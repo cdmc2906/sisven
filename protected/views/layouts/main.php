@@ -41,7 +41,7 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 <?php
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
-//                        array('label' => 'Inicio', 'url' => array('/site/index')),
+                        array('label' => 'Inicio', 'url' => array('/site/index')),
 ////                        array('label' => 'About', 'url' => array('/site/page', 'view' => 'about')),
 //                        array('label' => 'Empresa', 'url' => array('/empresa/index'), 'visible' => !Yii::app()->user->isGuest),
 //                        array('label' => 'Sucursales', 'url' => array('/sucursal/index'), 'visible' => !Yii::app()->user->isGuest),
@@ -89,26 +89,26 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 ?>
             </div><!-- mainmenu -->
 
-            <!--            <div id="mainmenu">
-            <?php
-            $this->widget('zii.widgets.CMenu', array(
-                'items' => array(
-                    array('label' => 'Reporte Totales por fecha', 'url' => array('/reportetotalplan/'), 'visible' => !Yii::app()->user->isGuest),
-                ),
-            ));
-            ?>
-                        </div> mainmenu -->
             <div id="mainmenu">
                 <?php
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
-                        array('label' => 'Administracion Historial', 'url' => array('/historialmb/index'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Administracion Ordenes', 'url' => array('/ordenesmb/admin'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Administracion Ruta', 'url' => array('/rutasmb/index'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Administracion Rangos cumplimiento', 'url' => array('/rangoCumplimiento/index'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Administracion Ventas Movistar', 'url' => array('/ventaMovistar/admin'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Administracion Indicadores', 'url' => array('/indicadores/admin'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Administracion Clientes', 'url' => array('/clientes/admin'), 'visible' => !Yii::app()->user->isGuest),
+//                        array('label' => 'Reporte Totales por fecha', 'url' => array('/reportetotalplan/'), 'visible' => !Yii::app()->user->isGuest),
+                    ),
+                ));
+                ?>
+            </div><!--mainmenu--> 
+            <div id="mainmenu">
+                <?php
+                $this->widget('zii.widgets.CMenu', array(
+                    'items' => array(
+                        array('label' => 'Admin Historial', 'url' => array('/historialmb/admin'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Admin Ordenes', 'url' => array('/ordenesmb/admin'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Admin Ruta', 'url' => array('/rutasmb/admin'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Admin Rangos cumplimiento', 'url' => array('/rangoCumplimiento/admin'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Admin Ventas Movistar', 'url' => array('/ventaMovistar/admin'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Admin Indicadores', 'url' => array('/indicadores/admin'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Admin Clientes', 'url' => array('/cliente/admin'), 'visible' => !Yii::app()->user->isGuest),
                     ),
                 ));
                 ?>
@@ -198,13 +198,11 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
             echo '</ul>';
             echo '</div>';
             if ($flashMessages) {
-                Yii::app()->clientScript->registerScript(
-                        '_HideEffect', 'hideEffect();', CClientScript::POS_READY
-                );
+                Yii::app()->clientScript->registerScript('_HideEffect', 'hideEffect();', CClientScript::POS_READY);
             }
             ?>
 
-            <?php echo $content; ?>
+<?php echo $content; ?>
 
             <div class="clear"></div>
 
@@ -212,7 +210,7 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 Copyright &copy; <?php echo date('Y'); ?> Tececab S.A.<br/>
                 Desarrollo Ing. Christian Araujo Y.<br/>
                 Todos los derechos reservados.<br/>
-                <?php echo Yii::powered(); ?>
+<?php echo Yii::powered(); ?>
             </div><!-- footer -->
 
         </div><!-- page -->
