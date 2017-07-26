@@ -20,75 +20,51 @@
 	<?php echo $form->errorSummary($model); ?>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'ID_CLI'); ?>
-		<?php echo $form->textField($model,'ID_CLI'); ?>
-		<?php echo $form->error($model,'ID_CLI'); ?>
+		<?php echo $form->labelEx($model,'cli_codigo_cliente'); ?>
+		<?php echo $form->textField($model,'cli_codigo_cliente',array('size'=>50,'maxlength'=>50)); ?>
+		<?php echo $form->error($model,'cli_codigo_cliente'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'ID_EST'); ?>
-		<?php echo $form->textField($model,'ID_EST'); ?>
-		<?php echo $form->error($model,'ID_EST'); ?>
+		<?php echo $form->labelEx($model,'cli_nombre_cliente'); ?>
+		<?php echo $form->textField($model,'cli_nombre_cliente',array('size'=>60,'maxlength'=>250)); ?>
+		<?php echo $form->error($model,'cli_nombre_cliente'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'ID_TCLI'); ?>
-		<?php echo $form->textField($model,'ID_TCLI'); ?>
-		<?php echo $form->error($model,'ID_TCLI'); ?>
+		<?php echo $form->labelEx($model,'cli_latitud'); ?>
+		<?php echo $form->textField($model,'cli_latitud',array('size'=>60,'maxlength'=>250)); ?>
+		<?php echo $form->error($model,'cli_latitud'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'NOMBRE_CLI'); ?>
-		<?php echo $form->textField($model,'NOMBRE_CLI',array('size'=>60,'maxlength'=>250)); ?>
-		<?php echo $form->error($model,'NOMBRE_CLI'); ?>
+		<?php echo $form->labelEx($model,'cli_longitud'); ?>
+		<?php echo $form->textField($model,'cli_longitud',array('size'=>60,'maxlength'=>250)); ?>
+		<?php echo $form->error($model,'cli_longitud'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'DOCUMENTO_CLI'); ?>
-		<?php echo $form->textField($model,'DOCUMENTO_CLI',array('size'=>15,'maxlength'=>15)); ?>
-		<?php echo $form->error($model,'DOCUMENTO_CLI'); ?>
+		<?php echo $form->labelEx($model,'cli_estado'); ?>
+		<?php echo $form->textField($model,'cli_estado'); ?>
+		<?php echo $form->error($model,'cli_estado'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'DIRECCION_CLI'); ?>
-		<?php echo $form->textField($model,'DIRECCION_CLI',array('size'=>60,'maxlength'=>250)); ?>
-		<?php echo $form->error($model,'DIRECCION_CLI'); ?>
+		<?php echo $form->labelEx($model,'cli_fecha_ingreso'); ?>
+		<?php echo $form->textField($model,'cli_fecha_ingreso'); ?>
+		<?php echo $form->error($model,'cli_fecha_ingreso'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'TELEFONO_CLI'); ?>
-		<?php echo $form->textField($model,'TELEFONO_CLI',array('size'=>50,'maxlength'=>50)); ?>
-		<?php echo $form->error($model,'TELEFONO_CLI'); ?>
+		<?php echo $form->labelEx($model,'cli_fecha_modificacion'); ?>
+		<?php echo $form->textField($model,'cli_fecha_modificacion'); ?>
+		<?php echo $form->error($model,'cli_fecha_modificacion'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'EMAIL_CLI'); ?>
-		<?php echo $form->textField($model,'EMAIL_CLI',array('size'=>50,'maxlength'=>50)); ?>
-		<?php echo $form->error($model,'EMAIL_CLI'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'FECHAINGRESO_CLI'); ?>
-		<?php echo $form->textField($model,'FECHAINGRESO_CLI'); ?>
-		<?php echo $form->error($model,'FECHAINGRESO_CLI'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'FECHAMODIFICACION_CLI'); ?>
-		<?php echo $form->textField($model,'FECHAMODIFICACION_CLI'); ?>
-		<?php echo $form->error($model,'FECHAMODIFICACION_CLI'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'IDUSR_CLI'); ?>
-		<?php echo $form->textField($model,'IDUSR_CLI'); ?>
-		<?php echo $form->error($model,'IDUSR_CLI'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'IDDELTA_CLI'); ?>
-		<?php echo $form->textField($model,'IDDELTA_CLI'); ?>
-		<?php echo $form->error($model,'IDDELTA_CLI'); ?>
+		<?php echo $form->labelEx($model,'cli_usuario_ingresa_modifica'); ?>
+		<?php echo $form->textField($model,'cli_usuario_ingresa_modifica'); ?>
+		<?php echo $form->error($model,'cli_usuario_ingresa_modifica'); ?>
 	</div>
 
 	<div class="row buttons">

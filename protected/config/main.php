@@ -6,7 +6,7 @@
 // CWebApplication properties can be configured here.
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
-    'name' => 'Sistema de ventas TECECAB',
+    'name' => 'Sistema TECECAB',
     'language' => 'es',
     'sourceLanguage' => 'en',
     // preloading 'log' component
@@ -119,10 +119,10 @@ return array(
         'db_conn' => array(
             // uncomment the following lines to use a PostgreSQL database
             'class' => 'CDbConnection',
-            'connectionString' => 'mysql:host=localhost;dbname=tececab',
+            'connectionString' => 'mysql:host=localhost;dbname=tcc_control_ruta',
             'emulatePrepare' => true,
             'username' => 'root',
-            'password' => '',
+            'password' => 'admin123',
             'charset' => 'utf8',
             'tablePrefix' => '',
         ),
@@ -130,8 +130,6 @@ return array(
             // use 'site/error' action to display errors
             'errorAction' => 'site/error',
         ),
-        
-        
 //        'log' => array(
 //            'class' => 'CLogRouter',
 //            'routes' => array(
@@ -143,8 +141,6 @@ return array(
 //                ),
 //            ),
 //        ),
-        
-        
         'log' => array(
             'class' => 'CLogRouter',
             'routes' => array(
@@ -165,9 +161,18 @@ return array(
     // using Yii::app()->params['paramName']
     'params' => array(
         // this is used in contact page
+        'mensajeExcepcion'=>'Se ha generado un error en el sistema.',
         'adminEmail' => 'webmaster@example.com',
         'archivosConsumo' => 'C:\archivos_sisven\consumo' . date('YmdHs') . '.csv',
         'archivosCompra' => 'C:\archivos_sisven\compra' . date('YmdHs') . '.csv',
-        'archivosIndicadores' => 'C:\archivos_sisven\indicador' . date('YmdHs') . '.csv',
+        'archivosIndicadores' => 'C:\carga_mobilvendor\indicador' . date('YmdHs') . '.csv',
+        'archivosHistorialMb' => 'C:\carga_mobilvendor\historial' . date('YmdHs') . '.csv',
+        'archivosOrdenesMb' => 'C:\carga_mobilvendor\ordenes' . date('YmdHs') . '.csv',
+        'archivosRutasMb' => 'C:\carga_mobilvendor\rutas' . date('YmdHs') . '.csv',
+        'archivosVentasMovistar' => 'C:\carga_mobilvendor\ventasMovistar' . date('YmdHs') . '.csv',
+        'archivosCoordenadasClientes' => 'C:\carga_mobilvendor\coordenadasClientes' . date('YmdHs') . '.csv',
+        'accioniniciovisita'=>'Inicio visita',        
+        'ivadoce'=>'0.12',
+        'ivaincdoce'=>'1.12'
     ),
 );

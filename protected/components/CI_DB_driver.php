@@ -615,9 +615,9 @@ class CI_DB_driver {
      * @param	string
      * @return	mixed
      */
-    function escape($str) {
+    function escape($str, $enlace = null) {
         if (is_string($str)) {
-            $str = "'" . $this->escape_str($str) . "'";
+            $str = "'" . $this->escape_str($str,false, $enlace) . "'";
         } elseif (is_bool($str)) {
             $str = ($str === FALSE) ? 0 : 1;
         } elseif (is_null($str)) {
@@ -1283,7 +1283,7 @@ class CI_DB_driver {
      * @param	bool	whether or not the string will be used in a LIKE condition
      * @return	string
      */
-    function escape_str($str, $like = FALSE) {
+    function escape_str($str, $like = FALSE,$enlace=null) {
         if (is_array($str)) {
             foreach ($str as $key => $val) {
                 $str[$key] = $this->escape_str($val, $like);
@@ -1291,18 +1291,16 @@ class CI_DB_driver {
 
             return $str;
         }
-
-        $str = mysql_real_escape_string($str);
+        $str = mysqli_real_escape_string($enlace, $str);
 //        var_dump($str);die();
         // escape LIKE condition wildcards
         if ($like === TRUE) {
             $str = str_replace(
-                    array('%', '_', $this->_like_escape_chr), 
-                    array(
-                        $this->_like_escape_chr . '%',
-                        $this->_like_escape_chr . '_', 
-                        $this->_like_escape_chr . 
-                        $this->_like_escape_chr), $str);
+                    array('%', '_', $this->_like_escape_chr), array(
+                $this->_like_escape_chr . '%',
+                $this->_like_escape_chr . '_',
+                $this->_like_escape_chr .
+                $this->_like_escape_chr), $str);
         }
 
         return $str;

@@ -7,15 +7,17 @@
 class CargaIndicadorForm extends CFormModel {
 
 //    public $fechaIngreso;
+    public $fechaUltimaCarga;
     public $rutaArchivo;
+    public $delimitadorColumnas;
 
     /**
      * Declares the validation rules.
      */
     public function rules() {
         return array(
-//            array('fechaConsumo', 'required'),
-            array('rutaArchivo', 'safe'),
+            array('delimitadorColumnas', 'required'),
+            array('rutaArchivo,delimitadorColumnas,fechaUltimaCarga', 'safe'),
             array('rutaArchivo', 'file', 'types' => 'csv')
         );
     }
@@ -29,6 +31,9 @@ class CargaIndicadorForm extends CFormModel {
         return array(
 //            'fechaConsumo' => 'Fecha Consumo',
             'rutaArchivo' => 'Archivo Indicadores',
+            'delimitadorColumnas' => 'Delimitador columnas archivo',
+            'fechaUltimaCarga' => 'Ultima fecha facturado',
+            
         );
     }
 

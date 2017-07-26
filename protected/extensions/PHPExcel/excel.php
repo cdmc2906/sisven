@@ -51,6 +51,7 @@ class excel {
      * @param type $result
      */
     public function Mapeo($result) {
+//        var_dump($result);        die();
         switch ($this->MapeoDefault) {
             case 1:
                 break;
@@ -61,9 +62,9 @@ class excel {
     }
 
     public function MapeoDefault($result) {
-
+//var_dump($result);        die();
         $row_cnt = count($result);
-
+        
         if ($row_cnt > 0) {
             $col_names = array_keys($result[0]);
             $fields_cnt = count($result[0]);

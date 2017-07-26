@@ -7,11 +7,11 @@ function blockUIOpen()
                  css: {
                 border: 'none',
                 padding: '15px',
-                backgroundColor: '#000',
+                backgroundColor: '#000000',
                 '-webkit-border-radius': '10px',
                 '-moz-border-radius': '10px',
                 opacity: .5,
-                color: '#fff'},
+                color: '#FFFFFF'},
                  message:'<h5>Espere por favor...</h5>'
              });
 }

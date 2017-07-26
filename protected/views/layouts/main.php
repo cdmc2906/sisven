@@ -41,16 +41,16 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 <?php
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
-                        array('label' => 'Inicio', 'url' => array('/site/index')),
-//                        array('label' => 'About', 'url' => array('/site/page', 'view' => 'about')),
-                        array('label' => 'Empresa', 'url' => array('/empresa/index'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Sucursales', 'url' => array('/sucursal/index'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Tipo de Clientes', 'url' => array('/tipocliente/index'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Tipos de Producto', 'url' => array('/tipoproducto/index'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Estados', 'url' => array('/estado/index'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Bodegas', 'url' => array('/bodega/index'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Productos', 'url' => array('/producto/index'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Clientes', 'url' => array('/cliente/index'), 'visible' => !Yii::app()->user->isGuest),
+//                        array('label' => 'Inicio', 'url' => array('/site/index')),
+////                        array('label' => 'About', 'url' => array('/site/page', 'view' => 'about')),
+//                        array('label' => 'Empresa', 'url' => array('/empresa/index'), 'visible' => !Yii::app()->user->isGuest),
+//                        array('label' => 'Sucursales', 'url' => array('/sucursal/index'), 'visible' => !Yii::app()->user->isGuest),
+//                        array('label' => 'Tipo de Clientes', 'url' => array('/tipocliente/index'), 'visible' => !Yii::app()->user->isGuest),
+//                        array('label' => 'Tipos de Producto', 'url' => array('/tipoproducto/index'), 'visible' => !Yii::app()->user->isGuest),
+//                        array('label' => 'Estados', 'url' => array('/estado/index'), 'visible' => !Yii::app()->user->isGuest),
+//                        array('label' => 'Bodegas', 'url' => array('/bodega/index'), 'visible' => !Yii::app()->user->isGuest),
+//                        array('label' => 'Productos', 'url' => array('/producto/index'), 'visible' => !Yii::app()->user->isGuest),
+//                        array('label' => 'Clientes', 'url' => array('/cliente/index'), 'visible' => !Yii::app()->user->isGuest),
                     ),
                 ));
                 ?>
@@ -59,8 +59,8 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 <?php
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
-                        array('label' => 'Rango Comision', 'url' => array('/rangocomision/index'), 'visible' => !Yii::app()->user->isGuest),    
-                        array('label' => 'Tipo Vendedor', 'url' => array('/tipovendedor/index'), 'visible' => !Yii::app()->user->isGuest),
+//                        array('label' => 'Rango Comision', 'url' => array('/rangocomision/index'), 'visible' => !Yii::app()->user->isGuest),    
+//                        array('label' => 'Tipo Vendedor', 'url' => array('/tipovendedor/index'), 'visible' => !Yii::app()->user->isGuest),
                     ),
                 ));
                 ?>
@@ -69,8 +69,8 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 <?php
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
-                        array('label' => 'Carga Indicadores', 'url' => array('/cargaindicador/index'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Carga Consumo', 'url' => array('/cargaconsumo/index'), 'visible' => !Yii::app()->user->isGuest),
+//                        array('label' => 'Carga Indicadores', 'url' => array('/cargaindicador/index'), 'visible' => !Yii::app()->user->isGuest),
+//                        array('label' => 'Carga Consumo', 'url' => array('/cargaconsumo/index'), 'visible' => !Yii::app()->user->isGuest),
                     ),
                 ));
                 ?>
@@ -80,23 +80,87 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 <?php
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
-                        array('label' => 'Reporte Totales por fecha', 'url' => array('/reportetotalplan/'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Reporte Ventas por mes', 'url' => array('/reporteventasxmes/'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Reporte Ventas por vendedor', 'url' => array('/reporteventasxvendedor/'), 'visible' => !Yii::app()->user->isGuest),
-                        array('label' => 'Reporte Ventas y consumos por mes', 'url' => array('/reporteventasconsumosxmes/'), 'visible' => !Yii::app()->user->isGuest),
+//                        array('label' => 'Reporte Totales por fecha', 'url' => array('/reportetotalplan/'), 'visible' => !Yii::app()->user->isGuest),
+//                        array('label' => 'Reporte Ventas por mes', 'url' => array('/reporteventasxmes/'), 'visible' => !Yii::app()->user->isGuest),
+//                        array('label' => 'Reporte Ventas por vendedor', 'url' => array('/reporteventasxvendedor/'), 'visible' => !Yii::app()->user->isGuest),
+//                        array('label' => 'Reporte Ventas y consumos por mes', 'url' => array('/reporteventasconsumosxmes/'), 'visible' => !Yii::app()->user->isGuest),
                     ),
                 ));
                 ?>
             </div><!-- mainmenu -->
-             <div id="mainmenu">
+
+            <!--            <div id="mainmenu">
+            <?php
+            $this->widget('zii.widgets.CMenu', array(
+                'items' => array(
+                    array('label' => 'Reporte Totales por fecha', 'url' => array('/reportetotalplan/'), 'visible' => !Yii::app()->user->isGuest),
+                ),
+            ));
+            ?>
+                        </div> mainmenu -->
+            <div id="mainmenu">
                 <?php
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
-                        array('label' => 'Calculo comisiones', 'url' => array('/calculocomision/'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Administracion Historial', 'url' => array('/historialmb/index'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Administracion Ordenes', 'url' => array('/ordenesmb/admin'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Administracion Ruta', 'url' => array('/rutasmb/index'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Administracion Rangos cumplimiento', 'url' => array('/rangoCumplimiento/index'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Administracion Ventas Movistar', 'url' => array('/ventaMovistar/admin'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Administracion Indicadores', 'url' => array('/indicadores/admin'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Administracion Clientes', 'url' => array('/clientes/admin'), 'visible' => !Yii::app()->user->isGuest),
                     ),
                 ));
                 ?>
             </div><!-- mainmenu -->
+            <div id="mainmenu">
+                <?php
+                $this->widget('zii.widgets.CMenu', array(
+                    'items' => array(
+                        array('label' => 'Carga Historial', 'url' => array('/cargahistorialmb/index'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Carga Ordenes', 'url' => array('/cargaordenesmb/index'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Carga Rutas', 'url' => array('/cargarutasmb/index'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Carga Coordenadas', 'url' => array('/cargaCoordenadasClientes/index'), 'visible' => !Yii::app()->user->isGuest),
+                    ),
+                ));
+                ?>
+            </div><!-- mainmenu -->
+
+            <div id="mainmenu">
+                <?php
+                $this->widget('zii.widgets.CMenu', array(
+                    'items' => array(
+                        array('label' => 'Carga Ventas Movistar', 'url' => array('/cargaventasmovistar/index'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Carga Indicadores', 'url' => array('/cargaindicador/index'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Reporte Factura-Transferencia', 'url' => array('/ReporteChipsFacturadosTransferidos/index'), 'visible' => !Yii::app()->user->isGuest),
+                    ),
+                ));
+                ?>
+            </div><!-- mainmenu -->
+
+            <div id="mainmenu">
+                <?php
+                $this->widget('zii.widgets.CMenu', array(
+                    'items' => array(
+                        array('label' => 'Reporte Ordenes', 'url' => array('/reporteordenesxfecha/'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Reporte Inicio Fin Jornada', 'url' => array('/reporteiniciofinjornadaxfecha/'), 'visible' => !Yii::app()->user->isGuest),
+                    ),
+                ));
+                ?>
+            </div><!-- mainmenu -->
+
+            <div id="mainmenu">
+                <?php
+                $this->widget('zii.widgets.CMenu', array(
+                    'items' => array(
+                        array('label' => 'Resumen diario historial', 'url' => array('/RptResumenDiarioHistorial/'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Resumen semanal historial', 'url' => array('/RptResumenSemanalHistorial/'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Revision ruta', 'url' => array('/revisionruta/'), 'visible' => !Yii::app()->user->isGuest),
+                    ),
+                ));
+                ?>
+            </div><!-- mainmenu -->
+
             <div id="mainmenu">
                 <?php
                 $this->widget('zii.widgets.CMenu', array(
@@ -146,6 +210,7 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
 
             <div id="footer">
                 Copyright &copy; <?php echo date('Y'); ?> Tececab S.A.<br/>
+                Desarrollo Ing. Christian Araujo Y.<br/>
                 Todos los derechos reservados.<br/>
                 <?php echo Yii::powered(); ?>
             </div><!-- footer -->

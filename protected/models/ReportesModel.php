@@ -2,15 +2,183 @@
 
 class ReportesModel extends DAOModel {
 
+    public function getTotalOrdenesxFecha($datos) {
+        $hora_inicio = "00:00:00";
+        $hora_fin = "23:59:59";
+
+        $fechaInicioA = $datos['fechaOrdenesInicio'];
+        $fechaFinA = $datos['fechaOrdenesFin'];
+        $fechaInicioB = $fechaInicioA . " " . $hora_inicio;
+        $fechaFinB = $fechaFinA . " " . $hora_fin;
+
+        $sql = "
+            SELECT
+                    o_usuario AS CODIGOEJECUTIVO                
+                    ,o_nom_usuario AS EJECUTIVO                
+                    , CONVERT(sum(o_subtotal), decimal(6, 0)) AS TOTALPEDIDOS
+                FROM tb_ordenes_mb
+                WHERE 1 = 1
+                    AND o_fch_creacion >= '" . $fechaInicioB . "'
+                    AND o_fch_creacion<'" . $fechaFinB . "'	
+                GROUP BY o_usuario
+                ORDER BY o_usuario;";
+
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+        $this->Close();
+        return $data;
+    }
+
+    public function getOrdenesxFecha($fechaInicio,$fechaFin) {
+        $hora_inicio = "00:00:00";
+        $hora_fin = "23:59:59";
+
+        $fechaInicioA = $fechaInicio;
+        $fechaFinA = $fechaFin;
+        $fechaInicioB = $fechaInicioA . " " . $hora_inicio;
+        $fechaFinB = $fechaFinA . " " . $hora_fin;
+
+        $sql = "
+        SELECT
+                o_nom_usuario AS EJECUTIVO
+                ,o_cod_cliente AS CLIENTE
+                , CONVERT(o_subtotal, decimal(6, 0)) AS TOTALORDENES
+                , DATE(o_fch_creacion) AS PERIODO
+            FROM tb_ordenes_mb
+            WHERE 1 = 1
+                AND o_fch_creacion >= '" . $fechaInicioB . "'
+                AND o_fch_creacion<'" . $fechaFinB . "'
+			ORDER BY o_usuario;";
+
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+        $this->Close();
+        return $data;
+    }
+    public function getOrdenesxEjecutivoxFecha($ejecutivo,$fechaInicio,$fechaFin) {
+        $hora_inicio = "00:00:00";
+        $hora_fin = "23:59:59";
+
+        $fechaInicioA = $fechaInicio;
+        $fechaFinA = $fechaFin;
+        $fechaInicioB = $fechaInicioA . " " . $hora_inicio;
+        $fechaFinB = $fechaFinA . " " . $hora_fin;
+
+        $sql = "
+        SELECT
+                --  o_nom_usuario AS EJECUTIVO
+                o_id as CODIGOORDEN
+                ,o_codigo_mb as ORDEN
+                ,o_cod_cliente AS COD_CLIENTE
+                ,o_nom_cliente AS NOM_CLIENTE
+                , CONVERT(o_subtotal, decimal(6, 0)) AS TOTALORDENES
+                , DATE(o_fch_creacion) AS PERIODO
+            FROM tb_ordenes_mb
+            WHERE 1 = 1
+                AND o_usuario='".$ejecutivo."'
+                AND o_fch_creacion >= '" . $fechaInicioB . "'
+                AND o_fch_creacion<'" . $fechaFinB . "'
+			ORDER BY o_usuario;";
+
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+        $this->Close();
+        return $data;
+    }
+
+    public function getInicioJornadaxFecha($usuario, $fecha) {
+//        var_dump($datos);die();
+//        $fechaInicioA = $datos['fechaOrdenesInicio'];
+
+        $sql = "
+          SELECT
+		H_FECHA AS FECHA
+		,DATE_FORMAT(H_FECHA,'%H:%i:%s') AS HORA
+                ,H_USUARIO_NOMBRE AS EJECUTIVO
+            FROM tb_historial_mb 
+            WHERE 1=1
+                AND DATE(h_fecha) ='" . $fecha . "'
+                AND TIME_FORMAT(h_fecha, '%H:%i') >='10:00'
+		AND h_accion='Inicio visita'
+		AND h_usuario='" . $usuario . "'
+            ORDER BY h_fecha
+            LIMIT 1;
+        ";
+
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+        $this->Close();
+        return $data;
+    }
+
+    public function getFinJornadaxUsuarioxFecha($usuario, $fecha) {
+//        var_dump($datos);die();
+//        $fechaInicioA = $datos['fechaOrdenesInicio'];
+
+        $sql = "
+          SELECT
+		H_FECHA AS FECHA
+		,DATE_FORMAT(H_FECHA,'%H:%i:%s') AS HORA
+                ,H_USUARIO_NOMBRE AS EJECUTIVO
+            FROM tb_historial_mb 
+            WHERE 1=1
+                AND DATE(h_fecha) ='" . $fecha . "'
+                AND TIME_FORMAT(h_fecha, '%H:%i') <='19:30'
+		AND h_accion='Fin de visita'
+		AND h_usuario='" . $usuario . "'
+            ORDER BY h_fecha desc
+            LIMIT 1;
+        ";
+
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+        $this->Close();
+        return $data;
+    }
+
+    public function getTotalesOrdenesxFecha($datos) {
+//        var_dump($datos);die();
+        $hora_inicio = "00:00:00";
+        $hora_fin = "23:59:59";
+
+        $fechaInicioA = $datos['fechaOrdenesInicio'];
+        $fechaFinA = $datos['fechaOrdenesFin'];
+        $fechaInicioB = $fechaInicioA . " " . $hora_inicio;
+        $fechaFinB = $fechaFinA . " " . $hora_fin;
+
+//        var_dump($fechaFinB);die();
+        $sql = " 
+        SELECT
+                o_nom_usuario AS EJECUTIVO
+                , CONVERT(SUM(o_subtotal), decimal(6, 0)) AS TOTALORDENES
+                , DATE(o_fch_creacion) AS PERIODO
+            FROM tb_ordenes_mb
+            WHERE 1 = 1
+                AND o_fch_creacion >= '" . $fechaInicioB . "'
+                AND o_fch_creacion<'" . $fechaFinB . "'
+            GROUP BY o_nom_usuario;";
+
+        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+        $this->Close();
+        return $data;
+    }
+
     public function getTotalPlan($datos) {
-        $sql = "select 
-                plan_cons as nombre_plan, 
-                count(min_cons) as total_min, 
-                FORMAT(sum(valorpago_cons),2) as total_pago
-                from tb_consumo 
-                -- where FECHACONSUMO_CONS between '" . $datos['fechaConsumoInicio'] . "' and '" . $datos['fechaConsumoFin'] . "'
-                where ID_MES between '" . $datos['fechaConsumoInicio'] . "' and '" . $datos['fechaConsumoFin'] . "'
-                group by plan_cons";
+        $sql = "select
+        plan_cons as nombre_plan,
+        count(min_cons) as total_min,
+        FORMAT(sum(valorpago_cons), 2) as total_pago
+        from tb_consumo
+        --where FECHACONSUMO_CONS between '" . $datos['fechaConsumoInicio'] . "' and '" . $datos['fechaConsumoFin'] . "'
+        where ID_MES between '" . $datos['fechaConsumoInicio'] . "' and '" . $datos['fechaConsumoFin'] . "'
+        group by plan_cons";
 //        var_dump($sql); die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
@@ -19,20 +187,21 @@ class ReportesModel extends DAOModel {
     }
 
     public function getConsumoxFecha($datos) {
-        $sql = "SELECT 
-                PLAN_CONS AS PLAN,
-                MIN_CONS AS MIN,
-                CONTRATO_CONS AS CONTRATO,
-                CODIGOVENDEDOR_CONS AS CODIGO_VENDEDOR,
-                VENDEDOR_CONS AS VENDEDOR,
-                date(FECHACONSUMO_CONS) AS FECHA_CONSUMO,
-                CONVERT(VALORPAGO_CONS ,DECIMAL(10,4)) AS VALOR_PAGO,
-                date(FECHAINGRESO_CONS) AS FECHA_INGRESO,
-                OBSERVACION_CONS AS OBSERVACION,
-                USERNAME AS SUBIDO_POR
-                FROM TB_CONSUMO
-                INNER JOIN cruge_user on tb_consumo.IDUSR_CONS =cruge_user.IDUSER
-                WHERE FECHACONSUMO_CONS ='" . $datos['fechaConsumo'] . "';";
+        $sql = "SELECT
+        PLAN_CONS AS PLAN,
+        MIN_CONS AS MIN,
+        CONTRATO_CONS AS CONTRATO,
+        CODIGOVENDEDOR_CONS AS CODIGO_VENDEDOR,
+        VENDEDOR_CONS AS VENDEDOR,
+        date(FECHACONSUMO_CONS) AS FECHA_CONSUMO,
+        CONVERT(VALORPAGO_CONS, DECIMAL(10, 4)) AS VALOR_PAGO,
+        date(FECHAINGRESO_CONS) AS FECHA_INGRESO,
+        OBSERVACION_CONS AS OBSERVACION,
+        USERNAME AS SUBIDO_POR
+        FROM TB_CONSUMO
+        INNER JOIN cruge_user on tb_consumo.IDUSR_CONS = cruge_user.IDUSER
+        WHERE FECHACONSUMO_CONS = '" . $datos['fechaConsumo'] . "';
+        ";
 //        var_dump($sql); die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
@@ -43,7 +212,7 @@ class ReportesModel extends DAOModel {
 
     public function getVentasxMes($datos) {
 //        var_dump($datos);die();
-//        $sql = "/*CANTIDAD DE CHIPS VENDIDOS Y CON CONSUMO POR MES*/
+//        $sql = "/* CANTIDAD DE CHIPS VENDIDOS Y CON CONSUMO POR MES */
 //                select 
 //                v.id_vend as CODIGO_VENDEDOR, 
 //                ve.nombre_vend AS VENDEDOR, 

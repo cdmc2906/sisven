@@ -71,7 +71,7 @@ class ClienteController extends Controller
 		{
 			$model->attributes=$_POST['ClienteModel'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->ID_CLI));
+				$this->redirect(array('view','id'=>$model->cli_codigo));
 		}
 
 		$this->render('create',array(
@@ -95,7 +95,7 @@ class ClienteController extends Controller
 		{
 			$model->attributes=$_POST['ClienteModel'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->ID_CLI));
+				$this->redirect(array('view','id'=>$model->cli_codigo));
 		}
 
 		$this->render('update',array(

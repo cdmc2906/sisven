@@ -5,53 +5,41 @@
 
 <div class="view">
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('ID_CLI')); ?>:</b>
-	<?php echo CHtml::link(CHtml::encode($data->ID_CLI), array('view', 'id'=>$data->ID_CLI)); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('cli_codigo')); ?>:</b>
+	<?php echo CHtml::link(CHtml::encode($data->cli_codigo), array('view', 'id'=>$data->cli_codigo)); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('ID_EST')); ?>:</b>
-	<?php echo CHtml::encode($data->ID_EST); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('cli_codigo_cliente')); ?>:</b>
+	<?php echo CHtml::encode($data->cli_codigo_cliente); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('ID_TCLI')); ?>:</b>
-	<?php echo CHtml::encode($data->ID_TCLI); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('cli_nombre_cliente')); ?>:</b>
+	<?php echo CHtml::encode($data->cli_nombre_cliente); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('NOMBRE_CLI')); ?>:</b>
-	<?php echo CHtml::encode($data->NOMBRE_CLI); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('cli_latitud')); ?>:</b>
+	<?php echo CHtml::encode($data->cli_latitud); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('DOCUMENTO_CLI')); ?>:</b>
-	<?php echo CHtml::encode($data->DOCUMENTO_CLI); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('cli_longitud')); ?>:</b>
+	<?php echo CHtml::encode($data->cli_longitud); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('DIRECCION_CLI')); ?>:</b>
-	<?php echo CHtml::encode($data->DIRECCION_CLI); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('cli_estado')); ?>:</b>
+	<?php echo CHtml::encode($data->cli_estado); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('TELEFONO_CLI')); ?>:</b>
-	<?php echo CHtml::encode($data->TELEFONO_CLI); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('cli_fecha_ingreso')); ?>:</b>
+	<?php echo CHtml::encode($data->cli_fecha_ingreso); ?>
 	<br />
 
 	<?php /*
-	<b><?php echo CHtml::encode($data->getAttributeLabel('EMAIL_CLI')); ?>:</b>
-	<?php echo CHtml::encode($data->EMAIL_CLI); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('cli_fecha_modificacion')); ?>:</b>
+	<?php echo CHtml::encode($data->cli_fecha_modificacion); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('FECHAINGRESO_CLI')); ?>:</b>
-	<?php echo CHtml::encode($data->FECHAINGRESO_CLI); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('FECHAMODIFICACION_CLI')); ?>:</b>
-	<?php echo CHtml::encode($data->FECHAMODIFICACION_CLI); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('IDUSR_CLI')); ?>:</b>
-	<?php echo CHtml::encode($data->IDUSR_CLI); ?>
-	<br />
-
-	<b><?php echo CHtml::encode($data->getAttributeLabel('IDDELTA_CLI')); ?>:</b>
-	<?php echo CHtml::encode($data->IDDELTA_CLI); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('cli_usuario_ingresa_modifica')); ?>:</b>
+	<?php echo CHtml::encode($data->cli_usuario_ingresa_modifica); ?>
 	<br />
 
 	*/ ?>

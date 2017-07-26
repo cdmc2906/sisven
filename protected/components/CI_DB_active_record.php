@@ -1111,7 +1111,9 @@ class CI_DB_active_record extends CI_DB_driver {
 
 		$keys = array_keys(current($key));
 		sort($keys);
-
+                
+                $enlace = mysqli_connect("localhost", "root", "admin123", "tcc_control_ruta");
+        
 		foreach ($key as $row)
 		{
 			if (count(array_diff($keys, array_keys($row))) > 0 OR count(array_diff(array_keys($row), $keys)) > 0)
@@ -1133,12 +1135,13 @@ class CI_DB_active_record extends CI_DB_driver {
 
 				foreach ($row as $value)
 				{
-					$clean[] = $this->escape($value);
+					$clean[] = $this->escape($value,$enlace);
 				}
 
 				$this->ar_set[] =  '('.implode(',', $clean).')';
 			}
 		}
+                mysqli_close($enlace);
 
 		foreach ($keys as $k)
 		{

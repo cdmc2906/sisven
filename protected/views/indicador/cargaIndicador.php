@@ -61,11 +61,13 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                     <?php echo $form->labelEx($model, 'delimitadorColumnas'); ?>
                     <?php
                     echo $form->dropDownList(
-                            $model, 'delimitadorColumnas', array(
-                        ';' => 'Punto y Coma',
-                        ',' => 'Coma'
-                            ), array(
-                        'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+                            $model, 'delimitadorColumnas'
+                            , array(
+                        ';' => 'Punto y Coma'
+                        , ',' => 'Coma')
+                            , array(
+                        'empty' => TEXT_OPCION_SELECCIONE
+                        , 'options' => array(0 => array('selected' => true)))
                     );
                     ?>
                     <?php echo $form->error($model, 'delimitadorColumnas'); ?>

@@ -17,7 +17,7 @@ $(document).ready(function () {
 
     });
     ConfigurarGrid();
-    ConfigurarGridResumen();
+//    ConfigurarGridResumen();
 });
 
 function ConfigurarGrid() {
@@ -27,67 +27,36 @@ function ConfigurarGrid() {
         mtype: 'POST',
         url: 'VerDatosArchivo',
         colNames: [
-            'FECHA',
-            'SUCURSAL',
-            'NUM_BOD',
-            'BODEGA',
-            'NUM_SERIE',
-            'NUM_FACT',
-            'CODCLI',
-            'TIPOCLI',
-            'NOMCLI',
-            'RUC',
-            'DIRECCION',
-            'CIUDAD',
-            'TELEFONO',
-            'COD_PROD',
-            'DESCRIP',
-            'CODGRUP',
-            'GRUPO',
-            'CANTIDAD',
-            'DETALLE',
-            'IMEI',
-            'MIN',
-            'ICC',
-            'COSTO',
-            'PRECIO1',
-            'PRECIO2',
-            'PRECIO3',
-            'PRECIO4',
-            'PRECIO5',
-            'PRECIO',
-            'PORCENDES',
-            'DESCUENTO',
-            'SUBTOTAL',
-            'IVA',
-            'TOTAL',
-            'E_COD',
-            'VENDEDOR',
-            'MES',
-            'SEMANA',
+            'FECHA', 'SUCURSAL', 'NUM_BOD',
+            'BODEGA', 'NUM_SERIE', 'NUM_FACT',
+            'CODCLI', 'TIPOCLI', 'NOMCLI',
+            'RUC', 'DIRECCION', 'CIUDAD',
+            'TELEFONO', 'COD_PROD', 'DESCRIP',
+            'CODGRUP', 'GRUPO', 'CANTIDAD',
+            'DETALLE', 'IMEI', 'MIN',
+            'ICC', 'COSTO', 'PRECIO1',
+            'PRECIO2', 'PRECIO3', 'PRECIO4',
+            'PRECIO5', 'PRECIO', 'PORCENDES',
+            'DESCUENTO', 'SUBTOTAL', 'IVA',
+            'TOTAL', 'E_COD', 'VENDEDOR', 'PROVINCIA'
         ],
         colModel: [
-//            {name: 'ID_PROD', index: 'ID_PRO', sortable: false, frozen: true},
-//            {name: 'ID_VEND', index: 'ID_VEND', width: 75, sortable: false, frozen: true, align: "center"},
-//            {name: 'FECHAINGRESO_ASIG', index: 'FECHAINGRESO_ASIG', width: 200, resizable: false, sortable: false, frozen: false},
-//            {name: 'IDUSR_ASIF', index: 'IDUSR_ASIF', width: 180, sortable: false, frozen: false},
-
             {name: 'FECHA', index: 'FECHA', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'SUCURSAL', index: 'SUCURSAL', width: 200, resizable: false, sortable: false, frozen: false},
-            {name: 'NUM_BOD', index: 'NUM_BOD', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'NUMERO_BODEGA', index: 'NUMERO_BODEGA', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'BODEGA', index: 'BODEGA', width: 200, resizable: false, sortable: false, frozen: false},
-            {name: 'NUM_SERIE', index: 'NUM_SERIE', width: 200, resizable: false, sortable: false, frozen: false},
-            {name: 'NUM_FACT', index: 'NUM_FACT', width: 200, resizable: false, sortable: false, frozen: false},
-            {name: 'CODCLI', index: 'CODCLI', width: 200, resizable: false, sortable: false, frozen: false},
-            {name: 'TIPOCLI', index: 'TIPOCLI', width: 200, resizable: false, sortable: false, frozen: false},
-            {name: 'NOMCLI', index: 'NOMCLI', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'NUMERO_SERIE', index: 'NUMERO_SERIE', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'NUMERO_FACTURA', index: 'NUMERO_FACTURA', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'COD_CLIENTE', index: 'COD_CLIENTE', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'TIPO_CLIENTE', index: 'TIPO_CLIENTE', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'NOMBRE_CLIENTE', index: 'NOMBRE_CLIENTE', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'RUC', index: 'RUC', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'DIRECCION', index: 'DIRECCION', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'CIUDAD', index: 'CIUDAD', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'TELEFONO', index: 'TELEFONO', width: 200, resizable: false, sortable: false, frozen: false},
-            {name: 'COD_PROD', index: 'COD_PROD', width: 200, resizable: false, sortable: false, frozen: false},
-            {name: 'DESCRIP', index: 'DESCRIP', width: 200, resizable: false, sortable: false, frozen: false},
-            {name: 'CODGRUP', index: 'CODGRUP', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'CODIGO_PRODUCTO', index: 'CODIGO_PRODUCTO', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'DESCRIPCION_PRODUCTO', index: 'DESCRIPCION_PRODUCTO', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'CODIGO_GRUPO', index: 'CODIGO_GRUPO', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'GRUPO', index: 'GRUPO', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'CANTIDAD', index: 'CANTIDAD', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'DETALLE', index: 'DETALLE', width: 200, resizable: false, sortable: false, frozen: false},
@@ -106,10 +75,9 @@ function ConfigurarGrid() {
             {name: 'SUBTOTAL', index: 'SUBTOTAL', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'IVA', index: 'IVA', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'TOTAL', index: 'TOTAL', width: 200, resizable: false, sortable: false, frozen: false},
-            {name: 'E_COD', index: 'E_COD', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'E_CODIGO', index: 'E_CODIGO', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'VENDEDOR', index: 'VENDEDOR', width: 200, resizable: false, sortable: false, frozen: false},
-            {name: 'MES', index: 'MES', width: 200, resizable: false, sortable: false, frozen: false},
-            {name: 'SEMANA', index: 'SEMANA', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'PROVINCIA', index: 'PROVINCIA', width: 200, resizable: false, sortable: false, frozen: false},
         ],
         pager: '#pagGrid',
         rowNum: NroFilas,
@@ -140,7 +108,7 @@ function ConfigurarGrid() {
 
     jQuery("#tblGrid").jqGrid('navGrid', '#pagGrid',
             {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options 
-    {}, // edit options 
+            {}, // edit options 
             {}, // add options 
             {}, // del options 
             {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
@@ -194,7 +162,7 @@ function ConfigurarGridResumen() {
 
     jQuery("#tblGridResumen").jqGrid('navGrid', '#pagGridResumen',
             {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options 
-    {}, // edit options 
+            {}, // edit options 
             {}, // add options 
             {}, // del options 
             {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search

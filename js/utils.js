@@ -45,7 +45,7 @@ function setMensaje(clase, message)
     $("ul.flashes").html(message);
 
     showEffect();
-    hideEffect();
+//    hideEffect();
     return false;
 }
 
@@ -101,7 +101,7 @@ function mostrarVentanaMensaje(mensaje, tituloDialogo, clase) {
 function ConfigDatePickersReporte(inicio, fin) {
     $(inicio)
             .datepicker({
-                format: "yyyy/mm/dd",
+                format: "yyyy-mm-dd",
                 startView: 1,
                 language: "es",
                 autoclose: true

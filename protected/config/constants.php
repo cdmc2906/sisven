@@ -4,7 +4,8 @@
  * Constantes ETIQUETAS
  */
 define('HOME_PRINCIPAL', '192.168.10.15:9090');
-
+define('MINMETROSVISITAVALIDA', '10');
+define('MAXMETROSVISITAVALIDA', '15');
 define('ELEMENTOS_PAGINA', '[15,30,50,100]');
 define('NRO_FILAS', '15');
 define('ERROR', 0);

@@ -4,23 +4,15 @@
  * This is the model class for table "tb_cliente".
  *
  * The followings are the available columns in table 'tb_cliente':
- * @property integer $ID_CLI
- * @property integer $ID_EST
- * @property integer $ID_TCLI
- * @property string $NOMBRE_CLI
- * @property string $DOCUMENTO_CLI
- * @property string $DIRECCION_CLI
- * @property string $TELEFONO_CLI
- * @property string $EMAIL_CLI
- * @property string $FECHAINGRESO_CLI
- * @property string $FECHAMODIFICACION_CLI
- * @property integer $IDUSR_CLI
- * @property integer $IDDELTA_CLI
- *
- * The followings are the available model relations:
- * @property TbTipoCliente $iDTCLI
- * @property TbEstado $iDEST
- * @property TbVenta[] $tbVentas
+ * @property integer $cli_codigo
+ * @property string $cli_codigo_cliente
+ * @property string $cli_nombre_cliente
+ * @property string $cli_latitud
+ * @property string $cli_longitud
+ * @property integer $cli_estado
+ * @property string $cli_fecha_ingreso
+ * @property string $cli_fecha_modificacion
+ * @property integer $cli_usuario_ingresa_modifica
  */
 class ClienteModel extends CActiveRecord
 {
@@ -40,15 +32,13 @@ class ClienteModel extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('ID_CLI', 'required'),
-			array('ID_CLI, ID_EST, ID_TCLI, IDUSR_CLI, IDDELTA_CLI', 'numerical', 'integerOnly'=>true),
-			array('NOMBRE_CLI, DIRECCION_CLI', 'length', 'max'=>250),
-			array('DOCUMENTO_CLI', 'length', 'max'=>15),
-			array('TELEFONO_CLI, EMAIL_CLI', 'length', 'max'=>50),
-			array('FECHAINGRESO_CLI, FECHAMODIFICACION_CLI', 'safe'),
+			array('cli_estado, cli_usuario_ingresa_modifica', 'numerical', 'integerOnly'=>true),
+			array('cli_codigo_cliente', 'length', 'max'=>50),
+			array('cli_nombre_cliente, cli_latitud, cli_longitud', 'length', 'max'=>250),
+			array('cli_fecha_ingreso, cli_fecha_modificacion', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('ID_CLI, ID_EST, ID_TCLI, NOMBRE_CLI, DOCUMENTO_CLI, DIRECCION_CLI, TELEFONO_CLI, EMAIL_CLI, FECHAINGRESO_CLI, FECHAMODIFICACION_CLI, IDUSR_CLI, IDDELTA_CLI', 'safe', 'on'=>'search'),
+			array('cli_codigo, cli_codigo_cliente, cli_nombre_cliente, cli_latitud, cli_longitud, cli_estado, cli_fecha_ingreso, cli_fecha_modificacion, cli_usuario_ingresa_modifica', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,9 +50,6 @@ class ClienteModel extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'iDTCLI' => array(self::BELONGS_TO, 'TbTipoCliente', 'ID_TCLI'),
-			'iDEST' => array(self::BELONGS_TO, 'TbEstado', 'ID_EST'),
-			'tbVentas' => array(self::HAS_MANY, 'TbVenta', 'ID_CLI'),
 		);
 	}
 
@@ -72,18 +59,15 @@ class ClienteModel extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'ID_CLI' => 'Id Cli',
-			'ID_EST' => 'Id Est',
-			'ID_TCLI' => 'Id Tcli',
-			'NOMBRE_CLI' => 'Nombre Cli',
-			'DOCUMENTO_CLI' => 'Documento Cli',
-			'DIRECCION_CLI' => 'Direccion Cli',
-			'TELEFONO_CLI' => 'Telefono Cli',
-			'EMAIL_CLI' => 'Email Cli',
-			'FECHAINGRESO_CLI' => 'Fechaingreso Cli',
-			'FECHAMODIFICACION_CLI' => 'Fechamodificacion Cli',
-			'IDUSR_CLI' => 'Idusr Cli',
-			'IDDELTA_CLI' => 'Iddelta Cli',
+			'cli_codigo' => 'Cli Codigo',
+			'cli_codigo_cliente' => 'Cli Codigo Cliente',
+			'cli_nombre_cliente' => 'Cli Nombre Cliente',
+			'cli_latitud' => 'Cli Latitud',
+			'cli_longitud' => 'Cli Longitud',
+			'cli_estado' => 'Cli Estado',
+			'cli_fecha_ingreso' => 'Cli Fecha Ingreso',
+			'cli_fecha_modificacion' => 'Cli Fecha Modificacion',
+			'cli_usuario_ingresa_modifica' => 'Cli Usuario Ingresa Modifica',
 		);
 	}
 
@@ -105,18 +89,15 @@ class ClienteModel extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('ID_CLI',$this->ID_CLI);
-		$criteria->compare('ID_EST',$this->ID_EST);
-		$criteria->compare('ID_TCLI',$this->ID_TCLI);
-		$criteria->compare('NOMBRE_CLI',$this->NOMBRE_CLI,true);
-		$criteria->compare('DOCUMENTO_CLI',$this->DOCUMENTO_CLI,true);
-		$criteria->compare('DIRECCION_CLI',$this->DIRECCION_CLI,true);
-		$criteria->compare('TELEFONO_CLI',$this->TELEFONO_CLI,true);
-		$criteria->compare('EMAIL_CLI',$this->EMAIL_CLI,true);
-		$criteria->compare('FECHAINGRESO_CLI',$this->FECHAINGRESO_CLI,true);
-		$criteria->compare('FECHAMODIFICACION_CLI',$this->FECHAMODIFICACION_CLI,true);
-		$criteria->compare('IDUSR_CLI',$this->IDUSR_CLI);
-		$criteria->compare('IDDELTA_CLI',$this->IDDELTA_CLI);
+		$criteria->compare('cli_codigo',$this->cli_codigo);
+		$criteria->compare('cli_codigo_cliente',$this->cli_codigo_cliente,true);
+		$criteria->compare('cli_nombre_cliente',$this->cli_nombre_cliente,true);
+		$criteria->compare('cli_latitud',$this->cli_latitud,true);
+		$criteria->compare('cli_longitud',$this->cli_longitud,true);
+		$criteria->compare('cli_estado',$this->cli_estado);
+		$criteria->compare('cli_fecha_ingreso',$this->cli_fecha_ingreso,true);
+		$criteria->compare('cli_fecha_modificacion',$this->cli_fecha_modificacion,true);
+		$criteria->compare('cli_usuario_ingresa_modifica',$this->cli_usuario_ingresa_modifica);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
