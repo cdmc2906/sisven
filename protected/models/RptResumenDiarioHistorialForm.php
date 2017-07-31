@@ -12,6 +12,7 @@ class RptResumenDiarioHistorialForm extends CFormModel {
     public $fechagestion;
     public $ejecutivo;
     public $precisionVisitas;
+    public $comentarioSupervision;
 
     /**
      * Declares the validation rules.
@@ -19,7 +20,7 @@ class RptResumenDiarioHistorialForm extends CFormModel {
     public function rules() {
         return array(
             array('fechagestion, ejecutivo,precisionVisitas', 'required'),
-            array('fechagestion,ejecutivo,precisionVisitas', 'safe'),
+            array('fechagestion,ejecutivo,precisionVisitas,comentarioSupervision', 'safe'),
         );
     }
 
@@ -32,7 +33,8 @@ class RptResumenDiarioHistorialForm extends CFormModel {
         return array(
             'fechagestion' => 'Fecha gestion en ruta',
             'ejecutivo' => 'Ejecutivo asignado ruta',
-            'precisionVisitas' => 'Precision visita (metros)'
+            'precisionVisitas' => 'Precision visita (metros)',
+            'comentarioSupervision'=>'Ingresar el comentario de supervision'
             
         );
     }

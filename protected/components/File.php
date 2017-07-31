@@ -397,8 +397,8 @@ class File {
 //                        var_dump($arrColumnas[1]);                    die();
 //                        var_dump($arrColumnas[20]);
 //                        var_dump($arrColumnas);                    die();
-                        if ($arrColumnas[1] == 'TCQU170290')
-                            var_dump($arrColumnas);
+//                        if ($arrColumnas[1] == 'TCQU170290')
+//                            var_dump($arrColumnas);
                         $datos = array(
                             'CLIENTE' => utf8_encode(trim($arrColumnas[1])),
                             'CLIENTENOMBRE' => utf8_encode(trim($arrColumnas[2])),
@@ -439,32 +439,33 @@ class File {
                     $arrColumnas = explode($this->Delimitador, $strFilas);
 //                    var_dump($arrColumnas);die();
 //                    var_dump($arrColumnas[1]);                    die();
-                    if (count($arrColumnas) > 0 && $arrColumnas[0] != 'Id') { // Quita la fila de encabezados
+                    if (isset($arrColumnas[18])) {
+                        if (count($arrColumnas) > 0 && $arrColumnas[0] != 'Id') { // Quita la fila de encabezados
 //                        var_dump($arrColumnas[1]);                    die();
-                        $datos = array(
-                            'ID' => trim($arrColumnas[0]),
-                            'FECHA' => trim($arrColumnas[1]),
-                            'USUARIO' => utf8_encode(trim($arrColumnas[2])),
-                            'USUARIONOMBRE' => utf8_encode(trim($arrColumnas[3])),
-                            'RUTA' => utf8_encode(trim($arrColumnas[4])),
-                            'RUTANOMBRE' => utf8_encode(trim($arrColumnas[5])),
-                            'SEMANA' => trim($arrColumnas[6]),
-                            'DIA' => trim($arrColumnas[7]),
-                            'CLIENTE' => utf8_encode(trim($arrColumnas[8])),
-                            'CLIENTENOMBRE' => utf8_encode(trim($arrColumnas[9])),
-                            'DIRECCION' => utf8_encode(trim($arrColumnas[10])),
-                            'ACCION' => utf8_encode(trim($arrColumnas[11])),
-                            'CODIGO' => utf8_encode(trim($arrColumnas[12])),
-                            'CODIGOCOMENTARIO' => utf8_encode(trim($arrColumnas[13])),
-                            'COMENTARIO' => utf8_encode(trim($arrColumnas[14])),
-                            'MONTO' => trim($arrColumnas[15]),
-                            'LATITUD' => trim($arrColumnas[16]),
-                            'LONGITUD' => trim($arrColumnas[17]),
-                            'ROMPERSECUENCIA' => trim($arrColumnas[18]),
-                        );
-
-                        array_push($datosCarga, $datos);
-                        unset($datos);
+                            $datos = array(
+                                'ID' => trim($arrColumnas[0]),
+                                'FECHA' => trim($arrColumnas[1]),
+                                'USUARIO' => utf8_encode(trim($arrColumnas[2])),
+                                'USUARIONOMBRE' => utf8_encode(trim($arrColumnas[3])),
+                                'RUTA' => utf8_encode(trim($arrColumnas[4])),
+                                'RUTANOMBRE' => utf8_encode(trim($arrColumnas[5])),
+                                'SEMANA' => trim($arrColumnas[6]),
+                                'DIA' => trim($arrColumnas[7]),
+                                'CLIENTE' => utf8_encode(trim($arrColumnas[8])),
+                                'CLIENTENOMBRE' => utf8_encode(trim($arrColumnas[9])),
+                                'DIRECCION' => utf8_encode(trim($arrColumnas[10])),
+                                'ACCION' => utf8_encode(trim($arrColumnas[11])),
+                                'CODIGO' => utf8_encode(trim($arrColumnas[12])),
+                                'CODIGOCOMENTARIO' => utf8_encode(trim($arrColumnas[13])),
+                                'COMENTARIO' => utf8_encode(trim($arrColumnas[14])),
+                                'MONTO' => trim($arrColumnas[15]),
+                                'LATITUD' => trim($arrColumnas[16]),
+                                'LONGITUD' => trim($arrColumnas[17]),
+                                'ROMPERSECUENCIA' => trim($arrColumnas[18]),
+                            );
+                            array_push($datosCarga, $datos);
+                            unset($datos);
+                        }
                     }
                 }
 
@@ -560,51 +561,53 @@ class File {
                     $arrColumnas = explode($this->Delimitador, $strFilas);
 //                    var_dump($arrColumnas);die();
 //                    var_dump($arrColumnas[1]);                    die();
-                    if (count($arrColumnas) > 0 && $arrColumnas[0] != 'Id') { // Quita la fila de encabezados
+                    if (isset($arrColumnas[37])) {
+                        if ($arrColumnas[0] != 'Id') { // Quita la fila de encabezados
 //                        var_dump($arrColumnas[1]);                    die();
-                        $datos = array(
-                            'ID' => trim($arrColumnas[0]),
-                            'CONCEPTO' => utf8_encode(trim($arrColumnas[1])),
-                            'CODIGO' => utf8_encode(trim($arrColumnas[2])),
-                            'COMENTARIO' => utf8_encode(trim($arrColumnas[3])),
-                            'FECHACREACION' => trim($arrColumnas[4]),
-                            'FECHADESPACHO' => trim($arrColumnas[5]),
-                            'TIPO' => utf8_encode(trim($arrColumnas[6])),
-                            'ESTATUS' => utf8_encode(trim($arrColumnas[7])),
-                            'CLIENTE' => utf8_encode(trim($arrColumnas[8])),
-                            'CLIENTENOMBRE' => utf8_encode(trim($arrColumnas[9])),
-                            'CLIENTEIDENTIFICACION' => utf8_encode(trim($arrColumnas[10])),
-                            'DIRECCION' => utf8_encode(trim($arrColumnas[11])),
-                            'LISTAPRECIOS' => utf8_encode(trim($arrColumnas[12])),
-                            'LISTAPRECIOSNOMBRE' => utf8_encode(trim($arrColumnas[13])),
-                            'BODEGAORIGEN' => utf8_encode(trim($arrColumnas[14])),
-                            'BODEGAORIGENNOMBRE' => utf8_encode(trim($arrColumnas[15])),
-                            'TERMINOPAGO' => utf8_encode(trim($arrColumnas[16])),
-                            'TERMINOPAGONOMBRE' => utf8_encode(trim($arrColumnas[17])),
-                            'USUARIO' => utf8_encode(trim($arrColumnas[18])),
-                            'USUARIONOMBRE' => utf8_encode(trim($arrColumnas[19])),
-                            'OFICINA' => utf8_encode(trim($arrColumnas[20])),
-                            'OFICINANOMBRE' => utf8_encode(trim($arrColumnas[21])),
-                            'TIPOSECUENCIA' => utf8_encode(trim($arrColumnas[22])),
-                            'IVA12BASE' => trim($arrColumnas[23]),
-                            'IVA12VALOR' => trim($arrColumnas[24]),
-                            'IVA0BASE' => trim($arrColumnas[25]),
-                            'IVA0VALOR' => trim($arrColumnas[26]),
-                            'IVA14BASE' => trim($arrColumnas[27]),
-                            'IVA14VALOR' => trim($arrColumnas[28]),
-                            'SUBTOTAL' => trim($arrColumnas[29]),
-                            'DESCUENTOP' => trim($arrColumnas[30]),
-                            'DESCUENTO' => trim($arrColumnas[31]),
-                            'IMPUESTOS' => trim($arrColumnas[32]),
-                            'OTROSCARGOS' => trim($arrColumnas[33]),
-                            'TOTAL' => trim($arrColumnas[34]),
-                            'DATOS' => utf8_encode(trim($arrColumnas[35])),
-                            'REFERENCIA' => utf8_encode(trim($arrColumnas[36])),
-                            'ESTATUSPROCESO' => utf8_encode(trim($arrColumnas[37])),
-                        );
+                            $datos = array(
+                                'ID' => trim($arrColumnas[0]),
+                                'CONCEPTO' => utf8_encode(trim($arrColumnas[1])),
+                                'CODIGO' => utf8_encode(trim($arrColumnas[2])),
+                                'COMENTARIO' => utf8_encode(trim($arrColumnas[3])),
+                                'FECHACREACION' => trim($arrColumnas[4]),
+                                'FECHADESPACHO' => trim($arrColumnas[5]),
+                                'TIPO' => utf8_encode(trim($arrColumnas[6])),
+                                'ESTATUS' => utf8_encode(trim($arrColumnas[7])),
+                                'CLIENTE' => utf8_encode(trim($arrColumnas[8])),
+                                'CLIENTENOMBRE' => utf8_encode(trim($arrColumnas[9])),
+                                'CLIENTEIDENTIFICACION' => utf8_encode(trim($arrColumnas[10])),
+                                'DIRECCION' => utf8_encode(trim($arrColumnas[11])),
+                                'LISTAPRECIOS' => utf8_encode(trim($arrColumnas[12])),
+                                'LISTAPRECIOSNOMBRE' => utf8_encode(trim($arrColumnas[13])),
+                                'BODEGAORIGEN' => utf8_encode(trim($arrColumnas[14])),
+                                'BODEGAORIGENNOMBRE' => utf8_encode(trim($arrColumnas[15])),
+                                'TERMINOPAGO' => utf8_encode(trim($arrColumnas[16])),
+                                'TERMINOPAGONOMBRE' => utf8_encode(trim($arrColumnas[17])),
+                                'USUARIO' => utf8_encode(trim($arrColumnas[18])),
+                                'USUARIONOMBRE' => utf8_encode(trim($arrColumnas[19])),
+                                'OFICINA' => utf8_encode(trim($arrColumnas[20])),
+                                'OFICINANOMBRE' => utf8_encode(trim($arrColumnas[21])),
+                                'TIPOSECUENCIA' => utf8_encode(trim($arrColumnas[22])),
+                                'IVA12BASE' => trim($arrColumnas[23]),
+                                'IVA12VALOR' => trim($arrColumnas[24]),
+                                'IVA0BASE' => trim($arrColumnas[25]),
+                                'IVA0VALOR' => trim($arrColumnas[26]),
+                                'IVA14BASE' => trim($arrColumnas[27]),
+                                'IVA14VALOR' => trim($arrColumnas[28]),
+                                'SUBTOTAL' => trim($arrColumnas[29]),
+                                'DESCUENTOP' => trim($arrColumnas[30]),
+                                'DESCUENTO' => trim($arrColumnas[31]),
+                                'IMPUESTOS' => trim($arrColumnas[32]),
+                                'OTROSCARGOS' => trim($arrColumnas[33]),
+                                'TOTAL' => trim($arrColumnas[34]),
+                                'DATOS' => utf8_encode(trim($arrColumnas[35])),
+                                'REFERENCIA' => utf8_encode(trim($arrColumnas[36])),
+                                'ESTATUSPROCESO' => utf8_encode(trim($arrColumnas[37])),
+                            );
 
-                        array_push($datosCarga, $datos);
-                        unset($datos);
+                            array_push($datosCarga, $datos);
+                            unset($datos);
+                        }
                     }
                 }
 
@@ -635,23 +638,25 @@ class File {
                     $arrColumnas = explode($this->Delimitador, $strFilas);
 //                    var_dump($arrColumnas);die();
 //                    var_dump($arrColumnas[1]);                    die();
-                    if (count($arrColumnas) > 0 && $arrColumnas[0] != 'Ruta') { // Quita la fila de encabezados
+                    if (isset($arrColumnas[9])) {
+                        if ($arrColumnas[0] != 'Ruta') { // Quita la fila de encabezados
 //                        var_dump($arrColumnas[1]);                    die();
-                        $datos = array(
-                            'RUTA' => utf8_encode(trim($arrColumnas[0])),
-                            'CLIENTE' => utf8_encode(trim($arrColumnas[1])),
-                            'NOMBRE' => utf8_encode(trim($arrColumnas[2])),
-                            'DIRECCION' => utf8_encode(trim($arrColumnas[3])),
-                            'DIRECCIONDESCRIPCION' => utf8_encode(trim($arrColumnas[4])),
-                            'REFERENCIA' => utf8_encode(trim($arrColumnas[5])),
-                            'SEMANA' => trim($arrColumnas[6]),
-                            'DIA' => trim($arrColumnas[7]),
-                            'SECUENCIA' => trim($arrColumnas[8]),
-                            'ESTATUS' => trim($arrColumnas[9]),
-                        );
+                            $datos = array(
+                                'RUTA' => utf8_encode(trim($arrColumnas[0])),
+                                'CLIENTE' => utf8_encode(trim($arrColumnas[1])),
+                                'NOMBRE' => utf8_encode(trim($arrColumnas[2])),
+                                'DIRECCION' => utf8_encode(trim($arrColumnas[3])),
+                                'DIRECCIONDESCRIPCION' => utf8_encode(trim($arrColumnas[4])),
+                                'REFERENCIA' => utf8_encode(trim($arrColumnas[5])),
+                                'SEMANA' => trim($arrColumnas[6]),
+                                'DIA' => trim($arrColumnas[7]),
+                                'SECUENCIA' => trim($arrColumnas[8]),
+                                'ESTATUS' => trim($arrColumnas[9]),
+                            );
 
-                        array_push($datosCarga, $datos);
-                        unset($datos);
+                            array_push($datosCarga, $datos);
+                            unset($datos);
+                        }
                     }
                 }
 

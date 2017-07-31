@@ -6,8 +6,8 @@
  */
 class CargaVentasMovistarForm extends CFormModel {
 
-    public $fechaUltimaCarga;
     public $rutaArchivo;
+    public $fechaUltimaCarga;
     public $delimitadorColumnas;
 
     /**

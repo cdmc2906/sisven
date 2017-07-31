@@ -46,7 +46,7 @@ class RevisionRutaController extends Controller {
                             $fechaVisita = $historial[0]['FECHAVISITA'];
                             $rutaVisita = $historial[0]['RUTAVISITA'];
                             if ($historial[0]['RUTAVISITA'] == $itemRuta['RUTA']) {
-                                $estadoRevision = 'Ruta ok';
+                                $estadoRevision = 'Visitado';
                             } else {
                                 $estadoRevision = 'Otra ruta';
                             }

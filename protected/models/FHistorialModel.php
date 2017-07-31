@@ -26,7 +26,6 @@ class FHistorialModel extends DAOModel {
     public function getHistorialxVendedorxFecha($fechagestion, $ejecutivo) {
 //        $anio = $datos['anio'];
         $sql = "
-           -- SET @linea=0;
             SELECT 
                     DATE(H_FECHA) as FECHAVISITA
                     ,H_COD_CLIENTE AS CODIGOCLIENTE
@@ -42,6 +41,32 @@ class FHistorialModel extends DAOModel {
                 ORDER BY H_FECHA ;
             ";
 //   var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getHistorialxVendedorxRangoFecha($fechaInicio, $fechaFin, $ejecutivo) {
+//        $anio = $datos['anio'];
+        $sql = "
+            SELECT 
+                    DATE(H_FECHA) as FECHAVISITA
+                    ,H_COD_CLIENTE AS CODIGOCLIENTE
+                    ,H_NOM_CLIENTE AS NOMBRECLIENTE
+                    ,H_RUTA AS RUTAVISITA
+                    ,h_latitud AS LATITUD
+                    ,h_longitud AS LONGITUD
+                FROM TB_HISTORIAL_MB
+                WHERE 1=1
+                    AND DATE(H_FECHA)='" . $fechagestion . "'
+                        AND DATE(H_FECHA) BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
+                    AND H_USUARIO='" . $ejecutivo . "'
+                    AND H_ACCION='Inicio visita'
+                ORDER BY H_FECHA ;
+            ";
+   var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
 //        var_dump($data);        die();

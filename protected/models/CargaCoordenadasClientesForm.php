@@ -6,16 +6,17 @@
  */
 class CargaCoordenadasClientesForm extends CFormModel {
 
-//    public $fechaIngreso;
     public $rutaArchivo;
+    public $delimitadorColumnas;
+    public $fechaUltimaCarga;
 
     /**
      * Declares the validation rules.
      */
     public function rules() {
         return array(
-//            array('fechaConsumo', 'required'),
-            array('rutaArchivo', 'safe'),
+            array('delimitadorColumnas', 'required'),
+            array('rutaArchivo,delimitadorColumnas,fechaUltimaCarga', 'safe'),
             array('rutaArchivo', 'file', 'types' => 'csv')
         );
     }
@@ -29,6 +30,8 @@ class CargaCoordenadasClientesForm extends CFormModel {
         return array(
 //            'fechaConsumo' => 'Fecha Consumo',
             'rutaArchivo' => 'Archivo coordenadas',
+            'delimitadorColumnas' => 'Delimitador columnas archivo',
+            'fechaUltimaCarga' => 'Ultima fecha venta',
         );
     }
 

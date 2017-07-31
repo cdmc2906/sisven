@@ -37,7 +37,8 @@ class CargaRutasMbController extends Controller {
                     $_SESSION['ModelForm'] = $model;
 
                     $operation = "r";
-                    $delimiter = ';';
+//                    $delimiter = ';';
+                    $delimiter = $model->delimitadorColumnas;
                     $file = new File($filePath, $operation, $delimiter);
                     $totalRows = $file->getTotalFilas();
 
@@ -50,7 +51,6 @@ class CargaRutasMbController extends Controller {
                             $file = new File($filePath, $operation, $delimiter);
                             $registroInicio = (($numeroBloque - 1) * $tamanioBloque) + 1;
                             $dataInsert = $this->getDatosMostrar($file, $registroInicio, $tamanioBloque);
-//                            var_dump($dataInsert);die();
                             if (count($dataInsert) > 0) {
                                 $rutasMbItems = array_merge($rutasMbItems, $dataInsert);
                                 unset($dataInsert);
@@ -58,14 +58,13 @@ class CargaRutasMbController extends Controller {
                             $numeroBloque ++;
                         }
                         $_SESSION['rutasMbItems'] = $rutasMbItems;
-//                        unlink($filePath);
                     } else {
                         $response->Message = 'El archivo no contiene registros';
                         $response->Status = NOTICE;
                     }
                 } else {
-                    //echo CActiveForm::validate($model);
-                    //Yii::app()->end();
+//                    echo CActiveForm::validate($model);
+//                    Yii::app()->end();
                 }
             }
         } catch (Exception $e) {
@@ -111,11 +110,15 @@ class CargaRutasMbController extends Controller {
         $response = new Response();
         $rutasRepetidos = '';
         try {
+            $_SESSION['itemRutaDuplicado'] = 0;
+            $_SESSION['itemRutaActualizado'] = 0;
+            
             if (isset($_SESSION['archivosRutasMb'])) {
                 $filePath = $_SESSION['archivosRutasMb'];
 
                 $operation = "r";
-                $delimiter = ';';
+//                $delimiter = ';';
+                $delimiter = $_SESSION['ModelForm']["delimitadorColumnas"]; //';';
                 $file = new File($filePath, $operation, $delimiter);
                 $totalRows = $file->getTotalFilas();
 
@@ -132,7 +135,7 @@ class CargaRutasMbController extends Controller {
                         $registroInicio = (($numeroBloque - 1) * $tamanioBloque) + 1;
                         $dataInsertar = $this->getDatosGuardar($file, $registroInicio, $tamanioBloque);
                         $datosRutasMb = $dataInsertar['rutasmb'];
-                        
+
                         if (count($datosRutasMb) > 0) {
                             $dbConnection = new CI_DB_active_record(null);
                             $sql = $dbConnection->insert_batch('tb_ruta_mb', $datosRutasMb);
@@ -157,8 +160,16 @@ class CargaRutasMbController extends Controller {
 
                     if ($totalRutasNoGuardados > 0) {
                         $response->Message = 'Se produjo un error en la carga del archivo';
+                        $response->ClassMessage=CLASS_MENSAJE_ERROR;
+                        
                     } else {
-                        $response->Message = 'Se han cargado ' . $totalRutasGuardados . ' registros correctamente.';
+                        
+                        $mensaje = 'Se han cargado ' . $totalRutasGuardados . ' registros correctamente.';
+                        if ($_SESSION['itemRutaActualizado'] > 0)
+                            $mensaje .= '<br> Se han actualizado ' . $_SESSION['cantidadVentasActualizadas'] . ' registros.';
+                        if ($_SESSION['itemRutaDuplicado']> 0)
+                            $mensaje .= '<br> Se han omitido ' . $_SESSION['cantidadVentasDuplicados'] . ' registros duplicados en el archivo.';
+                        $mensaje .= $response->Message = $mensaje;
                     }
 
                     unlink($filePath);
@@ -171,7 +182,7 @@ class CargaRutasMbController extends Controller {
                 $response->Status = NOTICE;
             }
         } catch (Exception $e) {
-            $response->Message = 'Se ha producido un error';
+            $response->Message = 'Se ha producido un error al guardar los datos';
             $response->Status = ERROR;
             $response->ClassMessage = CLASS_MENSAJE_ERROR;
         }
@@ -185,20 +196,31 @@ class CargaRutasMbController extends Controller {
         $datosRutas = array();
         $rutasRepetidos = array();
         $existeBdd = false;
-        $exisArray = false;
-        $_SESSION['itemRutasDuplicado'] = 0;
+        $itemRutaRepetidos = array();
+        $itemRutaActualizados = array();
+
+//        $_SESSION['itemRutasDuplicado'] = 0;
 
         $dataFile = $file->getDatosRutasMb($start, $blockSize);
         foreach ($dataFile as $row) {
             $existeBdd = RutaMbModel::model()->findByAttributes(array('r_cod_cliente' => $row['CLIENTE']));
-
+            if ($existeBdd) {
+                $existeBdd->delete();
+                $_SESSION['itemRutaActualizado'] += 1;
+                $clienteEnRuta = array(
+                    'CLIENTE' => $row['CLIENTE'],
+                    'RUTAANTERIOR' => $existeBdd["r_ruta"],
+                    'RUTANUEVA' => $row['RUTA']
+                );
+                array_push($itemRutaActualizados, $clienteEnRuta);
+            }
             $exisArray = false;
             foreach ($datosRutas as $item) {
                 $exisArray = in_array($row['CLIENTE'], $item);
                 if ($exisArray)
                     break;
             }
-            if (!$existeBdd && !$exisArray) {
+            if (!$exisArray) {
                 $data = array(
                     //''r_cod' => ($row[''] == '') ? null : $row[''],
                     'r_ruta' => ($row['RUTA'] == '') ? null : $row['RUTA'],
@@ -221,7 +243,7 @@ class CargaRutasMbController extends Controller {
                 array_push($datosRutas, $data);
                 unset($data);
             } else {
-                $_SESSION['itemrRutasDuplicado'] = $_SESSION['itemRutasDuplicado'] + 1;
+                $_SESSION['itemRutaDuplicado'] = $_SESSION['itemRutaDuplicado'] + 1;
             }
         }
         $datos['rutasmb'] = $datosRutas;

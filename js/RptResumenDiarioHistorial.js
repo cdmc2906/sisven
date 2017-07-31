@@ -64,7 +64,7 @@ function ConfigurarGridResumenDerecha() {
         rowList: ElementosPagina,
         sortorder: 'ASC',
         viewrecords: true,
-        height: 200,
+        height: 100,
         width: 250,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,

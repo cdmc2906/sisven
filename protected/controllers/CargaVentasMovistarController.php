@@ -109,7 +109,7 @@ class CargaVentasMovistarController extends Controller {
 
             unset($data);
         }
-        var_dump($datosMostar);die();
+//        var_dump($datosMostar);die();
         return $datosMostar;
     }
 
@@ -173,6 +173,7 @@ class CargaVentasMovistarController extends Controller {
 
                     if ($totalVentasNoGuardados > 0) {
                         $response->Message = 'Se produjo un error en la carga del archivo';
+                        $response->ClassMessage=CLASS_MENSAJE_ERROR;
                     } else {
 //                        var_dump($_SESSION);                        die();
 
@@ -227,12 +228,12 @@ class CargaVentasMovistarController extends Controller {
             }
 
             $exisArray = false;
-//            foreach ($datosVentasMovistar as $item) {
-//                $exisArray = in_array(trim($row['ICC']), $item['vm_icc']);
+//            foreach ($datosChipsRepetidos as $itemEnBloque) {
+//                $exisArray = in_array(trim($row['ICC']), $itemEnBloque);
 //                if ($exisArray) {
 ////                    var_dump($item['vm_icc']);die();
 ////                    var_dump($item['vm_icc'],$row['ICC']);die();
-////                    $_SESSION['cantidadVentasDuplicados'] += 1;
+//                    $_SESSION['cantidadVentasDuplicados'] += 1;
 //                    break;
 //                }
 //            }

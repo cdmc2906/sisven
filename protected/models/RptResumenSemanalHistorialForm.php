@@ -7,9 +7,9 @@
  */
 class RptResumenSemanalHistorialForm extends CFormModel {
 
-//    public $anio;
-//    public $mes;
-    public $fechagestion;
+    public $anio;
+    public $mes;
+//    public $fechagestion;
     public $ejecutivo;
 
     /**
@@ -17,8 +17,8 @@ class RptResumenSemanalHistorialForm extends CFormModel {
      */
     public function rules() {
         return array(
-            array('fechagestion, ejecutivo', 'required'),
-            array('fechagestion,ejecutivo', 'safe'),
+            array('anio, mes, ejecutivo', 'required'),
+            array('anio, mes, ejecutivo', 'safe'),
         );
     }
 
@@ -29,8 +29,9 @@ class RptResumenSemanalHistorialForm extends CFormModel {
      */
     public function attributeLabels() {
         return array(
-            'fechagestion' => 'Fecha gestion en ruta',
-            'ejecutivo' => 'Ejecutivo asignado ruta',
+            'anio' => 'Anio historial',
+            'mes' => 'Mes historial',
+            'ejecutivo' => 'Ejecutivo ruta',
         );
     }
 

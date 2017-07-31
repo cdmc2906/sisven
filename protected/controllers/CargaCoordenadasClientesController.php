@@ -37,7 +37,8 @@ class CargaCoordenadasClientesController extends Controller {
                     $_SESSION['ModelForm'] = $model;
 
                     $operation = "r";
-                    $delimiter = ';';
+//                    $delimiter = ';';
+                    $delimiter = $model->delimitadorColumnas;
                     $file = new File($filePath, $operation, $delimiter);
                     $totalRows = $file->getTotalFilas();
 
@@ -99,46 +100,37 @@ class CargaCoordenadasClientesController extends Controller {
         return $dataInsert;
     }
 
-    public function actionGuardarHistorial() {
+    public function actionGuardarCoordenadasClientes() {
         $response = new Response();
         $DclientesRepetidos = '';
         try {
-            if (isset($_SESSION['archivosHistorialMb'])) {
-                $filePath = $_SESSION['archivosHistorialMb'];
+            if (isset($_SESSION['coordenadasClientes'])) {
+                $filePath = $_SESSION['archivoCoordenadasClientes'];
 
                 $operation = "r";
-                $delimiter = ';';
+//                $delimiter = ';';
+                $delimiter = $_SESSION['ModelForm']["delimitadorColumnas"]; //';';
                 $file = new File($filePath, $operation, $delimiter);
                 $totalRows = $file->getTotalFilas();
 
-                $totalHistorialGuardados = 0;
-                $totalHistorialNoGuardados = 0;
+                $totalCoordenadasClientesGuardados = 0;
+                $totalCoordenadasClientesNoGuardados = 0;
 
                 if ($totalRows > 0) {
                     $totalBloques = ceil($totalRows / TAMANIO_BLOQUE);
                     $numeroBloque = 1;
                     $tamanioBloque = TAMANIO_BLOQUE;
 
-                    //PASO 1 INICIO DE OBTENCION DE DATOS PARA GUARDAR CLIENTES Y PRODUCTOS
                     while ($numeroBloque <= intval($totalBloques)) {
                         $file = new File($filePath, $operation, $delimiter);
                         $registroInicio = (($numeroBloque - 1) * $tamanioBloque) + 1;
-//                        var_dump('2');die();
                         $dataInsertar = $this->getDatosGuardar($file, $registroInicio, $tamanioBloque);
-//                        var_dump($dataInsertar);                        die();
                         $datosHistorialMb = $dataInsertar['historialmb'];
-//                        $_SESSION['clientesRepetidos'] = $dataInsertar['clientesRepetidos'];
-//                        if (isset($_SESSION['historialmb'])) {
-//                            $totalClientesDuplicados = $totalClientesDuplicados + $_SESSION['clientesDuplicados'];
-//                        }
+
                         if (count($datosHistorialMb) > 0) {
                             $dbConnection = new CI_DB_active_record(null);
-//                            var_dump($datosHistorialMb);                            die();
-//                            $hola[]=$datosHistorialMb[0];
-//                            var_dump($hola)                                    ;die();
-                            $sql = $dbConnection->insert_batch('tb_historial_mb', $datosHistorialMb);
+                            $sql = $dbConnection->insert_batch('tb_client', $datosHistorialMb);
                             $sql = str_replace('"', '', $sql);
-//                            var_dump($sql);                            die();
                             $connection = Yii::app()->db_conn;
                             $connection->active = true;
                             $transaction = $connection->beginTransaction();
@@ -147,10 +139,10 @@ class CargaCoordenadasClientesController extends Controller {
 
                             if ($countInsert > 0) {
                                 $transaction->commit();
-                                $totalHistorialGuardados = $totalHistorialGuardados + $countInsert;
+                                $totalCoordenadasClientesGuardados = $totalCoordenadasClientesGuardados + $countInsert;
                             } else {
                                 $transaction->rollback();
-                                $totalHistorialNoGuardados = $totalHistorialNoGuardados + $countInsert;
+                                $totalCoordenadasClientesNoGuardados = $totalCoordenadasClientesNoGuardados + $countInsert;
                             }
                             unset($datosHistorialMb);
                             $connection->active = false;
@@ -158,10 +150,10 @@ class CargaCoordenadasClientesController extends Controller {
                         $numeroBloque ++;
                     }
 
-                    if ($totalHistorialNoGuardados > 0) {
+                    if ($totalCoordenadasClientesNoGuardados > 0) {
                         $response->Message = 'Se produjo un error en la carga del archivo';
                     } else {
-                        $response->Message = 'Se han cargado ' . $totalHistorialGuardados . ' registros correctamente.';
+                        $response->Message = 'Se han cargado ' . $totalCoordenadasClientesGuardados . ' registros correctamente.';
                     }
 
                     unlink($filePath);

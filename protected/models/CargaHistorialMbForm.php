@@ -6,16 +6,17 @@
  */
 class CargaHistorialMbForm extends CFormModel {
 
-//    public $fechaIngreso;
     public $rutaArchivo;
+    public $fechaUltimaCarga;
+    public $delimitadorColumnas;
 
     /**
      * Declares the validation rules.
      */
     public function rules() {
         return array(
-//            array('fechaConsumo', 'required'),
-            array('rutaArchivo', 'safe'),
+            array('delimitadorColumnas', 'required'),
+            array('rutaArchivo,delimitadorColumnas,fechaUltimaCarga', 'safe'),
             array('rutaArchivo', 'file', 'types' => 'csv')
         );
     }
@@ -29,6 +30,8 @@ class CargaHistorialMbForm extends CFormModel {
         return array(
 //            'fechaConsumo' => 'Fecha Consumo',
             'rutaArchivo' => 'Archivo Historial',
+            'delimitadorColumnas' => 'Delimitador columnas archivo',
+            'fechaUltimaCarga' => 'Ultima fecha carga historial',
         );
     }
 

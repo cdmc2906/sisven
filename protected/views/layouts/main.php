@@ -42,6 +42,7 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
                         array('label' => 'Inicio', 'url' => array('/site/index')),
+//                        array('label' => 'Inicio', 'url' => array('/site/contact')),
 ////                        array('label' => 'About', 'url' => array('/site/page', 'view' => 'about')),
 //                        array('label' => 'Empresa', 'url' => array('/empresa/index'), 'visible' => !Yii::app()->user->isGuest),
 //                        array('label' => 'Sucursales', 'url' => array('/sucursal/index'), 'visible' => !Yii::app()->user->isGuest),

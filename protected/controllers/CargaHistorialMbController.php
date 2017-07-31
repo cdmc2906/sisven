@@ -221,6 +221,7 @@ class CargaHistorialMbController extends Controller {
             }
 
             if (!$existeBdd && !$exisArray) {
+//                var_dump($row['FECHA']);DIE();
                 $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHA']);
                 $dateString = $date->format(FORMATO_FECHA_LONG);
 

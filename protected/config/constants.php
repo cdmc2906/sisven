@@ -18,6 +18,7 @@ define('CLASS_MENSAJE_SUCCESS', 'success');
 define('CLASS_MENSAJE_NOTICE', 'notice');
 define('CLASS_MENSAJE_ERROR', 'error');
 define('INTERVALO_MONITOREO_SEC', 30);
+define('INTERVALO_REFRESCO_AUTOMATICO', 10);
 
 define('COPYRIGHT', 'TECECAB');
 define('LEYENDA_COPYRIGHT', 'Todos los derechos reservados &copy;');
@@ -43,7 +44,9 @@ define('FLASH_ERROR', 'error');
 define('FLASH_NOTICE', 'notice');
 
 define('FORMATO_FECHA_LONG', 'Y/m/d G:i:s');
+define('FORMATO_FECHA_LONG_2', 'Y/m/d G:i');
 define('FORMATO_FECHA', 'Y/m/d');
+define('FORMATO_FECHA_2', 'd-m');
 define('FORMATO_FECHA_BDD', '\'YYYY/MM/DD\'');
 define('FORMATO_FECHA_BDD_LONG', '\'YYYY/MM/DD HH24:MI:SS\'');
 define('FORMATO_NUMERO_ERROR', 'YmdGis');

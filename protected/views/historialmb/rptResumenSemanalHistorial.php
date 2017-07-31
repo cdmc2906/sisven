@@ -1,5 +1,5 @@
 <?php
-$this->breadcrumbs = array('Resumen Historial',);
+$this->breadcrumbs = array('Resumen semanal historial ejecutivo',);
 $this->renderPartial('/shared/_blockUI');
 $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'));
 ?>
@@ -30,27 +30,66 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
             ?>
             <div class="row">
                 <div>
+                    <table>
+                        <tr>
+                            <td>
+                                <?php echo $form->labelEx($model, 'anio'); ?>
+                                <?php
+                                echo $form->dropDownList(
+                                        $model, 'anio', array(
+                                    '2017' => '2017',
+                                    '2016' => '2016',
+                                        ), array(
+                                    'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+                                );
+                                ?>
+                                <?php echo $form->error($model, 'anio'); ?>
 
-                    <?php echo $form->labelEx($model, 'fechagestion'); ?>
-                    <?php echo $form->textField($model, 'fechagestion', array('class' => 'txtfechagestion')) ?>
-                    <?php echo $form->error($model, 'fechagestion'); ?>
+                            </td>
+                            <td>
+                                <?php echo $form->labelEx($model, 'mes'); ?>
+                                <?php
+                                echo $form->dropDownList(
+                                        $model, 'mes', array(
+                                    '1' => 'Enero',
+                                    '2' => 'Febrero',
+                                    '3' => 'Marzo',
+                                    '4' => 'Abril',
+                                    '5' => 'Mayo',
+                                    '6' => 'Junio',
+                                    '7' => 'Julio',
+                                    '8' => 'Agosto',
+                                    '9' => 'Septiembre',
+                                    '10' => 'Octubre',
+                                    '11' => 'Noviembre',
+                                    '12' => 'Diciembre',
+                                        ), array(
+                                    'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+                                );
+                                ?>
+                                <?php echo $form->error($model, 'mes'); ?>
 
-                    <?php echo $form->labelEx($model, 'ejecutivo'); ?>
-                    <?php
-                    echo $form->dropDownList(
-                            $model, 'ejecutivo', array(
-//                        '0' => 'TODOS',
-                        'QU25' => 'EDISON CALVACHE',
-                        'QU26' => 'GIOVANA BONILLA',
-                        'QU22' => 'JOSE CHAMBA',
-                        'QU21' => 'JUAN CLAVIJO',
-                        'QU17' => 'JHONNY PLUAS',
-                        'QU19' => 'LUIS OJEDA'
-                            ), array(
-                        'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
-                    );
-                    ?>
-                    <?php echo $form->error($model, 'ejecutivo'); ?>
+                            </td>
+                            <td>
+                                <?php echo $form->labelEx($model, 'ejecutivo'); ?>
+                                <?php
+                                echo $form->dropDownList(
+                                        $model, 'ejecutivo', array(
+                                    'QU25' => 'EDISON CALVACHE',
+                                    'QU26' => 'GIOVANA BONILLA',
+                                    'QU22' => 'JOSE CHAMBA',
+                                    'QU21' => 'JUAN CLAVIJO',
+                                    'QU17' => 'JHONNY PLUAS',
+                                    'QU19' => 'LUIS OJEDA'
+                                        ), array(
+                                    'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+                                );
+                                ?>
+                                <?php echo $form->error($model, 'ejecutivo'); ?>
+                            </td>
+
+                        </tr>
+                    </table>
                 </div>
             </div>
 
@@ -59,7 +98,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                 <?php
                 echo CHtml::ajaxSubmitButton(
                         'Revisar historial', CHtml
-                        ::normalizeUrl(array('resumenhistorial/revisarhistorial', 'render' => true)), array(
+                        ::normalizeUrl(array('RptResumenSemanalHistorial/revisarhistorial', 'render' => true)), array(
                     'dataType' => 'json',
                     'type' => 'post',
                     'beforeSend' => 'function() {
@@ -100,46 +139,81 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
     </div>     
 </section>
 <br><br>
-<div id="comisionVendedor" >
-    <section class="">
-        <header class="">
-            <h2><strong>Resultado Analisis</strong></h2>
-        </header>
-        <div class="">
-            <?php $this->renderPartial('/shared/_bodygrid'); ?>
-        </div>
-    </section>
+<h2><strong>Semana 1</strong></h2><br/>
+<div ><!--<div id="grilla" class="_grilla">-->
+    <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+        <table id="tblGridSemana1" class="table table-condensed"></table>
+        <div id="pagGrid"> </div>
+    </div>
 </div>
+<br>
+<div>
+    <p> Observacion Supervision Semana 1:  </p>
+    <textarea rows="4" cols="80">Ingrese su comentario.    </textarea> <br/>
+    <?php echo CHtml::Button('Guardar comentario', array('id' => 'btsnExcel', 'class' => 'btn btn-theme')); ?>
+</div>
+<br><br>
 
-<div id="comisionVendedor" >
-    <section class="">
-        <header class="">
-            <h2><strong>Resultado Analisis</strong></h2>
-        </header>
-        <div class="">
-            <?php $this->renderPartial('/shared/_bodygrid'); ?>
-        </div>
-    </section>
-</div>
 
-<div id="comisionVendedor" >
-    <section class="">
-        <header class="">
-            <h2><strong>Resultado Analisis</strong></h2>
-        </header>
-        <div class="">
-            <?php $this->renderPartial('/shared/_bodygrid'); ?>
-        </div>
-    </section>
+<h2><strong>Semana 2</strong></h2><br/>
+<div ><!--<div id="grilla" class="_grilla">-->
+    <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+        <table id="tblGridSemana2" class="table table-condensed"></table>
+        <div id="pagGrid"> </div>
+    </div>
 </div>
+<br>
+<div>
+    <p> Observacion Supervision Semana 2:  </p>
+    <textarea rows="4" cols="80">Ingrese su comentario.    </textarea> <br/>
+    <?php echo CHtml::Button('Guardar comentario', array('id' => 'btsnExcel', 'class' => 'btn btn-theme')); ?>
+</div>
+<br><br>
 
-<div id="comisionVendedor" >
-    <section class="">
-        <header class="">
-            <h2><strong>Resultado Analisis</strong></h2>
-        </header>
-        <div class="">
-            <?php $this->renderPartial('/shared/_bodygrid'); ?>
-        </div>
-    </section>
+
+<h2><strong>Semana 3</strong></h2><br/>
+<div ><!--<div id="grilla" class="_grilla">-->
+    <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+        <table id="tblGridSemana3" class="table table-condensed"></table>
+        <div id="pagGrid"> </div>
+    </div>
 </div>
+<br>
+<div>
+    <p> Observacion Supervision Semana 3:  </p>
+    <textarea rows="4" cols="80">Ingrese su comentario.    </textarea> <br/>
+    <?php echo CHtml::Button('Guardar comentario', array('id' => 'btsnExcel', 'class' => 'btn btn-theme')); ?>
+</div>
+<br><br>
+
+
+<h2><strong>Semana 4</strong></h2><br/>
+<div ><!--<div id="grilla" class="_grilla">-->
+    <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+        <table id="tblGridSemana4" class="table table-condensed"></table>
+        <div id="pagGrid"> </div>
+    </div>
+</div>
+<br>
+<div>
+    <p> Observacion Supervision Semana 4:  </p>
+    <textarea rows="4" cols="80">Ingrese su comentario.    </textarea> <br/>
+    <?php echo CHtml::Button('Guardar comentario', array('id' => 'btsnExcel', 'class' => 'btn btn-theme')); ?>
+</div>
+<br><br>
+
+
+<h2><strong>Semana 5</strong></h2><br/>
+<div ><!--<div id="grilla" class="_grilla">-->
+    <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+        <table id="tblGridSemana5" class="table table-condensed"></table>
+        <div id="pagGrid"> </div>
+    </div>
+</div>
+<br>
+<div>
+    <p> Observacion Supervision Semana 5:  </p>
+    <textarea rows="4" cols="80">Ingrese su comentario.    </textarea> <br/>
+    <?php echo CHtml::Button('Guardar comentario', array('id' => 'btsnExcel', 'class' => 'btn btn-theme')); ?>
+</div>
+<br><br>
