@@ -21,7 +21,7 @@ class FChipsFacturadosModel extends DAOModel {
 //        var_dump(2);die();
         $sql = "
            select 
-                i_fecha
+                date(i_fecha) as i_fecha
                 ,i_bodega
                 ,I_CODIGO_GRUPO
                 ,I_NOMBRE_CLIENTE
@@ -31,8 +31,7 @@ class FChipsFacturadosModel extends DAOModel {
             where 1=1
                 AND i_imei not in 
                     (select vm_icc from tb_venta_movistar)
--- AND i_estado_icc=''                
-AND i_estado_icc='ICC OK'
+                AND i_estado_icc='ICC OK'
                 ;
             ";
 //        var_dump($sql);        die();

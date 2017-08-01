@@ -21,15 +21,13 @@ class CargaRutasMbController extends Controller {
 
         $response = new Response();
         try {
-//            var_dump("POST2");die();
             $model = new CargaRutasMbForm();
             $rutasMbItems = array();
-//            var_dump($_POST);die();
             if (isset($_POST['CargaRutasMbForm'])) {
                 $model->attributes = $_POST['CargaRutasMbForm'];
                 if ($model->validate()) {
-                    unset($_SESSION['rutasMbItems']);
 
+                    unset($_SESSION['rutasMbItems']);
                     $filePath = Yii::app()->params['archivosRutasMb'];
                     $model->rutaArchivo = CUploadedFile::getInstance($model, 'rutaArchivo');
                     $model->rutaArchivo->saveAs($filePath);
@@ -72,8 +70,6 @@ class CargaRutasMbController extends Controller {
             $response->Status = ERROR;
             $response->ClassMessage = CLASS_MENSAJE_ERROR;
         }
-//        var_dump($_SESSION['rutasMbItems']);die();
-//        var_dump($model);die();
         $this->render('/rutasMb/cargarutasmb', array('model' => $model));
         return;
     }
@@ -81,11 +77,7 @@ class CargaRutasMbController extends Controller {
     private function getDatosMostrar($file, $start, $blockSize) {
         $dataInsert = array();
         $dataFile = $file->getDatosRutasMb($start, $blockSize);
-//        var_dump($dataFile[0]);        die();
         foreach ($dataFile as $row) {
-//            if ($row['ruc'] === '1717363251') {
-//                var_dump($row['direccion'], trim($row['direccion']));                die();
-//            }
             $data = array(
                 'RUTA' => ($row['RUTA'] == '') ? null : $row['RUTA'],
                 'CLIENTE' => ($row['CLIENTE'] == '') ? null : $row['CLIENTE'],
@@ -102,7 +94,6 @@ class CargaRutasMbController extends Controller {
 
             unset($data);
         }
-//var_dump($dataInsert);            die();
         return $dataInsert;
     }
 
@@ -112,7 +103,7 @@ class CargaRutasMbController extends Controller {
         try {
             $_SESSION['itemRutaDuplicado'] = 0;
             $_SESSION['itemRutaActualizado'] = 0;
-            
+
             if (isset($_SESSION['archivosRutasMb'])) {
                 $filePath = $_SESSION['archivosRutasMb'];
 
@@ -160,15 +151,14 @@ class CargaRutasMbController extends Controller {
 
                     if ($totalRutasNoGuardados > 0) {
                         $response->Message = 'Se produjo un error en la carga del archivo';
-                        $response->ClassMessage=CLASS_MENSAJE_ERROR;
-                        
+                        $response->ClassMessage = CLASS_MENSAJE_ERROR;
                     } else {
-                        
+
                         $mensaje = 'Se han cargado ' . $totalRutasGuardados . ' registros correctamente.';
                         if ($_SESSION['itemRutaActualizado'] > 0)
-                            $mensaje .= '<br> Se han actualizado ' . $_SESSION['cantidadVentasActualizadas'] . ' registros.';
-                        if ($_SESSION['itemRutaDuplicado']> 0)
-                            $mensaje .= '<br> Se han omitido ' . $_SESSION['cantidadVentasDuplicados'] . ' registros duplicados en el archivo.';
+                            $mensaje .= '<br> Se han actualizado ' . $_SESSION['itemRutaActualizado'] . ' registros.';
+                        if ($_SESSION['itemRutaDuplicado'] > 0)
+                            $mensaje .= '<br> Se han omitido ' . $_SESSION['itemRutaDuplicado'] . ' registros duplicados en el archivo.';
                         $mensaje .= $response->Message = $mensaje;
                     }
 
@@ -198,8 +188,6 @@ class CargaRutasMbController extends Controller {
         $existeBdd = false;
         $itemRutaRepetidos = array();
         $itemRutaActualizados = array();
-
-//        $_SESSION['itemRutasDuplicado'] = 0;
 
         $dataFile = $file->getDatosRutasMb($start, $blockSize);
         foreach ($dataFile as $row) {
@@ -247,13 +235,10 @@ class CargaRutasMbController extends Controller {
             }
         }
         $datos['rutasmb'] = $datosRutas;
-//        $datos['clientesRepetidos'] = $clientesRepetidos;
-//        var_dump($datos['ordenesmb']);        die();
         return $datos;
     }
 
     public function actionVerDatosArchivo() {
-//var_dump("ss"); die();
         if (!Yii::app()->request->isAjaxRequest) {
             $error['message'] = Yii::app()->params['msjErrorAccesoPag'];
             $error['code'] = Yii::app()->params['codErrorAccesoPag'];
@@ -263,8 +248,6 @@ class CargaRutasMbController extends Controller {
         $response = new Response();
         try {
             $response->Result = $_SESSION['rutasMbItems'];
-//            var_dump($_SESSION['historialMbItems'], $response->Result); die();
-
             unset($_SESSION['rutasMbItems']);
         } catch (Exception $e) {
             $mensaje = array(
@@ -277,7 +260,6 @@ class CargaRutasMbController extends Controller {
             $response->Message = Yii::app()->params['mensajeExcepcion'];
             $response->Status = ERROR;
         }
-//        var_dump(json_encode($response));die();
         $this->actionResponse(null, null, $response);
         return;
     }

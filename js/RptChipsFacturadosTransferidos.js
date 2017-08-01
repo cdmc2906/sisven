@@ -101,7 +101,7 @@ function ConfigGridJSON() {
         ],
         colModel: [
             {name: 'FECHA', index: 'FECHA', sortable: false, frozen: true, width: 80},
-            {name: 'BODEGA', index: 'BODEGA', sortable: false, frozen: true, width: 120},
+            {name: 'EJECUTIVO', index: 'EJECUTIVO', sortable: false, frozen: true, width: 120},
             {name: 'COD_CLIENTE', index: 'COD_CLIENTE', sortable: false, frozen: true, width: 90},
             {name: 'CLIENTE', index: '_CLIENTE', sortable: false, frozen: true, width: 200},
             {name: 'ICC', index: 'ICC', sortable: false, frozen: true, width: 150},

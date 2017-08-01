@@ -31,7 +31,7 @@ class CargaRutasMbForm extends CFormModel {
 //            'fechaConsumo' => 'Fecha Consumo',
             'rutaArchivo' => 'Archivo rutas',
             'delimitadorColumnas' => 'Delimitador columnas archivo',
-            'fechaUltimaCarga' => 'Ultima fecha carga informacion',
+            'fechaUltimaCarga' => 'Ultima fecha carga informacion rutas',
         );
     }
 

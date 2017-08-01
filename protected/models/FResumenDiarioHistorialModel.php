@@ -59,4 +59,26 @@ class FResumenDiarioHistorialModel extends DAOModel {
         return $data;
     }
 
+    public function getItemResumenxVendedorxRangoFechaxSemana($fechaInicioGestion, $fechaFinGestion, $ejecutivo, $semana) {
+        $sql = "
+            select 
+                    rhd_fecha_historial,
+                    rhd_parametro,
+                    rhd_valor,
+                    rhd_semana,
+                    rhd_observacion_supervisor
+                from tb_resumen_historial_diario
+                where 1=1
+                    and rhd_fecha_historial between '" . $fechaInicioGestion . "' and '" . $fechaFinGestion . "'
+                    and rhd_semana=" . $semana . "
+                    and rhd_cod_ejecutivo='" . $ejecutivo . "';
+            ";
+//   var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
 }

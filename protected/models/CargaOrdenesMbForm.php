@@ -8,14 +8,16 @@ class CargaOrdenesMbForm extends CFormModel {
 
 //    public $fechaIngreso;
     public $rutaArchivo;
+    public $fechaUltimaCarga;
+    public $delimitadorColumnas;
 
     /**
      * Declares the validation rules.
      */
     public function rules() {
         return array(
-//            array('fechaConsumo', 'required'),
-            array('rutaArchivo', 'safe'),
+            array('delimitadorColumnas', 'required'),
+            array('rutaArchivo,delimitadorColumnas,fechaUltimaCarga', 'safe'),
             array('rutaArchivo', 'file', 'types' => 'csv')
         );
     }
@@ -27,8 +29,9 @@ class CargaOrdenesMbForm extends CFormModel {
      */
     public function attributeLabels() {
         return array(
-//            'fechaConsumo' => 'Fecha Consumo',
             'rutaArchivo' => 'Archivo Ordenes',
+            'delimitadorColumnas' => 'Delimitador columnas archivo',
+            'fechaUltimaCarga' => 'Ultima fecha carga informacion ordenes',
         );
     }
 

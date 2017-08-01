@@ -96,29 +96,31 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
             <div class="">
                 <?php // echo CHtml::submitButton('Cargar', array('id' => 'btnCargar')); ?>
                 <?php
-                echo CHtml::ajaxSubmitButton(
-                        'Revisar historial', CHtml
-                        ::normalizeUrl(array('RptResumenSemanalHistorial/revisarhistorial', 'render' => true)), array(
-                    'dataType' => 'json',
-                    'type' => 'post',
-                    'beforeSend' => 'function() {
-                            blockUIOpen();
-                            }',
-                    'success' => 'function(data) {
+                echo CHtml::ajaxSubmitButton('Revisar historial'
+                        , CHtml::normalizeUrl(array('RptResumenSemanalHistorial/RevisarHistorial', 'render' => true))
+                        , array(
+                            'dataType' => 'json',
+                            'type' => 'post',
+                            'beforeSend' => 'function() {
+                                blockUIOpen();
+                                }',
+                            'success' => 'function(data) {
                         
-                        blockUIClose();
-                        setMensaje(data.ClassMessage, data.Message);
-                        if(data.Status==1){
-                             var datosResult = data.Result;
-                            $("#tblGrid").setGridParam(
-                            {
-                                datatype: \'jsonstring\', 
-                                datastr: datosResult
-                            }).trigger(\'reloadGrid\');
-                        } else{
-                            $.each(data, function(key, val) {
-                            $("#frmBankStat #"+key+"_em_").text(val);
-                            $("#frmBankStat #"+key+"_em_").show();
+                            blockUIClose();
+                            setMensaje(data.ClassMessage, data.Message);
+                            if(data.Status==1){
+                                 var datosResult = data.Result;
+                                 //alert(datosResult.toSource());
+                                $("#tblGridSemana1").setGridParam(
+                                    {
+                                        datatype: \'jsonstring\'
+                                        , datastr: datosResult[\'semana1\']
+                                    }
+                                ).trigger(\'reloadGrid\');
+                            } else{
+                                $.each(data, function(key, val) {
+                                $("#frmBankStat #"+key+"_em_").text(val);
+                                $("#frmBankStat #"+key+"_em_").show();
                             });
                             }
                         } ',

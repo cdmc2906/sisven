@@ -163,7 +163,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
         <br /><br />
         <?php echo $form->textArea($model, 'comentarioSupervision', array('maxlength' => 250, 'rows' => 3, 'cols' => 100), array('style' => 'resize:none;')); ?>
         <br />
-        <?php echo $form->error($model, 'fechagestcomentarioSupervisionion'); ?>
+        <?php echo $form->error($model, 'comentarioSupervision'); ?>
 
         <!--<textarea rows="3" cols="100" maxlength="250"></textarea> <br/>-->
         <?php // echo CHtml::Button('Guardar comentario', array('id' => 'btsnExcel', 'class' => 'btn btn-theme')); ?>

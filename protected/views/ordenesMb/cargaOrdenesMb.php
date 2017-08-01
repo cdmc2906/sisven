@@ -29,17 +29,49 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
             ));
             ?>
             <div class="row">
-                <div>
-                    <?php // echo $form->labelEx($model, 'fechaConsumo'); ?>
-                    <?php // echo $form->textField($model, 'fechaConsumo', array('class' => 'txtFecha')) ?>
-                    <?php // echo $form->error($model, 'fechaConsumo'); ?>
+                <div align="center">
+                    <?php echo $form->labelEx($model, 'fechaUltimaCarga'); ?>
+                    <?php
+//                    $ventas= VentaMovistarModel::model()->
+                    $command = Yii::app()->db->createCommand('
+                        select 
+                                 o_fch_ingreso as fecha 
+                            from tb_ordenes_mb 
+                            order by o_fch_ingreso desc 
+                            limit 1;');
+                    $resultado = $command->queryRow();
+                    $ultimaFecha = DateTime::createFromFormat('Y-m-d H:i:s', $resultado['fecha'])->format(FORMATO_FECHA_LONG_2);
 
-                    <?php echo $form->labelEx($model, 'rutaArchivo'); ?>
-                    <?php echo $form->fileField($model, 'rutaArchivo'); ?>
-                    <?php echo $form->error($model, 'rutaArchivo'); ?>
+                    echo $form->textField($model, 'fechaUltimaCarga'
+                            , array(
+                        'value' => $ultimaFecha
+                        , 'class' => 'txtUltimaCarga'
+                        , 'disabled' => 'disabled'
+                        , 'style' => 'text-align:center; color:orange; width:200px; height:30px; font-size:22px')
+                    )
+                    ?>
+                </div>
+                <div>
+                    <?php
+                    echo $form->labelEx($model, 'rutaArchivo');
+                    echo $form->fileField($model, 'rutaArchivo');
+                    echo $form->error($model, 'rutaArchivo');
+                    echo $form->labelEx($model, 'delimitadorColumnas');
+
+                    echo $form->dropDownList(
+                            $model, 'delimitadorColumnas', array(
+                        ';' => 'Punto y Coma',
+                        ',' => 'Coma'
+                            ), array(
+                        'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+                    );
+                    echo $form->error($model, 'delimitadorColumnas');
+                    ?>
                 </div>
             </div>
+            <div>
 
+            </div>
             <div class="">
                 <?php echo CHtml::submitButton('Cargar', array('id' => 'btnCargar')); ?>
                 <?php // echo CHtml::button('Guardar', array('submit' => array('cargaConsumo/GuardarConsumo'))); ?>

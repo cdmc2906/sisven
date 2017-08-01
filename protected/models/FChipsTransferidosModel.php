@@ -21,14 +21,14 @@ class FChipsTransferidosModel extends DAOModel {
 //        var_dump(2);die();
         $sql = "
            select 
-                VM_FECHA
+                date(VM_FECHA) as VM_FECHA
                 ,VM_NOMBREDISTRIBUIDOR
                 ,VM_IDDESTINO
                 ,VM_NOMBREDESTINO
                 ,vm_icc
                 ,vm_min
             from tb_venta_movistar
-            where vm_icc not in (select vm_icc from tb_indicadores);
+            where vm_icc not in (select i_imei from tb_indicadores);
             ";
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();

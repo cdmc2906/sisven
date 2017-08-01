@@ -60,6 +60,7 @@ class RptResumenDiarioHistorialController extends Controller {
         $response = new Response();
         try {
             $model = new RptResumenDiarioHistorialForm();
+//            var_dump($_POST);                die();
             if (isset($_POST['RptResumenDiarioHistorialForm'])) {
                 $model->attributes = $_POST['RptResumenDiarioHistorialForm'];
                 $_SESSION['ModelForm'] = $model;
@@ -389,18 +390,19 @@ class RptResumenDiarioHistorialController extends Controller {
 
                 $datosResumenRevisionHistorial = $_SESSION['resumenrevisionhistorialitem'];
 //                var_dump($datosResumenRevisionHistorial);                die();
-//                var_dump($_SESSION['ModelForm']['comentarioSupervision']);                die();
+                var_dump($_POST);                die();
                 $comentarioSupervisor = $_SESSION['ModelForm']['comentarioSupervision'];
 //                var_dump($precisionVisita,$comentarioSupervisor);die();
                 if (count($datosResumenRevisionHistorial) > 0) {
+//                    var_dump($datosResumenRevisionHistorial[0]['VALOR']);die();
                     foreach ($datosResumenRevisionHistorial as $row) {
                         $data = array(
                             //'rhd_codigo' => ($row[''] == '') ? null : $row['0'],
-                            'rhd_cod_ejecutivo' => ($row['EJECUTIVO'] == '') ? null : $row['EJECUTIVO'],
+                            'rhd_cod_ejecutivo' => ($row['EJECUTIVO'] == '') ? -1 : $row['EJECUTIVO'],
                             'rhd_fecha_historial' => ($row['FECHA_HISTORIAL'] == '') ? null : $row['FECHA_HISTORIAL'],
                             'rhd_parametro' => ($row['PARAMETRO'] == '') ? null : $row['PARAMETRO'],
-                            'rhd_valor' => ($row['VALOR'] == '') ? null : $row['VALOR'],
-                            'rhd_semana' => ($row['SEMANA'] == '') ? null : $row['SEMANA'],
+                            'rhd_valor' => ($row['VALOR'] == '') ? 0 : $row['VALOR'],
+                            'rhd_semana' => ($row['SEMANA'] == '') ? 0: $row['SEMANA'],
                             'rhd_observacion_supervisor' => (trim($comentarioSupervisor) == null) ? '' : trim($comentarioSupervisor),
                             'rhd_usuario_supervisor' => Yii::app()->user->id,
                             'rhd_fecha_ingreso_observacion' => date(FORMATO_FECHA_LONG),

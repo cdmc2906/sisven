@@ -29,7 +29,7 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
 
                     $noFacturadosTansferidos = new FChipsTransferidosModel();
                     $datosNoFacturadosTransferidos = $noFacturadosTansferidos->getChipsNoFacturadosTransferidos();
-
+//                    var_dump($datosNoFacturadosTransferidos);die(); 
                     foreach ($datosFacturadosNoTransferidos as $item) {
                         $infoFacturadosNoTransferidos = array(
                             'FECHA' => $item['i_fecha'],
@@ -69,7 +69,7 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
 
 //                    $response->Status = NOTICE;
                 } else {
-                    $response->Message = 'Generacion de diferencias generado correctamente';
+                    $response->Message = 'Chips de diferencias generado correctamente';
                     $response->ClassMessage = CLASS_MENSAJE_NOTICE;
 //                    $response->Status = NOTICE;
                 }

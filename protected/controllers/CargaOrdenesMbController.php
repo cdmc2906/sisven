@@ -18,13 +18,11 @@ class CargaOrdenesMbController extends Controller {
     }
 
     public function actionSubirArchivo() {
-
         $response = new Response();
         try {
-        $_SESSION['cantidadOrdenesDuplicados'] = 0;
-        $_SESSION['cantidadOrdenesActualizadas'] = 0;
+            $_SESSION['cantidadOrdenesDuplicados'] = 0;
+            $_SESSION['cantidadOrdenesActualizadas'] = 0;
 
-            
             $model = new CargaOrdenesMbForm();
             $ordenesMbItems = array();
             if (isset($_POST['CargaOrdenesMbForm'])) {
@@ -39,7 +37,8 @@ class CargaOrdenesMbController extends Controller {
                     $_SESSION['ModelForm'] = $model;
 
                     $operation = "r";
-                    $delimiter = ';';
+//                    $delimiter = ';';
+                    $delimiter = $model->delimitadorColumnas;
                     $file = new File($filePath, $operation, $delimiter);
                     $totalRows = $file->getTotalFilas();
 
@@ -75,8 +74,6 @@ class CargaOrdenesMbController extends Controller {
             $response->Status = ERROR;
             $response->ClassMessage = CLASS_MENSAJE_ERROR;
         }
-//        var_dump($_SESSION['ordenesMbItems']);die();
-//        var_dump($model);die();
         $this->render('/ordenesMb/cargaordenesmb', array('model' => $model));
         return;
     }
@@ -84,11 +81,7 @@ class CargaOrdenesMbController extends Controller {
     private function getDatosMostrar($file, $start, $blockSize) {
         $dataInsert = array();
         $dataFile = $file->getDatosOrdenesMb($start, $blockSize);
-//        var_dump($dataFile[0]);        die();
         foreach ($dataFile as $row) {
-//            if ($row['ruc'] === '1717363251') {
-//                var_dump($row['direccion'], trim($row['direccion']));                die();
-//            }
             $data = array(
                 'ID' => ($row['ID'] == '') ? null : $row['ID'],
                 'CONCEPTO' => ($row['CONCEPTO'] == '') ? null : $row['CONCEPTO'],
@@ -133,7 +126,6 @@ class CargaOrdenesMbController extends Controller {
 
             unset($data);
         }
-//var_dump($dataInsert);            die();
         return $dataInsert;
     }
 
@@ -144,7 +136,8 @@ class CargaOrdenesMbController extends Controller {
             if (isset($_SESSION['archivosOrdenesMb'])) {
                 $filePath = $_SESSION['archivosOrdenesMb'];
                 $operation = "r";
-                $delimiter = ';';
+//                $delimiter = ';';
+                $delimiter = $_SESSION['ModelForm']["delimitadorColumnas"]; //';';
                 $file = new File($filePath, $operation, $delimiter);
                 $totalRows = $file->getTotalFilas();
                 $totalOrdenesGuardados = 0;
@@ -218,9 +211,6 @@ class CargaOrdenesMbController extends Controller {
     private function getDatosGuardar($file, $start, $blockSize) {
         $datos = array();
         $datosOrdenes = array();
-//        $_SESSION['cantidadOrdenesDuplicados'] = 0;
-//        $_SESSION['cantidadOrdenesActualizadas'] = 0;
-
         $archivoDatosOrdenes = $file->getDatosOrdenesMb($start, $blockSize);
 
         foreach ($archivoDatosOrdenes as $filaArchivo) {
@@ -303,8 +293,6 @@ class CargaOrdenesMbController extends Controller {
         }
 
         $datos['ordenesmb'] = $datosOrdenes;
-//        $datos['clientesRepetidos'] = $clientesRepetidos;
-//        var_dump($datos['ordenesmb']);        die();
         return $datos;
     }
 
@@ -319,8 +307,6 @@ class CargaOrdenesMbController extends Controller {
         $response = new Response();
         try {
             $response->Result = $_SESSION['ordenesMbItems'];
-//            var_dump($_SESSION['historialMbItems'], $response->Result); die();
-
             unset($_SESSION['ordenesMbItems']);
         } catch (Exception $e) {
             $mensaje = array(
@@ -333,7 +319,6 @@ class CargaOrdenesMbController extends Controller {
             $response->Message = Yii::app()->params['mensajeExcepcion'];
             $response->Status = ERROR;
         }
-//        var_dump(json_encode($response));die();
         $this->actionResponse(null, null, $response);
         return;
     }
