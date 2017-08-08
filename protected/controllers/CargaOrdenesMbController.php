@@ -11,30 +11,37 @@ class CargaOrdenesMbController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             return;
         } else {
-            unset($_SESSION['ordenesMbItems']);
+//            unset($_SESSION['ordenesMbItems']);
+            unset(Yii::app()->session['ordenesMbItems']);
             $model = new CargaOrdenesMbForm();
-            $this->render('/ordenesmb/cargaordenesmb', array('model' => $model));
+            $this->render('/ordenesmb/cargaOrdenesMb', array('model' => $model));
         }
     }
 
     public function actionSubirArchivo() {
         $response = new Response();
         try {
-            $_SESSION['cantidadOrdenesDuplicados'] = 0;
-            $_SESSION['cantidadOrdenesActualizadas'] = 0;
+//            $_SESSION['cantidadOrdenesDuplicados'] = 0;
+//            $_SESSION['cantidadOrdenesActualizadas'] = 0;
+
+             Yii::app()->session['cantidadOrdenesDuplicados'] = 0;
+             Yii::app()->session['cantidadOrdenesActualizadas'] = 0;
 
             $model = new CargaOrdenesMbForm();
             $ordenesMbItems = array();
             if (isset($_POST['CargaOrdenesMbForm'])) {
                 $model->attributes = $_POST['CargaOrdenesMbForm'];
                 if ($model->validate()) {
-                    unset($_SESSION['ordenesMbItems']);
+//                    unset($_SESSION['ordenesMbItems']);
+                    unset(Yii::app()->session['ordenesMbItems']);
 
                     $filePath = Yii::app()->params['archivosOrdenesMb'];
                     $model->rutaArchivo = CUploadedFile::getInstance($model, 'rutaArchivo');
                     $model->rutaArchivo->saveAs($filePath);
-                    $_SESSION['archivosOrdenesMb'] = $filePath;
-                    $_SESSION['ModelForm'] = $model;
+//                    $_SESSION['archivosOrdenesMb'] = $filePath;
+//                    $_SESSION['ModelForm'] = $model;
+                     Yii::app()->session['archivosOrdenesMb'] = $filePath;
+                     Yii::app()->session['ModelForm'] = $model;
 
                     $operation = "r";
 //                    $delimiter = ';';
@@ -58,7 +65,8 @@ class CargaOrdenesMbController extends Controller {
                             }
                             $numeroBloque ++;
                         }
-                        $_SESSION['ordenesMbItems'] = $ordenesMbItems;
+//                        $_SESSION['ordenesMbItems'] = $ordenesMbItems;
+                         Yii::app()->session['ordenesMbItems'] = $ordenesMbItems;
 //                        unlink($filePath);
                     } else {
                         $response->Message = 'El archivo no contiene registros';
@@ -74,7 +82,7 @@ class CargaOrdenesMbController extends Controller {
             $response->Status = ERROR;
             $response->ClassMessage = CLASS_MENSAJE_ERROR;
         }
-        $this->render('/ordenesMb/cargaordenesmb', array('model' => $model));
+        $this->render('/ordenesMb/cargaOrdenesMb', array('model' => $model));
         return;
     }
 
@@ -133,11 +141,14 @@ class CargaOrdenesMbController extends Controller {
         $response = new Response();
         $DclientesRepetidos = '';
         try {
-            if (isset($_SESSION['archivosOrdenesMb'])) {
-                $filePath = $_SESSION['archivosOrdenesMb'];
+//            if (isset($_SESSION['archivosOrdenesMb'])) {
+            if (isset( Yii::app()->session['archivosOrdenesMb'])) {
+//                $filePath = $_SESSION['archivosOrdenesMb'];
+                $filePath =  Yii::app()->session['archivosOrdenesMb'];
                 $operation = "r";
 //                $delimiter = ';';
-                $delimiter = $_SESSION['ModelForm']["delimitadorColumnas"]; //';';
+//                $delimiter = $_SESSION['ModelForm']["delimitadorColumnas"]; //';';
+                $delimiter =  Yii::app()->session['ModelForm']["delimitadorColumnas"]; //';';
                 $file = new File($filePath, $operation, $delimiter);
                 $totalRows = $file->getTotalFilas();
                 $totalOrdenesGuardados = 0;
@@ -182,10 +193,14 @@ class CargaOrdenesMbController extends Controller {
 //                        var_dump($_SESSION);                        die();
 
                         $mensaje = 'Se han cargado ' . $totalOrdenesGuardados . ' registros correctamente.';
-                        if ($_SESSION['cantidadOrdenesActualizadas'] > 0)
-                            $mensaje .= '<br> Se han actualizado ' . $_SESSION['cantidadOrdenesActualizadas'] . ' registros.';
-                        if ($_SESSION['cantidadOrdenesDuplicados'] > 0)
-                            $mensaje .= '<br> Se han omitido ' . $_SESSION['cantidadOrdenesDuplicados'] . ' registros duplicados en el archivo.';
+//                        if ($_SESSION['cantidadOrdenesActualizadas'] > 0)
+                        if ( Yii::app()->session['cantidadOrdenesActualizadas'] > 0)
+//                            $mensaje .= '<br> Se han actualizado ' . $_SESSION['cantidadOrdenesActualizadas'] . ' registros.';
+                            $mensaje .= '<br> Se han actualizado ' .  Yii::app()->session['cantidadOrdenesActualizadas'] . ' registros.';
+//                        if ($_SESSION['cantidadOrdenesDuplicados'] > 0)
+                        if ( Yii::app()->session['cantidadOrdenesDuplicados'] > 0)
+//                            $mensaje .= '<br> Se han omitido ' . $_SESSION['cantidadOrdenesDuplicados'] . ' registros duplicados en el archivo.';
+                            $mensaje .= '<br> Se han omitido ' .  Yii::app()->session['cantidadOrdenesDuplicados'] . ' registros duplicados en el archivo.';
                         $mensaje .= $response->Message = $mensaje;
                     }
 
@@ -218,7 +233,8 @@ class CargaOrdenesMbController extends Controller {
             $existeBdd = OrdenesMbModel::model()->findByAttributes(array('o_id' => $filaArchivo['ID']));
             if ($existeBdd) {
                 $existeBdd->delete();
-                $_SESSION['cantidadOrdenesActualizadas'] += 1;
+//                $_SESSION['cantidadOrdenesActualizadas'] += 1;
+                 Yii::app()->session['cantidadOrdenesActualizadas'] += 1;
             }
 
             $exisArray = false;
@@ -288,7 +304,8 @@ class CargaOrdenesMbController extends Controller {
                 array_push($datosOrdenes, $data);
                 unset($data);
             } else {
-                $_SESSION['cantidadOrdenesDuplicados'] += 1;
+//                $_SESSION['cantidadOrdenesDuplicados'] += 1;
+                 Yii::app()->session['cantidadOrdenesDuplicados'] += 1;
             }
         }
 
@@ -306,8 +323,10 @@ class CargaOrdenesMbController extends Controller {
 
         $response = new Response();
         try {
-            $response->Result = $_SESSION['ordenesMbItems'];
-            unset($_SESSION['ordenesMbItems']);
+//            $response->Result = $_SESSION['ordenesMbItems'];
+            $response->Result =  Yii::app()->session['ordenesMbItems'];
+//            unset($_SESSION['ordenesMbItems']);
+            unset( Yii::app()->session['ordenesMbItems']);
         } catch (Exception $e) {
             $mensaje = array(
                 'code' => $e->getCode(),
@@ -331,20 +350,20 @@ class CargaOrdenesMbController extends Controller {
         }
     }
 
-    public function filters() {
-// return the filter configuration for this controller, e.g.:
-        return array('accessControl', array('CrugeAccessControlFilter'));
-    }
-
-    public function accessRules() {
-        return array(
-            array('allow', // allow authenticated users to access all actions
-                'users' => array('@'),
-            ),
-            array('deny', // deny all users
-                'users' => array('*'),
-            ),
-        );
-    }
+//    public function filters() {
+//// return the filter configuration for this controller, e.g.:
+//        return array('accessControl', array('CrugeAccessControlFilter'));
+//    }
+//
+//    public function accessRules() {
+//        return array(
+//            array('allow', // allow authenticated users to access all actions
+//                'users' => array('@'),
+//            ),
+//            array('deny', // deny all users
+//                'users' => array('*'),
+//            ),
+//        );
+//    }
 
 }

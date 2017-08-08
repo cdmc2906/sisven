@@ -6,7 +6,7 @@
 // CWebApplication properties can be configured here.
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
-    'name' => 'Sistema TECECAB',
+    'name' => 'Sistema Control Zona Sur TECECAB',
     'language' => 'es',
     'sourceLanguage' => 'en',
     // preloading 'log' component
@@ -119,7 +119,7 @@ return array(
         'db_conn' => array(
             // uncomment the following lines to use a PostgreSQL database
             'class' => 'CDbConnection',
-            'connectionString' => 'mysql:host=localhost;dbname=tcc_control_ruta',
+            'connectionString' => 'mysql:host=10.130.1.9;dbname=tcc_control_ruta',
             'emulatePrepare' => true,
             'username' => 'root',
             'password' => 'admin123',
@@ -163,16 +163,28 @@ return array(
         // this is used in contact page
         'mensajeExcepcion'=>'Se ha generado un error en el sistema.',
         'adminEmail' => 'webmaster@example.com',
-        'archivosConsumo' => 'C:\archivos_sisven\consumo' . date('YmdHs') . '.csv',
-        'archivosCompra' => 'C:\archivos_sisven\compra' . date('YmdHs') . '.csv',
+        'accioniniciovisita'=>'Inicio visita',        
+        'ivadoce'=>'0.12',
+        'ivaincdoce'=>'1.12',
+        
+        'archivosConsumo' => 'C:\carga_mobilvendor\consumo' . date('YmdHs') . '.csv',
+        'archivosCompra' => 'C:\carga_mobilvendor\compra' . date('YmdHs') . '.csv',
         'archivosIndicadores' => 'C:\carga_mobilvendor\indicador' . date('YmdHs') . '.csv',
         'archivosHistorialMb' => 'C:\carga_mobilvendor\historial' . date('YmdHs') . '.csv',
         'archivosOrdenesMb' => 'C:\carga_mobilvendor\ordenes' . date('YmdHs') . '.csv',
         'archivosRutasMb' => 'C:\carga_mobilvendor\rutas' . date('YmdHs') . '.csv',
         'archivosVentasMovistar' => 'C:\carga_mobilvendor\ventasMovistar' . date('YmdHs') . '.csv',
         'archivosCoordenadasClientes' => 'C:\carga_mobilvendor\coordenadasClientes' . date('YmdHs') . '.csv',
-        'accioniniciovisita'=>'Inicio visita',        
-        'ivadoce'=>'0.12',
-        'ivaincdoce'=>'1.12'
+        
+//        'archivosConsumo' => '/var/tmp/archivos-sisven/consumo' . date('YmdHs') . '.csv',
+//        'archivosCompra' => '/var/tmp/archivos-sisven/compra' . date('YmdHs') . '.csv',
+//        'archivosIndicadores' => '/var/tmp/archivos-sisven/indicador' . date('YmdHs') . '.csv',
+//        'archivosHistorialMb' => '/var/tmp/archivos-sisven/historial' . date('YmdHs') . '.csv',
+//        'archivosOrdenesMb' => '/var/tmp/archivos-sisven/ordenes' . date('YmdHs') . '.csv',
+//        'archivosRutasMb' => '/var/tmp/archivos-sisven/rutas' . date('YmdHs') . '.csv',
+//        'archivosVentasMovistar' => '/var/tmp/archivos-sisven/ventasMovistar' . date('YmdHs') . '.csv',
+//        'archivosCoordenadasClientes' => '/var/tmp/archivos-sisven/coordenadasClientes' . date('YmdHs') . '.csv',
+//        
+        
     ),
 );

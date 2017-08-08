@@ -31,7 +31,7 @@ class FRutaModel extends DAOModel {
 		R_DIA AS DIARUTA
 		,R_RUTA AS RUTA
                 ,R_SECUENCIA AS SECUENCIA
-            FROM TB_RUTA_MB
+            FROM tb_ruta_mb
             WHERE 1=1
 		AND R_COD_CLIENTE='" . $codigo_cliente . "'
 		--  AND RIGHT(R_RUTA,3)='" . $iniciales_ejecutivo . "';
@@ -50,7 +50,7 @@ class FRutaModel extends DAOModel {
 		R_COD_CLIENTE AS CODIGOCLIENTE
 		,R_RUTA AS RUTA
                 ,R_SECUENCIA AS SECUENCIA
-	FROM TB_RUTA_MB
+	FROM tb_ruta_mb
 	WHERE 1=1
 		AND R_DIA=" . $dia . "+1
 		AND RIGHT(R_RUTA,3)='" . $ejecutivo . "'
@@ -95,6 +95,130 @@ class FRutaModel extends DAOModel {
                                 AND DATE(H_FECHA)='" . $fechaGestion . "'
                                 AND H_USUARIO='" . $codEjecutivo . "'
             );
+           ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getTotalChipsVentaFinSemana($fechaGestion, $codEjecutivo) {
+        $fechaSabado = date('Y-m-d', strtotime($fechaGestion . ' + 1 days'));
+        $fechaDomingo = date('Y-m-d', strtotime($fechaGestion . ' + 2 days'));
+        $sql = "
+            -- VENTA DE FIN DE SEMANA
+            SELECT IFNULL(SUM(O_SUBTOTAL),0) AS RESPUESTA
+                FROM tb_ordenes_mb
+                WHERE 1=1 
+                    AND DATE(O_FCH_CREACION) BETWEEN '" . $fechaSabado . "' AND '" . $fechaDomingo . "'
+                    AND O_SUBTOTAL>0 
+                    AND O_USUARIO='" . $codEjecutivo . "';
+           ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getTotalChipsVentaDia($inicialesEjecutivo, $dia, $fechaGestion, $codEjecutivo) {
+        $sql = "
+            -- VENTA DEL DIA
+            SELECT IFNULL(SUM(O_SUBTOTAL),0) AS RESPUESTA
+                FROM tb_ordenes_mb  
+                WHERE 1=1 
+                    AND DATE(O_FCH_CREACION)='" . $fechaGestion . "' 
+                    AND O_SUBTOTAL>0 
+                    AND O_USUARIO='" . $codEjecutivo . "';
+           ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getTotalChipsVentaRuta($inicialesEjecutivo, $dia, $fechaGestion, $codEjecutivo) {
+        $sql = "
+            -- VENTA EN LA RUTA
+            SELECT IFNULL(SUM(O_SUBTOTAL),0) AS RESPUESTA
+                FROM tb_ordenes_mb  
+                WHERE 1=1 
+                    AND DATE(O_FCH_CREACION)='" . $fechaGestion . "' 
+                    AND O_SUBTOTAL>0 
+                    AND O_USUARIO='" . $codEjecutivo . "'
+                    AND O_COD_CLIENTE IN 
+                        (SELECT R_COD_CLIENTE 
+                            FROM tb_ruta_mb
+                            WHERE 1=1 
+                                AND R_DIA=" . $dia . "
+                                AND RIGHT(R_RUTA,3)='" . $inicialesEjecutivo . "');
+           ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getTotalChipsVentaFueraRuta($inicialesEjecutivo, $dia, $fechaGestion, $codEjecutivo) {
+        $sql = "
+            -- VENTA FUERA DE RUTA
+            SELECT IFNULL(SUM(O_SUBTOTAL),0) AS RESPUESTA
+                FROM tb_ordenes_mb  
+                WHERE 1=1 
+                    AND DATE(O_FCH_CREACION)='" . $fechaGestion . "' 
+                    AND O_SUBTOTAL>0 
+                    AND O_USUARIO='" . $codEjecutivo . "' 
+                    AND O_COD_CLIENTE NOT IN 
+                        (SELECT R_COD_CLIENTE 
+                            FROM tb_ruta_mb
+                            WHERE 1=1 
+                                AND R_DIA=" . $dia . " 
+                                AND RIGHT(R_RUTA,3)='" . $inicialesEjecutivo . "');
+           ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getTotalClientesVentaFinSemana($fechaGestion, $codEjecutivo) {
+        $fechaSabado = date('Y-m-d', strtotime($fechaGestion . ' + 1 days'));
+        $fechaDomingo = date('Y-m-d', strtotime($fechaGestion . ' + 2 days'));
+        
+        $sql = "
+            -- CLIENTES CON VENTA EN FIN SEMANA
+            SELECT IFNULL(COUNT(O_COD_CLIENTE),0) AS RESPUESTA
+                FROM tb_ordenes_mb  
+                WHERE 1=1 
+                    AND DATE(O_FCH_CREACION) BETWEEN '" . $fechaSabado . "' AND '" . $fechaDomingo . "'
+                    AND O_SUBTOTAL>0 
+                    AND O_USUARIO='" . $codEjecutivo . "';
+           ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+    public function getTotalClientesVenta($inicialesEjecutivo, $dia, $fechaGestion, $codEjecutivo) {
+        $sql = "
+            -- CLIENTES CON VENTA EN EL DIA
+            SELECT IFNULL(COUNT(O_COD_CLIENTE),0) AS RESPUESTA
+                FROM tb_ordenes_mb  
+                WHERE 1=1 
+                    AND DATE(O_FCH_CREACION)='" . $fechaGestion . "' 
+                    AND O_SUBTOTAL>0 
+                    AND O_USUARIO='" . $codEjecutivo . "';
            ";
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);

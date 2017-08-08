@@ -45,7 +45,8 @@ class FResumenDiarioHistorialModel extends DAOModel {
 //        $anio = $datos['anio'];
         $sql = "
             select 
-                    rhd_codigo as codigo
+                    rhd_fecha_historial
+                    ,rhd_cod_ejecutivo
                 from tb_resumen_historial_diario
                 where 1=1
                     and rhd_fecha_historial='" . $fechagestion . "'

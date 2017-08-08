@@ -1,4 +1,5 @@
 <?php
+//session_start();
 $this->breadcrumbs = array('Resumen diario historial ejecutivo',);
 $this->renderPartial('/shared/_blockUI');
 $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'));
@@ -12,12 +13,8 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
 
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/RptResumenDiarioHistorial.js"; ?>"></script>
 
-<?php // var_dump(Yii::app()->user->hasFlash('resultadoGuardar'));die(); ?>
-<?php // var_dump(Yii::app()->user->getFlash('resultadoGuardar'));die(); ?>
 <?php if (Yii::app()->user->hasFlash('resultadoGuardar')): ?>
-
     <div class="flash-success">
-        
         <?php echo Yii::app()->user->getFlash('resultadoGuardar'); ?>
     </div>
 
@@ -41,13 +38,57 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                 <div class="row">
                     <table>
                         <tr>
+                            <!--<td>-->
+                            <?php // echo $form->labelEx($model, 'comentarioSupervision'); ?>
+                            <?php echo $form->hiddenField($model, 'comentarioSupervision') ?>
+                            <?php // echo $form->error($model, 'comentarioSupervision'); ?>
+                            <!--</td>-->
                             <td><?php echo $form->labelEx($model, 'fechagestion'); ?>
                                 <?php echo $form->textField($model, 'fechagestion', array('class' => 'txtfechagestion')) ?>
                                 <?php echo $form->error($model, 'fechagestion'); ?>
                             </td>
+                            <td><?php
+                                echo $form->labelEx($model, 'horaInicioGestion');
+                                echo $form->dropDownList(
+                                        $model, 'horaInicioGestion', array(
+                                    '10:00' => '10:00'
+                                        )
+                                        //, array("disabled" => "disabled",)
+                                );
+
+                                echo $form->error($model, 'horaInicioGestion');
+                                ?>
+                            </td>
+                            <td><?php
+                                echo $form->labelEx($model, 'horaFinGestion');
+                                echo $form->dropDownList(
+                                        $model, 'horaFinGestion', array(
+                                    '23:59' => 'Sin limite',
+                                    '17:00' => '17:00',
+                                    '17:00' => '17:30',
+                                    '18:00' => '18:00',
+                                    '18:30' => '18:30',
+                                    '19:00' => '19:00',
+                                    '19:30' => '19:30',
+                                    '20:00' => '20:00',
+                                    '20:30' => '20:30',
+                                    '21:00' => '21:00',
+                                    '21:30' => '21:30',
+                                    '22:00' => '22:00',
+                                    '22:30' => '22:30',
+                                    '23:00' => '23:00',
+                                    '23:30' => '23:30',
+                                        )
+                                );
+
+                                echo $form->error($model, 'horaFinGestion');
+                                ?>
+                            </td>
+                        </tr>
+                        <tr>
                             <td>
-                                <?php echo $form->labelEx($model, 'ejecutivo'); ?>
                                 <?php
+                                echo $form->labelEx($model, 'ejecutivo');
                                 echo $form->dropDownList(
                                         $model, 'ejecutivo', array(
                                     'QU25' => 'EDISON CALVACHE',
@@ -59,15 +100,15 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                                         ), array(
                                     'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
                                 );
+                                echo $form->error($model, 'ejecutivo');
                                 ?>
-                                <?php echo $form->error($model, 'ejecutivo'); ?>
                             </td>
                             <td><?php echo $form->labelEx($model, 'precisionVisita'); ?>
                                 <?php
                                 echo $form->dropDownList(
                                         $model, 'precisionVisitas'
                                         , array(
-                                    '10000000' => 'Sin limite',
+                                    '0' => 'Sin limite',
                                     '5' => '5 metros',
                                     '10' => '10 metros',
                                     '15' => '15 metros',
@@ -85,6 +126,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                         </tr>
                     </table>
                 </div>
+
                 <div class="">
                     <?php // echo CHtml::submitButton('Cargar', array('id' => 'btnCargar'));  ?>
                     <?php
@@ -104,9 +146,12 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                              var datosResult = data.Result;
                              //console.log(JSON.stringify(datosResult[\'detalle\']));
                              //console.log(datosResult.toSource());
-                            $("#tblGrid").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'detalle\']}).trigger(\'reloadGrid\');
-                            $("#tblResumenIzquierda").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenIzquierda\']}).trigger(\'reloadGrid\');
-                            $("#tblResumenDerecha").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenDerecha\']}).trigger(\'reloadGrid\');
+                            $("#tblGridDetalle").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'detalle\']}).trigger(\'reloadGrid\');
+                            $("#tblResumenGeneral").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenGeneral\']}).trigger(\'reloadGrid\');
+                            $("#tblResumenVisitas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitas\']}).trigger(\'reloadGrid\');
+                            $("#tblResumenVisitasValidasInvalidas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitasValidasInvalidas\']}).trigger(\'reloadGrid\');
+                            $("#tblPrimeraUltimaVisita").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenPrimeraUltima\']}).trigger(\'reloadGrid\');
+                            $("#tblResumenVentas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVentas\']}).trigger(\'reloadGrid\');
                         } else{
                             $.each(data, function(key, val) {
                             $("#frmBankStat #"+key+"_em_").text(val);
@@ -120,63 +165,69 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                         }'), array('id' => 'btnGenerate', 'class' => 'btn btn-theme'));
                     ?>
                     <?php echo CHtml::Button('Limpiar', array('id' => 'btnLimpiar', 'class' => 'btn btn-theme')); ?>
-                    <?php echo CHtml::Button('Exportar Detalle', array('id' => 'btnExcel', 'class' => 'btn btn-theme')); ?>
-                    <?php 
-                    
+
+                    <?php
 //                    var_dump($model);die();
 //                    CHtml::submitButton('Save', array('confirm'=>'Are you sure you want to save?'));
-                    
-                    echo CHtml::button('Guardar Revision', array('submit' => array('rptResumenDiarioHistorial/GuardarRevision'))); ?>
+
+//                    echo CHtml::button('Guardar Revision', array('submit' => array('rptResumenDiarioHistorial/GuardarRevision')));
+                    ?>
+                    <?php echo CHtml::Button('Exportar Resumen', array('id' => 'btnExcelResumen', 'class' => 'btn btn-theme')); ?>
                 </div>
-
-
                 <?php $this->endWidget(); ?>
 
             </div>
         </div>     
     </section>
 
-    <table>
-        <tr>
-            <td><div id="resumenAnalisis">
-                    <h2><strong>Parametros</strong></h2>
-                    <div class="">
-                        <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                            <table id="tblResumenIzquierda" class="table table-condensed"></table>
-                        </div>
-                    </div>
-            </td>
-            <td valign="top"><div id="resumenAnalisis">
-                    <h2><strong>Visitas validas/invalidas</strong></h2>
-                    <div class="">
-                        <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                            <table id="tblResumenDerecha" class="table table-condensed"></table>
-                        </div>
-                    </div>
-                </div>
-            </td></tr>
-    </table>
-    <br>
     <div>
-        <!--<p> Observacion Supervision:  </p>-->
-        <?php echo $form->labelEx($model, 'comentarioSupervision'); ?>
-        <br /><br />
-        <?php echo $form->textArea($model, 'comentarioSupervision', array('maxlength' => 250, 'rows' => 3, 'cols' => 100), array('style' => 'resize:none;')); ?>
-        <br />
-        <?php echo $form->error($model, 'comentarioSupervision'); ?>
-
-        <!--<textarea rows="3" cols="100" maxlength="250"></textarea> <br/>-->
-        <?php // echo CHtml::Button('Guardar comentario', array('id' => 'btsnExcel', 'class' => 'btn btn-theme')); ?>
-    </div>
-    <br><br>
-    <div id="detalleAnalisis" >
-        <section class="">
-            <header class="">
-                <h2><strong>Detalle Analisis</strong></h2>
-            </header>
+        <div>
             <div class="">
-                <?php $this->renderPartial('/shared/_bodygrid'); ?>
+                <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                    <table id="tblResumenGeneral" class="table table-condensed"></table>
+                </div>
             </div>
-        </section>
+        </div><br>
+        <div  style="display: flex; justify-content: flex-start;">
+            <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                <table id="tblResumenVisitas" class="table table-condensed"></table>
+            </div>
+            <div style="margin-left: 50px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                <table id="tblResumenVisitasValidasInvalidas" class="table table-condensed"></table>
+            </div>
+            <div style="margin-left: 50px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                <table id="tblPrimeraUltimaVisita" class="table table-condensed"></table>
+            </div>
+        </div><br>
+        <div  style="display: flex; justify-content: flex-start;">
+            <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                <table id="tblResumenVentas" class="table table-condensed"></table>                
+            </div>
+
+            <div  style="margin-left: 50px"  id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                <h1>Comentario del supervisor de zona:</h1>
+                <?php
+                echo CHtml::textArea(
+                        'd_comentarioSupervision', '', array('onblur' => 'copiarValores(document.getElementById(\'d_comentarioSupervision\').value)', 'id' => 'd_comentarioSupervision', 'cols' => 70, 'rows' => 3, 'maxlength' => 250)
+                );
+                ?>                    
+            </div>
+
+        </div>
+    </div>
+    </div>
+    <br/> <?php echo CHtml::Button('Exportar Detalle', array('id' => 'btnExcel', 'class' => 'btn btn-theme')); ?>
+    <br>    
+    <!--<div id="grilla" class="_grilla">-->
+    <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+        <table id="tblGridDetalle" class="table table-condensed"></table>
+        <div id="pagGrid"> </div>
     </div>
 <?php endif; ?>
+
+<script>
+    function copiarValores($valor) {
+//        alert($valor);
+        $("#RptResumenDiarioHistorialForm_comentarioSupervision").val($valor);
+    }
+</script>

@@ -18,7 +18,7 @@ define('CLASS_MENSAJE_SUCCESS', 'success');
 define('CLASS_MENSAJE_NOTICE', 'notice');
 define('CLASS_MENSAJE_ERROR', 'error');
 define('INTERVALO_MONITOREO_SEC', 30);
-define('INTERVALO_REFRESCO_AUTOMATICO', 10);
+define('INTERVALO_REFRESCO_AUTOMATICO', 60);
 
 define('COPYRIGHT', 'TECECAB');
 define('LEYENDA_COPYRIGHT', 'Todos los derechos reservados &copy;');

@@ -26,6 +26,7 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
                 if ($model->validate()) {
                     $facturadosNoTansferidos = new FChipsFacturadosModel();
                     $datosFacturadosNoTransferidos = $facturadosNoTansferidos->getChipsFacturadosNoTransferidos();
+//                    var_dump($datosFacturadosNoTransferidos);die();
 
                     $noFacturadosTansferidos = new FChipsTransferidosModel();
                     $datosNoFacturadosTransferidos = $noFacturadosTansferidos->getChipsNoFacturadosTransferidos();
@@ -37,7 +38,8 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
                             'COD_CLIENTE' => $item['I_CODIGO_GRUPO'],
                             'CLIENTE' => $item['I_NOMBRE_CLIENTE'],
                             'ICC' => $item['i_imei'],
-                            'MIN' => $item['i_min']
+                            'MIN' => $item['i_min'],
+                            'LOTE' => $item['tm_lote']
                         );
                         array_push($datosGridFNT, $infoFacturadosNoTransferidos);
                         unset($infoFacturadosNoTransferidos);
@@ -96,23 +98,17 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
 
     public function actionGenerateExcel($opcion) {
 //        var_dump($opcion);die();
+//        var_dump( $_SESSION['FNT']);die();
         $datosGrid = array();
         $datosGridFNT = array();
         $datosGridNFT = array();
         $response = new Response();
         $nombreArchivo = '';
         try {
-//            var_dump($opcion);die();
             if ($opcion == 'FNT') {
                 $nombreArchivo = 'facturados_no_transferidos';
-//                print_r($_SESSION, TRUE);
-//                $now = new DateTime();
-//                var_dump($now->format('Y-m-d H:i:s'));die();    // MySQL datetime format
-//                echo $now->getTimestamp();
                 $facturadosNoTansferidos = new FChipsFacturadosModel();
-//                var_dump('2ss');die();
                 $datosFacturadosNoTransferidos = $facturadosNoTansferidos->getChipsFacturadosNoTransferidos();
-//                var_dump($datosFacturadosNoTransferidos);die();
                 foreach ($datosFacturadosNoTransferidos as $item) {
                     $infoFacturadosNoTransferidos = array(
                         'FECHA' => $item['i_fecha'],
@@ -120,7 +116,8 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
                         'COD_CLIENTE' => $item['I_CODIGO_GRUPO'],
                         'CLIENTE' => $item['I_NOMBRE_CLIENTE'],
                         'ICC' => '\'' . $item['i_imei'],
-                        'MIN' => '\'' . $item['i_min']
+                        'MIN' => '\'' . $item['i_min'],
+                        'LOTE' => '\'' . $item['tm_lote']
                     );
                     array_push($datosGrid, $infoFacturadosNoTransferidos);
                     unset($infoFacturadosNoTransferidos);

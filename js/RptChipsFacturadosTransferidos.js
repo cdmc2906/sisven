@@ -28,7 +28,8 @@ function ConfigGridJSON() {
             'COD CLIENTE',
             'CLIENTE',
             'ICC',
-            'MIN'
+            'MIN',
+            'LOTE'
         ],
         colModel: [
             {name: 'FECHA',
@@ -48,8 +49,8 @@ function ConfigGridJSON() {
             {name: 'ICC', index: 'ICC', sortable: false, frozen: true
                 , width: 150
             },
-            {name: 'MIN', index: 'MIN', sortable: false, frozen: true
-                , width: 80},
+            {name: 'MIN', index: 'MIN', sortable: false, frozen: true                , width: 80},
+            {name: 'LOTE', index: 'LOTE', sortable: false, frozen: true                , width: 150},
         ],
         pager: '#pagGridFacturadosNoTransferidos',
         rowNum: 200, //NroFilas,
@@ -59,7 +60,7 @@ function ConfigGridJSON() {
         viewrecords: true,
 //        height: 'auto',
         height: 300,
-        width: 780,
+        width: 923,
 //        autowidth: true,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
@@ -115,7 +116,7 @@ function ConfigGridJSON() {
         viewrecords: true,
 //        height: 'auto',
         height: 300,
-        width: 780,
+        width: 770,
 //        autowidth: true,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,

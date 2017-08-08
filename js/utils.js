@@ -12,20 +12,19 @@ var uTildeJS = '\xfa';
 /* Fin Secci�n variables globales*/
 
 function ConfigDatePicker(campo) {
-    $(campo)
-            .datepicker({
+    $(campo).datepicker(
+            {
                 format: "yyyy/mm/dd",
                 startView: 1,
                 language: "es",
                 autoclose: true,
                 endDate: "0d"
             }
-            )
+    )
 }
 
 function setMensaje(clase, message)
 {
-
     // $('html, body').animate({scrollTop: 0}, duration);
     $('#main').scrollTop(0);
 
@@ -36,8 +35,7 @@ function setMensaje(clase, message)
         var file = '<li><div class="flash-' + clase + '">' + 'ARCHIVO: ' + message.file + "</div></li>";
         var line = '<li><div class="flash-' + clase + '">' + 'LINEA: ' + message.line + "</div></li>";
         message = code + error + file + line;
-    }
-    else
+    } else
     {
         message = '<li><div class="flash-' + clase + '">' + message + "</div></li>";
     }
@@ -73,8 +71,7 @@ function mostrarVentanaMensaje(mensaje, tituloDialogo, clase) {
     if (clase == undefined)
     {
         msj = '<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>';
-    }
-    else
+    } else
     {
         msj = '<span class= "' + clase + '" style="float:left; margin:0 7px 20px 0;"></span>';
     }
@@ -123,8 +120,7 @@ function ConfigDatePickersReporte(inicio, fin) {
                     var fecha = anio + "/" + mes + "/" + dia;
                     $(fin).datepicker('setEndDate', fecha);
                     $(fin).datepicker('setDate', fecha);
-                }
-                else
+                } else
                 {
                     $(fin).datepicker('setEndDate', fechaHoy);
                     $(fin).datepicker('setDate', fechaHoy.getFullYear() + '/' + (fechaHoy.getMonth() + 1) + '/' + fechaHoy.getDate());

@@ -10,6 +10,8 @@ class RptResumenDiarioHistorialForm extends CFormModel {
 //    public $anio;
 //    public $mes;
     public $fechagestion;
+    public $horaInicioGestion;
+    public $horaFinGestion;
     public $ejecutivo;
     public $precisionVisitas;
     public $comentarioSupervision;
@@ -19,8 +21,8 @@ class RptResumenDiarioHistorialForm extends CFormModel {
      */
     public function rules() {
         return array(
-            array('fechagestion, ejecutivo,precisionVisitas', 'required'),
-            array('fechagestion,ejecutivo,precisionVisitas,comentarioSupervision', 'safe'),
+            array('fechagestion, ejecutivo,precisionVisitas,horaFinGestion', 'required'),
+            array('fechagestion,ejecutivo,precisionVisitas,comentarioSupervision,horaInicioGestion,horaFinGestion', 'safe'),
         );
     }
 
@@ -34,7 +36,9 @@ class RptResumenDiarioHistorialForm extends CFormModel {
             'fechagestion' => 'Fecha gestion en ruta',
             'ejecutivo' => 'Ejecutivo asignado ruta',
             'precisionVisitas' => 'Precision visita (metros)',
-            'comentarioSupervision'=>'Ingresar el comentario de supervision'
+            'comentarioSupervision'=>'Ingresar el comentario de supervision',
+            'horaInicioGestion'=>'Seleccione la hora de inicio gestion',
+            'horaFinGestion'=>'Seleccione la hora de fin gestion'
             
         );
     }

@@ -40,10 +40,10 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/sisven/protected/views/historialmb/rptResumenDiarioHistorial.php</file>
-            <file>file:/C:/xampp/htdocs/sisven/protected/models/FResumenDiarioHistorialModel.php</file>
-            <file>file:/C:/xampp/htdocs/sisven/protected/models/FDetalleDiarioHistorialModel.php</file>
-            <file>file:/C:/xampp/htdocs/sisven/protected/controllers/RptResumenDiarioHistorialController.php</file>
+            <file>file:/C:/xampp/htdocs/sisven/js/RptChipsFacturadosTransferidos.js</file>
+            <file>file:/C:/xampp/htdocs/sisven/protected/config/main.php</file>
+            <file>file:/C:/xampp/htdocs/sisven/protected/models/FChipsFacturadosModel.php</file>
+            <file>file:/C:/xampp/htdocs/sisven/protected/controllers/ReporteChipsFacturadosTransferidosController.php</file>
         </group>
     </open-files>
 </project-private>

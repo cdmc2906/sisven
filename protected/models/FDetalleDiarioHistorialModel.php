@@ -45,7 +45,8 @@ class FDetalleDiarioHistorialModel extends DAOModel {
 //        $anio = $datos['anio'];
         $sql = "
             select 
-                    rh_id as codigo
+                    rh_fecha_ruta
+                    ,rh_codigo_vendedor
                 from tb_detalle_historial_diario
                 where 1=1
                     and rh_fecha_ruta='" . $fechagestion . "'

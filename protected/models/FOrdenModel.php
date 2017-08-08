@@ -27,7 +27,7 @@ class FOrdenModel extends DAOModel {
         $sql = "
             SELECT
                     CAST(COALESCE(SUM(O_SUBTOTAL),0) AS int)AS CHIPS                          
-                FROM TB_ORDENES_MB 
+                FROM tb_ordenes_mb 
                 WHERE 1=1  
                     AND O_USUARIO='".$codEjecutivo."'
                     AND O_COD_CLIENTE='" . $codigo_cliente . "'
@@ -53,7 +53,7 @@ class FOrdenModel extends DAOModel {
         $sqlFechaFinVisita = "
             SELECT
                     H_FECHA            
-                FROM TB_HISTORIAL_MB
+                FROM tb_historial_mb
                 WHERE H_ACCION='Fin de visita'
                     AND H_FECHA>='" . $fechaOrden . "'
                     AND H_COD_CLIENTE='TCQU190004'
@@ -68,7 +68,7 @@ class FOrdenModel extends DAOModel {
             $sql = "
             SELECT 
                     CAST(COALESCE(SUM(O_SUBTOTAL),0) AS DECIMAL(6,2))AS CHIPS 
-                FROM TB_ORDENES_MB 
+                FROM tb_ordenes_mb 
                 WHERE 1=1  
                     AND O_COD_CLIENTE='" . $codigo_cliente . "'
                     AND O_FCH_CREACION  
@@ -79,7 +79,7 @@ class FOrdenModel extends DAOModel {
             $sql = "
             SELECT 
                     CAST(COALESCE(SUM(O_SUBTOTAL),0) AS DECIMAL(6,2))AS CHIPS 
-                FROM TB_ORDENES_MB 
+                FROM tb_ordenes_mb 
                 WHERE 1=1  
                     AND O_COD_CLIENTE='" . $codigo_cliente . "'
                     AND O_FCH_CREACION  

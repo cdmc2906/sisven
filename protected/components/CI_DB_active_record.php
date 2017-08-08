@@ -1112,7 +1112,7 @@ class CI_DB_active_record extends CI_DB_driver {
 		$keys = array_keys(current($key));
 		sort($keys);
                 
-                $enlace = mysqli_connect("localhost", "root", "admin123", "tcc_control_ruta");
+                $enlace = mysqli_connect("10.130.1.9", "root", "admin123", "tcc_control_ruta");
         
 		foreach ($key as $row)
 		{

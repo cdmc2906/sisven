@@ -11,9 +11,10 @@ class CargaHistorialMbController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             return;
         } else {
-            unset($_SESSION['historialMbItems']);
+//            unset($_SESSION['historialMbItems']);
+            unset(Yii::app()->session['historialMbItems']);
             $model = new CargaHistorialMbForm();
-            $this->render('/historialmb/cargahistorialmb', array('model' => $model));
+            $this->render('/historialmb/cargaHistorialMb', array('model' => $model));
         }
     }
 
@@ -28,13 +29,16 @@ class CargaHistorialMbController extends Controller {
             if (isset($_POST['CargaHistorialMbForm'])) {
                 $model->attributes = $_POST['CargaHistorialMbForm'];
                 if ($model->validate()) {
-                    unset($_SESSION['historialMbItems']);
+//                    unset($_SESSION['historialMbItems']);
+                    unset(Yii::app()->session['historialMbItems']);
 
                     $filePath = Yii::app()->params['archivosHistorialMb'];
                     $model->rutaArchivo = CUploadedFile::getInstance($model, 'rutaArchivo');
                     $model->rutaArchivo->saveAs($filePath);
-                    $_SESSION['archivosHistorialMb'] = $filePath;
-                    $_SESSION['ModelForm'] = $model;
+//                    $_SESSION['archivosHistorialMb'] = $filePath;
+//                    $_SESSION['ModelForm'] = $model;
+                    Yii::app()->session['archivosHistorialMb'] = $filePath;
+                    Yii::app()->session['ModelForm'] = $model;
 
                     $operation = "r";
                     $delimiter = ';';
@@ -57,7 +61,8 @@ class CargaHistorialMbController extends Controller {
                             }
                             $numeroBloque ++;
                         }
-                        $_SESSION['historialMbItems'] = $historialMbItems;
+//                        $_SESSION['historialMbItems'] = $historialMbItems;
+                        Yii::app()->session['historialMbItems'] = $historialMbItems;
 //                        unlink($filePath);
                     } else {
                         $response->Message = 'El archivo no contiene registros';
@@ -74,7 +79,7 @@ class CargaHistorialMbController extends Controller {
             $response->ClassMessage = CLASS_MENSAJE_ERROR;
         }
 //        var_dump($_SESSION['historialMbItems']);die();
-        $this->render('/historialmb/cargahistorialmb', array('model' => $model));
+        $this->render('/historialmb/cargaHistorialMb', array('model' => $model));
         return;
     }
 
@@ -119,8 +124,10 @@ class CargaHistorialMbController extends Controller {
         $response = new Response();
         $DclientesRepetidos = '';
         try {
-            if (isset($_SESSION['archivosHistorialMb'])) {
-                $filePath = $_SESSION['archivosHistorialMb'];
+//            if (isset($_SESSION['archivosHistorialMb'])) {
+            if (isset(Yii::app()->session['archivosHistorialMb'])) {
+//                $filePath = $_SESSION['archivosHistorialMb'];
+                $filePath = Yii::app()->session['archivosHistorialMb'];
 
                 $operation = "r";
                 $delimiter = ';';
@@ -205,7 +212,8 @@ class CargaHistorialMbController extends Controller {
         $clientesRepetidos = array();
 
 //        $_SESSION['clientesDuplicados'] = 0;
-        $_SESSION['itemHistorialDuplicado'] = 0;
+//        $_SESSION['itemHistorialDuplicado'] = 0;
+        Yii::app()->session['itemHistorialDuplicado'] = 0;
 
         $dataFile = $file->getDatosHistorialMb($start, $blockSize);
 //        var_dump($dataFile);        die();
@@ -255,7 +263,8 @@ class CargaHistorialMbController extends Controller {
                 array_push($datosHistorial, $data);
                 unset($data);
             } else {
-                $_SESSION['itemHistorialDuplicado'] = $_SESSION['itemHistorialDuplicado'] + 1;
+//                $_SESSION['itemHistorialDuplicado'] = $_SESSION['itemHistorialDuplicado'] + 1;
+                Yii::app()->session['itemHistorialDuplicado'] = Yii::app()->session['itemHistorialDuplicado'] + 1;
             }
         }
         $datos['historialmb'] = $datosHistorial;
@@ -274,8 +283,10 @@ class CargaHistorialMbController extends Controller {
 
         $response = new Response();
         try {
-            $response->Result = $_SESSION['historialMbItems'];
-            unset($_SESSION['historialMbItems']);
+//            $response->Result = $_SESSION['historialMbItems'];
+            $response->Result = Yii::app()->session['historialMbItems'];
+//            unset($_SESSION['historialMbItems']);
+            unset(Yii::app()->session['historialMbItems']);
         } catch (Exception $e) {
             $mensaje = array(
                 'code' => $e->getCode(),
@@ -300,20 +311,20 @@ class CargaHistorialMbController extends Controller {
         }
     }
 
-    public function filters() {
-// return the filter configuration for this controller, e.g.:
-        return array('accessControl', array('CrugeAccessControlFilter'));
-    }
-
-    public function accessRules() {
-        return array(
-            array('allow', // allow authenticated users to access all actions
-                'users' => array('@'),
-            ),
-            array('deny', // deny all users
-                'users' => array('*'),
-            ),
-        );
-    }
+//    public function filters() {
+//// return the filter configuration for this controller, e.g.:
+//        return array('accessControl', array('CrugeAccessControlFilter'));
+//    }
+//
+//    public function accessRules() {
+//        return array(
+//            array('allow', // allow authenticated users to access all actions
+//                'users' => array('@'),
+//            ),
+//            array('deny', // deny all users
+//                'users' => array('*'),
+//            ),
+//        );
+//    }
 
 }

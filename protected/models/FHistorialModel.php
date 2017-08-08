@@ -15,30 +15,98 @@
  * @property TbProducto $iDPRO
  */
 class FHistorialModel extends DAOModel {
-    /*
-     * Obtiene el listado de mines vendidos por el vendedor segun la fecha.
-     * 
-     * El tipo de vendedor influye en los meses en los que se obtiene las ventas
-     *  Vendedores (1) =Ventas 4 meses atrás de la fecha de calculo
-     *  Mayoristas(2) = Ventas en el mes anterior al calculo de las comisiones
-     */
 
     public function getHistorialxVendedorxFecha($fechagestion, $ejecutivo) {
-//        $anio = $datos['anio'];
         $sql = "
-            SELECT 
-                    DATE(H_FECHA) as FECHAVISITA
-                    ,H_COD_CLIENTE AS CODIGOCLIENTE
-                    ,H_NOM_CLIENTE AS NOMBRECLIENTE
-                    ,H_RUTA AS RUTAVISITA
-                    ,h_latitud AS LATITUD
-                    ,h_longitud AS LONGITUD
-                FROM TB_HISTORIAL_MB
-                WHERE 1=1
-                    AND DATE(H_FECHA)='" . $fechagestion . "'
-                    AND H_USUARIO='" . $ejecutivo . "'
-                    AND H_ACCION='Inicio visita'
-                ORDER BY H_FECHA ;
+           select 
+                    date(h_fecha) as fechavisita
+                    ,h_cod_cliente as codigocliente
+                    ,h_nom_cliente as nombrecliente
+                    ,h_ruta as rutavisita
+                    ,h_latitud as latitud
+                    ,h_longitud as longitud
+                from tb_historial_mb
+                where 1=1
+                   and date(h_fecha) ='" . $fechagestion . "'
+                    and h_usuario='" . $ejecutivo . "'
+                    and h_accion='inicio visita'
+                order by h_fecha ;
+
+            ";
+//   var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getHistorialxVendedorxFechaxHoraInicioxHoraFin($fechagestion, $horaInicio, $horaFin, $ejecutivo) {
+//        $anio = $datos['anio'];
+//        $horaInicio = '10:00';
+        $fechaInicio = $fechagestion . ' ' . $horaInicio;
+        $fechaFin = $fechagestion . ' ' . $horaFin;
+//        var_dump($fechaInicio, $fechaFin);        die();
+        $sql = "
+            select 
+                    date_format(h_fecha, '%y-%m-%d %h:%i') as FECHAVISITA
+                    ,h_cod_cliente as CODIGOCLIENTE
+                    ,h_nom_cliente as NOMBRECLIENTE
+                    ,h_ruta as RUTAVISITA
+                    ,h_latitud as LATITUD
+                    ,h_longitud as LONGITUD
+                from tb_historial_mb
+                where 1=1
+                    and h_fecha between '" . $fechaInicio . "' and '" . $fechaFin . "'
+                    and h_usuario='" . $ejecutivo . "'
+                    and h_accion='inicio visita'
+                order by h_fecha
+;
+            ";
+//   var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getPrimeraVisitaxEjecutivoxFechaxHoraInicioxHoraFin($fechagestion, $horaInicio, $horaFin, $ejecutivo) {
+        $fechaInicio = $fechagestion . ' ' . $horaInicio;
+        $fechaFin = $fechagestion . ' ' . $horaFin;
+        $sql = "
+            select 
+             date_format(h_fecha, '%h:%i') as RESULTADO
+                from tb_historial_mb
+                where 1=1
+                    and h_fecha between '" . $fechaInicio . "' and '" . $fechaFin . "'
+                    and h_usuario='" . $ejecutivo . "'
+                    and h_accion='inicio visita'
+                order by h_fecha
+                limit 1;
+            ";
+//   var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getUltimaVisitaxEjecutivoxFechaxHoraInicioxHoraFin($fechagestion, $horaInicio, $horaFin, $ejecutivo) {
+        $fechaInicio = $fechagestion . ' ' . $horaInicio;
+        $fechaFin = $fechagestion . ' ' . $horaFin;
+        $sql = "
+           select 
+             date_format(h_fecha, '%h:%i') as RESULTADO
+                from tb_historial_mb
+                where 1=1
+                    and h_fecha between '" . $fechaInicio . "' and '" . $fechaFin . "'
+                    and h_usuario='" . $ejecutivo . "'
+                    and h_accion='inicio visita'
+                order by h_fecha desc
+                limit 1
+;
             ";
 //   var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
@@ -51,6 +119,34 @@ class FHistorialModel extends DAOModel {
     public function getHistorialxVendedorxRangoFecha($fechaInicio, $fechaFin, $ejecutivo) {
 //        $anio = $datos['anio'];
         $sql = "
+            select 
+                    date(h_fecha) as FECHAVISITA
+                    ,h_cod_cliente as CODIGOCLIENTE
+                    ,h_nom_cliente as NOMBRECLIENTE
+                    ,h_ruta as RUTAVISITA
+                    ,h_latitud as LATITUD
+                    ,h_longitud as LONGITUD
+                from tb_historial_mb
+                where 1=1                    
+                    and date(h_fecha) between '" . $fechaInicio . "' and '" . $fechaFin . "'
+                    and h_usuario='" . $ejecutivo . "'
+                    and h_accion='inicio visita'
+                order by h_fecha
+ ;
+            ";
+        var_dump($sql);
+        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getHistorialxVendedorxRangoFechaxHoraInicioxHoraFin($fechaInicio, $horaInicio, $horaFin, $fechaFin, $ejecutivo) {
+        $fechaInicio = $fechagestion . ' ' . $horaInicio;
+        $fechaFin = $fechagestion . ' ' . $horaFin;
+        $sql = "
             SELECT 
                     DATE(H_FECHA) as FECHAVISITA
                     ,H_COD_CLIENTE AS CODIGOCLIENTE
@@ -58,7 +154,7 @@ class FHistorialModel extends DAOModel {
                     ,H_RUTA AS RUTAVISITA
                     ,h_latitud AS LATITUD
                     ,h_longitud AS LONGITUD
-                FROM TB_HISTORIAL_MB
+                FROM tb_historial_mb
                 WHERE 1=1
                     AND DATE(H_FECHA)='" . $fechagestion . "'
                         AND DATE(H_FECHA) BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
@@ -66,7 +162,8 @@ class FHistorialModel extends DAOModel {
                     AND H_ACCION='Inicio visita'
                 ORDER BY H_FECHA ;
             ";
-   var_dump($sql);        die();
+        var_dump($sql);
+        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
 //        var_dump($data);        die();
@@ -83,7 +180,7 @@ class FHistorialModel extends DAOModel {
                     ,H_NOM_CLIENTE AS NOMBRECLIENTE
                     ,H_RUTA AS RUTAVISITA
                    ,'' AS FILA
-                FROM TB_HISTORIAL_MB
+                FROM tb_historial_mb
                 WHERE 1=1
                     AND DATE(H_FECHA)='" . $fecha . "'
                     AND H_USUARIO='" . $codigoejecutivo . "'
