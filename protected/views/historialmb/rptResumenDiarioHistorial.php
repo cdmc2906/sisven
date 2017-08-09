@@ -170,7 +170,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
 //                    var_dump($model);die();
 //                    CHtml::submitButton('Save', array('confirm'=>'Are you sure you want to save?'));
 
-//                    echo CHtml::button('Guardar Revision', array('submit' => array('rptResumenDiarioHistorial/GuardarRevision')));
+                    echo CHtml::button('Guardar Revision', array('submit' => array('rptResumenDiarioHistorial/GuardarRevision')));
                     ?>
                     <?php echo CHtml::Button('Exportar Resumen', array('id' => 'btnExcelResumen', 'class' => 'btn btn-theme')); ?>
                 </div>

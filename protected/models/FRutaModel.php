@@ -110,7 +110,7 @@ class FRutaModel extends DAOModel {
         $sql = "
             -- VENTA DE FIN DE SEMANA
             SELECT IFNULL(SUM(O_SUBTOTAL),0) AS RESPUESTA
-                FROM tb_ordenes_mb
+                FROM tb_ordenes_mb  
                 WHERE 1=1 
                     AND DATE(O_FCH_CREACION) BETWEEN '" . $fechaSabado . "' AND '" . $fechaDomingo . "'
                     AND O_SUBTOTAL>0 
@@ -153,7 +153,7 @@ class FRutaModel extends DAOModel {
                     AND O_USUARIO='" . $codEjecutivo . "'
                     AND O_COD_CLIENTE IN 
                         (SELECT R_COD_CLIENTE 
-                            FROM tb_ruta_mb
+                            FROM tb_ruta_mb 
                             WHERE 1=1 
                                 AND R_DIA=" . $dia . "
                                 AND RIGHT(R_RUTA,3)='" . $inicialesEjecutivo . "');
@@ -177,7 +177,7 @@ class FRutaModel extends DAOModel {
                     AND O_USUARIO='" . $codEjecutivo . "' 
                     AND O_COD_CLIENTE NOT IN 
                         (SELECT R_COD_CLIENTE 
-                            FROM tb_ruta_mb
+                            FROM tb_ruta_mb 
                             WHERE 1=1 
                                 AND R_DIA=" . $dia . " 
                                 AND RIGHT(R_RUTA,3)='" . $inicialesEjecutivo . "');

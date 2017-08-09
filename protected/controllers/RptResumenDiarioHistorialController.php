@@ -8,7 +8,6 @@
 class RptResumenDiarioHistorialController extends Controller {
 
     public function actionIndex() {
-//        session_start();
         Yii::app()->user->setFlash('resultadoGuardar', null);
         if (Yii::app()->request->isAjaxRequest) {
             return;
@@ -78,6 +77,7 @@ class RptResumenDiarioHistorialController extends Controller {
                 Yii::app()->session['ModelForm'] = $model;
 
                 if ($model->validate()) {
+
                     $ejecutivo = EjecutivoModel::model()->findAllByAttributes(array('e_usr_mobilvendor' => $model->ejecutivo));
                     $fila = 1;
                     $fHistorial = new FHistorialModel();
@@ -85,134 +85,136 @@ class RptResumenDiarioHistorialController extends Controller {
                     $fRuta = new FRutaModel();
 //                    var_dump($model);die();
                     $historial = $fHistorial->getHistorialxVendedorxFechaxHoraInicioxHoraFin($model->fechagestion, $model->horaInicioGestion, $model->horaFinGestion, $ejecutivo[0]['e_usr_mobilvendor']);
+//                    var_dump(count($historial) );die();
 
-                    $primeraVisita = $fHistorial->getPrimeraVisitaxEjecutivoxFechaxHoraInicioxHoraFin($model->fechagestion, $model->horaInicioGestion, $model->horaFinGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESULTADO'];
-                    $ultimaVisita = $fHistorial->getUltimaVisitaxEjecutivoxFechaxHoraInicioxHoraFin($model->fechagestion, $model->horaInicioGestion, $model->horaFinGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESULTADO'];
+                    if (count($historial)) {
+                        $primeraVisita = $fHistorial->getPrimeraVisitaxEjecutivoxFechaxHoraInicioxHoraFin($model->fechagestion, $model->horaInicioGestion, $model->horaFinGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESULTADO'];
+                        $ultimaVisita = $fHistorial->getUltimaVisitaxEjecutivoxFechaxHoraInicioxHoraFin($model->fechagestion, $model->horaInicioGestion, $model->horaFinGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESULTADO'];
 
-                    $dia = date("w", strtotime($model->fechagestion));
-                    $ruta_dia_gestion = "R" . $dia . '-' . $ejecutivo[0]['e_iniciales'];
+                        $dia = date("w", strtotime($model->fechagestion));
+                        $ruta_dia_gestion = "R" . $dia . '-' . $ejecutivo[0]['e_iniciales'];
 
-                    $rsTotalClientesRuta = $fRuta->getTotalClientesxRutaxEjecutivoxDia($ejecutivo[0]['e_iniciales'], $dia + 1);
-                    $totalClientesRuta = $rsTotalClientesRuta[0]["TOTALCLIENTES"];
+                        $rsTotalClientesRuta = $fRuta->getTotalClientesxRutaxEjecutivoxDia($ejecutivo[0]['e_iniciales'], $dia + 1);
+                        $totalClientesRuta = $rsTotalClientesRuta[0]["TOTALCLIENTES"];
 
-                    $nivelCumplimiento = 0;
-                    $totalVisitasEfectuadas = 0;
-                    $clientesNoVisitados = $fRuta->getTotalClientesNoVisitadosxRutaxEjecutivo($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['CLIENTESNOVISITADOS'];
-                    $visitasRuta = 0;
-                    $visitasValidasRuta = 0;
-                    $visitasFueraRuta = 0;
-                    $visitasRepetidas = 0;
-                    $cantidadVentaRuta = 0;
-                    $cantidadVentaFueraRuta = 0;
-                    $clientesConVenta = 0;
-                    $totalVentaReportada = 0;
-                    $visitaRepetida = false;
-
-                    $visitaValida = false;
-
-                    $rsTotales = new FRutaModel();
-                    $diaSemana = date('w', strtotime($model->fechagestion));
-                    if ($diaSemana == 5) {
-
-                        $_totalVentaViernes = intval($rsTotales->getTotalChipsVentaDia($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                        $_totalVentaRutaViernes = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                        $_totalVentaFueraRutaViernes = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                        $_totalClientesVentaViernes = intval($rsTotales->getTotalClientesVenta($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-
-                        $_totalVentaFinSemana = intval($rsTotales->getTotalChipsVentaFinSemana($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                        $_totalVentaRutaFinSemana = intval($rsTotales->getTotalChipsVentaFinSemana($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                        $_totalClientesVentaFinSemana = intval($rsTotales->getTotalClientesVentaFinSemana($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-
-                        $_totalVentaDia = $_totalVentaViernes + $_totalVentaFinSemana;
-                        $_totalVentaRuta = $_totalVentaRutaViernes + $_totalVentaRutaFinSemana;
-                        $_totalVentaFueraRuta = $_totalVentaFueraRutaViernes;
-                        $_totalClientesVenta = $_totalClientesVentaViernes + $_totalClientesVentaFinSemana;
-                    } else {
-                        $_totalVentaDia = intval($rsTotales->getTotalChipsVentaDia($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                        $_totalVentaRuta = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                        $_totalVentaFueraRuta = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                        $_totalClientesVenta = intval($rsTotales->getTotalClientesVenta($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                    }
-                    $visitasValidas = 0;
-                    $visitasInvalidas = 0;
-
-                    foreach ($historial as $itemHistorial) {
-
-                        $cliente = ClienteModel::model()->findAllByAttributes(array('cli_codigo_cliente' => $itemHistorial['CODIGOCLIENTE']));
-                        if (count($cliente) > 0) {
-                            $latitudCliente = str_replace(',', '.', $cliente[0]['cli_latitud']);
-                            $longitudCliente = str_replace(',', '.', $cliente[0]['cli_longitud']);
-                        } else {
-                            $latitudCliente = 0;
-                            $longitudCliente = 0;
-                        }
-                        $latitudHistorial = floatval(str_replace(",", ".", $itemHistorial['LATITUD']));
-                        $longitudHistorial = floatval(str_replace(",", ".", $itemHistorial['LONGITUD']));
-
-                        $distancia = $this->haversineGreatCircleDistance($latitudCliente, $longitudCliente, $latitudHistorial, $longitudHistorial);
-                        if ($model->precisionVisitas != 0) {
-                            if ($distancia <= $model->precisionVisitas) {
-                                $visitasValidas += 1;
-                                $visitaValida = true;
-                            } else {
-                                $visitasInvalidas += 1;
-                                $visitaValida = false;
-                            }
-                        } else {
-                            $visitasValidas += 1;
-                            $visitaValida = true;
-                        }
-
-                        $fechaHistorialSinFormato = new DateTime($itemHistorial['FECHAVISITA']);
-                        $fechaHistorial = $fechaHistorialSinFormato->format('Y-m-d');
-
-                        $estadoRevisionRuta = '';
-                        $cantidadChips = $fOrden->getChipsxClientexEjecutivoxFecha($itemHistorial['CODIGOCLIENTE'], $ejecutivo[0]['e_usr_mobilvendor'], $fechaHistorial);
-                        $chips = $cantidadChips[0]['CHIPS'];
-
-                        foreach ($datosDetalleGrid as $item) {
-                            if (in_array($itemHistorial['CODIGOCLIENTE'], $item) && intval($item['CHIPSCOMPRADOS']) > 0) {
-                                $chips = "0";
-                            }
-                        }
-
-                        $ruta = $fRuta->getRutaxCliente($itemHistorial['CODIGOCLIENTE'], $ejecutivo[0]['e_iniciales']);
-                        if (count($ruta) == 0) {
-                            $rutaCliente = "Sin ruta";
-                            $secuenciaRutaCliente = "Sin secuencia";
-                        } else {
-                            $rutaCliente = $ruta[0]['RUTA'];
-                            $secuenciaRutaCliente = $ruta[0]['SECUENCIA'];
-                            if ($chips > 0) {
-                                $clientesConVenta += 1;
-                            }
-                        }
+                        $nivelCumplimiento = 0;
+                        $totalVisitasEfectuadas = 0;
+                        $clientesNoVisitados = $fRuta->getTotalClientesNoVisitadosxRutaxEjecutivo($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['CLIENTESNOVISITADOS'];
+                        $visitasRuta = 0;
+                        $visitasValidasRuta = 0;
+                        $visitasFueraRuta = 0;
+                        $visitasRepetidas = 0;
+                        $cantidadVentaRuta = 0;
+                        $cantidadVentaFueraRuta = 0;
+                        $clientesConVenta = 0;
+                        $totalVentaReportada = 0;
                         $visitaRepetida = false;
 
-//                        if ($itemHistorial['RUTAVISITA'] == $rutaCliente) {
-                        if ($ruta_dia_gestion == $rutaCliente) {
+                        $visitaValida = false;
+
+                        $rsTotales = new FRutaModel();
+                        $diaSemana = date('w', strtotime($model->fechagestion));
+                        if ($diaSemana == 5) {
+
+                            $_totalVentaViernes = intval($rsTotales->getTotalChipsVentaDia($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                            $_totalVentaRutaViernes = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                            $_totalVentaFueraRutaViernes = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                            $_totalClientesVentaViernes = intval($rsTotales->getTotalClientesVenta($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+
+                            $_totalVentaFinSemana = intval($rsTotales->getTotalChipsVentaFinSemana($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                            $_totalVentaRutaFinSemana = intval($rsTotales->getTotalChipsVentaFinSemana($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                            $_totalClientesVentaFinSemana = intval($rsTotales->getTotalClientesVentaFinSemana($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+
+                            $_totalVentaDia = $_totalVentaViernes + $_totalVentaFinSemana;
+                            $_totalVentaRuta = $_totalVentaRutaViernes + $_totalVentaRutaFinSemana;
+                            $_totalVentaFueraRuta = $_totalVentaFueraRutaViernes;
+                            $_totalClientesVenta = $_totalClientesVentaViernes + $_totalClientesVentaFinSemana;
+                        } else {
+                            $_totalVentaDia = intval($rsTotales->getTotalChipsVentaDia($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                            $_totalVentaRuta = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                            $_totalVentaFueraRuta = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                            $_totalClientesVenta = intval($rsTotales->getTotalClientesVenta($ejecutivo[0]['e_iniciales'], $dia + 1, $model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                        }
+                        $visitasValidas = 0;
+                        $visitasInvalidas = 0;
+
+                        foreach ($historial as $itemHistorial) {
+
+                            $cliente = ClienteModel::model()->findAllByAttributes(array('cli_codigo_cliente' => $itemHistorial['CODIGOCLIENTE']));
+                            if (count($cliente) > 0) {
+                                $latitudCliente = str_replace(',', '.', $cliente[0]['cli_latitud']);
+                                $longitudCliente = str_replace(',', '.', $cliente[0]['cli_longitud']);
+                            } else {
+                                $latitudCliente = 0;
+                                $longitudCliente = 0;
+                            }
+                            $latitudHistorial = floatval(str_replace(",", ".", $itemHistorial['LATITUD']));
+                            $longitudHistorial = floatval(str_replace(",", ".", $itemHistorial['LONGITUD']));
+
+                            $distancia = $this->haversineGreatCircleDistance($latitudCliente, $longitudCliente, $latitudHistorial, $longitudHistorial);
+                            if ($model->precisionVisitas != 0) {
+                                if ($distancia <= $model->precisionVisitas) {
+                                    $visitasValidas += 1;
+                                    $visitaValida = true;
+                                } else {
+                                    $visitasInvalidas += 1;
+                                    $visitaValida = false;
+                                }
+                            } else {
+                                $visitasValidas += 1;
+                                $visitaValida = true;
+                            }
+
+                            $fechaHistorialSinFormato = new DateTime($itemHistorial['FECHAVISITA']);
+                            $fechaHistorial = $fechaHistorialSinFormato->format('Y-m-d');
+
+                            $estadoRevisionRuta = '';
+                            $cantidadChips = $fOrden->getChipsxClientexEjecutivoxFecha($itemHistorial['CODIGOCLIENTE'], $ejecutivo[0]['e_usr_mobilvendor'], $fechaHistorial);
+                            $chips = $cantidadChips[0]['CHIPS'];
+
                             foreach ($datosDetalleGrid as $item) {
-                                if (in_array($itemHistorial['CODIGOCLIENTE'], $item)) {
-                                    $visitaRepetida = true;
-                                    break;
+                                if (in_array($itemHistorial['CODIGOCLIENTE'], $item) && intval($item['CHIPSCOMPRADOS']) > 0) {
+                                    $chips = "0";
                                 }
                             }
 
-                            if ($visitaRepetida) {
-                                $estadoRevisionRuta = 'Visita en ruta repetida';
-                                $visitasValidas -= 1;
-                                $visitasRepetidas += 1;
+                            $ruta = $fRuta->getRutaxCliente($itemHistorial['CODIGOCLIENTE'], $ejecutivo[0]['e_iniciales']);
+                            if (count($ruta) == 0) {
+                                $rutaCliente = "Sin ruta";
+                                $secuenciaRutaCliente = "Sin secuencia";
                             } else {
-                                $estadoRevisionRuta = 'Visita en ruta';
-                                $visitasRuta += 1;
-                                if ($visitaValida)
-                                    $visitasValidasRuta += 1;
+                                $rutaCliente = $ruta[0]['RUTA'];
+                                $secuenciaRutaCliente = $ruta[0]['SECUENCIA'];
+                                if ($chips > 0) {
+                                    $clientesConVenta += 1;
+                                }
                             }
+                            $visitaRepetida = false;
 
-                            if ($chips > 0) {
-                                $cantidadVentaRuta += $chips;
-                            }
-                        } else {
+//                        if ($itemHistorial['RUTAVISITA'] == $rutaCliente) {
+                            if ($ruta_dia_gestion == $rutaCliente) {
+                                foreach ($datosDetalleGrid as $item) {
+                                    if (in_array($itemHistorial['CODIGOCLIENTE'], $item)) {
+                                        $visitaRepetida = true;
+                                        break;
+                                    }
+                                }
+
+                                if ($visitaRepetida) {
+                                    $estadoRevisionRuta = 'Visita en ruta repetida';
+                                    $visitasValidas -= 1;
+                                    $visitasRepetidas += 1;
+                                } else {
+                                    $estadoRevisionRuta = 'Visita en ruta';
+                                    $visitasRuta += 1;
+                                    if ($visitaValida)
+                                        $visitasValidasRuta += 1;
+                                }
+
+                                if ($chips > 0) {
+                                    $cantidadVentaRuta += $chips;
+                                }
+                            } else {
 
 //                            if ($visitaRepetida) {
 //                                $estadoRevisionRuta = 'Visita fuera ruta repetida';
@@ -223,117 +225,119 @@ class RptResumenDiarioHistorialController extends Controller {
 //                                    $visitasFueraRuta += 1;
 //                            }
 
-                            $estadoRevisionRuta = 'Visita fuera de ruta';
-                            $visitasFueraRuta += 1;
-                            if ($chips > 0) {
-                                $cantidadVentaFueraRuta += $chips;
+                                $estadoRevisionRuta = 'Visita fuera de ruta';
+                                $visitasFueraRuta += 1;
+                                if ($chips > 0) {
+                                    $cantidadVentaFueraRuta += $chips;
+                                }
                             }
-                        }
-                        if ($fila == $secuenciaRutaCliente) {
-                            $estadoRevisionS = 'Secuencia OK';
-                        } else {
-                            $estadoRevisionS = 'Otra secuencia';
-                        }
+                            if ($fila == $secuenciaRutaCliente) {
+                                $estadoRevisionS = 'Secuencia OK';
+                            } else {
+                                $estadoRevisionS = 'Otra secuencia';
+                            }
 
-                        $totalVentaReportada = $cantidadVentaFueraRuta + $cantidadVentaRuta;
-                        $totalVisitasEfectuadas = $visitasRuta + $visitasFueraRuta;
-                        $nivelCumplimiento = ceil(($visitasValidasRuta / $totalClientesRuta) * 100);
+                            $totalVentaReportada = $cantidadVentaFueraRuta + $cantidadVentaRuta;
+                            $totalVisitasEfectuadas = $visitasRuta + $visitasFueraRuta;
+                            $nivelCumplimiento = ceil(($visitasValidasRuta / $totalClientesRuta) * 100);
 
-                        $revisionRuta = array(
-                            'FECHAREVISION' => date(FORMATO_FECHA),
-                            'FECHARUTA' => $itemHistorial['FECHAVISITA'],
-                            'CODEJECUTIVO' => $ejecutivo[0]->e_usr_mobilvendor,
-                            'EJECUTIVO' => $ejecutivo[0]->e_nombre,
-                            'CODIGOCLIENTE' => $itemHistorial['CODIGOCLIENTE'],
-                            'CLIENTE' => $itemHistorial['NOMBRECLIENTE'],
-                            'RUTAUSADA' => $itemHistorial['RUTAVISITA'],
-                            'SECUENCIAVISITA' => $fila,
-                            'RUTACLIENTE' => $rutaCliente,
-                            'SECUENCIARUTA' => $secuenciaRutaCliente,
-                            'ESTADOREVISIONR' => $estadoRevisionRuta,
-                            'ESTADOREVISIONS' => $estadoRevisionS,
-                            'CHIPSCOMPRADOS' => $chips,
-                            'METROS' => number_format($distancia, 2, '.', ''),
-                            'VALIDACION' => ($visitaValida == true) ? "VALIDA" : "INVALIDA",
-                            'LATITUDC' => number_format($latitudCliente, 6, '.', ''),
-                            'LONGITUDC' => number_format($longitudCliente, 6, '.', ''),
-                            'LATITUDH' => number_format($latitudHistorial, 6, '.', ''),
-                            'LONGITUDH' => number_format($longitudHistorial, 6, '.', ''),
-                        );
-                        $fila = $fila + 1;
-                        array_push($datosDetalleGrid, $revisionRuta);
-                        $datos['detalle'] = $datosDetalleGrid;
-                        unset($revisionRuta);
-                    }// Fin iteracion items historial
-                    $resumenRuta = array(
-                        'PORCENTAJE-CUMPLIMIENTO' => ($nivelCumplimiento == null) ? "0%" : $nivelCumplimiento . "%",
-//                        'TOTAL-VENTA-REPORTADA' => ($totalVentaReportada == null) ? 0 : $totalVentaReportada,
-                        'TOTAL-VENTA-REPORTADA' => ($_totalVentaDia == null) ? 0 : $_totalVentaDia,
-                        //
-                        'CLIENTES-RUTA' => ($totalClientesRuta == null) ? 0 : $totalClientesRuta,
-                        'VISITAS-EFECTUADAS-EN-RUTA' => ($visitasValidasRuta == null) ? 0 : $visitasValidasRuta,
-                        'CLIENTES-NO-VISITADOS' => ($clientesNoVisitados == null) ? 0 : $clientesNoVisitados,
-                        'VISITAS-FUERA-RUTA' => ($visitasFueraRuta == null) ? 0 : $visitasFueraRuta,
-                        'VISITAS-REPETIDAS' => ($visitasRepetidas == null) ? 0 : $visitasRepetidas,
-//                        'VISITAS-VALIDAS-RUTA' => ($visitasValidasRuta == null) ? 0 : $visitasValidasRuta,
-                        'CLIENTES-VENTA' => ($_totalClientesVenta == null) ? 0 : $_totalClientesVenta,
-                        'CANTIDAD-VENTA-RUTA' => ($_totalVentaRuta == null) ? 0 : $_totalVentaRuta,
-                        'CANTIDAD-VENTA-FUERA-RUTA' => ($_totalVentaFueraRuta == null) ? 0 : $_totalVentaFueraRuta,
-                    );
-                    array_push($datosResumenGrid, $resumenRuta);
-                    unset($resumenRuta);
-
-                    foreach ($datosResumenGrid as $key => $filaGrid) {
-//                        var_dump($filaGrid);                        die();
-                        foreach ($filaGrid as $clave => $valor) {
-                            $resumenRuta = array(
-                                'EJECUTIVO' => $ejecutivo[0]['e_usr_mobilvendor'],
-                                'FECHA_HISTORIAL' => $model->fechagestion,
-                                'PARAMETRO' => $clave,
-                                'VALOR' => strval($valor),
-                                'SEMANA' => strval($this->weekOfMonth($model->fechagestion)),
+                            $revisionRuta = array(
+                                'FECHAREVISION' => date(FORMATO_FECHA),
+                                'FECHARUTA' => $itemHistorial['FECHAVISITA'],
+                                'CODEJECUTIVO' => $ejecutivo[0]->e_usr_mobilvendor,
+                                'EJECUTIVO' => $ejecutivo[0]->e_nombre,
+                                'CODIGOCLIENTE' => $itemHistorial['CODIGOCLIENTE'],
+                                'CLIENTE' => $itemHistorial['NOMBRECLIENTE'],
+                                'RUTAUSADA' => $itemHistorial['RUTAVISITA'],
+                                'SECUENCIAVISITA' => $fila,
+                                'RUTACLIENTE' => $rutaCliente,
+                                'SECUENCIARUTA' => $secuenciaRutaCliente,
+                                'ESTADOREVISIONR' => $estadoRevisionRuta,
+                                'ESTADOREVISIONS' => $estadoRevisionS,
+                                'CHIPSCOMPRADOS' => $chips,
+                                'METROS' => number_format($distancia, 2, '.', ''),
+                                'VALIDACION' => ($visitaValida == true) ? "VALIDA" : "INVALIDA",
+                                'LATITUDC' => number_format($latitudCliente, 6, '.', ''),
+                                'LONGITUDC' => number_format($longitudCliente, 6, '.', ''),
+                                'LATITUDH' => number_format($latitudHistorial, 6, '.', ''),
+                                'LONGITUDH' => number_format($longitudHistorial, 6, '.', ''),
                             );
+                            $fila = $fila + 1;
+                            array_push($datosDetalleGrid, $revisionRuta);
+                            $datos['detalle'] = $datosDetalleGrid;
+                            unset($revisionRuta);
+                        }// Fin iteracion items historial
+                        $resumenRuta = array(
+                            'PORCENTAJE-CUMPLIMIENTO' => ($nivelCumplimiento == null) ? "0%" : $nivelCumplimiento . "%",
+                            'TOTAL-VENTA-REPORTADA' => ($_totalVentaDia == null) ? 0 : $_totalVentaDia,
+                            'CLIENTES-RUTA' => ($totalClientesRuta == null) ? 0 : $totalClientesRuta,
+                            'VISITAS-EFECTUADAS-EN-RUTA' => ($visitasValidasRuta == null) ? 0 : $visitasValidasRuta,
+                            'CLIENTES-NO-VISITADOS' => ($clientesNoVisitados == null) ? 0 : $clientesNoVisitados,
+                            'VISITAS-FUERA-RUTA' => ($visitasFueraRuta == null) ? 0 : $visitasFueraRuta,
+                            'VISITAS-REPETIDAS' => ($visitasRepetidas == null) ? 0 : $visitasRepetidas,
+                            'CLIENTES-VENTA' => ($_totalClientesVenta == null) ? 0 : $_totalClientesVenta,
+                            'CANTIDAD-VENTA-RUTA' => ($_totalVentaRuta == null) ? 0 : $_totalVentaRuta,
+                            'CANTIDAD-VENTA-FUERA-RUTA' => ($_totalVentaFueraRuta == null) ? 0 : $_totalVentaFueraRuta,
+                        );
+                        array_push($datosResumenGrid, $resumenRuta);
+                        unset($resumenRuta);
 
-                            if ($clave == 'PORCENTAJE-CUMPLIMIENTO' || $clave == 'TOTAL-VENTA-REPORTADA')
-                                array_push($datosResumenGridGeneral, $resumenRuta);
-                            if ($clave == 'CLIENTES-RUTA' || $clave == 'VISITAS-EFECTUADAS-EN-RUTA' || $clave == 'CLIENTES-NO-VISITADOS' || $clave == 'VISITAS-FUERA-RUTA' || $clave == 'VISITAS-REPETIDAS')
-                                array_push($datosResumenGridVisitas, $resumenRuta);
-                            if ($clave == 'CLIENTES-VENTA' || $clave == 'CANTIDAD-VENTA-RUTA' || $clave == 'CANTIDAD-VENTA-FUERA-RUTA')
-                                array_push($datosResumenGridVentas, $resumenRuta);
+                        foreach ($datosResumenGrid as $key => $filaGrid) {
+                            foreach ($filaGrid as $clave => $valor) {
+                                $resumenRuta = array(
+                                    'EJECUTIVO' => $ejecutivo[0]['e_usr_mobilvendor'],
+                                    'FECHA_HISTORIAL' => $model->fechagestion,
+                                    'PARAMETRO' => $clave,
+                                    'VALOR' => strval($valor),
+                                    'SEMANA' => strval($this->weekOfMonth($model->fechagestion)),
+                                );
 
-                            array_push($datosResumenGridIzquierda, $resumenRuta);
-                            unset($resumenRuta);
-                        }//fin iteracion valores en fila
-                    }//fin iteracion filas resumen
-                    $datos['resumenGeneral'] = $datosResumenGridGeneral;
-                    $datos['resumenVisitas'] = $datosResumenGridVisitas;
-                    $datos['resumenVentas'] = $datosResumenGridVentas;
+                                if ($clave == 'PORCENTAJE-CUMPLIMIENTO' || $clave == 'TOTAL-VENTA-REPORTADA')
+                                    array_push($datosResumenGridGeneral, $resumenRuta);
+                                if ($clave == 'CLIENTES-RUTA' || $clave == 'VISITAS-EFECTUADAS-EN-RUTA' || $clave == 'CLIENTES-NO-VISITADOS' || $clave == 'VISITAS-FUERA-RUTA' || $clave == 'VISITAS-REPETIDAS')
+                                    array_push($datosResumenGridVisitas, $resumenRuta);
+                                if ($clave == 'CLIENTES-VENTA' || $clave == 'CANTIDAD-VENTA-RUTA' || $clave == 'CANTIDAD-VENTA-FUERA-RUTA')
+                                    array_push($datosResumenGridVentas, $resumenRuta);
 
-                    $resumenRutaDerecha = array('VISITA' => 'Validas', 'CANTIDAD' => $visitasValidas);
-                    array_push($datosResumenGridVisitasValidasInvalidas, $resumenRutaDerecha);
-                    unset($resumenRutaDerecha);
-                    $resumenRutaDerecha = array('VISITA' => 'Invalidas', 'CANTIDAD' => $visitasInvalidas);
-                    array_push($datosResumenGridVisitasValidasInvalidas, $resumenRutaDerecha);
-                    unset($resumenRutaDerecha);
-                    $datos['resumenVisitasValidasInvalidas'] = $datosResumenGridVisitasValidasInvalidas;
+                                array_push($datosResumenGridIzquierda, $resumenRuta);
+                                unset($resumenRuta);
+                            }//fin iteracion valores en fila
+                        }//fin iteracion filas resumen
+                        $datos['resumenGeneral'] = $datosResumenGridGeneral;
+                        $datos['resumenVisitas'] = $datosResumenGridVisitas;
+                        $datos['resumenVentas'] = $datosResumenGridVentas;
 
-                    $resumenPrimeraUltima = array('VISITA' => 'Primera', 'CANTIDAD' => $primeraVisita);
-                    array_push($datosResumenGridPrimeraUltimaVisita, $resumenPrimeraUltima);
-                    unset($resumenPrimeraUltima);
-                    $resumenPrimeraUltima = array('VISITA' => 'Ultima', 'CANTIDAD' => $ultimaVisita);
-                    array_push($datosResumenGridPrimeraUltimaVisita, $resumenPrimeraUltima);
-                    unset($resumenPrimeraUltima);
-                    $datos['resumenPrimeraUltima'] = $datosResumenGridPrimeraUltimaVisita;
+                        $resumenRutaDerecha = array('VISITA' => 'Validas', 'CANTIDAD' => $visitasValidas);
+                        array_push($datosResumenGridVisitasValidasInvalidas, $resumenRutaDerecha);
+                        unset($resumenRutaDerecha);
+                        $resumenRutaDerecha = array('VISITA' => 'Invalidas', 'CANTIDAD' => $visitasInvalidas);
+                        array_push($datosResumenGridVisitasValidasInvalidas, $resumenRutaDerecha);
+                        unset($resumenRutaDerecha);
+                        $datos['resumenVisitasValidasInvalidas'] = $datosResumenGridVisitasValidasInvalidas;
 
-                    $_SESSION['detallerevisionhistorialitem'] = $datosDetalleGrid;
-                    $_SESSION['resumenrevisionhistorialitem'] = $datosResumenGridIzquierda;
+                        $resumenPrimeraUltima = array('VISITA' => 'Primera', 'CANTIDAD' => $primeraVisita);
+                        array_push($datosResumenGridPrimeraUltimaVisita, $resumenPrimeraUltima);
+                        unset($resumenPrimeraUltima);
+                        $resumenPrimeraUltima = array('VISITA' => 'Ultima', 'CANTIDAD' => $ultimaVisita);
+                        array_push($datosResumenGridPrimeraUltimaVisita, $resumenPrimeraUltima);
+                        unset($resumenPrimeraUltima);
+                        $datos['resumenPrimeraUltima'] = $datosResumenGridPrimeraUltimaVisita;
 
-                    Yii::app()->session['detallerevisionhistorialitem'] = $datosDetalleGrid;
-                    Yii::app()->session['resumenrevisionhistorialitem'] = $datosResumenGridIzquierda;
+                        $_SESSION['detallerevisionhistorialitem'] = $datosDetalleGrid;
+                        $_SESSION['resumenrevisionhistorialitem'] = $datosResumenGridIzquierda;
 
-                    $response->Message = "Historial revisado exitosamente";
-                    $response->Status = SUCCESS;
-                    $response->Result = $datos; // $datosGrid;
+                        Yii::app()->session['detallerevisionhistorialitem'] = $datosDetalleGrid;
+                        Yii::app()->session['resumenrevisionhistorialitem'] = $datosResumenGridIzquierda;
+
+                        $response->Message = "Historial revisado exitosamente";
+                        $response->Status = SUCCESS;
+                        $response->Result = $datos; // $datosGrid;
+                    }
+                    else {
+                        $response->Message = "No existen datos para los filtros usados";
+                        $response->ClassMessage = CLASS_MENSAJE_NOTICE;
+//                $response->Result = $datos; // $datosGrid;
+                    }
                 }//fin model->validate
                 else {
                     $response->Message = "Debe seleccionar todos los filtros";
@@ -362,21 +366,17 @@ class RptResumenDiarioHistorialController extends Controller {
         $datosResumenRevisionDiarioGuardar = array();
         $totalResumenGuardados = 0;
         $totalResumenOmitidos = 0;
-
         $mensaje = '';
         try {
-//            if (isset($_SESSION['detallerevisionhistorialitem']) && isset($_SESSION['resumenrevisionhistorialitem'])) {
-//            var_dump(Yii::app()->session['detallerevisionhistorialitem']);die();
-//            if (isset($Yii::app()->session['ModelForm'])) {
-            if (TRUE) {
+            $comentarioSupervisor = $_POST['RptResumenDiarioHistorialForm']['comentarioSupervision'];
+//            if (strlen($comentarioSupervisor) > 0) {
+            if (true) {
                 if (isset(Yii::app()->session['detallerevisionhistorialitem']) && isset(Yii::app()->session['resumenrevisionhistorialitem'])) {
 
                     $fechagestion = Yii::app()->session['ModelForm']['fechagestion'];
                     $ejecutivo = Yii::app()->session['ModelForm']['ejecutivo'];
-//                    var_dump($fechagestion, $ejecutivo);                    die();
                     $consultasResumenDH = new FResumenDiarioHistorialModel();
                     $cantidadRegistrosResumen = intval($consultasResumenDH->getCantidadResumenxVendedorxFecha($fechagestion, $ejecutivo)[0]['registrosResumen']);
-//                var_dump($cantidadRegistrosResumen);die();
 
                     $registrosIguales = $consultasResumenDH->getItemResumenxVendedorxFecha($fechagestion, $ejecutivo);
                     if ($cantidadRegistrosResumen > 0) {
@@ -392,32 +392,24 @@ class RptResumenDiarioHistorialController extends Controller {
                             }
                         }
                     }
-//                var_dump(2);die();
                     $consultasDetalleDH = new FDetalleDiarioHistorialModel();
                     $cantidadRegistrosDetalle = intval($consultasDetalleDH->getCantidadDetallexVendedorxFecha($fechagestion, $ejecutivo)[0]['registrosDetalle']);
-//                var_dump($cantidadRegistrosDetalle);die();
                     $registrosIgualesDetalle = $consultasDetalleDH->getItemDetallexVendedorxFecha($fechagestion, $ejecutivo);
                     if ($cantidadRegistrosDetalle > 0) {
 
                         foreach ($registrosIgualesDetalle as $itemBorrar) {
-//                        var_dump($itemBorrar['codigo']);                        die();
                             $existeBdd = DetalleHistorialDiarioModel::model()->findByAttributes(
                                     array(
                                         'rh_fecha_ruta' => $itemBorrar['rh_fecha_ruta'],
                                         'rh_codigo_vendedor' => $itemBorrar['rh_codigo_vendedor']
                             ));
-//                        var_dump($existeBdd);die();
                             if (isset($existeBdd)) {
-//                            var_dump(4);die();
-//                            var_dump($existeBdd->delete());die();
-
                                 $existeBdd->delete();
                             }
                         }
                     }
 
                     $datosDetalleRevisionHistorial = Yii::app()->session['detallerevisionhistorialitem'];
-//                var_dump($datosDetalleRevisionHistorial);die();
                     $precisionVisita = Yii::app()->session['ModelForm']['precisionVisitas'];
                     if (count($datosDetalleRevisionHistorial) > 0) {
                         foreach ($datosDetalleRevisionHistorial as $row) {
@@ -478,19 +470,15 @@ class RptResumenDiarioHistorialController extends Controller {
                     }
 
                     $datosResumenRevisionHistorial = Yii::app()->session['resumenrevisionhistorialitem'];
-//                var_dump($_SESSION['ModelForm']);die();
-                    $comentarioSupervisor = Yii::app()->session['ModelForm']['comentarioSupervision'];
-                    $comentarioSupervisor = Yii::app()->session['ModelForm']['comentarioSupervision'];
                     if (count($datosResumenRevisionHistorial) > 0) {
                         foreach ($datosResumenRevisionHistorial as $row) {
                             $data = array(
-                                //'rhd_codigo' => ($row[''] == '') ? null : $row['0'],
                                 'rhd_cod_ejecutivo' => ($row['EJECUTIVO'] == '') ? -1 : $row['EJECUTIVO'],
                                 'rhd_fecha_historial' => ($row['FECHA_HISTORIAL'] == '') ? null : $row['FECHA_HISTORIAL'],
                                 'rhd_parametro' => ($row['PARAMETRO'] == '') ? null : $row['PARAMETRO'],
                                 'rhd_valor' => ($row['VALOR'] == '') ? 0 : $row['VALOR'],
                                 'rhd_semana' => ($row['SEMANA'] == '') ? 0 : $row['SEMANA'],
-                                'rhd_observacion_supervisor' => (trim($comentarioSupervisor) == null) ? '' : trim($comentarioSupervisor),
+                                'rhd_observacion_supervisor' => (strlen(trim($comentarioSupervisor)) > 0) ? 'Comentario no ingresado' : trim($comentarioSupervisor),
                                 'rhd_usuario_supervisor' => Yii::app()->user->id,
                                 'rhd_fecha_ingreso_observacion' => date(FORMATO_FECHA_LONG),
                                 'rhd_fecha_modifica_observacion' => date(FORMATO_FECHA_LONG),
@@ -501,7 +489,6 @@ class RptResumenDiarioHistorialController extends Controller {
                             array_push($datosResumenRevisionDiarioGuardar, $data);
                             unset($data);
                         }// fin iteracion filas resumen revision
-//                    var_dump($datosResumenRevisionDiarioGuardar);die();
                         if (count($datosResumenRevisionDiarioGuardar) > 0) {
                             $dbConnection = new CI_DB_active_record(null);
                             $sql = $dbConnection->insert_batch('tb_resumen_historial_diario', $datosResumenRevisionDiarioGuardar);
@@ -527,41 +514,23 @@ class RptResumenDiarioHistorialController extends Controller {
                         if ($totalResumenOmitidos > 0)
                             $mensaje .= '<br>Se han omitido ' . $totalResumenOmitidos . ' resumenes.';
                     }
-//                $response->Message = $mensaje;
-//                $response->Status = SUCCESS;
-//                $response->ClassMessage = CLASS_MENSAJE_SUCCESS;
                 } else {
                     $mensaje = 'No existen registros para guardar';
-//                $response->Message = $mensaje;
-//                $response->Status = NOTICE;
-//                $response->ClassMessage = CLASS_MENSAJE_NOTICE;
                 }
             } else {
-                $mensaje = 'No existen registros para guardar';
-//                $response->Message = $mensaje;
-//                $response->Status = NOTICE;
-//                $response->ClassMessage = CLASS_MENSAJE_NOTICE;
+                $mensaje = 'Debe ingresar un comentario sobre el resultado del analisis';
             }
         } catch (Exception $e) {
-            $mensaje = 'Se ha producido un error';
-//            $response->Message = 'Se ha producido un error';
-//            $response->Status = ERROR;
-//            $response->ClassMessage = CLASS_MENSAJE_ERROR;
+            $mensaje = 'Se ha producido un error al guardar los registros';
         }
-//        $mensaje .= "<br><br>***** Esta pagina se recargara en " . INTERVALO_REFRESCO_AUTOMATICO . " segundos *****";
         Yii::app()->user->setFlash('resultadoGuardar', $mensaje);
         $returnUri = '/sisven/RptResumenDiarioHistorial/';
         Yii::app()->clientScript->registerMetaTag("" . INTERVALO_REFRESCO_AUTOMATICO . ";url={$returnUri}", null, 'refresh');
-//        Yii::app()->user->setFlash('resultadoGuardar', null);
         $this->render('/historialmb/rptResumenDiarioHistorial', array('model' => $model));
-
-//        $this->actionResponse(null, null, $response);
         return;
     }
 
     private function actionResponse($view = 'error', $model = null, $response = null) {
-//        var_dump($view,$model);die();
-//        var_dump($model);die();
         if (Yii::app()->request->isAjaxRequest) {
             echo json_encode($response);
         } else {

@@ -184,7 +184,12 @@ class CargaHistorialMbController extends Controller {
                     if ($totalHistorialNoGuardados > 0) {
                         $response->Message = 'Se produjo un error en la carga del archivo';
                     } else {
-                        $response->Message = 'Se han cargado ' . $totalHistorialGuardados . ' registros correctamente.';
+                        if ($totalHistorialGuardados > 0)
+                            $mensaje = 'Se han cargado ' . $totalHistorialGuardados . ' registros correctamente.';
+                        if ($totalHistorialNoGuardados > 0)
+                            $mensaje .= 'Se han cargado ' . $totalHistorialNoGuardados . ' registros no guardados.';
+
+                        $response->Message = $mensaje;
                     }
 
                     unlink($filePath);
@@ -221,7 +226,7 @@ class CargaHistorialMbController extends Controller {
         foreach ($dataFile as $row) {
             $existeBdd = HistorialMbModel::model()->findByAttributes(array('h_id' => $row['ID']));
             $exisArray = false;
-            
+
             foreach ($datosHistorial as $item) {
                 $exisArray = in_array($row['ID'], $item);
                 if ($exisArray)
@@ -229,10 +234,11 @@ class CargaHistorialMbController extends Controller {
             }
 
             if (!$existeBdd && !$exisArray) {
-//                var_dump($row['FECHA']);DIE();
+
                 $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHA']);
                 $dateString = $date->format(FORMATO_FECHA_LONG);
 
+//                var_dump($row['FECHA'],$dateString);DIE();
                 $data = array(
                     'h_id' => ($row['ID'] == '') ? null : $row['ID'],
                     'h_fecha' => ($row['FECHA'] == '') ? null : $dateString,
@@ -326,5 +332,4 @@ class CargaHistorialMbController extends Controller {
 //            ),
 //        );
 //    }
-
 }
