@@ -124,6 +124,7 @@ class CargaHistorialMbController extends Controller {
         $response = new Response();
         $DclientesRepetidos = '';
         $mensaje='';
+//        $test='';
         try {
 //            if (isset($_SESSION['archivosHistorialMb'])) {
             if (isset(Yii::app()->session['archivosHistorialMb'])) {
@@ -186,7 +187,8 @@ class CargaHistorialMbController extends Controller {
                     }
 
                     if ($totalHistorialNoGuardados > 0) {
-                       $mensaje = 'Se produjo un error en la carga del archivo';
+                        
+                        $response->Message = 'Se produjo un error en la carga del archivo';
                     } else {
                         if ($totalHistorialGuardados > 0)
                             $mensaje = 'Se han cargado ' . $totalHistorialGuardados . ' registros correctamente.';
@@ -195,6 +197,9 @@ class CargaHistorialMbController extends Controller {
 
                         $response->Message = $mensaje;
                     }
+//                    if($totalHistorialGuardados==0&&$totalHistorialNoGuardados==0)
+//                        var_dump($test);                            die();
+//                    var_dump($totalHistorialGuardados,$totalHistorialNoGuardados);die();
 
                     unlink($filePath);
                 } else {

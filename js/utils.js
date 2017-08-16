@@ -1,7 +1,7 @@
 /*
  * Secci�n variables globales
  */
-var delayAnimate = 5000;
+var delayAnimate = 60000; //en milisegundos - 1000 -> 1 segundo
 var msjError = "Ocurrio un error inesperado. Intentelo nuevamente.";
 
 var aTildeJS = '\xe1';
@@ -43,7 +43,7 @@ function setMensaje(clase, message)
     $("ul.flashes").html(message);
 
     showEffect();
-//    hideEffect();
+    hideEffect();
     return false;
 }
 

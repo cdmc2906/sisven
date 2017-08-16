@@ -145,21 +145,21 @@ class ResumenHistorialController extends Controller {
         }
     }
 
-    public function filters() {
-// return the filter configuration for this controller, e.g.:
-        return array('accessControl', array('CrugeAccessControlFilter'));
-    }
-
-    public function accessRules() {
-        return array(
-            array('allow', // allow authenticated users to access all actions
-                'users' => array('@'),
-            ),
-            array('deny', // deny all users
-                'users' => array('*'),
-            ),
-        );
-    }
+//    public function filters() {
+//// return the filter configuration for this controller, e.g.:
+//        return array('accessControl', array('CrugeAccessControlFilter'));
+//    }
+//
+//    public function accessRules() {
+//        return array(
+//            array('allow', // allow authenticated users to access all actions
+//                'users' => array('@'),
+//            ),
+//            array('deny', // deny all users
+//                'users' => array('*'),
+//            ),
+//        );
+//    }
 
     public function actionGenerateExcel() {
         $response = new Response();

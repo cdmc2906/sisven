@@ -3,9 +3,21 @@ $(document).ready(function () {
 
     ConfigurarGrids();
     $("#btnLimpiar").click(function () {
+        $("#RptResumenDiarioHistorialForm_fechagestion").val('');
+        $("#RptResumenDiarioHistorialForm_ejecutivo").val('');
         
-        $("#RevisionHistorialForm_fechagestion").val('');
-        $("#RevisionHistorialForm_ejecutivo").val('');
+        $("#RptResumenDiarioHistorialForm_horaInicioGestion").val('');
+        $("#RptResumenDiarioHistorialForm_horaFinGestion").val('');
+        
+        $("#RptResumenDiarioHistorialForm_precisionVisitas").val('');
+
+        $("#RptResumenDiarioHistorialForm_comentarioSupervision").val('');
+        $("#RptResumenDiarioHistorialForm_enlaceMapa").val('');
+
+        
+        $("#d_comentariosSupervision").val('');
+        $("#d_comentarioSupervision").val('');
+        $("#d_enlaceMapa").val('');
         
         $("#tblGridDetalle").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tblResumenGeneral").jqGrid("clearGridData", true).trigger("reloadGrid");
@@ -13,8 +25,7 @@ $(document).ready(function () {
         $("#tblResumenVisitasValidasInvalidas").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tblPrimeraUltimaVisita").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tblResumenVentas").jqGrid("clearGridData", true).trigger("reloadGrid");
-//        $("#tblGrid").jqGrid("GridDestroy");
-//        GridDestroy("#tblGrid");
+        
     });
     $("#btnExcel").click(function () {
         GenerarDocumentoReporte('GenerateExcel');

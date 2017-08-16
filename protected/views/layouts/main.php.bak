@@ -168,9 +168,10 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
                         array('label' => 'Resumen diario historial', 'url' => array('/RptResumenDiarioHistorial/'), 'visible' => $verMenuRevision),
+                        array('label' => 'Enlaces mapas', 'url' => array('/ComentarioOficina/'), 'visible' => $verMenuRevision),
                         array('label' => 'Resumen diario historial superv.', 'url' => array('/RptResumenDiarioHistorialSupervision/'), 'visible' => $verMenusAdmin),
 //                        array('label' => 'Resumen semanal historial', 'url' => array('/RptResumenSemanalHistorial/'), 'visible' => $verMenuRevision),
-                        array('label' => 'Revision ruta', 'url' => array('/RevisionRuta/'), 'visible' => $verMenuRevision),
+                        array('label' => 'Revision ruta', 'url' => array('/RevisionRuta/'), 'visible' => !Yii::app()->user->isGuest),
                     ),
                 ));
                 ?>
