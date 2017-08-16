@@ -32,7 +32,8 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConsultarReporte"'
 
             <div class="row">
                 <div class="col-lg-4">
-                    <table alignt="left"><tr>
+                    <table alignt="left">
+                        <tr>
                             <td>
                                 <div>
                                     <?php echo $form->labelEx($model, 'fechaOrdenesInicio'); ?>
@@ -46,6 +47,22 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConsultarReporte"'
                                     <?php echo $form->textField($model, 'fechaOrdenesFin', array('class' => 'txtfechaOrdenesFin')) ?>
                                     <?php echo $form->error($model, 'fechaOrdenesFin'); ?>
                                 </div>
+                            </td>
+
+                        </tr>
+                        <tr><td>  <?php
+                                echo $form->labelEx($model, 'tipoReporte');
+                                echo $form->dropDownList(
+                                        $model, 'tipoReporte', array(
+                                    '1' => 'Ejecutivos',
+                                    '2' => 'Supervisores',
+                                    '3' => 'Servicio Cliente',
+                                    '0' => 'Todos')
+//                                        , array(
+//                                    'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+                                );
+                                echo $form->error($model, 'tipoReporte');
+                                ?>
                             </td>
                         </tr>
                     </table>
@@ -111,6 +128,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConsultarReporte"'
         </div>
     </section>
 </div>
-<?php echo CHtml::Button('Editar seleccion', array('id' => 'btnEditarFila', 'class' => 'btn btn-theme')); ?>
+<?php echo CHtml::Button('Editar pedido', array('id' => 'btnEditarFila', 'class' => 'btn btn-theme')); ?>
+<?php echo CHtml::Button('Eliminar pedido', array('id' => 'btnEliminarFila', 'class' => 'btn btn-theme')); ?>
 <?php // $this->renderPartial('/shared/_bodygrid'); ?>
 <?php // $this->renderPartial('/shared/_dialog'); ?>

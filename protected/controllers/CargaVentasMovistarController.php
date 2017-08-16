@@ -11,7 +11,8 @@ class CargaVentasMovistarController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             return;
         } else {
-            unset($_SESSION['ventasMovistarItems']);
+//            unset($_SESSION['ventasMovistarItems']);
+            unset(Yii::app()->session['ventasMovistarItems']);
             $model = new CargaVentasMovistarForm();
             $this->render('/ventaMovistar/cargaVentasMovistar', array('model' => $model));
         }
@@ -20,8 +21,10 @@ class CargaVentasMovistarController extends Controller {
     public function actionSubirArchivo() {
         $response = new Response();
         try {
-            $_SESSION['cantidadVentasDuplicados'] = 0;
-            $_SESSION['cantidadVentasActualizadas'] = 0;
+//            $_SESSION['cantidadVentasDuplicados'] = 0;
+//            $_SESSION['cantidadVentasActualizadas'] = 0;
+            Yii::app()->session['cantidadVentasDuplicados'] = 0;
+            Yii::app()->session['cantidadVentasActualizadas'] = 0;
 
             $model = new CargaVentasMovistarForm();
             $ventasMovistar = array();
@@ -32,8 +35,10 @@ class CargaVentasMovistarController extends Controller {
                     $filePath = Yii::app()->params['archivosVentasMovistar'];
                     $model->rutaArchivo = CUploadedFile::getInstance($model, 'rutaArchivo');
                     $model->rutaArchivo->saveAs($filePath);
-                    $_SESSION['archivosVentasMovistar'] = $filePath;
-                    $_SESSION['ModelForm'] = $model;
+//                    $_SESSION['archivosVentasMovistar'] = $filePath;
+//                    $_SESSION['ModelForm'] = $model;
+                    Yii::app()->session['archivosVentasMovistar'] = $filePath;
+                    Yii::app()->session['ModelForm'] = $model;
 
 //                    var_dump($model->delimitadorColumnas);                    die();
                     $operation = "r";
@@ -59,7 +64,8 @@ class CargaVentasMovistarController extends Controller {
                             $numeroBloque ++;
                         }
 //                        var_dump($ventasMovistar);                        die();
-                        $_SESSION['ventasMovistarItems'] = $ventasMovistar;
+//                        $_SESSION['ventasMovistarItems'] = $ventasMovistar;
+                        Yii::app()->session['ventasMovistarItems'] = $ventasMovistar;
 //                        unlink($filePath);
                     } else {
                         $response->Message = 'El archivo no contiene registros';
@@ -118,13 +124,16 @@ class CargaVentasMovistarController extends Controller {
         $ventasMovistar = '';
 //        var_dump($_SESSION['ventasMovistarItems']);        die();
         try {
-            if (isset($_SESSION['archivosVentasMovistar'])) {
-                $filePath = $_SESSION['archivosVentasMovistar'];
+//            if (isset($_SESSION['archivosVentasMovistar'])) {
+            if (isset(Yii::app()->session['archivosVentasMovistar'])) {
+//                $filePath = $_SESSION['archivosVentasMovistar'];
+                $filePath = Yii::app()->session['archivosVentasMovistar'];
 //                var_dump($_SESSION['ModelForm']["delimitadorColumnas"]);die();
 //                var_dump($filePath);die();
 
                 $operation = "r";
-                $delimiter = $_SESSION['ModelForm']["delimitadorColumnas"]; //';';
+//                $delimiter = $_SESSION['ModelForm']["delimitadorColumnas"]; //';';
+                $delimiter = Yii::app()->session['ModelForm']["delimitadorColumnas"]; //';';
 //                var_dump($filePath);die();
                 $file = new File($filePath, $operation, $delimiter);
 //                var_dump($file);                die();
@@ -173,15 +182,20 @@ class CargaVentasMovistarController extends Controller {
 
                     if ($totalVentasNoGuardados > 0) {
                         $response->Message = 'Se produjo un error en la carga del archivo';
-                        $response->ClassMessage=CLASS_MENSAJE_ERROR;
+                        $response->ClassMessage = CLASS_MENSAJE_ERROR;
                     } else {
 //                        var_dump($_SESSION);                        die();
 
                         $mensaje = 'Se han cargado ' . $totalVentasGuardadas . ' registros correctamente.';
-                        if ($_SESSION['cantidadVentasActualizadas'] > 0)
-                            $mensaje .= '<br> Se han actualizado ' . $_SESSION['cantidadVentasActualizadas'] . ' registros.';
-                        if ($_SESSION['cantidadVentasDuplicados'] > 0)
-                            $mensaje .= '<br> Se han omitido ' . $_SESSION['cantidadVentasDuplicados'] . ' registros duplicados en el archivo.';
+//                        if ($_SESSION['cantidadVentasActualizadas'] > 0)
+//                            $mensaje .= '<br> Se han actualizado ' . $_SESSION['cantidadVentasActualizadas'] . ' registros.';
+//                        if ($_SESSION['cantidadVentasDuplicados'] > 0)
+//                            $mensaje .= '<br> Se han omitido ' . $_SESSION['cantidadVentasDuplicados'] . ' registros duplicados en el archivo.';
+
+                        if (Yii::app()->session['cantidadVentasActualizadas'] > 0)
+                            $mensaje .= '<br> Se han actualizado ' . Yii::app()->session['cantidadVentasActualizadas'] . ' registros.';
+                        if (Yii::app()->session['cantidadVentasDuplicados'] > 0)
+                            $mensaje .= '<br> Se han omitido ' . Yii::app()->session['cantidadVentasDuplicados'] . ' registros duplicados en el archivo.';
                         $mensaje .= $response->Message = $mensaje;
                     }
 //                    var_dump($_SESSION['chipsDuplicados']);
@@ -190,7 +204,8 @@ class CargaVentasMovistarController extends Controller {
                     if (isset($datosVentasMovistar['minesActualizados'])) {
                         $minesActualizados = $datosVentasMovistar['minesActualizados'];
 
-                        $_SESSION['minesActualizados'] = $minesActualizados;
+//                        $_SESSION['minesActualizados'] = $minesActualizados;
+                        Yii::app()->session['minesActualizados'] = $minesActualizados;
                         $response->Result = $minesActualizados;
                     }
                     unlink($filePath);
@@ -223,7 +238,8 @@ class CargaVentasMovistarController extends Controller {
             $existeBdd = VentaMovistarModel::model()->findByAttributes(array('vm_icc' => trim($row['ICC'])));
             if ($existeBdd) {
                 $existeBdd->delete();
-                $_SESSION['cantidadVentasActualizadas'] += 1;
+//                $_SESSION['cantidadVentasActualizadas'] += 1;
+                Yii::app()->session['cantidadVentasActualizadas'] += 1;
                 array_push($datosChipsActualizados, $row['ICC']);
             }
 
@@ -266,15 +282,18 @@ class CargaVentasMovistarController extends Controller {
                 array_push($datosVentasMovistar, $data);
                 unset($data);
             } else {
-                $_SESSION['cantidadVentasDuplicados'] += 1;
+//                $_SESSION['cantidadVentasDuplicados'] += 1;
+                Yii::app()->session['cantidadVentasDuplicados'] += 1;
                 array_push($datosChipsRepetidos, $row['ICC']);
             }
         }
 //        if (count($datosChipsRepetidos))
 //            var_dump($datosChipsRepetidos);die();
 
-        $_SESSION['chipsDuplicados'] = $datosChipsRepetidos;
-        $_SESSION['chipsActualizados'] = $datosChipsActualizados;
+//        $_SESSION['chipsDuplicados'] = $datosChipsRepetidos;
+//        $_SESSION['chipsActualizados'] = $datosChipsActualizados;
+        Yii::app()->session['chipsDuplicados'] = $datosChipsRepetidos;
+        Yii::app()->session['chipsActualizados'] = $datosChipsActualizados;
 
         $datos['ventasMovistar'] = $datosVentasMovistar;
         $datos['minesActualizados'] = $datosChipsActualizados;
@@ -295,7 +314,8 @@ class CargaVentasMovistarController extends Controller {
         $response = new Response();
         try {
 //            if (isset($_SESSION['ventasMovistarItems'])) {
-            $response->Result = $_SESSION['ventasMovistarItems'];
+//            $response->Result = $_SESSION['ventasMovistarItems'];
+            $response->Result = Yii::app()->session['ventasMovistarItems'];
 //            unset($_SESSION['ventasMovistarItems']);
 //            }
         } catch (Exception $e) {
@@ -337,5 +357,4 @@ class CargaVentasMovistarController extends Controller {
 //            ),
 //        );
 //    }
-
 }

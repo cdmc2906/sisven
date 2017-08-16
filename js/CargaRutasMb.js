@@ -59,6 +59,7 @@ function ConfigurarGrid() {
 //        height: 'auto',
         height: 360,
 //        width: 200,
+        hidegrid: false,
         autowidth: true,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,

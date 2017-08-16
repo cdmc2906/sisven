@@ -7,7 +7,9 @@
  * @property integer $o_codigo
  * @property integer $o_id
  * @property string $o_concepto
+ * @property string $o_codigo_mb
  * @property string $o_comentario
+ * @property string $o_fch_venta
  * @property string $o_fch_creacion
  * @property string $o_fch_despacho
  * @property string $o_tipo
@@ -47,7 +49,6 @@
  * @property string $o_fch_desde
  * @property string $o_fch_hasta
  * @property integer $o_usr_ing_mod
- * @property string $o_codigo_mb
  */
 class OrdenesMbModel extends CActiveRecord
 {
@@ -68,16 +69,16 @@ class OrdenesMbModel extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('o_id, o_usr_ing_mod', 'numerical', 'integerOnly'=>true),
-			array('o_concepto, o_comentario, o_codigo_mb', 'length', 'max'=>500),
+			array('o_concepto, o_codigo_mb, o_comentario', 'length', 'max'=>500),
 			array('o_tipo, o_estatus, o_cod_cliente', 'length', 'max'=>50),
 			array('o_nom_cliente, o_id_cliente, o_lista_precio, o_nom_lista_precio, o_bodega_origen, o_nom_bodega_origen, o_termino_pago, o_nom_termino_pago, o_usuario, o_nom_usuario, o_oficina, o_nom_oficina, o_tipo_secuencia', 'length', 'max'=>100),
 			array('o_direccion', 'length', 'max'=>250),
 			array('o_iva_12_base, o_iva_12_valor, o_iva_0_base, o_iva_0_valor, o_iva_14_base, o_iva_14_valor, o_subtotal, o_porcentaje_descuento, o_descuento, o_impuestos, o_otros_cargos, o_total', 'length', 'max'=>10),
 			array('o_datos, o_referencia, o_estado_proceso', 'length', 'max'=>1024),
-			array('o_fch_creacion, o_fch_despacho, o_fch_ingreso, o_fch_modificacion, o_fch_desde, o_fch_hasta', 'safe'),
+			array('o_fch_venta, o_fch_creacion, o_fch_despacho, o_fch_ingreso, o_fch_modificacion, o_fch_desde, o_fch_hasta', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('o_codigo, o_id, o_concepto, o_comentario, o_fch_creacion, o_fch_despacho, o_tipo, o_estatus, o_cod_cliente, o_nom_cliente, o_id_cliente, o_direccion, o_lista_precio, o_nom_lista_precio, o_bodega_origen, o_nom_bodega_origen, o_termino_pago, o_nom_termino_pago, o_usuario, o_nom_usuario, o_oficina, o_nom_oficina, o_tipo_secuencia, o_iva_12_base, o_iva_12_valor, o_iva_0_base, o_iva_0_valor, o_iva_14_base, o_iva_14_valor, o_subtotal, o_porcentaje_descuento, o_descuento, o_impuestos, o_otros_cargos, o_total, o_datos, o_referencia, o_estado_proceso, o_fch_ingreso, o_fch_modificacion, o_fch_desde, o_fch_hasta, o_usr_ing_mod, o_codigo_mb', 'safe', 'on'=>'search'),
+			array('o_codigo, o_id, o_concepto, o_codigo_mb, o_comentario, o_fch_venta, o_fch_creacion, o_fch_despacho, o_tipo, o_estatus, o_cod_cliente, o_nom_cliente, o_id_cliente, o_direccion, o_lista_precio, o_nom_lista_precio, o_bodega_origen, o_nom_bodega_origen, o_termino_pago, o_nom_termino_pago, o_usuario, o_nom_usuario, o_oficina, o_nom_oficina, o_tipo_secuencia, o_iva_12_base, o_iva_12_valor, o_iva_0_base, o_iva_0_valor, o_iva_14_base, o_iva_14_valor, o_subtotal, o_porcentaje_descuento, o_descuento, o_impuestos, o_otros_cargos, o_total, o_datos, o_referencia, o_estado_proceso, o_fch_ingreso, o_fch_modificacion, o_fch_desde, o_fch_hasta, o_usr_ing_mod', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -101,7 +102,9 @@ class OrdenesMbModel extends CActiveRecord
 			'o_codigo' => 'O Codigo',
 			'o_id' => 'O',
 			'o_concepto' => 'O Concepto',
+			'o_codigo_mb' => 'O Codigo Mb',
 			'o_comentario' => 'O Comentario',
+			'o_fch_venta' => 'O Fch Venta',
 			'o_fch_creacion' => 'O Fch Creacion',
 			'o_fch_despacho' => 'O Fch Despacho',
 			'o_tipo' => 'O Tipo',
@@ -141,7 +144,6 @@ class OrdenesMbModel extends CActiveRecord
 			'o_fch_desde' => 'O Fch Desde',
 			'o_fch_hasta' => 'O Fch Hasta',
 			'o_usr_ing_mod' => 'O Usr Ing Mod',
-			'o_codigo_mb' => 'O Codigo Mb',
 		);
 	}
 
@@ -166,7 +168,9 @@ class OrdenesMbModel extends CActiveRecord
 		$criteria->compare('o_codigo',$this->o_codigo);
 		$criteria->compare('o_id',$this->o_id);
 		$criteria->compare('o_concepto',$this->o_concepto,true);
+		$criteria->compare('o_codigo_mb',$this->o_codigo_mb,true);
 		$criteria->compare('o_comentario',$this->o_comentario,true);
+		$criteria->compare('o_fch_venta',$this->o_fch_venta,true);
 		$criteria->compare('o_fch_creacion',$this->o_fch_creacion,true);
 		$criteria->compare('o_fch_despacho',$this->o_fch_despacho,true);
 		$criteria->compare('o_tipo',$this->o_tipo,true);
@@ -206,7 +210,6 @@ class OrdenesMbModel extends CActiveRecord
 		$criteria->compare('o_fch_desde',$this->o_fch_desde,true);
 		$criteria->compare('o_fch_hasta',$this->o_fch_hasta,true);
 		$criteria->compare('o_usr_ing_mod',$this->o_usr_ing_mod);
-		$criteria->compare('o_codigo_mb',$this->o_codigo_mb,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

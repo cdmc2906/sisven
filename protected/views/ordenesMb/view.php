@@ -24,7 +24,9 @@ $this->menu=array(
 		'o_codigo',
 		'o_id',
 		'o_concepto',
+		'o_codigo_mb',
 		'o_comentario',
+		'o_fch_venta',
 		'o_fch_creacion',
 		'o_fch_despacho',
 		'o_tipo',
@@ -64,6 +66,5 @@ $this->menu=array(
 		'o_fch_desde',
 		'o_fch_hasta',
 		'o_usr_ing_mod',
-		'o_codigo_mb',
 	),
 )); ?>

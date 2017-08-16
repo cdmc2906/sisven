@@ -114,9 +114,6 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
 
 <br><br>
 <section class="">
-    <header class="">
-        <h2><strong>Detalle archivo Ordenes</strong></h2>
-    </header>
     <div class="">
         <?php $this->renderPartial('/shared/_bodygrid'); ?>
     </div>

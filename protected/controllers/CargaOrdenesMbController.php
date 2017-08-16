@@ -11,7 +11,6 @@ class CargaOrdenesMbController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             return;
         } else {
-//            unset($_SESSION['ordenesMbItems']);
             unset(Yii::app()->session['ordenesMbItems']);
             $model = new CargaOrdenesMbForm();
             $this->render('/ordenesmb/cargaOrdenesMb', array('model' => $model));
@@ -21,30 +20,23 @@ class CargaOrdenesMbController extends Controller {
     public function actionSubirArchivo() {
         $response = new Response();
         try {
-//            $_SESSION['cantidadOrdenesDuplicados'] = 0;
-//            $_SESSION['cantidadOrdenesActualizadas'] = 0;
-
-             Yii::app()->session['cantidadOrdenesDuplicados'] = 0;
-             Yii::app()->session['cantidadOrdenesActualizadas'] = 0;
+            Yii::app()->session['cantidadOrdenesDuplicados'] = 0;
+            Yii::app()->session['cantidadOrdenesActualizadas'] = 0;
 
             $model = new CargaOrdenesMbForm();
             $ordenesMbItems = array();
             if (isset($_POST['CargaOrdenesMbForm'])) {
                 $model->attributes = $_POST['CargaOrdenesMbForm'];
                 if ($model->validate()) {
-//                    unset($_SESSION['ordenesMbItems']);
                     unset(Yii::app()->session['ordenesMbItems']);
 
                     $filePath = Yii::app()->params['archivosOrdenesMb'];
                     $model->rutaArchivo = CUploadedFile::getInstance($model, 'rutaArchivo');
                     $model->rutaArchivo->saveAs($filePath);
-//                    $_SESSION['archivosOrdenesMb'] = $filePath;
-//                    $_SESSION['ModelForm'] = $model;
-                     Yii::app()->session['archivosOrdenesMb'] = $filePath;
-                     Yii::app()->session['ModelForm'] = $model;
+                    Yii::app()->session['archivosOrdenesMb'] = $filePath;
+                    Yii::app()->session['ModelForm'] = $model;
 
                     $operation = "r";
-//                    $delimiter = ';';
                     $delimiter = $model->delimitadorColumnas;
                     $file = new File($filePath, $operation, $delimiter);
                     $totalRows = $file->getTotalFilas();
@@ -58,16 +50,13 @@ class CargaOrdenesMbController extends Controller {
                             $file = new File($filePath, $operation, $delimiter);
                             $registroInicio = (($numeroBloque - 1) * $tamanioBloque) + 1;
                             $dataInsert = $this->getDatosMostrar($file, $registroInicio, $tamanioBloque);
-//                            var_dump($dataInsert);die();
                             if (count($dataInsert) > 0) {
                                 $ordenesMbItems = array_merge($ordenesMbItems, $dataInsert);
                                 unset($dataInsert);
                             }
                             $numeroBloque ++;
                         }
-//                        $_SESSION['ordenesMbItems'] = $ordenesMbItems;
-                         Yii::app()->session['ordenesMbItems'] = $ordenesMbItems;
-//                        unlink($filePath);
+                        Yii::app()->session['ordenesMbItems'] = $ordenesMbItems;
                     } else {
                         $response->Message = 'El archivo no contiene registros';
                         $response->Status = NOTICE;
@@ -95,6 +84,7 @@ class CargaOrdenesMbController extends Controller {
                 'CONCEPTO' => ($row['CONCEPTO'] == '') ? null : $row['CONCEPTO'],
                 'CODIGO' => ($row['CODIGO'] == '') ? null : $row['CODIGO'],
                 'COMENTARIO' => ($row['COMENTARIO'] == '') ? null : $row['COMENTARIO'],
+//                'FECHAVENTA' => ($row['FECHAVENTA'] == '') ? null : $row['FECHAVENTA'],
                 'FECHACREACION' => ($row['FECHACREACION'] == '') ? null : $row['FECHACREACION'],
                 'FECHADESPACHO' => ($row['FECHADESPACHO'] == '') ? null : $row['FECHADESPACHO'],
                 'TIPO' => ($row['TIPO'] == '') ? null : $row['TIPO'],
@@ -142,13 +132,13 @@ class CargaOrdenesMbController extends Controller {
         $DclientesRepetidos = '';
         try {
 //            if (isset($_SESSION['archivosOrdenesMb'])) {
-            if (isset( Yii::app()->session['archivosOrdenesMb'])) {
+            if (isset(Yii::app()->session['archivosOrdenesMb'])) {
 //                $filePath = $_SESSION['archivosOrdenesMb'];
-                $filePath =  Yii::app()->session['archivosOrdenesMb'];
+                $filePath = Yii::app()->session['archivosOrdenesMb'];
                 $operation = "r";
 //                $delimiter = ';';
 //                $delimiter = $_SESSION['ModelForm']["delimitadorColumnas"]; //';';
-                $delimiter =  Yii::app()->session['ModelForm']["delimitadorColumnas"]; //';';
+                $delimiter = Yii::app()->session['ModelForm']["delimitadorColumnas"]; //';';
                 $file = new File($filePath, $operation, $delimiter);
                 $totalRows = $file->getTotalFilas();
                 $totalOrdenesGuardados = 0;
@@ -194,13 +184,13 @@ class CargaOrdenesMbController extends Controller {
 
                         $mensaje = 'Se han cargado ' . $totalOrdenesGuardados . ' registros correctamente.';
 //                        if ($_SESSION['cantidadOrdenesActualizadas'] > 0)
-                        if ( Yii::app()->session['cantidadOrdenesActualizadas'] > 0)
+                        if (Yii::app()->session['cantidadOrdenesActualizadas'] > 0)
 //                            $mensaje .= '<br> Se han actualizado ' . $_SESSION['cantidadOrdenesActualizadas'] . ' registros.';
-                            $mensaje .= '<br> Se han actualizado ' .  Yii::app()->session['cantidadOrdenesActualizadas'] . ' registros.';
+                            $mensaje .= '<br> Se han actualizado ' . Yii::app()->session['cantidadOrdenesActualizadas'] . ' registros.';
 //                        if ($_SESSION['cantidadOrdenesDuplicados'] > 0)
-                        if ( Yii::app()->session['cantidadOrdenesDuplicados'] > 0)
+                        if (Yii::app()->session['cantidadOrdenesDuplicados'] > 0)
 //                            $mensaje .= '<br> Se han omitido ' . $_SESSION['cantidadOrdenesDuplicados'] . ' registros duplicados en el archivo.';
-                            $mensaje .= '<br> Se han omitido ' .  Yii::app()->session['cantidadOrdenesDuplicados'] . ' registros duplicados en el archivo.';
+                            $mensaje .= '<br> Se han omitido ' . Yii::app()->session['cantidadOrdenesDuplicados'] . ' registros duplicados en el archivo.';
                         $mensaje .= $response->Message = $mensaje;
                     }
 
@@ -234,7 +224,7 @@ class CargaOrdenesMbController extends Controller {
             if ($existeBdd) {
                 $existeBdd->delete();
 //                $_SESSION['cantidadOrdenesActualizadas'] += 1;
-                 Yii::app()->session['cantidadOrdenesActualizadas'] += 1;
+                Yii::app()->session['cantidadOrdenesActualizadas'] += 1;
             }
 
             $exisArray = false;
@@ -260,6 +250,7 @@ class CargaOrdenesMbController extends Controller {
                     'o_concepto' => ($filaArchivo['CONCEPTO'] == '') ? null : $filaArchivo['CONCEPTO'],
                     'o_codigo_mb' => ($filaArchivo['CODIGO'] == '') ? null : $filaArchivo['CODIGO'],
                     'o_comentario' => ($filaArchivo['COMENTARIO'] == '') ? null : $filaArchivo['COMENTARIO'],
+//                    'o_fch_venta' => ($filaArchivo['FECHAVENTA'] == '') ? null : $filaArchivo['FECHAVENTA'],
                     'o_fch_creacion' => ($filaArchivo['FECHACREACION'] == '') ? null : $sfechaCreacion,
                     'o_fch_despacho' => ($filaArchivo['FECHADESPACHO'] == '') ? null : $sfechaDespacho,
                     'o_tipo' => ($filaArchivo['TIPO'] == '') ? null : $filaArchivo['TIPO'],
@@ -305,7 +296,7 @@ class CargaOrdenesMbController extends Controller {
                 unset($data);
             } else {
 //                $_SESSION['cantidadOrdenesDuplicados'] += 1;
-                 Yii::app()->session['cantidadOrdenesDuplicados'] += 1;
+                Yii::app()->session['cantidadOrdenesDuplicados'] += 1;
             }
         }
 
@@ -324,9 +315,9 @@ class CargaOrdenesMbController extends Controller {
         $response = new Response();
         try {
 //            $response->Result = $_SESSION['ordenesMbItems'];
-            $response->Result =  Yii::app()->session['ordenesMbItems'];
+            $response->Result = Yii::app()->session['ordenesMbItems'];
 //            unset($_SESSION['ordenesMbItems']);
-            unset( Yii::app()->session['ordenesMbItems']);
+            unset(Yii::app()->session['ordenesMbItems']);
         } catch (Exception $e) {
             $mensaje = array(
                 'code' => $e->getCode(),
@@ -365,5 +356,4 @@ class CargaOrdenesMbController extends Controller {
 //            ),
 //        );
 //    }
-
 }

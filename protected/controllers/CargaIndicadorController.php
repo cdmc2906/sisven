@@ -11,9 +11,10 @@ class CargaIndicadorController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             return;
         } else {
-            unset($_SESSION['indicadorItems']);
+//            unset($_SESSION['indicadorItems']);
+            unset(Yii::app()->session['indicadorItems']);
             $model = new CargaIndicadorForm();
-            $this->render('/indicador/cargaIndicador', array('model' => $model));
+            $this->render('/indicadores/cargaIndicador', array('model' => $model));
         }
     }
 
@@ -22,7 +23,8 @@ class CargaIndicadorController extends Controller {
         try {
             $model = new CargaIndicadorForm();
             $indicadorItems = array();
-            $_SESSION['indicadoresDuplicados'] = 0;
+//            $_SESSION['indicadoresDuplicados'] = 0;
+            Yii::app()->session['indicadoresDuplicados'] = 0;
             if (isset($_POST['CargaIndicadorForm'])) {
                 $model->attributes = $_POST['CargaIndicadorForm'];
                 if ($model->validate()) {
@@ -31,8 +33,10 @@ class CargaIndicadorController extends Controller {
                     $filePath = Yii::app()->params['archivosIndicadores'];
                     $model->rutaArchivo = CUploadedFile::getInstance($model, 'rutaArchivo');
                     $model->rutaArchivo->saveAs($filePath);
-                    $_SESSION['FileIndicador'] = $filePath;
-                    $_SESSION['ModelForm'] = $model;
+//                    $_SESSION['FileIndicador'] = $filePath;
+//                    $_SESSION['ModelForm'] = $model;
+                    Yii::app()->session['FileIndicador'] = $filePath;
+                    Yii::app()->session['ModelForm'] = $model;
 
 //                    var_dump($model->delimitadorColumnas);                    die();
                     $operation = "r";
@@ -58,7 +62,8 @@ class CargaIndicadorController extends Controller {
                             }
                             $numeroBloque ++;
                         }
-                        $_SESSION['indicadorItems'] = $indicadorItems;
+//                        $_SESSION['indicadorItems'] = $indicadorItems;
+                        Yii::app()->session['indicadorItems'] = $indicadorItems;
 //                        unlink($filePath);
 //var_dump($indicadorItems);die();
 //                        var_dump($_SESSION['indicadorItems']);die();
@@ -77,7 +82,7 @@ class CargaIndicadorController extends Controller {
             $response->ClassMessage = CLASS_MENSAJE_ERROR;
         }
 
-        $this->render('/indicador/cargaIndicador', array('model' => $model));
+        $this->render('/indicadores/cargaIndicador', array('model' => $model));
         return;
     }
 
@@ -143,12 +148,17 @@ class CargaIndicadorController extends Controller {
     public function actionGuardarIndicadores() {
         $response = new Response();
         try {
-            if (isset($_SESSION['FileIndicador'])) {
-                $filePath = $_SESSION['FileIndicador'];
+//            if (isset($_SESSION['FileIndicador'])) {
+            if (isset(Yii::app()->session['FileIndicador'])) {
+//                $filePath = $_SESSION['FileIndicador'];
+                Yii::app()->session['indicadoresDuplicados'] = 0;
+                $filePath = Yii::app()->session['FileIndicador'];
 
                 $operation = "r";
 //              $delimiter = ';';
-                $delimiter = $_SESSION['ModelForm']["delimitadorColumnas"]; //';';;
+//                $delimiter = $_SESSION['ModelForm']["delimitadorColumnas"]; //';';;
+                $delimiter = Yii::app()->session['ModelForm']["delimitadorColumnas"]; //';';;
+
                 $file = new File($filePath, $operation, $delimiter);
                 $totalRows = $file->getTotalFilas();
 
@@ -168,8 +178,10 @@ class CargaIndicadorController extends Controller {
                         $datosIndicadores = $dataInsertar;
 //                        $_SESSION['clientesRepetidos'] = $dataInsertar['clientesRepetidos'];
 
-                        if (isset($_SESSION['indicadoresDuplicados'])) {
-                            $totalIndicadoresDuplicados = $totalIndicadoresDuplicados + $_SESSION['indicadoresDuplicados'];
+//                        if (isset($_SESSION['indicadoresDuplicados'])) {
+                        if (isset(Yii::app()->session['indicadoresDuplicados'])) {
+//                            $totalIndicadoresDuplicados = $totalIndicadoresDuplicados + $_SESSION['indicadoresDuplicados'];
+                            $totalIndicadoresDuplicados = $totalIndicadoresDuplicados + Yii::app()->session['indicadoresDuplicados'];
                         }
                         if (count($datosIndicadores) > 0) {
                             $dbConnection = new CI_DB_active_record(null);
@@ -235,7 +247,8 @@ class CargaIndicadorController extends Controller {
             if (isset($existeBdd)) {
 //                var_dump($existeBdd);die();
                 $existeBdd->delete();
-                $_SESSION['indicadoresDuplicados'] += 1;
+//                $_SESSION['indicadoresDuplicados'] += 1;
+                Yii::app()->session['indicadoresDuplicados'] += 1;
             }
 
             $exisArray = false;
@@ -316,10 +329,12 @@ class CargaIndicadorController extends Controller {
 
         $response = new Response();
         try {
-            $response->Result = $_SESSION['indicadorItems'];
+//            $response->Result = $_SESSION['indicadorItems'];
+            $response->Result = Yii::app()->session['indicadorItems'];
 //            var_dump($_SESSION['indicadorItems'], $response->Result); die();
 //            var_dump($response->Result);die();
-            unset($_SESSION['indicadorItems']);
+//            unset($_SESSION['indicadorItems']);
+            unset(Yii::app()->session['indicadorItems']);
         } catch (Exception $e) {
             $mensaje = array(
                 'code' => $e->getCode(),
@@ -359,5 +374,4 @@ class CargaIndicadorController extends Controller {
 //            ),
 //        );
 //    }
-
 }

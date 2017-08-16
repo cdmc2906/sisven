@@ -7,6 +7,7 @@
 class ReporteOrdenesxFechaForm extends CFormModel {
     public $fechaOrdenesInicio;
     public $fechaOrdenesFin;
+    public $tipoReporte;
 //    public $fechaConsumoFin;
 //    public $rutaArchivo;
 
@@ -15,6 +16,7 @@ class ReporteOrdenesxFechaForm extends CFormModel {
      */
     public function rules() {
         return array(
+            array('tipoReporte', 'required'),
             array('fechaOrdenesInicio', 'required'),
             array('fechaOrdenesFin', 'required'),
 //            array('fechaConsumo, rutaArchivo', 'safe'),
@@ -30,6 +32,7 @@ class ReporteOrdenesxFechaForm extends CFormModel {
         return array(
             'fechaOrdenesInicio' => 'Fecha Inicio',
             'fechaOrdenesFin' => 'Fecha Fin',
+            'tipoReporte' => 'Seleccion el tipo reporte',
 //            'fechaConsumoFin' => 'Fecha Consumo Fin',
         );
     }

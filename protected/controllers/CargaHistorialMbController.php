@@ -123,6 +123,8 @@ class CargaHistorialMbController extends Controller {
     public function actionGuardarHistorial() {
         $response = new Response();
         $DclientesRepetidos = '';
+        $mensaje='';
+//        $test='';
         try {
 //            if (isset($_SESSION['archivosHistorialMb'])) {
             if (isset(Yii::app()->session['archivosHistorialMb'])) {
@@ -154,6 +156,7 @@ class CargaHistorialMbController extends Controller {
 //                        if (isset($_SESSION['historialmb'])) {
 //                            $totalClientesDuplicados = $totalClientesDuplicados + $_SESSION['clientesDuplicados'];
 //                        }
+//                          var_dump($dataInsertar);                        die();
                         if (count($datosHistorialMb) > 0) {
                             $dbConnection = new CI_DB_active_record(null);
 //                            var_dump($datosHistorialMb);                            die();
@@ -161,7 +164,8 @@ class CargaHistorialMbController extends Controller {
 //                            var_dump($hola)                                    ;die();
                             $sql = $dbConnection->insert_batch('tb_historial_mb', $datosHistorialMb);
                             $sql = str_replace('"', '', $sql);
-//                            var_dump($sql);                            die();
+//                            $test=$sql  ;
+//                            var_dump($sql);die()  ;
                             $connection = Yii::app()->db_conn;
                             $connection->active = true;
                             $transaction = $connection->beginTransaction();
@@ -172,6 +176,7 @@ class CargaHistorialMbController extends Controller {
                                 $transaction->commit();
                                 $totalHistorialGuardados = $totalHistorialGuardados + $countInsert;
                             } else {
+                                
                                 $transaction->rollback();
                                 $totalHistorialNoGuardados = $totalHistorialNoGuardados + $countInsert;
                             }
@@ -182,6 +187,7 @@ class CargaHistorialMbController extends Controller {
                     }
 
                     if ($totalHistorialNoGuardados > 0) {
+                        
                         $response->Message = 'Se produjo un error en la carga del archivo';
                     } else {
                         if ($totalHistorialGuardados > 0)
@@ -191,6 +197,9 @@ class CargaHistorialMbController extends Controller {
 
                         $response->Message = $mensaje;
                     }
+//                    if($totalHistorialGuardados==0&&$totalHistorialNoGuardados==0)
+//                        var_dump($test);                            die();
+//                    var_dump($totalHistorialGuardados,$totalHistorialNoGuardados);die();
 
                     unlink($filePath);
                 } else {
@@ -225,6 +234,11 @@ class CargaHistorialMbController extends Controller {
         // agregar 
         foreach ($dataFile as $row) {
             $existeBdd = HistorialMbModel::model()->findByAttributes(array('h_id' => $row['ID']));
+            if ($existeBdd) {
+                $existeBdd->delete();
+//                $_SESSION['cantidadOrdenesActualizadas'] += 1;
+                Yii::app()->session['cantidadHistorialActualizados'] += 1;
+            }
             $exisArray = false;
 
             foreach ($datosHistorial as $item) {
@@ -232,8 +246,8 @@ class CargaHistorialMbController extends Controller {
                 if ($exisArray)
                     break;
             }
-
-            if (!$existeBdd && !$exisArray) {
+//            var_dump(!$existeBdd,!$exisArray);die();
+            if (!$exisArray) {
 
                 $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHA']);
                 $dateString = $date->format(FORMATO_FECHA_LONG);

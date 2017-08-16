@@ -32,7 +32,7 @@ class CargaIndicadorForm extends CFormModel {
 //            'fechaConsumo' => 'Fecha Consumo',
             'rutaArchivo' => 'Archivo Indicadores',
             'delimitadorColumnas' => 'Delimitador columnas archivo',
-            'fechaUltimaCarga' => 'Ultima fecha facturado',
+            'fechaUltimaCarga' => 'Ultima fecha carga de indicadores',
             
         );
     }

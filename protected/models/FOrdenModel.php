@@ -118,5 +118,20 @@ class FOrdenModel extends DAOModel {
         $this->Close();
         return $data;
     }
+    
+    public function getEliminarOrden($idOrden, $codigoOrden) {
+        $sql = "
+           DELETE FROM tb_ordenes_mb
+           WHERE o_codigo_mb='" . $codigoOrden . "'
+               AND o_id='" . $idOrden . "';
+            ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql)->execute();
+//        var_dump($command);die();
+        $data = $command;
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
 
 }

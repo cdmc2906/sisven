@@ -13,6 +13,7 @@ $(document).ready(function () {
     $("#btnExcel").click(function () {
         GenerarDocumentoReporte('GenerateExcel');
     });
+    
     $("#btnEditarFila").click(function () {
         var idFilaSeleccionada = jQuery("#tblGridDetalle").jqGrid('getGridParam', 'selrow');
         if (idFilaSeleccionada != null)
@@ -30,6 +31,35 @@ $(document).ready(function () {
                         modal: true,
                         editCaption: 'Actualizar Venta',
                         bSubmit: "Actualizar",
+                        bCancel: "Cancelar",
+                        closeAfterEdit: true,
+                        checkOnSubmit: false,
+                        clearAfterAdd: false,
+                        saveData: 'Desea guardar los cambios',
+                        reloadAfterSubmit: true
+                    }
+            );
+        } else
+            alert("Por favor seleccione una fila");
+    });
+    
+     $("#btnEliminarFila").click(function () {
+        var idFilaSeleccionada = jQuery("#tblGridDetalle").jqGrid('getGridParam', 'selrow');
+        if (idFilaSeleccionada != null)
+        {
+            var idFilaSeleccionada = jQuery("#tblGridDetalle").jqGrid('getGridParam', 'selrow');
+            var fila = jQuery("#tblGridDetalle").jqGrid('getRowData', idFilaSeleccionada);
+
+            jQuery("#tblGridDetalle").jqGrid(
+                    'editGridRow',
+                    idFilaSeleccionada,
+                    {
+                        drag: false,
+                        url: "reporteordenesxfecha/EliminarPedido",
+                        height: 200,
+                        modal: true,
+                        editCaption: 'Eliminar Pedido',
+                        bSubmit: "Eliminar",
                         bCancel: "Cancelar",
                         closeAfterEdit: true,
                         checkOnSubmit: false,

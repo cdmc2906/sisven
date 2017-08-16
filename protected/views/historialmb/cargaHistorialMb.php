@@ -35,9 +35,9 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
 //                    $ventas= VentaMovistarModel::model()->
                     $command = Yii::app()->db->createCommand('
                         select 
-                                 r_fch_ingreso as fecha 
-                            from tb_ruta_mb 
-                            order by r_fch_ingreso desc 
+                                 h_fch_ingreso as fecha 
+                            from tb_historial_mb 
+                            order by h_fch_ingreso desc 
                             limit 1;');
                     $resultado = $command->queryRow();
                     $ultimaFecha = DateTime::createFromFormat('Y-m-d H:i:s', $resultado['fecha'])->format(FORMATO_FECHA_LONG_2);
@@ -115,9 +115,6 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
 
 <br><br>
 <section class="">
-    <header class="">
-        <h2><strong>Detalle archivo Historial</strong></h2>
-    </header>
     <div class="">
         <?php $this->renderPartial('/shared/_bodygrid'); ?>
     </div>

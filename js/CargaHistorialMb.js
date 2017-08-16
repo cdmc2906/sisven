@@ -75,17 +75,19 @@ function ConfigurarGrid() {
         rowList: ElementosPagina,
         //sortname: 'bank_date',
         sortorder: 'ASC',
-        caption:'Detalle historial Mobilvendor',
-        
+        caption: 'Detalle historial Mobilvendor',
+
         viewrecords: true,
 //        height: 'auto',
         height: 360,
 //        width: 200,
+        caption: "Detalle archivo historial",
+        hidegrid: false,
         autowidth: true,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
         rownumbers: true,
-        
+
         jsonReader: {
             root: "Result",
             repeatitems: false, //cuando el array de la data son object

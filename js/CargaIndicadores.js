@@ -89,6 +89,8 @@ function ConfigurarGrid() {
         height: 360,
 //        width: 200,
         autowidth: true,
+          caption: "Detalle archivo indicadores",
+        hidegrid: false,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
         rownumbers: true,

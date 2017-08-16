@@ -100,9 +100,10 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 $verMenuRevision = false;
                 $verMenusAdmin = false;
 //                var_dump(Yii::app()->user->id);die();
-                if (Yii::app()->user->id == 1 || Yii::app()->user->id == 3 || Yii::app()->user->id == 4 || Yii::app()->user->id == 5 || Yii::app()->user->id == 6 || Yii::app()->user->id == 7)
+
+                if (Yii::app()->user->id == 1 || Yii::app()->user->id == 3 || Yii::app()->user->id == 4 || Yii::app()->user->id == 5 || Yii::app()->user->id == 6 || Yii::app()->user->id == 7 || Yii::app()->user->id == 8 || Yii::app()->user->id == 9)
                     $verMenuRevision = true;
-                if (Yii::app()->user->id == 1 || Yii::app()->user->id == 3)
+                if (Yii::app()->user->id == 1 || Yii::app()->user->id == 3 || Yii::app()->user->id == 8 || Yii::app()->user->id == 9)
                     $verMenusAdmin = true;
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
@@ -167,6 +168,8 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
                         array('label' => 'Resumen diario historial', 'url' => array('/RptResumenDiarioHistorial/'), 'visible' => $verMenuRevision),
+                        array('label' => 'Enlaces mapas', 'url' => array('/ComentarioOficina/'), 'visible' => $verMenuRevision),
+                        array('label' => 'Resumen diario historial superv.', 'url' => array('/RptResumenDiarioHistorialSupervision/'), 'visible' => $verMenusAdmin),
 //                        array('label' => 'Resumen semanal historial', 'url' => array('/RptResumenSemanalHistorial/'), 'visible' => $verMenuRevision),
                         array('label' => 'Revision ruta', 'url' => array('/RevisionRuta/'), 'visible' => !Yii::app()->user->isGuest),
                     ),

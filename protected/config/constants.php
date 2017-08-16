@@ -20,6 +20,15 @@ define('CLASS_MENSAJE_ERROR', 'error');
 define('INTERVALO_MONITOREO_SEC', 30);
 define('INTERVALO_REFRESCO_AUTOMATICO', 60);
 
+define('GRUPO_USUARIOS_SUPERVISION', '1,2');
+define('GRUPO_USUARIOS_ADMIN', '\'QU17\',\'QU19\',\'QU21\',\'QU22\',\'QU26\',\'QU25\'');
+
+
+define('GRUPO_EJECUTIVOS_ZONA', '\'QU17\',\'QU19\',\'QU21\',\'QU22\',\'QU26\',\'QU25\'');
+define('GRUPO_SUPERVISORES', '\'QU20\',\'QU39\',\'QU47\'');
+define('GRUPO_SERVICIO_CLIENTE', '\'QU23\',\'QU24\'');
+define('GRUPO_TODOS', '\'QU17\',\'QU19\',\'QU21\',\'QU22\',\'QU26\',\'QU25\',\'QU23\',\'QU24\',\'QU20\',\'QU39\',\'QU47\'');
+
 define('COPYRIGHT', 'TECECAB');
 define('LEYENDA_COPYRIGHT', 'Todos los derechos reservados &copy;');
 
@@ -32,7 +41,7 @@ define('TEXT_OPCION_TODOS', '--Todos--');
 define('CLAVE_ENCRIPTACION_DATOS', 'claveSecreta');
 define('CLAVE_ENCRIPTACION_ARCHIVOS', 'claveSecretaArchivos');
 
-/*UBICACION ARCHIVOS ENCRIPTADOS*/
+/* UBICACION ARCHIVOS ENCRIPTADOS */
 define('CLAVE_ENCRIPTACION', 'claveSecreta');
 define('IV_ENCRIPTACION', '1234658');
 define('RUTA_ARCHIVO_CLAVE', 'E:\confBddEtiquetas\firma_segura.conf');

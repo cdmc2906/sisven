@@ -2,15 +2,16 @@
 
 class ReportesModel extends DAOModel {
 
-    public function getTotalOrdenesxFecha($datos) {
-        $hora_inicio = "00:00:00";
-        $hora_fin = "23:59:59";
+    public function getTotalOrdenesxFecha($datos,$grupoEjecutivos) {
+        $hora_inicio = "09:00:00";
+//        $hora_fin = "23:59:59";
 
         $fechaInicioA = $datos['fechaOrdenesInicio'];
         $fechaFinA = $datos['fechaOrdenesFin'];
+        
         $fechaInicioB = $fechaInicioA . " " . $hora_inicio;
-        $fechaFinB = $fechaFinA . " " . $hora_fin;
-
+//        $fechaFinB = $fechaFinA . " " . $hora_fin;
+        $fechaFinB = date('Y-m-d', strtotime($fechaFinA. ' + 1 days')) . ' 09:00';
         $sql = "
             SELECT
                     o_usuario AS CODIGOEJECUTIVO                
@@ -20,6 +21,7 @@ class ReportesModel extends DAOModel {
                 WHERE 1 = 1
                     AND o_fch_creacion >= '" . $fechaInicioB . "'
                     AND o_fch_creacion<'" . $fechaFinB . "'	
+                    AND o_usuario in(" . $grupoEjecutivos. ")	
                 GROUP BY o_usuario
                 ORDER BY o_usuario;";
 
@@ -57,14 +59,18 @@ class ReportesModel extends DAOModel {
         $this->Close();
         return $data;
     }
+    
     public function getOrdenesxEjecutivoxFecha($ejecutivo,$fechaInicio,$fechaFin) {
-        $hora_inicio = "00:00:00";
-        $hora_fin = "23:59:59";
+        $hora_inicio = "09:00:00";
+//        $hora_fin = "23:59:59";
+        
 
         $fechaInicioA = $fechaInicio;
         $fechaFinA = $fechaFin;
         $fechaInicioB = $fechaInicioA . " " . $hora_inicio;
-        $fechaFinB = $fechaFinA . " " . $hora_fin;
+//        $fechaFinB = $fechaFinA . " " . $hora_fin;
+        
+        $fechaFinB = date('Y-m-d', strtotime($fechaFinA. ' + 1 days')) . ' 09:00';
 
         $sql = "
         SELECT

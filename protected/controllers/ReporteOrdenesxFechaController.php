@@ -29,7 +29,21 @@ class ReporteOrdenesxFechaController extends Controller {
                 $model->attributes = $_POST['ReporteOrdenesxFechaForm'];
                 if ($model->validate()) {
                     $reporteModel = new ReportesModel();
-                    $data = $reporteModel->getTotalOrdenesxFecha($model);
+
+//                    var_dump($model['tipoReporte']);die();
+                    $grupoEjecutivos = '';
+                    switch ($model['tipoReporte']) {
+                        case 1: $grupoEjecutivos = GRUPO_EJECUTIVOS_ZONA;
+                            break;
+                        case 2: $grupoEjecutivos = GRUPO_SUPERVISORES;
+                            break;
+                        case 3: $grupoEjecutivos = GRUPO_SERVICIO_CLIENTE;
+                            break;
+                        default:$grupoEjecutivos = GRUPO_TODOS;
+                            break;
+                    }
+//                    var_dump($grupoEjecutivos);die();
+                    $data = $reporteModel->getTotalOrdenesxFecha($model, $grupoEjecutivos);
                     $response->Result = $data;
                 } else {
                     echo CActiveForm::validate($model);
@@ -127,7 +141,8 @@ class ReporteOrdenesxFechaController extends Controller {
         $reporteModel = new ReportesModel();
 
         $response = new Response();
-        $data = $reporteModel->getOrdenesxEjecutivoxFecha($_POST['ejecutivo'], $_POST['fechaInicio'], $_POST['fechaInicio']);
+//        var_dump($_POST['ejecutivo'], $_POST['fechaInicio'], $_POST['fechaFin']);        die();
+        $data = $reporteModel->getOrdenesxEjecutivoxFecha($_POST['ejecutivo'], $_POST['fechaInicio'], $_POST['fechaFin']);
 //        var_dump($data);die();
         $response->Result = $data;
 //var_dump($response);die();
@@ -164,6 +179,25 @@ class ReporteOrdenesxFechaController extends Controller {
             $response->Status = NOTICE;
         } else {
             $response->Message = 'Actualizacion fallida';
+            $response->Status = ERROR;
+        }
+
+//        var_dump($respuestaActualizacion);        die();
+        return;
+    }
+
+    public function actionEliminarPedido() {
+
+        $response = new Response();
+        $ordenModel = new FOrdenModel();
+
+        $respuestaActualizacion = $ordenModel->getEliminarOrden($_POST['CODIGOORDEN'], $_POST['ORDEN']);
+        
+        if ($respuestaActualizacion > 0) {
+            $response->Message = 'Eliminacion correcta';
+            $response->Status = NOTICE;
+        } else {
+            $response->Message = 'Eliminacionfallida';
             $response->Status = ERROR;
         }
 

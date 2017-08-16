@@ -11,9 +11,10 @@ class CargaRutasMbController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             return;
         } else {
-            unset($_SESSION['rutasMbItems']);
+//            unset($_SESSION['rutasMbItems']);
+            unset(Yii::app()->session['rutasMbItems']);
             $model = new CargaRutasMbForm();
-            $this->render('/rutasmb/cargarutasmb', array('model' => $model));
+            $this->render('/rutasMb/cargaRutasMb', array('model' => $model));
         }
     }
 
@@ -27,12 +28,15 @@ class CargaRutasMbController extends Controller {
                 $model->attributes = $_POST['CargaRutasMbForm'];
                 if ($model->validate()) {
 
-                    unset($_SESSION['rutasMbItems']);
+//                    unset($_SESSION['rutasMbItems']);
+                    unset(Yii::app()->session['rutasMbItems']);
                     $filePath = Yii::app()->params['archivosRutasMb'];
                     $model->rutaArchivo = CUploadedFile::getInstance($model, 'rutaArchivo');
                     $model->rutaArchivo->saveAs($filePath);
-                    $_SESSION['archivosRutasMb'] = $filePath;
-                    $_SESSION['ModelForm'] = $model;
+//                    $_SESSION['archivosRutasMb'] = $filePath;
+//                    $_SESSION['ModelForm'] = $model;
+                    Yii::app()->session['archivosRutasMb'] = $filePath;
+                    Yii::app()->session['ModelForm'] = $model;
 
                     $operation = "r";
 //                    $delimiter = ';';
@@ -55,7 +59,8 @@ class CargaRutasMbController extends Controller {
                             }
                             $numeroBloque ++;
                         }
-                        $_SESSION['rutasMbItems'] = $rutasMbItems;
+//                        $_SESSION['rutasMbItems'] = $rutasMbItems;
+                        Yii::app()->session['rutasMbItems'] = $rutasMbItems;
                     } else {
                         $response->Message = 'El archivo no contiene registros';
                         $response->Status = NOTICE;
@@ -70,7 +75,7 @@ class CargaRutasMbController extends Controller {
             $response->Status = ERROR;
             $response->ClassMessage = CLASS_MENSAJE_ERROR;
         }
-        $this->render('/rutasMb/cargarutasmb', array('model' => $model));
+        $this->render('/rutasMb/cargaRutasMb', array('model' => $model));
         return;
     }
 
@@ -101,15 +106,19 @@ class CargaRutasMbController extends Controller {
         $response = new Response();
         $rutasRepetidos = '';
         try {
-            $_SESSION['itemRutaDuplicado'] = 0;
-            $_SESSION['itemRutaActualizado'] = 0;
+//            $_SESSION['itemRutaDuplicado'] = 0;
+//            $_SESSION['itemRutaActualizado'] = 0;
+            Yii::app()->session['itemRutaDuplicado'] = 0;
+            Yii::app()->session['itemRutaActualizado'] = 0;
 
             if (isset($_SESSION['archivosRutasMb'])) {
-                $filePath = $_SESSION['archivosRutasMb'];
+//                $filePath = $_SESSION['archivosRutasMb'];
+                $filePath = Yii::app()->session['archivosRutasMb'];
 
                 $operation = "r";
 //                $delimiter = ';';
-                $delimiter = $_SESSION['ModelForm']["delimitadorColumnas"]; //';';
+//                $delimiter = $_SESSION['ModelForm']["delimitadorColumnas"]; //';';
+                $delimiter = Yii::app()->session['ModelForm']["delimitadorColumnas"]; //';';
                 $file = new File($filePath, $operation, $delimiter);
                 $totalRows = $file->getTotalFilas();
 
@@ -155,10 +164,16 @@ class CargaRutasMbController extends Controller {
                     } else {
 
                         $mensaje = 'Se han cargado ' . $totalRutasGuardados . ' registros correctamente.';
-                        if ($_SESSION['itemRutaActualizado'] > 0)
-                            $mensaje .= '<br> Se han actualizado ' . $_SESSION['itemRutaActualizado'] . ' registros.';
-                        if ($_SESSION['itemRutaDuplicado'] > 0)
-                            $mensaje .= '<br> Se han omitido ' . $_SESSION['itemRutaDuplicado'] . ' registros duplicados en el archivo.';
+                        
+//                        if ($_SESSION['itemRutaActualizado'] > 0)
+//                            $mensaje .= '<br> Se han actualizado ' . $_SESSION['itemRutaActualizado'] . ' registros.';
+//                        if ($_SESSION['itemRutaDuplicado'] > 0)
+//                            $mensaje .= '<br> Se han omitido ' . $_SESSION['itemRutaDuplicado'] . ' registros duplicados en el archivo.';
+                        
+                        if (Yii::app()->session['itemRutaActualizado'] > 0)
+                            $mensaje .= '<br> Se han actualizado ' . Yii::app()->session['itemRutaActualizado'] . ' registros.';
+                        if (Yii::app()->session['itemRutaDuplicado'] > 0)
+                            $mensaje .= '<br> Se han omitido ' . Yii::app()->session['itemRutaDuplicado'] . ' registros duplicados en el archivo.';
                         $mensaje .= $response->Message = $mensaje;
                     }
 
@@ -194,7 +209,8 @@ class CargaRutasMbController extends Controller {
             $existeBdd = RutaMbModel::model()->findByAttributes(array('r_cod_cliente' => $row['CLIENTE']));
             if ($existeBdd) {
                 $existeBdd->delete();
-                $_SESSION['itemRutaActualizado'] += 1;
+//                $_SESSION['itemRutaActualizado'] += 1;
+                Yii::app()->session['itemRutaActualizado'] += 1;
                 $clienteEnRuta = array(
                     'CLIENTE' => $row['CLIENTE'],
                     'RUTAANTERIOR' => $existeBdd["r_ruta"],
@@ -231,7 +247,8 @@ class CargaRutasMbController extends Controller {
                 array_push($datosRutas, $data);
                 unset($data);
             } else {
-                $_SESSION['itemRutaDuplicado'] = $_SESSION['itemRutaDuplicado'] + 1;
+//                $_SESSION['itemRutaDuplicado'] = $_SESSION['itemRutaDuplicado'] + 1;
+                Yii::app()->session['itemRutaDuplicado'] = Yii::app()->session['itemRutaDuplicado'] + 1;
             }
         }
         $datos['rutasmb'] = $datosRutas;
@@ -247,8 +264,10 @@ class CargaRutasMbController extends Controller {
 
         $response = new Response();
         try {
-            $response->Result = $_SESSION['rutasMbItems'];
-            unset($_SESSION['rutasMbItems']);
+//            $response->Result = $_SESSION['rutasMbItems'];
+//            unset($_SESSION['rutasMbItems']);
+            $response->Result = Yii::app()->session['rutasMbItems'];
+            unset(Yii::app()->session['rutasMbItems']);
         } catch (Exception $e) {
             $mensaje = array(
                 'code' => $e->getCode(),
@@ -287,5 +306,4 @@ class CargaRutasMbController extends Controller {
 //            ),
 //        );
 //    }
-
 }

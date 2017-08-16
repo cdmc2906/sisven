@@ -32,9 +32,21 @@
 	</div>
 
 	<div class="row">
+		<?php echo $form->labelEx($model,'o_codigo_mb'); ?>
+		<?php echo $form->textField($model,'o_codigo_mb',array('size'=>60,'maxlength'=>500)); ?>
+		<?php echo $form->error($model,'o_codigo_mb'); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->labelEx($model,'o_comentario'); ?>
 		<?php echo $form->textField($model,'o_comentario',array('size'=>60,'maxlength'=>500)); ?>
 		<?php echo $form->error($model,'o_comentario'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'o_fch_venta'); ?>
+		<?php echo $form->textField($model,'o_fch_venta'); ?>
+		<?php echo $form->error($model,'o_fch_venta'); ?>
 	</div>
 
 	<div class="row">
@@ -269,12 +281,6 @@
 		<?php echo $form->labelEx($model,'o_usr_ing_mod'); ?>
 		<?php echo $form->textField($model,'o_usr_ing_mod'); ?>
 		<?php echo $form->error($model,'o_usr_ing_mod'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'o_codigo_mb'); ?>
-		<?php echo $form->textField($model,'o_codigo_mb',array('size'=>60,'maxlength'=>500)); ?>
-		<?php echo $form->error($model,'o_codigo_mb'); ?>
 	</div>
 
 	<div class="row buttons">
