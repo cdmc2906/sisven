@@ -58,6 +58,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                     <?php echo $form->labelEx($model, 'rutaArchivo'); ?>
                     <?php echo $form->fileField($model, 'rutaArchivo'); ?>
                     <?php echo $form->error($model, 'rutaArchivo'); ?>
+
                     <?php echo $form->labelEx($model, 'delimitadorColumnas'); ?>
                     <?php
                     echo $form->dropDownList(

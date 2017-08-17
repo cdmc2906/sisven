@@ -31,7 +31,7 @@ class CargaCoordenadasClientesForm extends CFormModel {
 //            'fechaConsumo' => 'Fecha Consumo',
             'rutaArchivo' => 'Archivo coordenadas',
             'delimitadorColumnas' => 'Delimitador columnas archivo',
-            'fechaUltimaCarga' => 'Ultima fecha venta',
+            'fechaUltimaCarga' => 'Ultima fecha carga coordenadas',
         );
     }
 

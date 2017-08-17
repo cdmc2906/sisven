@@ -28,14 +28,14 @@ function ConfigurarGrid() {
         mtype: 'POST',
         url: 'VerDatosArchivo',
         colNames: [
-            'Cliente',
-            'Cliente(Nombre)',
+            'Codigo cliente',
+            'Nombre',
             'Latitud',
             'Longitud'
         ],
         colModel: [
 
-            {name: 'CLIENTE', index: 'CLIENTE', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'CODIGO', index: 'CODIGO', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'CLIENTENOMBRE', index: 'CLIENTENOMBRE', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'LATITUD', index: 'LATITUD', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'LONGITUD', index: 'LONGITUD', width: 200, resizable: false, sortable: false, frozen: false},
@@ -52,6 +52,7 @@ function ConfigurarGrid() {
         height: 360,
 //        width: 200,
         autowidth: true,
+         hidegrid: false,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
         rownumbers: true,

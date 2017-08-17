@@ -29,6 +29,27 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
             ));
             ?>
             <div class="row">
+                 <div align="center">
+                    <?php echo $form->labelEx($model, 'fechaUltimaCarga'); ?>
+                    <?php
+//                    $ventas= VentaMovistarModel::model()->
+                    $command = Yii::app()->db->createCommand('
+                        SELECT cli_fecha_modificacion as fecha 
+                            FROM tb_cliente 
+                            order by cli_fecha_modificacion desc 
+                            limit 1;');
+                    $resultado = $command->queryRow();
+                    $ultimaFecha = DateTime::createFromFormat('Y-m-d H:i:s', $resultado['fecha'])->format(FORMATO_FECHA_LONG_2);
+
+                    echo $form->textField($model, 'fechaUltimaCarga'
+                            , array(
+                        'value' => $ultimaFecha
+                        , 'class' => 'txtUltimaCarga'
+                        , 'disabled' => 'disabled'
+                        , 'style' => 'text-align:center; color:orange; width:200px; height:30px; font-size:22px')
+                    )
+                    ?>
+                </div>
                 <div>
                     <?php // echo $form->labelEx($model, 'fechaConsumo'); ?>
                     <?php // echo $form->textField($model, 'fechaConsumo', array('class' => 'txtFecha')) ?>
@@ -37,6 +58,19 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                     <?php echo $form->labelEx($model, 'rutaArchivo'); ?>
                     <?php echo $form->fileField($model, 'rutaArchivo'); ?>
                     <?php echo $form->error($model, 'rutaArchivo'); ?>
+                      <?php echo $form->labelEx($model, 'delimitadorColumnas'); ?>
+                    <?php
+                    echo $form->dropDownList(
+                            $model, 'delimitadorColumnas'
+                            , array(
+                        ';' => 'Punto y Coma'
+                        , ',' => 'Coma')
+                            , array(
+                        'empty' => TEXT_OPCION_SELECCIONE
+                        , 'options' => array(0 => array('selected' => true)))
+                    );
+                    ?>
+                    <?php echo $form->error($model, 'delimitadorColumnas'); ?>
                 </div>
             </div>
 
@@ -44,7 +78,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                 <?php echo CHtml::submitButton('Cargar', array('id' => 'btnCargar')); ?>
                 <?php // echo CHtml::button('Guardar', array('submit' => array('cargaConsumo/GuardarConsumo'))); ?>
                 <?php
-                echo CHtml::ajaxSubmitButton('Guardar', CHtml::normalizeUrl(array('cargahistorialmb/guardarHistorial', 'render' => true)), array(
+                echo CHtml::ajaxSubmitButton('Guardar', CHtml::normalizeUrl(array('CargaCoordenadasClientes/GuardarCoordenadasClientes', 'render' => true)), array(
                     'dataType' => 'json',
                     'type' => 'post',
                     'beforeSend' => 'function() {

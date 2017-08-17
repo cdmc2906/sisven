@@ -395,21 +395,18 @@ class File {
                     $arrColumnas = explode($this->Delimitador, $strFilas);
 //                    var_dump($arrColumnas);die();
 //                    var_dump(utf8_encode($arrColumnas[0]));                    die();
-                    if (count($arrColumnas) > 0 && utf8_encode($arrColumnas[0]) != 'Código' && isset($arrColumnas)) { // Quita la fila de encabezados
-//                        var_dump($arrColumnas[1]);                    die();
-//                        var_dump($arrColumnas[20]);
-//                        var_dump($arrColumnas);                    die();
-//                        if ($arrColumnas[1] == 'TCQU170290')
-//                            var_dump($arrColumnas);
-                        $datos = array(
-                            'CLIENTE' => utf8_encode(trim($arrColumnas[1])),
-                            'CLIENTENOMBRE' => utf8_encode(trim($arrColumnas[2])),
-                            'LATITUD' => trim($arrColumnas[20]),
-                            'LONGITUD' => trim($arrColumnas[21]),
-                        );
+                    if (isset($arrColumnas[3])) {
+                        if (utf8_encode($arrColumnas[0]) != 'Codigo') { // Quita la fila de encabezados
+                            $datos = array(
+                                'CODIGO' => utf8_encode(trim($arrColumnas[0])),
+                                'CLIENTENOMBRE' => utf8_encode(trim($arrColumnas[1])),
+                                'LATITUD' => trim($arrColumnas[2]),
+                                'LONGITUD' => trim($arrColumnas[3]),
+                            );
 
-                        array_push($datosCarga, $datos);
-                        unset($datos);
+                            array_push($datosCarga, $datos);
+                            unset($datos);
+                        }
                     }
                 }
 
