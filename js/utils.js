@@ -43,7 +43,7 @@ function setMensaje(clase, message)
     $("ul.flashes").html(message);
 
     showEffect();
-    hideEffect();
+//    hideEffect();
     return false;
 }
 

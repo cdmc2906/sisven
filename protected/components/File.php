@@ -546,6 +546,71 @@ class File {
         return $datosCarga;
     }
 
+    public function getDatosTransferenciasMovistar($start, $blockSize) {
+        $this->Open();
+        $data = $this->Archivo;
+
+        if ($data) {
+            $datosCarga = array();
+            $lineNumber = 1;
+
+            while (!feof($data)) {
+                $strFilas = fgets($data, 4096);
+                if ($lineNumber >= $start && $lineNumber <= ($start + $blockSize) - 1) {
+                    $arrColumnas = explode($this->Delimitador, $strFilas);
+//                    var_dump($arrColumnas);die();
+//                    if(is_array($arrColumnas)) {
+//                    if(
+//                    if (count($arrColumnas) > 0) {
+                    if (isset($arrColumnas[17])) {
+                        if ($arrColumnas[0] != 'Transferencia de Fecha y hora ') {
+
+//                            $prueba = trim(utf8_encode(substr($arrColumnas[12], 1, -1)));
+//                            var_dump($prueba);                            die();
+
+                            $fechaVenta = DateTime::createFromFormat('d/m/Y H:i:s', trim(utf8_decode(trim($arrColumnas[0])), "?"));
+                            $sfechaVenta = $fechaVenta->format(FORMATO_FECHA_LONG);
+                            $datos = array(
+                                'FECHA' => $sfechaVenta, //trim(utf8_decode(trim($arrColumnas[0])), "?"),
+                                //''FECHA' => trim(utf8_encode(substr($arrColumnas[0],1,-1))),
+                                'TRANSACCION' => trim(utf8_encode(substr($arrColumnas[1], 1, -1))),
+                                'DISTRIBUIDOR' => trim(utf8_encode(substr($arrColumnas[2], 1, -1))),
+                                'NOMBREDISTRIBUIDOR' => trim(utf8_encode(substr($arrColumnas[3], 1, -1))),
+                                'CODIGOSCL' => trim(utf8_encode(substr($arrColumnas[4], 1, -1))),
+                                'INVENTARIOANTERIORFUENTE' => trim(utf8_encode(substr($arrColumnas[5], 1, -1))),
+                                'INVENTARIOACTUALFUENTE' => trim(utf8_encode(substr($arrColumnas[6], 1, -1))),
+                                'TIPOSIM' => trim(utf8_encode(substr($arrColumnas[7], 1, -1))),
+                                'ICC' => trim(utf8_encode(substr($arrColumnas[8], 1, -1))),
+                                'MIN' => trim(utf8_encode(substr($arrColumnas[9], 1, -1))),
+                                'ESTADO' => trim(utf8_encode(substr($arrColumnas[10], 1, -1))),
+                                'IDDESTINO' => trim(utf8_encode(substr($arrColumnas[11], 1, -1))),
+                                'NOMBREDESTINO' => trim(utf8_encode(substr($arrColumnas[12], 1, -1))),
+                                'INVENTARIOANTERIORDESTINO' => trim(utf8_encode(substr($arrColumnas[13], 1, -1))),
+                                'INVENTARIOACTUALDESTINO' => trim(utf8_encode(substr($arrColumnas[14], 1, -1))),
+                                'CANAL' => trim(utf8_encode(substr($arrColumnas[15], 1, -1))),
+                                'LOTE' => trim(utf8_encode(substr($arrColumnas[16], 1, -1))),
+                                'ZONA' => trim(utf8_encode(substr($arrColumnas[17], 1, -1))),
+                            );
+
+                            array_push($datosCarga, $datos);
+                            unset($datos);
+                        }
+                    }
+                }
+
+                if ($lineNumber > ($start + $blockSize) - 1) {
+                    break;
+                }
+
+                $lineNumber++;
+            }
+        }
+//        var_dump($datosCarga);        die();
+        unset($data);
+        $this->Close();
+        return $datosCarga;
+    }
+
     public function getDatosOrdenesMb($start, $blockSize) {
         $this->Open();
         $data = $this->Archivo;
@@ -651,6 +716,51 @@ class File {
                                 'DIA' => trim($arrColumnas[7]),
                                 'SECUENCIA' => trim($arrColumnas[8]),
                                 'ESTATUS' => trim($arrColumnas[9]),
+                            );
+
+                            array_push($datosCarga, $datos);
+                            unset($datos);
+                        }
+                    }
+                }
+
+                if ($lineNumber > ($start + $blockSize) - 1) {
+                    break;
+                }
+
+                $lineNumber++;
+            }
+        }
+//        var_dump($datosCarga);                        die();
+        unset($data);
+        $this->Close();
+        return $datosCarga;
+    }
+
+    public function getDatosMinesDesconocidos($start, $blockSize) {
+        $this->Open();
+        $data = $this->Archivo;
+
+        if ($data) {
+            $datosCarga = array();
+            $lineNumber = 1;
+
+            while (!feof($data)) {
+                $strFilas = fgets($data, 4096);
+                if ($lineNumber >= $start && $lineNumber <= ($start + $blockSize) - 1) {
+                    $arrColumnas = explode($this->Delimitador, $strFilas);
+//                    var_dump($arrColumnas);die();
+//                    var_dump($arrColumnas[1]);                    die();
+                    if (isset($arrColumnas[5])) {
+                        if ($arrColumnas[0] != 'Nro') { // Quita la fila de encabezados
+//                        var_dump($arrColumnas[1]);                    die();
+                            $datos = array(
+                                'NRO' => utf8_encode(trim($arrColumnas[0])),
+                                'ICC' => utf8_encode(trim(trim($arrColumnas[1]), '\'')),
+                                'MIN' => utf8_encode(trim(trim($arrColumnas[2]), '\'')),
+                                'CODIGOVENDEDOR' => utf8_encode(trim($arrColumnas[3])),
+                                'CIUDAD' => utf8_encode(trim($arrColumnas[4])),
+                                'FECHAALTA' => utf8_encode(trim($arrColumnas[5]))
                             );
 
                             array_push($datosCarga, $datos);

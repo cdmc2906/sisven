@@ -174,6 +174,7 @@ return array(
         'archivosOrdenesMb' => 'C:\carga_mobilvendor\ordenes' . date('YmdHs') . '.csv',
         'archivosRutasMb' => 'C:\carga_mobilvendor\rutas' . date('YmdHs') . '.csv',
         'archivosVentasMovistar' => 'C:\carga_mobilvendor\ventasMovistar' . date('YmdHs') . '.csv',
+        'archivosTransferenciasMovistar' => 'C:\carga_mobilvendor\transferenciasMovistar' . date('YmdHs') . '.csv',
         'archivosCoordenadasClientes' => 'C:\carga_mobilvendor\coordenadasClientes' . date('YmdHs') . '.csv',
         
 //        'archivosConsumo' => '/var/tmp/archivos-sisven/consumo' . date('YmdHs') . '.csv',

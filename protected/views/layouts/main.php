@@ -134,6 +134,7 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                         array('label' => 'Carga Historial', 'url' => array('/CargaHistorialMb/index'), 'visible' => $verMenusAdmin),
                         array('label' => 'Carga Ordenes', 'url' => array('/CargaOrdenesMb/index'), 'visible' => $verMenusAdmin),
                         array('label' => 'Carga Rutas', 'url' => array('/CargaRutasMb/index'), 'visible' => $verMenusAdmin),
+                        
                         array('label' => 'Carga Coordenadas', 'url' => array('/CargaCoordenadasClientes/index'), 'visible' => $verMenusAdmin),
                     ),
                 ));
@@ -145,8 +146,10 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
                         array('label' => 'Carga Ventas Movistar', 'url' => array('/CargaVentasMovistar/index'), 'visible' => $verMenusAdmin),
+                        array('label' => 'Carga Transferencias Movistar', 'url' => array('/CargaTransferenciasMovistar/index'), 'visible' => $verMenusAdmin),
                         array('label' => 'Carga Indicadores', 'url' => array('/CargaIndicador/index'), 'visible' => $verMenusAdmin),
                         array('label' => 'Reporte Factura-Transferencia', 'url' => array('/ReporteChipsFacturadosTransferidos/index'), 'visible' => $verMenusAdmin),
+                        array('label' => 'Revision Mines Desconocidos', 'url' => array('/RevisaMinesDesconocidos/index'), 'visible' => $verMenusAdmin),
                     ),
                 ));
                 ?>

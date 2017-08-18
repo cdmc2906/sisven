@@ -1,6 +1,6 @@
 $(document).ready(function () {
     $("#btnLimpiar").click(function () {
-        $("#CargaVentasMovistarForm_rutaArchivo").val('');
+        $("#CargaTransferenciasMovistarForm_rutaArchivo").val('');
         $("#tblGrid").jqGrid("clearGridData", true).trigger("reloadGrid");
 
     });
