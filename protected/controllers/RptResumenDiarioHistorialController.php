@@ -441,7 +441,7 @@ class RptResumenDiarioHistorialController extends Controller {
         try {
             if (isset(Yii::app()->session['detallerevisionhistorialitem']) && isset(Yii::app()->session['resumenrevisionhistorialitem'])) {
 
-                var_dump(Yii::app()->session['ModelForm']);die();
+//                var_dump(Yii::app()->session['ModelForm']);die();
                 $fechagestion = Yii::app()->session['ModelForm']['fechagestion'];
                 $ejecutivo = Yii::app()->session['ModelForm']['ejecutivo'];
                 $precisionVisita = Yii::app()->session['ModelForm']['precisionVisitas'];
@@ -450,7 +450,7 @@ class RptResumenDiarioHistorialController extends Controller {
                 
                 $model->fechagestion=$fechagestion;
                 $model->ejecutivo=$ejecutivo;
-                $model->
+//                $model->
 //                $model->horaFinGestion=Yii::app()->session['ModelForm']['fechagestion']
 
 //                var_dump($comentarioSupervisor);die();
