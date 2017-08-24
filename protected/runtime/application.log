@@ -719,3 +719,30 @@ Stack trace:
 REQUEST_URI=/sisven_2/ConfigurarGrid
 HTTP_REFERER=http://10.130.1.67/sisven_2/RptResumenDiarioHistorial
 ---
+2017/08/24 14:13:32 [error] [exception.CHttpException.404] CHttpException: No es posible resolver la solicitud "ConfigurarGrid" in C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php:286
+Stack trace:
+#0 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('ConfigurarGrid')
+#1 C:\xampp\htdocs\sisven_2\yii\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#2 C:\xampp\htdocs\sisven_2\index.php(15): CApplication->run()
+#3 {main}
+REQUEST_URI=/sisven_2/ConfigurarGrid
+HTTP_REFERER=http://10.130.1.67/sisven_2/RevisionRuta
+---
+2017/08/24 14:14:00 [error] [exception.CHttpException.404] CHttpException: No es posible resolver la solicitud "RevisionRuta" in C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php:286
+Stack trace:
+#0 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('RevisionRuta')
+#1 C:\xampp\htdocs\sisven_2\yii\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#2 C:\xampp\htdocs\sisven_2\index.php(15): CApplication->run()
+#3 {main}
+REQUEST_URI=/sisven_2/RevisionRuta
+HTTP_REFERER=http://10.130.1.67/sisven_2/RevisionRuta
+---
+2017/08/24 14:14:08 [error] [exception.CHttpException.404] CHttpException: No es posible resolver la solicitud "ConfigurarGrid" in C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php:286
+Stack trace:
+#0 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('ConfigurarGrid')
+#1 C:\xampp\htdocs\sisven_2\yii\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#2 C:\xampp\htdocs\sisven_2\index.php(15): CApplication->run()
+#3 {main}
+REQUEST_URI=/sisven_2/ConfigurarGrid
+HTTP_REFERER=http://10.130.1.67/sisven_2/RevisionRuta
+---
