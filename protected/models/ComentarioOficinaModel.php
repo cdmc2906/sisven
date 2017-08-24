@@ -60,16 +60,16 @@ class ComentarioOficinaModel extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'co_id' => 'Co',
-			'co_fecha_historial_revisado' => 'Co Fecha Historial Revisado',
-			'co_ejecutivo_revisado' => 'Co Ejecutivo Revisado',
-			'co_comentario' => 'Co Comentario',
-			'co_enlace_mapa' => 'Co Enlace Mapa',
-			'co_enlace_imagen' => 'Co Enlace Imagen',
-			'co_estado' => 'Co Estado',
-			'co_fecha_ingreso' => 'Co Fecha Ingreso',
-			'co_fecha_modificacion' => 'Co Fecha Modificacion',
-			'co_usuario_ingresa_modifica' => 'Co Usuario Ingresa Modifica',
+			'co_id' => 'Codigo comentario',
+			'co_fecha_historial_revisado' => 'Fecha Historial Revisado',
+			'co_ejecutivo_revisado' => 'Ejecutivo Revisado',
+			'co_comentario' => 'Comentario',
+			'co_enlace_mapa' => 'Enlace Mapa',
+			'co_enlace_imagen' => 'Enlace Imagen',
+			'co_estado' => 'Estado',
+			'co_fecha_ingreso' => 'Fecha Ingreso',
+			'co_fecha_modificacion' => 'Fecha Modificacion',
+			'co_usuario_ingresa_modifica' => 'Realizado por',
 		);
 	}
 

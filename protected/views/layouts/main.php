@@ -112,8 +112,11 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                         array('label' => 'Admin Ruta', 'url' => array('/RutasMb/admin'), 'visible' => $verMenusAdmin),
 //                        array('label' => 'Admin Rangos cumplimiento', 'url' => array('/RangoCumplimiento/admin'), 'visible' => !Yii::app()->user->isGuest),
                         array('label' => 'Admin Ventas Movistar', 'url' => array('/VentaMovistar/admin'), 'visible' => $verMenusAdmin),
+                        array('label' => 'Admin Transferencias Movistar', 'url' => array('/TransferenciaMovistar/admin'), 'visible' => $verMenusAdmin),
                         array('label' => 'Admin Indicadores', 'url' => array('/Indicadores/admin'), 'visible' => $verMenusAdmin),
                         array('label' => 'Admin Clientes', 'url' => array('/Cliente/admin'), 'visible' => $verMenusAdmin),
+                        
+                        
                     ),
                 ));
                 ?>
@@ -122,7 +125,8 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 <?php
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
-                        array('label' => 'Admin Transferencias Movistar', 'url' => array('/TransferenciaMovistar/admin'), 'visible' => $verMenusAdmin),
+                        array('label' => 'Admin Comentarios Ofi', 'url' => array('/ComentarioOficina/admin'), 'visible' => $verMenusAdmin),
+                        array('label' => 'Admin Comentarios Supervisor', 'url' => array('/ComentarioSupervision/admin'), 'visible' => $verMenusAdmin),
                     ),
                 ));
                 ?>

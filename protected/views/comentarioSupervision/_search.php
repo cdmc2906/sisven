@@ -32,8 +32,8 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'co_estado'); ?>
-		<?php echo $form->textField($model,'co_estado'); ?>
+		<?php echo $form->label($model,'cs_estado'); ?>
+		<?php echo $form->textField($model,'cs_estado'); ?>
 	</div>
 
 	<div class="row">

@@ -21,8 +21,8 @@
 	<?php echo CHtml::encode($data->cs_comentario); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('co_estado')); ?>:</b>
-	<?php echo CHtml::encode($data->co_estado); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('cs_estado')); ?>:</b>
+	<?php echo CHtml::encode($data->cs_estado); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('cs_fecha_ingreso')); ?>:</b>

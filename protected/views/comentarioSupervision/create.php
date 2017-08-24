@@ -4,15 +4,15 @@
 
 $this->breadcrumbs=array(
 	'Comentario Supervision Models'=>array('index'),
-	'Create',
+	'Crear',
 );
 
 $this->menu=array(
-	array('label'=>'List ComentarioSupervisionModel', 'url'=>array('index')),
-	array('label'=>'Manage ComentarioSupervisionModel', 'url'=>array('admin')),
+//	array('label'=>'List ComentarioSupervisionModel', 'url'=>array('index')),
+	array('label'=>'Administrar Comentarios Supervision', 'url'=>array('admin')),
 );
 ?>
 
-<h1>Create ComentarioSupervisionModel</h1>
+<h1>Ingresar Comentario Supervisor</h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

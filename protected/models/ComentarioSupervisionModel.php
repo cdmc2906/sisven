@@ -8,7 +8,7 @@
  * @property string $cs_fecha_historial_supervisado
  * @property string $cs_ejecutivo_supervisado
  * @property string $cs_comentario
- * @property integer $co_estado
+ * @property integer $cs_estado
  * @property string $cs_fecha_ingreso
  * @property string $cs_fecha_modificacion
  * @property integer $cs_usuario_ingresa_modifica
@@ -31,13 +31,13 @@ class ComentarioSupervisionModel extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('co_estado, cs_usuario_ingresa_modifica', 'numerical', 'integerOnly'=>true),
+			array('cs_estado, cs_usuario_ingresa_modifica', 'numerical', 'integerOnly'=>true),
 			array('cs_ejecutivo_supervisado', 'length', 'max'=>25),
 			array('cs_comentario', 'length', 'max'=>500),
 			array('cs_fecha_historial_supervisado, cs_fecha_ingreso, cs_fecha_modificacion', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('cs_id, cs_fecha_historial_supervisado, cs_ejecutivo_supervisado, cs_comentario, co_estado, cs_fecha_ingreso, cs_fecha_modificacion, cs_usuario_ingresa_modifica', 'safe', 'on'=>'search'),
+			array('cs_id, cs_fecha_historial_supervisado, cs_ejecutivo_supervisado, cs_comentario, cs_estado, cs_fecha_ingreso, cs_fecha_modificacion, cs_usuario_ingresa_modifica', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -58,14 +58,14 @@ class ComentarioSupervisionModel extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'cs_id' => 'Cs',
-			'cs_fecha_historial_supervisado' => 'Cs Fecha Historial Supervisado',
-			'cs_ejecutivo_supervisado' => 'Cs Ejecutivo Supervisado',
-			'cs_comentario' => 'Cs Comentario',
-			'co_estado' => 'Co Estado',
-			'cs_fecha_ingreso' => 'Cs Fecha Ingreso',
-			'cs_fecha_modificacion' => 'Cs Fecha Modificacion',
-			'cs_usuario_ingresa_modifica' => 'Cs Usuario Ingresa Modifica',
+			'cs_id' => 'Codigo comentario',
+			'cs_fecha_historial_supervisado' => 'Fecha Historial Supervisado',
+			'cs_ejecutivo_supervisado' => 'Ejecutivo Supervisado',
+			'cs_comentario' => 'Comentario',
+			'cs_estado' => 'Cs Estado',
+			'cs_fecha_ingreso' => 'Fecha Ingreso',
+			'cs_fecha_modificacion' => 'Fecha Modificacion',
+			'cs_usuario_ingresa_modifica' => 'Realizado por',
 		);
 	}
 
@@ -91,7 +91,7 @@ class ComentarioSupervisionModel extends CActiveRecord
 		$criteria->compare('cs_fecha_historial_supervisado',$this->cs_fecha_historial_supervisado,true);
 		$criteria->compare('cs_ejecutivo_supervisado',$this->cs_ejecutivo_supervisado,true);
 		$criteria->compare('cs_comentario',$this->cs_comentario,true);
-		$criteria->compare('co_estado',$this->co_estado);
+		$criteria->compare('cs_estado',$this->cs_estado);
 		$criteria->compare('cs_fecha_ingreso',$this->cs_fecha_ingreso,true);
 		$criteria->compare('cs_fecha_modificacion',$this->cs_fecha_modificacion,true);
 		$criteria->compare('cs_usuario_ingresa_modifica',$this->cs_usuario_ingresa_modifica);

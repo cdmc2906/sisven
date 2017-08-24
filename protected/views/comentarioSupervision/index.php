@@ -3,16 +3,16 @@
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs=array(
-	'Comentario Supervision Models',
+	'Comentario Supervision',
 );
 
 $this->menu=array(
-	array('label'=>'Create ComentarioSupervisionModel', 'url'=>array('create')),
-	array('label'=>'Manage ComentarioSupervisionModel', 'url'=>array('admin')),
+	array('label'=>'Crear Comentario Supervision', 'url'=>array('create')),
+	array('label'=>'Administrar Comentarios Supervision', 'url'=>array('admin')),
 );
 ?>
 
-<h1>Comentario Supervision Models</h1>
+<h1>Comentario Supervision</h1>
 
 <?php $this->widget('zii.widgets.CListView', array(
 	'dataProvider'=>$dataProvider,

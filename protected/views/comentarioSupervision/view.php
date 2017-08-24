@@ -25,7 +25,7 @@ $this->menu=array(
 		'cs_fecha_historial_supervisado',
 		'cs_ejecutivo_supervisado',
 		'cs_comentario',
-		'co_estado',
+		'cs_estado',
 		'cs_fecha_ingreso',
 		'cs_fecha_modificacion',
 		'cs_usuario_ingresa_modifica',
