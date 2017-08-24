@@ -93,7 +93,7 @@ function ConfigurarGrids() {
         hidegrid: false,
         footerrow: true
         , gridComplete: function () {
-            var $grid = $('#tblGrid');
+            var $grid = $('#tblGridDetalle');
             var colSum = $grid.jqGrid('getCol', 'CHIPSCOMPRADOS', false, 'sum');
             $grid.jqGrid('footerData', 'set', {'ESTADOREVISIONS': 'Total Venta'});
             $grid.jqGrid('footerData', 'set', {'CHIPSCOMPRADOS': colSum});
