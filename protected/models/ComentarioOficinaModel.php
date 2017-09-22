@@ -14,6 +14,7 @@
  * @property string $co_fecha_ingreso
  * @property string $co_fecha_modificacion
  * @property integer $co_usuario_ingresa_modifica
+ * @property string $co_tipo_comentario
  */
 class ComentarioOficinaModel extends CActiveRecord
 {
@@ -36,10 +37,11 @@ class ComentarioOficinaModel extends CActiveRecord
 			array('co_estado, co_usuario_ingresa_modifica', 'numerical', 'integerOnly'=>true),
 			array('co_ejecutivo_revisado', 'length', 'max'=>25),
 			array('co_comentario, co_enlace_mapa, co_enlace_imagen', 'length', 'max'=>500),
+			array('co_tipo_comentario', 'length', 'max'=>45),
 			array('co_fecha_historial_revisado, co_fecha_ingreso, co_fecha_modificacion', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('co_id, co_fecha_historial_revisado, co_ejecutivo_revisado, co_comentario, co_enlace_mapa, co_enlace_imagen, co_estado, co_fecha_ingreso, co_fecha_modificacion, co_usuario_ingresa_modifica', 'safe', 'on'=>'search'),
+			array('co_id, co_fecha_historial_revisado, co_ejecutivo_revisado, co_comentario, co_enlace_mapa, co_enlace_imagen, co_estado, co_fecha_ingreso, co_fecha_modificacion, co_usuario_ingresa_modifica, co_tipo_comentario', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,16 +62,17 @@ class ComentarioOficinaModel extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'co_id' => 'Codigo comentario',
-			'co_fecha_historial_revisado' => 'Fecha Historial Revisado',
-			'co_ejecutivo_revisado' => 'Ejecutivo Revisado',
-			'co_comentario' => 'Comentario',
-			'co_enlace_mapa' => 'Enlace Mapa',
-			'co_enlace_imagen' => 'Enlace Imagen',
-			'co_estado' => 'Estado',
-			'co_fecha_ingreso' => 'Fecha Ingreso',
-			'co_fecha_modificacion' => 'Fecha Modificacion',
-			'co_usuario_ingresa_modifica' => 'Realizado por',
+			'co_id' => 'Co',
+			'co_fecha_historial_revisado' => 'Co Fecha Historial Revisado',
+			'co_ejecutivo_revisado' => 'Co Ejecutivo Revisado',
+			'co_comentario' => 'Co Comentario',
+			'co_enlace_mapa' => 'Co Enlace Mapa',
+			'co_enlace_imagen' => 'Co Enlace Imagen',
+			'co_estado' => 'Co Estado',
+			'co_fecha_ingreso' => 'Co Fecha Ingreso',
+			'co_fecha_modificacion' => 'Co Fecha Modificacion',
+			'co_usuario_ingresa_modifica' => 'Co Usuario Ingresa Modifica',
+			'co_tipo_comentario' => 'Co Tipo Comentario',
 		);
 	}
 
@@ -101,6 +104,7 @@ class ComentarioOficinaModel extends CActiveRecord
 		$criteria->compare('co_fecha_ingreso',$this->co_fecha_ingreso,true);
 		$criteria->compare('co_fecha_modificacion',$this->co_fecha_modificacion,true);
 		$criteria->compare('co_usuario_ingresa_modifica',$this->co_usuario_ingresa_modifica);
+		$criteria->compare('co_tipo_comentario',$this->co_tipo_comentario,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

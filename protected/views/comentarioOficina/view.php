@@ -31,5 +31,6 @@ $this->menu=array(
 		'co_fecha_ingreso',
 		'co_fecha_modificacion',
 		'co_usuario_ingresa_modifica',
+		'co_tipo_comentario',
 	),
 )); ?>

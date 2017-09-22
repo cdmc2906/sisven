@@ -397,9 +397,15 @@ class File {
 //                    var_dump(utf8_encode($arrColumnas[0]));                    die();
                     if (isset($arrColumnas[3])) {
                         if (utf8_encode($arrColumnas[0]) != 'Codigo') { // Quita la fila de encabezados
+//                            if(trim($arrColumnas[0])=='TCQU310036'){
+//                                var_dump(trim(trim($arrColumnas[1],'\"')));die();
+//                                var_dump(trim($arrColumnas[1]));die();
+//                                var_dump(trim(trim(trim($arrColumnas[1]),'\"')));die();
+//                                var_dump(substr(trim($arrColumnas[1]), -1),trim($arrColumnas[1]));die();
+//                            }
                             $datos = array(
                                 'CODIGO' => utf8_encode(trim($arrColumnas[0])),
-                                'CLIENTENOMBRE' => utf8_encode(trim($arrColumnas[1])),
+                                'CLIENTENOMBRE' => utf8_encode(trim(trim($arrColumnas[1], '\"'))),
                                 'LATITUD' => trim($arrColumnas[2]),
                                 'LONGITUD' => trim($arrColumnas[3]),
                             );
@@ -438,7 +444,7 @@ class File {
                     $arrColumnas = explode($this->Delimitador, $strFilas);
 //                    var_dump($arrColumnas);die();
 //                    var_dump($arrColumnas[1]);                    die();
-                    if (isset($arrColumnas[18])) {
+                    if (isset($arrColumnas[18]) && intval($arrColumnas[0] > 0)) {
                         if (count($arrColumnas) > 0 && $arrColumnas[0] != 'Id') { // Quita la fila de encabezados
 //                        var_dump($arrColumnas[1]);                    die();
                             $datos = array(

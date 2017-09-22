@@ -232,7 +232,7 @@ class CargaCoordenadasClientesController extends Controller {
         try {
             $response->Result = Yii::app()->session['coordenadasClientes'];
 //            var_dump(Yii::app()->session['coordenadasClientes']);die();
-            unset(Yii::app()->session['coordenadasClientes']);
+//            unset(Yii::app()->session['coordenadasClientes']);
         } catch (Exception $e) {
             $mensaje = array(
                 'code' => $e->getCode(),

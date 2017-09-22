@@ -5,6 +5,20 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
 <!DOCTYPE html>
 <html lang="es">
     <head>
+        <style>
+            #map {
+                height: 400px;
+                width: 100%;
+            }
+            /* Optional: Makes the sample page fill the window. */
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+        </style>
+
         <!-- Meta information -->
         <meta charset="iso-8859-1">
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
@@ -101,13 +115,13 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 $verMenusAdmin = false;
 //                var_dump(Yii::app()->user->id);die();
 
-                if (Yii::app()->user->id == 1 || Yii::app()->user->id == 3 || Yii::app()->user->id == 4 || Yii::app()->user->id == 5 || Yii::app()->user->id == 6 || Yii::app()->user->id == 7 || Yii::app()->user->id == 8 || Yii::app()->user->id == 9|| Yii::app()->user->id == 10)
+                if (Yii::app()->user->id == 1 || Yii::app()->user->id == 3 || Yii::app()->user->id == 4 || Yii::app()->user->id == 5 || Yii::app()->user->id == 6 || Yii::app()->user->id == 7 || Yii::app()->user->id == 8 || Yii::app()->user->id == 9 || Yii::app()->user->id == 10)
                     $verMenuRevision = true;
                 if (Yii::app()->user->id == 1 || Yii::app()->user->id == 3 || Yii::app()->user->id == 8 || Yii::app()->user->id == 9)
                     $verMenusAdmin = true;
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
-//                        array('label' => 'Admin Historial', 'url' => array('/HistorialMb/admin'), 'visible' => !Yii::app()->user->isGuest),
+                        array('label' => 'Admin Historial', 'url' => array('/HistorialMb/admin'), 'visible' => $verMenusAdmin),
                         array('label' => 'Admin Ordenes', 'url' => array('/OrdenesMb/admin'), 'visible' => $verMenusAdmin),
                         array('label' => 'Admin Ruta', 'url' => array('/RutasMb/admin'), 'visible' => $verMenusAdmin),
 //                        array('label' => 'Admin Rangos cumplimiento', 'url' => array('/RangoCumplimiento/admin'), 'visible' => !Yii::app()->user->isGuest),
@@ -115,8 +129,6 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                         array('label' => 'Admin Transferencias Movistar', 'url' => array('/TransferenciaMovistar/admin'), 'visible' => $verMenusAdmin),
                         array('label' => 'Admin Indicadores', 'url' => array('/Indicadores/admin'), 'visible' => $verMenusAdmin),
                         array('label' => 'Admin Clientes', 'url' => array('/Cliente/admin'), 'visible' => $verMenusAdmin),
-                        
-                        
                     ),
                 ));
                 ?>
@@ -138,7 +150,6 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                         array('label' => 'Carga Historial', 'url' => array('/CargaHistorialMb/index'), 'visible' => $verMenusAdmin),
                         array('label' => 'Carga Ordenes', 'url' => array('/CargaOrdenesMb/index'), 'visible' => $verMenusAdmin),
                         array('label' => 'Carga Rutas', 'url' => array('/CargaRutasMb/index'), 'visible' => $verMenusAdmin),
-                        
                         array('label' => 'Carga Coordenadas', 'url' => array('/CargaCoordenadasClientes/index'), 'visible' => $verMenusAdmin),
                     ),
                 ));
@@ -164,7 +175,7 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
                         array('label' => 'Reporte Ordenes', 'url' => array('/ReporteOrdenesxFecha/'), 'visible' => $verMenusAdmin),
-                        array('label' => 'Reporte Inicio Fin Jornada', 'url' => array('/ReporteInicioFinJornadaxFecha/'), 'visible' => $verMenuRevision),
+                        array('label' => 'Reporte Jornada', 'url' => array('/ReporteInicioFinJornadaxFecha/'), 'visible' => $verMenuRevision),
                     ),
                 ));
                 ?>
@@ -174,8 +185,9 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 <?php
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
-                        array('label' => 'Resumen diario historial', 'url' => array('/RptResumenDiarioHistorial/'), 'visible' => $verMenuRevision),
-                        array('label' => 'Resumen diario historial superv.', 'url' => array('/RptResumenDiarioHistorialSupervision/'), 'visible' => $verMenusAdmin),
+                        array('label' => 'Analisis ejecutivos', 'url' => array('/RptResumenDiarioHistorial/'), 'visible' => $verMenuRevision),
+                        array('label' => 'Analisis reemplazo ruta', 'url' => array('/RptResumenDiarioHistorialSupervision/'), 'visible' => $verMenusAdmin),
+                        array('label' => 'Analisis superviso vs ejecutivo', 'url' => array('/RptSupervisorVsEjecutivoHistorial/'), 'visible' => $verMenusAdmin),
 //                        array('label' => 'Resumen semanal historial', 'url' => array('/RptResumenSemanalHistorial/'), 'visible' => $verMenuRevision),
                         array('label' => 'Revision ruta', 'url' => array('/RevisionRuta/'), 'visible' => $verMenuRevision),
                     ),

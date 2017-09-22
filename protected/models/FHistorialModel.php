@@ -16,7 +16,7 @@
  */
 class FHistorialModel extends DAOModel {
 
-    public function getHistorialxVendedorxFecha($fechagestion, $ejecutivo) {
+    public function getHistorialxVendedorxFecha($accion = 'Inicio Visita', $fechagestion, $ejecutivo) {
         $sql = "
             SELECT 
                     DATE(H_FECHA) as FECHAVISITA
@@ -29,7 +29,7 @@ class FHistorialModel extends DAOModel {
                 WHERE 1=1
                     AND DATE(H_FECHA) ='" . $fechagestion . "'
                     AND H_USUARIO='" . $ejecutivo . "'
-                    AND H_ACCION='Inicio visita'
+                    AND H_ACCION='" . $accion . "'
                 ORDER BY H_FECHA ;
             ";
 //   var_dump($sql);        die();
@@ -40,7 +40,7 @@ class FHistorialModel extends DAOModel {
         return $data;
     }
 
-    public function getHistorialxVendedorxFechaxHoraInicioxHoraFin($fechagestion, $horaInicio, $horaFin, $ejecutivo) {
+    public function getHistorialxVendedorxFechaxHoraInicioxHoraFin($accion = 'Inicio Visita', $fechagestion, $horaInicio, $horaFin, $ejecutivo) {
 //        $anio = $datos['anio'];
 //        $horaInicio = '10:00';
         $fechaInicio = $fechagestion . ' ' . $horaInicio;
@@ -59,7 +59,7 @@ class FHistorialModel extends DAOModel {
                 WHERE 1=1
                     AND H_FECHA BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
                     AND H_USUARIO='" . $ejecutivo . "'
-                    AND H_ACCION='Inicio visita'
+                    AND H_ACCION='" . $accion . "'
                 ORDER BY H_FECHA ;
             ";
 //   var_dump($sql);        die();
@@ -69,7 +69,8 @@ class FHistorialModel extends DAOModel {
         $this->Close();
         return $data;
     }
-    public function getPrimeraVisitaxEjecutivoxFechaxHoraInicioxHoraFin($fechagestion, $horaInicio, $horaFin, $ejecutivo) {
+
+    public function getPrimeraVisitaxEjecutivoxFechaxHoraInicioxHoraFin($accion = 'Inicio Visita', $fechagestion, $horaInicio, $horaFin, $ejecutivo) {
         $fechaInicio = $fechagestion . ' ' . $horaInicio;
         $fechaFin = $fechagestion . ' ' . $horaFin;
         $sql = "
@@ -79,7 +80,7 @@ class FHistorialModel extends DAOModel {
                 WHERE 1=1
                     AND H_FECHA BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
                     AND H_USUARIO='" . $ejecutivo . "'
-                    AND H_ACCION='Inicio visita'
+                    AND H_ACCION='" . $accion . "'
                 ORDER BY H_FECHA
                 LIMIT 1;
             ";
@@ -90,7 +91,8 @@ class FHistorialModel extends DAOModel {
         $this->Close();
         return $data;
     }
-    public function getUltimaVisitaxEjecutivoxFechaxHoraInicioxHoraFin($fechagestion, $horaInicio, $horaFin, $ejecutivo) {
+
+    public function getUltimaVisitaxEjecutivoxFechaxHoraInicioxHoraFin($accion = 'Inicio Visita', $fechagestion, $horaInicio, $horaFin, $ejecutivo) {
         $fechaInicio = $fechagestion . ' ' . $horaInicio;
         $fechaFin = $fechagestion . ' ' . $horaFin;
         $sql = "
@@ -100,7 +102,7 @@ class FHistorialModel extends DAOModel {
                 WHERE 1=1
                     AND H_FECHA BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
                     AND H_USUARIO='" . $ejecutivo . "'
-                    AND H_ACCION='Inicio visita'
+                    AND H_ACCION='" . $accion . "'
                 ORDER BY H_FECHA DESC
                 LIMIT 1;
             ";
@@ -112,7 +114,7 @@ class FHistorialModel extends DAOModel {
         return $data;
     }
 
-    public function getHistorialxVendedorxRangoFecha($fechaInicio, $fechaFin, $ejecutivo) {
+    public function getHistorialxVendedorxRangoFecha($accion = 'Inicio Visita', $fechaInicio, $fechaFin, $ejecutivo) {
 //        $anio = $datos['anio'];
         $sql = "
             SELECT 
@@ -127,7 +129,7 @@ class FHistorialModel extends DAOModel {
                     AND DATE(H_FECHA)='" . $fechagestion . "'
                         AND DATE(H_FECHA) BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
                     AND H_USUARIO='" . $ejecutivo . "'
-                    AND H_ACCION='Inicio visita'
+                    AND H_ACCION='" . $accion . "'
                 ORDER BY H_FECHA ;
             ";
         var_dump($sql);
@@ -139,7 +141,7 @@ class FHistorialModel extends DAOModel {
         return $data;
     }
 
-    public function getHistorialxVendedorxRangoFechaxHoraInicioxHoraFin($fechaInicio, $horaInicio, $horaFin, $fechaFin, $ejecutivo) {
+    public function getHistorialxVendedorxRangoFechaxHoraInicioxHoraFin($accion = 'Inicio Visita', $fechaInicio, $horaInicio, $horaFin, $fechaFin, $ejecutivo) {
         $fechaInicio = $fechagestion . ' ' . $horaInicio;
         $fechaFin = $fechagestion . ' ' . $horaFin;
         $sql = "
@@ -155,7 +157,7 @@ class FHistorialModel extends DAOModel {
                     AND DATE(H_FECHA)='" . $fechagestion . "'
                         AND DATE(H_FECHA) BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
                     AND H_USUARIO='" . $ejecutivo . "'
-                    AND H_ACCION='Inicio visita'
+                    AND H_ACCION='" . $accion . "'
                 ORDER BY H_FECHA ;
             ";
         var_dump($sql);
@@ -167,7 +169,7 @@ class FHistorialModel extends DAOModel {
         return $data;
     }
 
-    public function getHistorialVisitaxEjecutivoxClientexFecha($codigoejecutivo, $codigocliente, $fecha) {
+    public function getHistorialVisitaxEjecutivoxClientexFecha($accion = 'Inicio Visita', $codigoejecutivo, $codigocliente, $fecha) {
 //        $anio = $datos['anio'];
         $sql = "
             SELECT 
@@ -181,7 +183,7 @@ class FHistorialModel extends DAOModel {
                     AND DATE(H_FECHA)='" . $fecha . "'
                     AND H_USUARIO='" . $codigoejecutivo . "'
                     AND H_COD_CLIENTE='" . $codigocliente . "'
-                    AND H_ACCION='Inicio visita'
+                    AND H_ACCION='" . $accion . "'
                 ORDER BY H_FECHA ;
             ";
 //   var_dump($sql);        die();
@@ -190,6 +192,75 @@ class FHistorialModel extends DAOModel {
 //        var_dump($data);        die();
         $this->Close();
         return $data;
+    }
+
+    public function getCantidadVisitasxEjecutivoxFecha($accion = 'Inicio Visita', $codigoejecutivo, $fecha, $ruta) {
+//        $anio = $datos['anio'];
+        $sql = "
+            SELECT 
+                   count(distinct h_cod_cliente) as visitas_en_ruta
+                FROM tb_historial_mb
+                WHERE 1=1
+                    AND DATE(H_FECHA)='" . $fecha . "'
+                    AND H_USUARIO='" . $codigoejecutivo . "'
+                    AND H_ACCION='" . $accion . "'
+                    AND H_RUTA='" . $ruta . "'
+                ORDER BY H_FECHA ;
+            ";
+//   var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getCantidadClientesVisitadosxEjecutivoxFecha($codigoejecutivo, $fecha) {
+        $txt1 = 'VISITAS';
+        $txt2 = 'REPETIDAS';
+        $txt3 = 'TODAS';
+
+        $resultado = array();
+        $sql1 = "
+            select sum(rhd_valor) AS '" . $txt1 . "'
+            from tb_resumen_historial_diario 
+            where 1=1
+            and date(rhd_fecha_historial)='" . $fecha . "' 
+            and rhd_cod_ejecutivo='" . $codigoejecutivo . "'
+            and rhd_parametro IN ('VISITAS-EFECTUADAS-EN-RUTA','VISITAS-FUERA-RUTA'); 
+            ";
+        $command = $this->connection->createCommand($sql1);
+        $datos1 = $command->queryAll();
+        $resultado [$txt1] = (isset($datos1[0])) ? intval($datos1[0][$txt1]) : 0;
+
+        $sql2 = "
+            select sum(rhd_valor) AS '" . $txt2 . "'
+            from tb_resumen_historial_diario 
+            where 1=1
+            and date(rhd_fecha_historial)='" . $fecha . "' 
+            and rhd_cod_ejecutivo='" . $codigoejecutivo . "'
+            and rhd_parametro IN ('VISITAS-REPETIDAS');
+
+            ";
+        $command = $this->connection->createCommand($sql2);
+        $datos2 = $command->queryAll();
+        $resultado [$txt2] = (isset($datos2[0])) ? intval($datos2[0][$txt2]) : 0;
+
+        $sql3 = "
+            select sum(rhd_valor) AS '" . $txt3 . "'
+            from tb_resumen_historial_diario 
+            where 1=1
+           and date(rhd_fecha_historial)='" . $fecha . "' 
+            and rhd_cod_ejecutivo='" . $codigoejecutivo . "'
+            and rhd_parametro IN ('VISITAS-EFECTUADAS-EN-RUTA','VISITAS-FUERA-RUTA','VISITAS-REPETIDAS');
+            ";
+        $command = $this->connection->createCommand($sql3);
+        $datos3 = $command->queryAll();
+        $resultado [$txt3] = (isset($datos3[0])) ? intval($datos3[0][$txt3]) : 0;
+
+//        var_dump($resultado);        DIE();
+        $this->Close();
+        return $resultado;
     }
 
 }

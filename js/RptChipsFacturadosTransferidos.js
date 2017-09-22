@@ -147,7 +147,7 @@ function ConfigGridJSON() {
 
 function GenerarDocumentoReporte(accion, opcion) {
     if ($("#ReporteInicioFinJornadaxFechaForm_fechaInicioFinJornadaInicio").val() != "") {
-        window.open('/sisven/ReporteChipsFacturadosTransferidos/'
+        window.open('/sisven_2/ReporteChipsFacturadosTransferidos/'
                 + accion
                 + '?opcion=' + opcion
                 );

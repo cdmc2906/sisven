@@ -19,6 +19,11 @@ define('CLASS_MENSAJE_NOTICE', 'notice');
 define('CLASS_MENSAJE_ERROR', 'error');
 define('INTERVALO_MONITOREO_SEC', 30);
 define('INTERVALO_REFRESCO_AUTOMATICO', 60);
+define('INTERVALO_REFRESCO_INMEDIATO', 1);
+define('SISTEMA', 'sisven_2');
+define('USUARIO_INVITADO', '2');
+define('TIPOCOMENTARIOENLACEMAPA', 'Enlace Mapa');
+define('TIPOCOMENTARIOJORNADA', 'Comentario Jornada');
 
 define('GRUPO_USUARIOS_SUPERVISION', '1,2');
 define('GRUPO_USUARIOS_ADMIN', '\'QU17\',\'QU19\',\'QU21\',\'QU22\',\'QU26\',\'QU25\'');

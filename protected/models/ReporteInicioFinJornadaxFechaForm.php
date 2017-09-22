@@ -1,12 +1,17 @@
 <?php
+
 /**
  * Description of ReporteTotalPlanForm
  * @fecha 2015/11/15
  * @author Christian Araujo
  */
 class ReporteInicioFinJornadaxFechaForm extends CFormModel {
+
     public $fechaInicioFinJornadaInicio;
-//    public $fechaOrdenesFin;
+    public $horaFinGestion;
+    public $horaInicioGestion;
+    public $tipoUsuario;
+
 //    public $fechaConsumoFin;
 //    public $rutaArchivo;
 
@@ -15,7 +20,7 @@ class ReporteInicioFinJornadaxFechaForm extends CFormModel {
      */
     public function rules() {
         return array(
-            array('fechaInicioFinJornadaInicio', 'required'),
+            array('fechaInicioFinJornadaInicio,horaInicioGestion,horaFinGestion,tipoUsuario', 'required'),
 //            array('fechaOrdenesFin', 'required'),
 //            array('fechaConsumo, rutaArchivo', 'safe'),
         );
@@ -29,8 +34,10 @@ class ReporteInicioFinJornadaxFechaForm extends CFormModel {
     public function attributeLabels() {
         return array(
             'fechaInicioFinJornadaInicio' => 'Fecha Revision',
-//            'fechaOrdenesFin' => 'Fecha Fin',
-//            'fechaConsumoFin' => 'Fecha Consumo Fin',
+            'horaInicioGestion' => 'Hora Inicio',
+            'horaFinGestion' => 'Hora Fin',
+            'tipoUsuario' => 'Seleccione el tipo de usuario',
         );
     }
+
 }

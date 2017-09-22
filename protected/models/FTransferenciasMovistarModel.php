@@ -31,5 +31,21 @@ class FTransferenciasMovistarModel extends DAOModel {
         $this->Close();
         return $data;
     }
+    public function getLotexICC($iccBuscar) {
+        $sql = "
+            select 
+                tm_numero_lote 
+                from tb_transferencia_movistar 
+                where tm_icc='" . $iccBuscar . "';';
+                
+            ";
+//        var_dump($sql);die();   
+        
+        $command = $this->connection->createCommand($sql);
+        
+        $data = $command->queryAll();
+        $this->Close();
+        return $data;
+    }
 
 }

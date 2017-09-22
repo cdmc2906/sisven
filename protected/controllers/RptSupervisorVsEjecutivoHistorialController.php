@@ -5,17 +5,16 @@
  * @fecha 
  * @author 
  */
-class RptResumenDiarioHistorialController extends Controller {
+class RptSupervisorVsEjecutivoHistorialController extends Controller {
 
     public function actionIndex() {
         Yii::app()->user->setFlash('resultadoGuardar', null);
         if (Yii::app()->request->isAjaxRequest) {
             return;
         } else {
-            $_SESSION['RptResumenDiarioHistorialForm'] = '';
-            $model = new RptResumenDiarioHistorialForm();
-//            var_dump($model);die();
-            $this->render('/historialmb/rptResumenDiarioHistorial', array('model' => $model));
+            Yii::app()->session['RptSupervisorVsEjecutivoHistorialForm '] = '';
+            $model = new RptSupervisorVsEjecutivoHistorialForm ();
+            $this->render('/historialmb/rptSupervisorVsEjecutivoHistorial', array('model' => $model));
         }
     }
 
@@ -68,7 +67,8 @@ class RptResumenDiarioHistorialController extends Controller {
         $datosResumenGridVisitasValidasInvalidas = array();
         $datosResumenGridPrimeraUltimaVisita = array();
         $datosResumenGridVentas = array();
-//        $_SESSION['ejecutivo']='';
+
+//        $modelo = new RptResumenDiarioHistorialForm ();
         $response = new Response();
         try {
             $model = new RptResumenDiarioHistorialForm();
@@ -78,17 +78,40 @@ class RptResumenDiarioHistorialController extends Controller {
                 Yii::app()->session['ModelForm'] = $model;
 
                 if ($model->validate()) {
+//                    var_dump($model->ejecutivo,$model->fechagestion);die();
+                    $fComentarioOficina = new FComentariosOficinalModel();
+                    $enlaceMapa = $fComentarioOficina->getUltimoEnlaceMapaxVendedorxFecha($model->ejecutivo, $model->fechagestion);
 
+                    if (count($enlaceMapa) > 0) {
+//                        var_dump($enlaceMapa[0]['co_enlace_mapa']);                        die();
+                        $datos['enlaceMapa'] = $enlaceMapa[0]['co_enlace_mapa'];
+                    }
+
+                    $fComentarioSupervision = new FComentariosSupervisionModel ();
+                    $comentarioSupervisor = $fComentarioSupervision->getComentariosSupervisionxEjecutivoxFecha($model->ejecutivo, $model->fechagestion);
+
+                    $comentarios = '';
+                    if (count($comentarioSupervisor) > 0) {
+                        foreach ($comentarioSupervisor as $key => $comentario) {
+//                            var_dump($value['username']);die();
+                            $comentarios .= intval($key + 1) . '.- ' . substr($comentario['username'], 0, 2) . "-" . $comentario['fecha'] . "-(" . $comentario['cs_comentario'] . ') ' . "\n";
+                        }
+//                        foreach ($comentarioSupervisor as $comentario) {
+//                            $comentarios .= $comentario['username'] . "-" . $comentario['fecha'] . "-(" . $comentario['cs_comentario'] . ') ' . "\n";
+//                        }
+                        $datos['comentarioSupervisor'] = $comentarios;
+                    }
+//                    var_dump($model);                    die();
                     $ejecutivo = EjecutivoModel::model()->findAllByAttributes(array('e_usr_mobilvendor' => $model->ejecutivo));
                     $fila = 1;
                     $fHistorial = new FHistorialModel();
                     $fOrden = new FOrdenModel();
                     $fRuta = new FRutaModel();
-                    $historial = $fHistorial->getHistorialxVendedorxFechaxHoraInicioxHoraFin($model->fechagestion, $model->horaInicioGestion, $model->horaFinGestion, $ejecutivo[0]['e_usr_mobilvendor']);
+                    $historial = $fHistorial->getHistorialxVendedorxFechaxHoraInicioxHoraFin($model->accionHistorial, $model->fechagestion, $model->horaInicioGestion, $model->horaFinGestion, $ejecutivo[0]['e_usr_mobilvendor']);
 
                     if (count($historial)) {
-                        $primeraVisita = $fHistorial->getPrimeraVisitaxEjecutivoxFechaxHoraInicioxHoraFin($model->fechagestion, $model->horaInicioGestion, $model->horaFinGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESULTADO'];
-                        $ultimaVisita = $fHistorial->getUltimaVisitaxEjecutivoxFechaxHoraInicioxHoraFin($model->fechagestion, $model->horaInicioGestion, $model->horaFinGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESULTADO'];
+                        $primeraVisita = $fHistorial->getPrimeraVisitaxEjecutivoxFechaxHoraInicioxHoraFin($model->accionHistorial, $model->fechagestion, $model->horaInicioGestion, $model->horaFinGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESULTADO'];
+                        $ultimaVisita = $fHistorial->getUltimaVisitaxEjecutivoxFechaxHoraInicioxHoraFin($model->accionHistorial, $model->fechagestion, $model->horaInicioGestion, $model->horaFinGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESULTADO'];
 
                         $diaGestion = date("w", strtotime($model->fechagestion));
                         $ruta_dia_gestion = "R" . $diaGestion . '-' . $ejecutivo[0]['e_iniciales'];
@@ -395,6 +418,7 @@ class RptResumenDiarioHistorialController extends Controller {
             $response->ClassMessage = CLASS_MENSAJE_ERROR;
         }
         $this->actionResponse(null, null, $response);
+//        $this->actionResponse(null, $model, $response);
         return;
     }
 
@@ -417,12 +441,18 @@ class RptResumenDiarioHistorialController extends Controller {
         try {
             if (isset(Yii::app()->session['detallerevisionhistorialitem']) && isset(Yii::app()->session['resumenrevisionhistorialitem'])) {
 
+//                var_dump(Yii::app()->session['ModelForm']);die();
                 $fechagestion = Yii::app()->session['ModelForm']['fechagestion'];
                 $ejecutivo = Yii::app()->session['ModelForm']['ejecutivo'];
                 $precisionVisita = Yii::app()->session['ModelForm']['precisionVisitas'];
                 $comentarioSupervisor = $_POST['RptResumenDiarioHistorialForm']['comentarioSupervision'];
                 $enlaceMapa = $_POST['RptResumenDiarioHistorialForm']['enlaceMapa'];
 
+                $model->fechagestion = $fechagestion;
+                $model->ejecutivo = $ejecutivo;
+//                $model->
+//                $model->horaFinGestion=Yii::app()->session['ModelForm']['fechagestion']
+//                var_dump($comentarioSupervisor);die();
                 /* VERIFICACION PARA ELIMINACION DE REGISTROS DE RESUMEN HISTORIAL */
                 $consultasResumenDH = new FResumenDiarioHistorialModel();
                 $cantidadRegistrosResumen = intval($consultasResumenDH->getCantidadResumenxVendedorxFecha($fechagestion, $ejecutivo)[0]['registrosResumen']);
@@ -442,6 +472,7 @@ class RptResumenDiarioHistorialController extends Controller {
 
                     /* GUARDAR DATOS RESUMEN REVISION */
                     $datosResumenRevisionHistorial = Yii::app()->session['resumenrevisionhistorialitem'];
+                    var_dump(count($datosResumenRevisionHistorial));die();
                     if (count($datosResumenRevisionHistorial) > 0) {
                         foreach ($datosResumenRevisionHistorial as $row) {
                             $data = array(
@@ -492,7 +523,7 @@ class RptResumenDiarioHistorialController extends Controller {
                 $consultasDetalleDH = new FDetalleDiarioHistorialModel();
                 $cantidadRegistrosDetalle = intval($consultasDetalleDH->getCantidadDetallexVendedorxFecha($fechagestion, $ejecutivo)[0]['registrosDetalle']);
                 $registrosIgualesDetalle = $consultasDetalleDH->getItemDetallexVendedorxFecha($fechagestion, $ejecutivo);
-                if ($cantidadRegistrosDetalle > 0) {
+                if ($cantidadRegistrosDetalle == 0) {
                     foreach ($registrosIgualesDetalle as $itemBorrar) {
                         $existeBdd = DetalleHistorialDiarioModel::model()->findByAttributes(
                                 array(

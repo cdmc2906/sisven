@@ -14,15 +14,16 @@
  * @property TbVendedor $iDVEND
  * @property TbProducto $iDPRO
  */
-class FComentariosOficinalModel extends DAOModel {
+class FComentariosOficinaModel extends DAOModel {
 
-    public function getUltimoEnlaceMapaxVendedorxFecha($ejecutivo, $fechagestion) {
+    public function getUltimoEnlaceMapaxVendedorxFecha($ejecutivo, $fechagestion, $tipo) {
         $sql = "
             select co_enlace_mapa 
                 from tb_comentario_oficina 
             where 1=1
                         and co_fecha_historial_revisado='" . $fechagestion . "'
                         and co_ejecutivo_revisado='" . $ejecutivo . "'
+                        and co_tipo_comentario='" . $tipo . "'
             order by co_fecha_ingreso desc
             limit 1    ;
             ";

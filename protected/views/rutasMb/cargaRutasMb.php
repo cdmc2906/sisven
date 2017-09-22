@@ -33,12 +33,12 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                     <?php
                     $command = Yii::app()->db->createCommand('
                         select 
-                                date(r_fch_ingreso) AS fecha
+                                r_fch_ingreso AS fecha
                             from tb_ruta_mb 
                             order by r_fch_ingreso desc 
                             limit 1');
                     $resultado = $command->queryRow();
-                    $ultimaFecha = DateTime::createFromFormat('Y-m-d', $resultado['fecha'])->format(FORMATO_FECHA_LONG_2);
+                    $ultimaFecha = DateTime::createFromFormat('Y-m-d H:i:s', $resultado['fecha'])->format(FORMATO_FECHA_LONG_2);
 
                     echo $form->textField($model, 'fechaUltimaCarga'
                             , array(

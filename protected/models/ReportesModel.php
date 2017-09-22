@@ -169,7 +169,7 @@ class ReportesModel extends DAOModel {
                 AND o_fch_creacion<'" . $fechaFinB . "'
             GROUP BY o_nom_usuario;";
 
-        var_dump($sql);        die();
+//        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
         $this->Close();

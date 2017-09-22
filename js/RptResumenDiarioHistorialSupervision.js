@@ -3,9 +3,21 @@ $(document).ready(function () {
 
     ConfigurarGrids();
     $("#btnLimpiar").click(function () {
+        $("#RptResumenDiarioHistorialSupervisionForm_fechagestion").val('');
+        $("#RptResumenDiarioHistorialSupervisionForm_ejecutivo").val('');
         
-        $("#RevisionHistorialForm_fechagestion").val('');
-        $("#RevisionHistorialForm_ejecutivo").val('');
+        $("#RptResumenDiarioHistorialSupervisionForm_horaInicioGestion").val('');
+        $("#RptResumenDiarioHistorialSupervisionForm_horaFinGestion").val('');
+        
+        $("#RptResumenDiarioHistorialSupervisionForm_precisionVisitas").val('');
+
+        $("#RptResumenDiarioHistorialSupervisionForm_comentarioSupervision").val('');
+        $("#RptResumenDiarioHistorialSupervisionForm_enlaceMapa").val('');
+
+        
+        $("#d_comentariosSupervision").val('');
+        $("#d_comentarioSupervision").val('');
+        $("#d_enlaceMapa").val('');
         
         $("#tblGridDetalle").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tblResumenGeneral").jqGrid("clearGridData", true).trigger("reloadGrid");
@@ -13,8 +25,7 @@ $(document).ready(function () {
         $("#tblResumenVisitasValidasInvalidas").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tblPrimeraUltimaVisita").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tblResumenVentas").jqGrid("clearGridData", true).trigger("reloadGrid");
-//        $("#tblGrid").jqGrid("GridDestroy");
-//        GridDestroy("#tblGrid");
+        
     });
     $("#btnExcel").click(function () {
         GenerarDocumentoReporte('GenerateExcel');
@@ -45,7 +56,7 @@ function ConfigurarGrids() {
             'ESTADO RUTA',
             'ESTADO SEC',
             'CHIPS',
-//            'METROS',
+            'METROS',
             'VALIDACION',
         ],
         colModel: [
@@ -54,16 +65,16 @@ function ConfigurarGrids() {
 //            {name: 'CODEJECUTIVO', index: 'CODEJECUTIVO', width: 100, sortable: false, frozen: true},
 //            {name: 'EJECUTIVO', index: 'EJECUTIVO', width: 100, sortable: false, frozen: true},
             {name: 'CODIGOCLIENTE', index: 'CODIGOCLIENTE', width: 80, sortable: false, frozen: true},
-            {name: 'CLIENTE', index: 'CLIENTE', width: 250, sortable: false, frozen: true},
+            {name: 'CLIENTE', index: 'CLIENTE', width: 215, sortable: false, frozen: true},
             {name: 'RUTAUSADA', index: 'RUTAUSADA', width: 50, sortable: false, frozen: true, align: "center"},
-            {name: 'SECUENCIAVISITA', index: 'SECUENCIAVISITA', width: 30, sortable: false, frozen: true, align: "center"},
+            {name: 'SECUENCIAVISITA', index: 'SECUENCIAVISITA', width: 20, sortable: false, frozen: true, align: "center"},
             {name: 'RUTACLIENTE', index: 'RUTACLIENTE', width: 50, sortable: false, frozen: true, align: "center"},
-            {name: 'SECUENCIARUTA', index: 'SECUENCIARUTA', width: 30, sortable: false, frozen: true, align: "center"},
-            {name: 'ESTADOREVISIONR', index: 'ESTADOREVISIONR', width: 117, sortable: false, frozen: true, align: "center"},
+            {name: 'SECUENCIARUTA', index: 'SECUENCIARUTA', width: 20, sortable: false, frozen: true, align: "center"},
+            {name: 'ESTADOREVISIONR', index: 'ESTADOREVISIONR', width: 100, sortable: false, frozen: true, align: "center"},
             {name: 'ESTADOREVISIONS', index: 'ESTADOREVISIONS', width: 95, sortable: false, frozen: true, align: "center"},
             {name: 'CHIPSCOMPRADOS', index: 'CHIPSCOMPRADOS', width: 40, sortable: false, formatter: "integer", summaryType: 'sum', align: "center"},
-//            {name: 'METROS', index: 'METROS', width: 70, sortable: false, formatter: "number", decimalSeparator: ".", thousandsSeparator: "", decimalPlaces: 2, defaultValue: '0.00', summaryType: 'sum',align: "right"},
-            {name: 'VALIDACION', index: 'VALIDACION', width: 80, sortable: false, align: "left"},
+            {name: 'METROS', index: 'METROS', width: 60, sortable: false, formatter: "number", decimalSeparator: ".", thousandsSeparator: "", decimalPlaces: 2, defaultValue: '0.00', summaryType: 'sum',align: "right"},
+            {name: 'VALIDACION', index: 'VALIDACION', width: 80, sortable: false, align: "center"},
         ],
         pager: '#pagGrid',
         rowNum: 6000,
@@ -82,7 +93,7 @@ function ConfigurarGrids() {
         hidegrid: false,
         footerrow: true
         , gridComplete: function () {
-            var $grid = $('#tblGrid');
+            var $grid = $('#tblGridDetalle');
             var colSum = $grid.jqGrid('getCol', 'CHIPSCOMPRADOS', false, 'sum');
             $grid.jqGrid('footerData', 'set', {'ESTADOREVISIONS': 'Total Venta'});
             $grid.jqGrid('footerData', 'set', {'CHIPSCOMPRADOS': colSum});
@@ -280,7 +291,7 @@ function ConfigurarGrids() {
 
 function GenerarDocumentoReporte(accion) {
     if (true) {
-        window.open('/sisven/RptResumenDiarioHistorial/' + accion);
+        window.open('/sisven/RptResumenDiarioHistorialSupervision/' + accion);
     } else {
         mostrarVentanaMensaje("Ingrese los parámetros necesarios para generar el reporte", 'Alerta');
     }

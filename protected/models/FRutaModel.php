@@ -23,7 +23,8 @@ class FRutaModel extends DAOModel {
      *  Mayoristas(2) = Ventas en el mes anterior al calculo de las comisiones
      */
 
-    public $campoFechaOrdenes='o_fch_creacion';
+    public $campoFechaOrdenes = 'o_fch_creacion';
+
     public function getRutaxCliente($codigo_cliente, $iniciales_ejecutivo) {
         $sql = "
            SELECT 
@@ -94,6 +95,24 @@ class FRutaModel extends DAOModel {
                                 AND DATE(H_FECHA)='" . $fechaGestion . "'
                                 AND H_USUARIO='" . $codEjecutivo . "'
             );
+           ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getVisitasSupervisorRutaEjecutivoxFecha($rutaEjecutivo, $fechaGestion, $codSupervisor) {
+        $sql = "
+            SELECT count(*) as CLIENTESVISITADOS
+                FROM tb_historial_mb
+                where 1=1
+                    and h_ruta ='" . $rutaEjecutivo . "'
+                    and h_usuario='" . $codSupervisor . "'
+                    and h_accion='Inicio visita'
+                    and date(h_fecha)='" . $fechaGestion . "';
            ";
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);

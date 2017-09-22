@@ -11,10 +11,10 @@ class FChipsFacturadosModel extends DAOModel {
                 ,I_NOMBRE_CLIENTE
                 ,i_min
                 ,i_imei 
-                ,tm_numero_lote as tm_lote
+                -- ,tm_numero_lote as tm_lote
             from tb_indicadores
-                inner join tb_transferencia_movistar
-                on  tb_indicadores.i_imei=tb_transferencia_movistar.tm_icc
+                -- inner join tb_transferencia_movistar
+                -- on  tb_indicadores.i_imei=tb_transferencia_movistar.tm_icc
             where 1=1
                 AND i_imei not in 
                     (select vm_icc from tb_venta_movistar)

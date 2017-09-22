@@ -46,6 +46,10 @@
 	<?php echo CHtml::encode($data->co_usuario_ingresa_modifica); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('co_tipo_comentario')); ?>:</b>
+	<?php echo CHtml::encode($data->co_tipo_comentario); ?>
+	<br />
+
 	*/ ?>
 
 </div>

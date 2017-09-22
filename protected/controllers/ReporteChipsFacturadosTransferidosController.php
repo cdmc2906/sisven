@@ -8,7 +8,6 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
         } else {
 
             $model = new ReporteChipsFacturadosTransferidosForm();
-
             $this->render('/reportes/rptChipsFacturadosTransferidos', array('model' => $model));
         }
     }
@@ -19,19 +18,30 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
         $datosGridNFT = array();
         $response = new Response();
         try {
+//            var_dump(0);die();
             $model = new ReporteChipsFacturadosTransferidosForm();
+//            var_dump($_POST);die();
             if (isset($_POST['ReporteChipsFacturadosTransferidosForm'])) {
+//                  var_dump('0-0');die();
                 $model->attributes = $_POST['ReporteChipsFacturadosTransferidosForm'];
 //                var_dump($model->validate());die();
-                if ($model->validate()) {
+//                if ($model->validate()) {
+//                    var_dump(2);                    die();
+                    $transferencias = new FTransferenciasMovistarModel();
                     $facturadosNoTansferidos = new FChipsFacturadosModel();
                     $datosFacturadosNoTransferidos = $facturadosNoTansferidos->getChipsFacturadosNoTransferidos();
-//                    var_dump($datosFacturadosNoTransferidos);die();
-
+//                    var_dump(1);die();
                     $noFacturadosTansferidos = new FChipsTransferidosModel();
                     $datosNoFacturadosTransferidos = $noFacturadosTansferidos->getChipsNoFacturadosTransferidos();
 //                    var_dump($datosNoFacturadosTransferidos);die(); 
                     foreach ($datosFacturadosNoTransferidos as $item) {
+                        $lote = $transferencias->getLotexICC($item['i_imei']);
+                        if (count($lote) > 0) {
+//                            var_dump($lote[0]["tm_numero_lote"]);die();
+                            $lote_ = $lote[0]["tm_numero_lote"];
+                        } else {
+                            $lote_ = "SIN LOTE";
+                        }
                         $infoFacturadosNoTransferidos = array(
                             'FECHA' => $item['i_fecha'],
                             'BODEGA' => $item['i_bodega'],
@@ -39,7 +49,7 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
                             'CLIENTE' => $item['I_NOMBRE_CLIENTE'],
                             'ICC' => $item['i_imei'],
                             'MIN' => $item['i_min'],
-                            'LOTE' => $item['tm_lote']
+                            'LOTE' => $lote_// $item['tm_lote']
                         );
                         array_push($datosGridFNT, $infoFacturadosNoTransferidos);
                         unset($infoFacturadosNoTransferidos);
@@ -56,12 +66,13 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
                         array_push($datosGridNFT, $infoNoFacturadosTransferidos);
                         unset($infoNoFacturadosTransferidos);
                     }
-                }
-                $_SESSION['FNT'] = $datosGridFNT;
-                $_SESSION['NFT'] = $datosGridNFT;
+//                }
+                Yii::app()->session['FNT'] = $datosGridFNT;
+                Yii::app()->session['NFT'] = $datosGridNFT;
 
                 $datosGrid['FNT'] = $datosGridFNT;
                 $datosGrid['NFT'] = $datosGridNFT;
+
                 $response->Result = $datosGrid;
 //                var_dump(count($datosGridFNT),count($datosGridNFT));die();
 
@@ -107,34 +118,35 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
         try {
             if ($opcion == 'FNT') {
                 $nombreArchivo = 'facturados_no_transferidos';
-                $facturadosNoTansferidos = new FChipsFacturadosModel();
-                $datosFacturadosNoTransferidos = $facturadosNoTansferidos->getChipsFacturadosNoTransferidos();
+//                var_dump(Yii::app()->session['NFT']);die();
+
+                $datosFacturadosNoTransferidos = Yii::app()->session['FNT'];
+
                 foreach ($datosFacturadosNoTransferidos as $item) {
                     $infoFacturadosNoTransferidos = array(
-                        'FECHA' => $item['i_fecha'],
-                        'BODEGA' => $item['i_bodega'],
-                        'COD_CLIENTE' => $item['I_CODIGO_GRUPO'],
-                        'CLIENTE' => $item['I_NOMBRE_CLIENTE'],
-                        'ICC' => '\'' . $item['i_imei'],
-                        'MIN' => '\'' . $item['i_min'],
-                        'LOTE' => '\'' . $item['tm_lote']
+                        'FECHA' => $item['FECHA'],
+                        'BODEGA' => $item['BODEGA'],
+                        'COD_CLIENTE' => $item['COD_CLIENTE'],
+                        'CLIENTE' => $item['CLIENTE'],
+                        'ICC' => '\'' . $item['ICC'],
+                        'MIN' => '\'' . $item['MIN'],
+                        'LOTE' => '\'' . $item['LOTE']
                     );
                     array_push($datosGrid, $infoFacturadosNoTransferidos);
                     unset($infoFacturadosNoTransferidos);
                 }
             } else if ($opcion == 'NFT') {
                 $nombreArchivo = 'no_facturados_transferidos';
-                $noFacturadosTansferidos = new FChipsTransferidosModel();
-                $datosNoFacturadosTransferidos = $noFacturadosTansferidos->getChipsNoFacturadosTransferidos();
+                $datosNoFacturadosTransferidos = Yii::app()->session['NFT'];
 
                 foreach ($datosNoFacturadosTransferidos as $item) {
                     $infoNoFacturadosTransferidos = array(
-                        'FECHA' => $item['VM_FECHA'],
-                        'EJECUTIVO' => $item['VM_NOMBREDISTRIBUIDOR'],
-                        'COD_CLIENTE' => $item['VM_IDDESTINO'],
-                        'CLIENTE' => $item['VM_NOMBREDESTINO'],
-                        'ICC' => '\'' . $item['vm_icc'],
-                        'MIN' => '\'' . $item['vm_min']
+                        'FECHA' => $item['FECHA'],
+                        'EJECUTIVO' => $item['EJECUTIVO'],
+                        'COD_CLIENTE' => $item['COD_CLIENTE'],
+                        'CLIENTE' => $item['CLIENTE'],
+                        'ICC' => '\'' . $item['ICC'],
+                        'MIN' => '\'' . $item['MIN']
                     );
                     array_push($datosGrid, $infoNoFacturadosTransferidos);
                     unset($infoNoFacturadosTransferidos);
@@ -142,19 +154,14 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
             } else {
                 //TO DO
             }
-//            var_dump($datosGrid);            die();
-//            $NombreArchivo = "reporte_" . $nombreArchivo . "_" . getdate();
             $NombreArchivo = "reporte_" . $nombreArchivo;
-//            $NombreHoja = "reporte_" . $nombreArchivo;
             $NombreHoja = "reporte";
-//            var_dump($NombreHoja);die();
             $autor = "Tececab";
             $titulo = "reporte_" . $nombreArchivo;
             $tema = "reporte_" . $nombreArchivo;
             $keywords = "office 2007";
 
             $excel = new excel();
-
             $excel->getObjPHPExcel()->getProperties()
                     ->setCreator($autor)
                     ->setLastModifiedBy($autor)
@@ -166,7 +173,6 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
 
             $excel->SetHojaDefault(0);
             $excel->SetNombreHojaActiva($NombreHoja);
-//var_dump('ssss');die();
             $excel->Mapeo($datosGrid);
 
             $excel->CrearArchivo('Excel2007', $NombreArchivo);

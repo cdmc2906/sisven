@@ -61,6 +61,11 @@
 		<?php echo $form->textField($model,'co_usuario_ingresa_modifica'); ?>
 	</div>
 
+	<div class="row">
+		<?php echo $form->label($model,'co_tipo_comentario'); ?>
+		<?php echo $form->textField($model,'co_tipo_comentario',array('size'=>45,'maxlength'=>45)); ?>
+	</div>
+
 	<div class="row buttons">
 		<?php echo CHtml::submitButton('Search'); ?>
 	</div>

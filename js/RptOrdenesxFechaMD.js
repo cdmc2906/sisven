@@ -111,6 +111,7 @@ function configurarMaestroDetalle()
                     cargarDetalle(fila.CODIGOEJECUTIVO);
                 }});
     jQuery("#tblGridMaestro").jqGrid('navGrid', '#pager10', {add: false, edit: false, del: false});
+    
     jQuery("#tblGridDetalle").jqGrid(
             {
                 height: 200
@@ -200,8 +201,6 @@ function configurarMaestroDetalle()
                 , caption: "Detalle Pedidos"}
     ).navGrid('#pager10_d', {add: false, edit: false, del: false}
     );
-
-
 }
 
 function cargarDetalle(codigoEjecutivoFila) {

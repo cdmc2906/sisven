@@ -151,13 +151,14 @@ class CargaIndicadorController extends Controller {
 //            if (isset($_SESSION['FileIndicador'])) {
             if (isset(Yii::app()->session['FileIndicador'])) {
 //                $filePath = $_SESSION['FileIndicador'];
+                Yii::app()->session['indicadoresDuplicados'] = 0;
                 $filePath = Yii::app()->session['FileIndicador'];
 
                 $operation = "r";
 //              $delimiter = ';';
 //                $delimiter = $_SESSION['ModelForm']["delimitadorColumnas"]; //';';;
                 $delimiter = Yii::app()->session['ModelForm']["delimitadorColumnas"]; //';';;
-                
+
                 $file = new File($filePath, $operation, $delimiter);
                 $totalRows = $file->getTotalFilas();
 
