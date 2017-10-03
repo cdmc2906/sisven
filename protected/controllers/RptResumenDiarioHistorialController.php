@@ -285,7 +285,7 @@ class RptResumenDiarioHistorialController extends Controller {
 
                                 $totalVentaReportada = $cantidadVentaFueraRuta + $cantidadVentaRuta;
                                 $totalVisitasEfectuadas = $visitasRuta + $visitasFueraRuta;
-                                $nivelCumplimiento = ceil(($visitasValidasRuta / $totalClientesRuta) * 100);
+                                $nivelCumplimiento = round(($visitasValidasRuta / $totalClientesRuta) * 100);
 
                                 $revisionRuta = array(
                                     'FECHAREVISION' => date(FORMATO_FECHA),

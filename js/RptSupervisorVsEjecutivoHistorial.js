@@ -1,27 +1,192 @@
 $(document).ready(function () {
     ConfigDatePickersReporte('.txtfechagestion');
+//    ConfigDatePickersReporte('.txtFechaGestionEjecutivo');
 
     ConfigurarGrids();
+
+    $("#btnExcel").click(function () {
+        GenerarDocumentoReporte('GenerateExcel');
+    });
+
+    $("#btnLimpiar").click(function () {
+        $("#RptSupervisorVsEjecutivoHistorialForm _fechagestion").val('');
+        $("#RptResumenDiarioHistorialForm_ejecutivo").val('');
+
+//        $("#RptResumenDiarioHistorialForm_horaInicioGestion").val('');
+//        $("#RptResumenDiarioHistorialForm_horaFinGestion").val('');
+//        
+//        $("#RptResumenDiarioHistorialForm_precisionVisitas").val('');
+//
+//        $("#RptResumenDiarioHistorialForm_comentarioSupervision").val('');
+//        $("#RptResumenDiarioHistorialForm_enlaceMapa").val('');
+
+
+//        $("#d_comentariosSupervision").val('');
+//        $("#d_comentarioSupervision").val('');
+//        $("#d_enlaceMapa").val('');
+
+        LimpiarGrids();
+    });
+
+    $('#RptSupervisorVsEjecutivoHistorialForm_accionHistorial').on('change', function (e) {
+//        var optionSelected = $("option:selected", this);
+//        var valueSelected = this.value;
+        alert('Cambio detectado');
+        LimpiarGrids();
+    });
+    $('#RptSupervisorVsEjecutivoHistorialForm_precisionVisitas').on('change', function (e) {
+//        var optionSelected = $("option:selected", this);
+//        var valueSelected = this.value;
+        alert('Cambio detectado');
+        LimpiarGrids();
+    });
+    $('#RptSupervisorVsEjecutivoHistorialForm_horaInicioGestion').on('change', function (e) {
+//        var optionSelected = $("option:selected", this);
+//        var valueSelected = this.value;
+        alert('Cambio detectado');
+        LimpiarGrids();
+    });
+    $('#RptSupervisorVsEjecutivoHistorialForm_horaFinGestion').on('change', function (e) {
+//        var optionSelected = $("option:selected", this);
+//        var valueSelected = this.value;
+        alert('Cambio detectado');
+        LimpiarGrids();
+    });
 });
 
-$("#btnExcelResumen").click(function () {
-    GenerarDocumentoReporte('GenerateExcelResumen');
-});
+function LimpiarGrids() {
+    $("#tblGridSupervisores").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblGridRutas").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblGridDetalle").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblVisitasSupervisor").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblCumplimientoSupervisor").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblResumenVisitasValidasInvalidasSupervisor").jqGrid("clearGridData", true).trigger("reloadGrid");
 
+    $("#tblVisitasEjecutivo").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblCumplimientoEjecutivo").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblResumenVisitasValidasInvalidasEjecutivo").jqGrid("clearGridData", true).trigger("reloadGrid");
+}
 function ConfigurarGrids() {
+
+    jQuery("#tblGridSupervisores").jqGrid(
+            {
+                loadonce: true
+                , height: 100
+                , width: 300
+                , mtype: 'POST'
+                , url: 'VerDatosArchivo'
+                , datatype: "json"
+                , colNames: ['CODIGO ', 'SUPERVISOR', 'VISITAS']
+                , colModel:
+                        [
+                            {name: 'CODIGOEJECUTIVO', index: 'CODIGOEJECUTIVO', width: 55}
+                            , {name: 'SUPERVISOR', index: 'SUPERVISOR', width: 100}
+                            , {name: 'VISITAS', index: 'VISITAS', width: 40, align: "center"}
+                        ]
+                , rowNum: 10
+                , rowList: [10, 20, 30]
+                , pager: '#pager10'
+                , sortname: 'id'
+                , viewrecords: true
+                , sortorder: "desc"
+                , multiselect: false
+                , hidegrid: false
+                , caption: "Supervisores "
+                , footerrow: true
+                , gridComplete: function () {
+                    var $grid = $('#tblGridSupervisores');
+                    var colSum = $grid.jqGrid('getCol', 'VISITAS', false, 'sum');
+                    $grid.jqGrid('footerData', 'set', {'SUPERVISOR': 'Total visitas:'});
+                    $grid.jqGrid('footerData', 'set', {'VISITAS': colSum});
+                }
+                , onSelectRow: function (idFilaSeleccionada) {
+                    var fila = jQuery("#tblGridSupervisores").jqGrid('getRowData', idFilaSeleccionada);
+                    jQuery("#tblGridRutas").jqGrid('setCaption', "Detalle rutas visitadas: " + fila.SUPERVISOR).trigger('reloadGrid');
+                    cargarDetalleRutas(fila.CODIGOEJECUTIVO);
+                }
+            });
+    jQuery("#tblGridRutas").jqGrid(
+            {
+                height: 100
+                , width: 300
+                , datatype: "json"
+                , colNames: [
+                    'SUPERVISOR',
+                    'EJECUTIVO',
+                    'RUTACOMPLETA',
+                    'RUTA',
+                    'VISITAS'
+                ]
+                , colModel:
+                        [
+                            {name: 'CODIGOSUPERVISOR', index: 'CODIGOEJECUTIVO', width: 40, hidden: true, align: "center"}
+                            , {name: 'CODIGOEJECUTIVO', index: 'CODIGOEJECUTIVO', width: 40, align: "center"}
+                            , {name: 'RUTACOMPLETA', index: 'RUTACOMPLETA', width: 40, hidden: true, align: "center"}
+                            , {name: 'RUTA', index: 'RUTA', width: 50, align: "center"}
+                            , {name: 'VISITAS', index: 'VISITAS', width: 40, align: "center"}
+                        ]
+                , rowNum: 1000
+                , rowList: [5, 10, 20]
+                , pager: '#pager10_d'
+                , sortname: 'item'
+                , viewrecords: true
+                , hidegrid: false
+                , sortorder: "asc"
+                , footerrow: true
+                , gridComplete: function () {
+                    var $grid = $('#tblGridRutas');
+                    var colSum = $grid.jqGrid('getCol', 'VISITAS', false, 'sum');
+                    $grid.jqGrid('footerData', 'set', {'RUTA': 'Visitas supervisor'});
+                    $grid.jqGrid('footerData', 'set', {'VISITAS': colSum});
+
+                }
+                , onSelectRow: function (idFilaSeleccionada) {
+                    var fila = jQuery("#tblGridRutas").jqGrid('getRowData', idFilaSeleccionada);
+//                    jQuery("#tblGridDetalle").jqGrid('setCaption', "Detalle rutas visitadas ejecutivo: " + fila.SUPERVISOR).trigger('reloadGrid');
+                    cargarInformes(fila.CODIGOSUPERVISOR, fila.CODIGOEJECUTIVO, fila.RUTACOMPLETA, fila.RUTA);
+                }
+                , caption: "Rutas visitadas"});
+
     jQuery("#tblGridDetalle").jqGrid({
         loadonce: true,
         datatype: 'json',
         mtype: 'POST',
         url: 'ConfigurarGrid',
-        colNames: ['CODIGO', 'CLIENTE', 'METROS SUV', 'ESTADO SUV', 'METROS EJE', 'ESTADO EJE'],
+        colNames: [
+            'FECHA GESTION',
+            'CODIGO',
+            'CLIENTE',
+            'METROS SUV',
+            'ESTADO SUV',
+            'METROS EJE',
+            'ESTADO EJE',
+//            'DISTANCIA_SC',
+//            'DISTANCIA_EC',
+            'DISTANCIA_SE',
+            'LATITUD_CLIENTE',
+            'LONGITID_CLIENTE',
+            'LATITUD_SUPERVISOR',
+            'LONGITID_SUPERVISOR',
+            'LATITUD_EJECUTIVO',
+            'LONGITID_EJECUTIVO'
+        ],
         colModel: [
+            {name: 'FECHAGESTION', index: 'FECHAGESTION', hidden: true, width: 80, sortable: false, frozen: true},
             {name: 'CODIGOCLIENTE', index: 'CODIGOCLIENTE', width: 80, sortable: false, frozen: true},
-            {name: 'CLIENTE', index: 'CLIENTE', width: 215, sortable: false, frozen: true},
-            {name: 'METROSS', index: 'SECUENCIARUTA', width: 20, sortable: false, frozen: true, align: "center"},
-            {name: 'ESTADOS', index: 'ESTADOREVISIONR', width: 100, sortable: false, frozen: true, align: "center"},
-            {name: 'METROSE', index: 'ESTADOREVISIONS', width: 95, sortable: false, frozen: true, align: "center"},
-            {name: 'ESTADOE', index: 'CHIPSCOMPRADOS', width: 40, sortable: false, formatter: "integer", summaryType: 'sum', align: "center"},
+            {name: 'CLIENTE', index: 'CLIENTE', width: 230, sortable: false, frozen: true},
+            {name: 'METROSS', index: 'METROSS', width: 95, sortable: false, frozen: true, align: "center"},
+            {name: 'ESTADOS', index: 'ESTADOS', width: 100, sortable: false, frozen: true, align: "center"},
+            {name: 'METROSE', index: 'METROSE', width: 95, sortable: false, frozen: true, align: "center"},
+            {name: 'ESTADOE', index: 'ESTADOE', width: 100, sortable: false, frozen: true, align: "center"},
+//            {name: 'DISTANCIA_SC', index: 'DISTANCIA_SC', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},
+//            {name: 'DISTANCIA_EC', index: 'DISTANCIA_EC', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},
+            {name: 'DISTANCIA_SE', index: 'DISTANCIA_SE', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},
+            {name: 'LATITUD_CLIENTE', index: 'LATITUD_CLIENTE', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},
+            {name: 'LONGITUD_CLIENTE', index: 'LONGITUD_CLIENTE', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},
+            {name: 'LATITUD_SUPERVISOR', index: 'LATITUD_SUPERVISOR', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},
+            {name: 'LONGITUD_SUPERVISOR', index: 'LONGITUD_SUPERVISOR', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},
+            {name: 'LATITUD_EJECUTIVO', index: 'LATITUD_EJECUTIVO', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},
+            {name: 'LONGITUD_EJECUTIVO', index: 'LONGITUD_EJECUTIVO', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},
         ],
         pager: '#pagGrid',
         rowNum: 6000,
@@ -53,95 +218,6 @@ function ConfigurarGrids() {
             {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
     );
 
-    jQuery("#tblGridSupervisores").jqGrid(
-            {
-                loadonce: true
-                , height: 100
-                , width: 320
-                , mtype: 'POST'
-                , url: 'VerDatosArchivo'
-                , datatype: "json"
-                , colNames: ['CODIGO ', 'SUPERVISOR', 'VISITAS']
-                , colModel:
-                        [
-                            {name: 'CODIGOEJECUTIVO', index: 'CODIGOEJECUTIVO', width: 55}
-                            , {name: 'SUPERVISOR', index: 'SUPERVISOR', width: 100}
-                            , {name: 'VISITAS', index: 'VISITAS', width: 40, align: "center"}
-                        ]
-                , rowNum: 10
-                , rowList: [10, 20, 30]
-                , pager: '#pager10'
-                , sortname: 'id'
-                , viewrecords: true
-                , sortorder: "desc"
-                , multiselect: false
-                , caption: "Supervisores "
-                , footerrow: true
-                , gridComplete: function () {
-                    var $grid = $('#tblGridSupervisores');
-                    var colSum = $grid.jqGrid('getCol', 'VISITAS', false, 'sum');
-                    $grid.jqGrid('footerData', 'set', {'SUPERVISOR': 'Total visitas'});
-                    $grid.jqGrid('footerData', 'set', {'VISITAS': colSum});
-                }
-                , onSelectRow: function (idFilaSeleccionada) {
-                    var fila = jQuery("#tblGridMaestro").jqGrid('getRowData', idFilaSeleccionada);
-                    jQuery("#tblGridDetalle").jqGrid('setCaption', "Detalle Pedidos Ejecutivo: " + fila.EJECUTIVO).trigger('reloadGrid');
-                    cargarDetalle(fila.CODIGOEJECUTIVO);
-                }});
-    jQuery("#tblGridRutas").jqGrid(
-            {
-                height: 100
-                , width: 320
-                , datatype: "json"
-                , colNames: [
-                    'EJECUTIVO',
-                    'RUTA',
-                    'VISITAS'
-                ]
-                , colModel:
-                        [
-                            {name: 'CODIGOEJECUTIVO',
-//                                hidden: true,
-                                index: 'CODIGOEJECUTIVO',
-                                sortable: false,
-                                width: 80,
-                                frozen: true,
-                                editable: true,
-                                align: "center",
-                                editoptions: {readonly: true, size: 10}
-                            },
-                            {name: 'RUTA',
-                                index: 'RUTA',
-                                sortable: false,
-                                frozen: true,
-                                editable: true,
-                                editoptions: {readonly: true, size: 20}
-                            },
-                            {name: 'VISITAS'
-                                , index: 'VISITAS'
-                                , sortable: false
-                                , frozen: true
-                                , width: 100
-                                , editable: true,
-                                editoptions: {readonly: true, size: 15}
-                            },
-                        ]
-                , rowNum: 1000
-                , rowList: [5, 10, 20]
-                , pager: '#pager10_d'
-                , sortname: 'item'
-                , viewrecords: true
-                , sortorder: "asc"
-                , footerrow: true
-                , gridComplete: function () {
-                    var $grid = $('#tblGridDetalle');
-                    var colSum = $grid.jqGrid('getCol', 'VISITAS', false, 'sum');
-                    $grid.jqGrid('footerData', 'set', {'RUTA': 'Total visitas'});
-                    $grid.jqGrid('footerData', 'set', {'VISITAS': colSum});
-
-                }
-                , caption: "Rutas visitadas"});
-    
     jQuery("#tblVisitasSupervisor").jqGrid({
         loadonce: true,
         datatype: 'json',
@@ -150,14 +226,14 @@ function ConfigurarGrids() {
         colNames: ['PARAMETRO', 'VALOR'],
         colModel: [
             {name: 'PARAMETRO', index: 'PARAMETRO', width: 150, sortable: false, frozen: true},
-            {name: 'VALOR', index: 'VALOR', width: 90, sortable: false, frozen: true, align: 'center'}
+            {name: 'VALOR', index: 'VALOR', width: 60, sortable: false, frozen: true, align: 'center'}
         ],
         rowNum: 60,
         rowList: ElementosPagina,
         sortorder: 'ASC',
         viewrecords: true,
-        height: 46,
-        width: 250,
+        height: 120,
+        width: 220,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensiï¿½n personalizada de las celdas,
         caption: "Visitas supervisor",
@@ -180,16 +256,16 @@ function ConfigurarGrids() {
         url: 'ConfigurarGrid',
         colNames: ['Parametro', 'Valor'],
         colModel: [
-            {name: 'PARAMETRO', index: 'PARAMETRO', width: 200, sortable: false, frozen: true},
-            {name: 'VALOR', index: 'VALOR', width: 90, sortable: false, frozen: true, align: 'center'}
+            {name: 'PARAMETRO', index: 'PARAMETRO', width: 150, sortable: false, frozen: true},
+            {name: 'VALOR', index: 'VALOR', width: 60, sortable: false, frozen: true, align: 'center'}
         ],
 //        pager: '#pagGrid',
         rowNum: 60,
         rowList: ElementosPagina,
         sortorder: 'ASC',
         viewrecords: true,
-        height: 115,
-        width: 300,
+        height: 120,
+        width: 220,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensiï¿½n personalizada de las celdas,
         caption: "Cumplimiento",
@@ -213,7 +289,7 @@ function ConfigurarGrids() {
         colNames: ['Visita', 'Cantidad'],
         colModel: [
             {name: 'VISITA', index: 'VISITA', width: 100, sortable: false, frozen: true},
-            {name: 'CANTIDAD', index: '', width: 90, sortable: false, frozen: true, align: 'center'}
+            {name: 'CANTIDAD', index: 'CANTIDAD', width: 90, sortable: false, frozen: true, align: 'center'}
         ],
         rowNum: 60,
         rowList: ElementosPagina,
@@ -227,7 +303,7 @@ function ConfigurarGrids() {
         caption: "Validas-invalidas",
         hidegrid: false,
         gridComplete: function () {
-            var $grid = $('#tblResumenVisitasValidasInvalidas');
+            var $grid = $('#tblResumenVisitasValidasInvalidasSupervisor');
             var colSum = $grid.jqGrid('getCol', 'CANTIDAD', false, 'sum');
             $grid.jqGrid('footerData', 'set', {'VISITA': 'Total Visitas'});
             $grid.jqGrid('footerData', 'set', {'CANTIDAD': colSum});
@@ -253,15 +329,15 @@ function ConfigurarGrids() {
         colNames: ['PARAMETRO', 'VALOR'],
         colModel: [
             {name: 'PARAMETRO', index: 'PARAMETRO', width: 150, sortable: false, frozen: true},
-            {name: 'VALOR', index: 'VALOR', width: 90, sortable: false, frozen: true, align: 'center'}
+            {name: 'VALOR', index: 'VALOR', width: 60, sortable: false, frozen: true, align: 'center'}
         ],
 //        pager: '#pagGrid',
         rowNum: 60,
         rowList: ElementosPagina,
         sortorder: 'ASC',
         viewrecords: true,
-        height: 46,
-        width: 250,
+        height: 120,
+        width: 220,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensiï¿½n personalizada de las celdas,
         caption: "Visitas Ejecutivo",
@@ -284,16 +360,16 @@ function ConfigurarGrids() {
         url: 'ConfigurarGrid',
         colNames: ['Parametro', 'Valor'],
         colModel: [
-            {name: 'PARAMETRO', index: 'PARAMETRO', width: 200, sortable: false, frozen: true},
-            {name: 'VALOR', index: 'VALOR', width: 90, sortable: false, frozen: true, align: 'center'}
+            {name: 'PARAMETRO', index: 'PARAMETRO', width: 150, sortable: false, frozen: true},
+            {name: 'VALOR', index: 'VALOR', width: 60, sortable: false, frozen: true, align: 'center'}
         ],
 //        pager: '#pagGrid',
         rowNum: 60,
         rowList: ElementosPagina,
         sortorder: 'ASC',
         viewrecords: true,
-        height: 115,
-        width: 300,
+        height: 120,
+        width: 220,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensiï¿½n personalizada de las celdas,
         caption: "Cumplimiento",
@@ -317,7 +393,7 @@ function ConfigurarGrids() {
         colNames: ['Visita', 'Cantidad'],
         colModel: [
             {name: 'VISITA', index: 'VISITA', width: 100, sortable: false, frozen: true},
-            {name: 'CANTIDAD', index: '', width: 90, sortable: false, frozen: true, align: 'center'}
+            {name: 'CANTIDAD', index: 'CANTIDAD', width: 90, sortable: false, frozen: true, align: 'center'}
         ],
         rowNum: 60,
         rowList: ElementosPagina,
@@ -331,7 +407,7 @@ function ConfigurarGrids() {
         caption: "Validas-invalidas",
         hidegrid: false,
         gridComplete: function () {
-            var $grid = $('#tblResumenVisitasValidasInvalidas');
+            var $grid = $('#tblResumenVisitasValidasInvalidasEjecutivo');
             var colSum = $grid.jqGrid('getCol', 'CANTIDAD', false, 'sum');
             $grid.jqGrid('footerData', 'set', {'VISITA': 'Total Visitas'});
             $grid.jqGrid('footerData', 'set', {'CANTIDAD': colSum});
@@ -350,10 +426,101 @@ function ConfigurarGrids() {
     );
 }
 
+function cargarDetalleRutas(codigoEjecutivoFila) {
+    $.ajax(
+            {
+                method: "POST",
+                url: "RptSupervisorVsEjecutivoHistorial/CargarGridDetalleRuta",
+                data: {
+                    ejecutivo: codigoEjecutivoFila,
+                    fechaGestion: $("#RptSupervisorVsEjecutivoHistorialForm_fechagestion").val(),
+                    accionHistorial: $("#RptSupervisorVsEjecutivoHistorialForm_accionHistorial").val(),
+                    horaInicio: $("#RptSupervisorVsEjecutivoHistorialForm_horaInicioGestion").val(),
+                    horaFin: $("#RptSupervisorVsEjecutivoHistorialForm_horaFinGestion").val()
+                },
+                dataType: 'json',
+                type: 'post',
+                beforeSend: function ()
+                {
+                    blockUIOpen();
+                },
+                success: function (data)
+                {
+                    blockUIClose();
+                    if (data.Status == 1) {
+                        var datosResult = data.Result;
+                        $("#tblGridRutas").setGridParam({datatype: 'jsonstring', datastr: datosResult}).trigger('reloadGrid');
+
+                    } else {
+                        //to do
+                    }
+                },
+                error: function (xhr, st, err)
+                {
+                    blockUIClose();
+                    alert(err);
+                }
+            }
+    );
+}
+
+function cargarInformes(codigoSupervisor, codigoEjecutivo, ruta, diaRuta) {
+    $.ajax(
+            {
+                method: "POST",
+                url: "RptSupervisorVsEjecutivoHistorial/CargarInformes",
+                data: {
+                    supervisor: codigoSupervisor,
+                    ejecutivo: codigoEjecutivo,
+                    rutaEjecutivo: ruta,
+                    diaRuta: diaRuta,
+                    fechaGestion: $("#RptSupervisorVsEjecutivoHistorialForm_fechagestion").val(),
+                    accionHistorial: $("#RptSupervisorVsEjecutivoHistorialForm_accionHistorial").val(),
+                    horaInicio: $("#RptSupervisorVsEjecutivoHistorialForm_horaInicioGestion").val(),
+                    horaFin: $("#RptSupervisorVsEjecutivoHistorialForm_horaFinGestion").val(),
+                    precision: $("#RptSupervisorVsEjecutivoHistorialForm_precisionVisitas").val()
+                },
+                dataType: 'json',
+                type: 'post',
+                beforeSend: function ()
+                {
+                    blockUIOpen();
+                },
+                success: function (data)
+                {
+                    blockUIClose();
+                    if (data.Status == 1) {
+                        var datosResult = data.Result;
+//                        alert(datosResult.toSource());
+//                        $("#tblGridDetalle").setGridParam({datatype: 'jsonstring', datastr: datosResult}).trigger('reloadGrid');
+
+                        $("#tblCumplimientoSupervisor").setGridParam({datatype: 'jsonstring', datastr: datosResult['gridCumplimientoSupervisor']}).trigger('reloadGrid');
+                        $("#tblVisitasSupervisor").setGridParam({datatype: 'jsonstring', datastr: datosResult['gridVisitasSupervisor']}).trigger('reloadGrid');
+                        $("#tblResumenVisitasValidasInvalidasSupervisor").setGridParam({datatype: 'jsonstring', datastr: datosResult['resumenVisitasValidasInvalidasSupervisor']}).trigger('reloadGrid');
+
+                        $("#tblCumplimientoEjecutivo").setGridParam({datatype: 'jsonstring', datastr: datosResult['gridCumplimientoEjecutivo']}).trigger('reloadGrid');
+                        $("#tblVisitasEjecutivo").setGridParam({datatype: 'jsonstring', datastr: datosResult['gridVisitasEjecutivo']}).trigger('reloadGrid');
+                        $("#tblResumenVisitasValidasInvalidasEjecutivo").setGridParam({datatype: 'jsonstring', datastr: datosResult['resumenVisitasValidasInvalidasEjecutivo']}).trigger('reloadGrid');
+
+                        $("#tblGridDetalle").setGridParam({datatype: 'jsonstring', datastr: datosResult['gridDetalleSupervisorEjecutivo']}).trigger('reloadGrid');
+
+                    } else {
+                        //to do
+                    }
+                },
+                error: function (xhr, st, err)
+                {
+                    blockUIClose();
+                    alert(err);
+                }
+            }
+    );
+}
+
 function GenerarDocumentoReporte(accion) {
-    if (true) {
-        window.open('/sisven/RptResumenDiarioHistorial/' + accion);
-    } else {
-        mostrarVentanaMensaje("Ingrese los parámetros necesarios para generar el reporte", 'Alerta');
-    }
+//    if (true) {
+    window.open('/sisven_2/RptSupervisorVsEjecutivoHistorial/' + accion);
+//    } else {
+//        mostrarVentanaMensaje("Ingrese los parámetros necesarios para generar el reporte", 'Alerta');
+//    }
 }

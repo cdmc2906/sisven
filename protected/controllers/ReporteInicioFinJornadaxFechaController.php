@@ -63,10 +63,10 @@ class ReporteInicioFinJornadaxFechaController extends Controller {
 //                        var_dump($ejecutivos);die();
                         foreach ($ejecutivos as $ejecutivo) {
                             $cResumenDiarioHistorialMB = new FResumenDiarioHistorialModel();
-                            $inicioJornadaEjecutivo = $reporteModel->getInicioJornadaxFecha($ejecutivo['e_usr_mobilvendor'], $model->fechaInicioFinJornadaInicio);
-                            $finJornadaEjecutivo = $reporteModel->getFinJornadaxUsuarioxFecha($ejecutivo['e_usr_mobilvendor'], $model->fechaInicioFinJornadaInicio);
+                            $inicioJornadaEjecutivo = $reporteModel->getInicioJornadaxFecha($ejecutivo['e_usr_mobilvendor'], $model->fechaInicioFinJornadaInicio, $model->horaInicioGestion);
+                            $finJornadaEjecutivo = $reporteModel->getFinJornadaxUsuarioxFecha($ejecutivo['e_usr_mobilvendor'], $model->fechaInicioFinJornadaInicio, $model->horaFinGestion);
 //                        $cumplimientoEjecutivo = $cResumenDiarioHistorialMB->getCumplimientoxVendedorxFecha($model->fechaInicioFinJornadaInicio, $ejecutivo['e_usr_mobilvendor']);
-//                        var_dump(count($cumplimientoEjecutivo));                        DIE();
+//                        var_dump($inicioJornadaEjecutivo,$finJornadaEjecutivo);                        DIE();
 //                        if (count($cumplimientoEjecutivo) == 0) {
 //                            var_dump($ejecutivo);die();
                             $diaGestion = date("w", strtotime($model->fechaInicioFinJornadaInicio));
@@ -103,7 +103,7 @@ class ReporteInicioFinJornadaxFechaController extends Controller {
                                 'CUMPLIMIENTO' => $cumplimientoEjecutivo,
                                 'INICIOPRIMERAVISITA' => (count($inicioJornadaEjecutivo) > 0) ? $entrada->format("H:i") : "00:00",
                                 'FINALULTIMAVISITA' => (count($finJornadaEjecutivo) > 0) ? $salida->format("H:i") : "00:00",
-                                'TIEMPOGESTION' => ((count($inicioJornadaEjecutivo) > 0) && (count($finJornadaEjecutivo) > 0)) ? $entrada->diff($salida)->format("%H:%i") : "00:00",
+                                'TIEMPOGESTION' => ((count($inicioJornadaEjecutivo) > 0) && (count($finJornadaEjecutivo) > 0)) ? $entrada->diff($salida)->format("%Hh %im") : "00:00",
                                 'COMENTARIOS' => (isset($comentarioSupervision[0])) ? $comentarioSupervision[0]['cs_comentario'] : '',
                                 'COMENTARIOO' => '',
                             );

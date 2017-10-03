@@ -40,11 +40,22 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
             <div  style="display: flex; justify-content: flex-start;">
                 <div style="margin-left: 50px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
                     <fieldset style="border:2px groove ;">
-                        <legend style="border:1px solid green;">Filtros</legend>
+                        <legend style="border:1px solid green;">Filtros Fecha</legend>
 
                         <?php echo $form->labelEx($model, 'fechagestion'); ?>
                         <?php echo $form->textField($model, 'fechagestion', array('class' => 'txtfechagestion')) ?>
                         <?php echo $form->error($model, 'fechagestion'); ?>
+
+                        <?php // echo $form->labelEx($model, 'fechaGestionEjecutivo'); ?>
+                        <?php // echo $form->textField($model, 'fechaGestionEjecutivo', array('class' => 'txtFechaGestionEjecutivo')) ?>
+                        <?php // echo $form->error($model, 'fechaGestionEjecutivo'); ?>
+
+                    </fieldset>
+                </div>
+                <div style="margin-left: 50px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                    <fieldset style="border:2px groove ;">
+                        <legend style="border:1px solid green;">Filtros Historial</legend>
+
                         <?php echo $form->labelEx($model, 'accionHistorial'); ?>
                         <?php
                         echo $form->dropDownList(
@@ -64,6 +75,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                         );
                         ?>
                         <?php echo $form->error($model, 'accionHistorial'); ?>
+
                         <?php echo $form->labelEx($model, 'precisionVisita'); ?>
                         <?php
                         echo $form->dropDownList(
@@ -131,7 +143,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                         <?php
                         echo CHtml::ajaxSubmitButton(
                                 'Revisar historial', CHtml
-                                ::normalizeUrl(array('rptResumenDiarioHistorial/revisarhistorial', 'render' => true)), array(
+                                ::normalizeUrl(array('RptSupervisorVsEjecutivoHistorial/revisarhistorial', 'render' => true)), array(
                             'dataType' => 'json',
                             'type' => 'post',
                             'beforeSend' => 'function() {
@@ -145,14 +157,15 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                              var datosResult = data.Result;
                              //console.log(JSON.stringify(datosResult[\'detalle\']));
                              //console.log(datosResult.toSource());
-                            $("#tblGridDetalle").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'detalle\']}).trigger(\'reloadGrid\');
-                            $("#tblResumenGeneral").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenGeneral\']}).trigger(\'reloadGrid\');
-                            $("#tblResumenVisitas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitas\']}).trigger(\'reloadGrid\');
-                            $("#tblResumenVisitasValidasInvalidas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitasValidasInvalidas\']}).trigger(\'reloadGrid\');
-                            $("#tblPrimeraUltimaVisita").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenPrimeraUltima\']}).trigger(\'reloadGrid\');
-                            $("#tblResumenVentas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVentas\']}).trigger(\'reloadGrid\');
+                            //$("#tblGridDetalle").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'detalle\']}).trigger(\'reloadGrid\');
+                            //$("#tblResumenGeneral").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenGeneral\']}).trigger(\'reloadGrid\');
+                            //$("#tblResumenVisitas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitas\']}).trigger(\'reloadGrid\');
+                            //$("#tblResumenVisitasValidasInvalidas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitasValidasInvalidas\']}).trigger(\'reloadGrid\');
+                            //$("#tblPrimeraUltimaVisita").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenPrimeraUltima\']}).trigger(\'reloadGrid\');
+                            //$("#tblResumenVentas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVentas\']}).trigger(\'reloadGrid\');
+                            $("#tblGridSupervisores").setGridParam({datatype: \'jsonstring\', datastr: datosResult}).trigger(\'reloadGrid\');
                            
-                            $("#d_comentariosSupervision").val(datosResult[\'comentarioSupervisor\']);;
+                            $("#tblGridSupervisores").val(datosResult);
 
                             $("#RptResumenDiarioHistorialForm_enlaceMapa").val(datosResult[\'enlaceMapa\']);
                             $("#d_enlaceMapa").val(datosResult[\'enlaceMapa\']);
@@ -173,7 +186,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                         <br>
                         <?php echo CHtml::Button('Limpiar', array('id' => 'btnLimpiar', 'class' => 'btn btn-theme')); ?>
                         <br>
-                        <?php echo CHtml::Button('Exportar Resumen', array('id' => 'btnExcelResumen', 'class' => 'btn btn-theme')); ?>
+                        <?php // echo CHtml::Button('Exportar Resumen', array('id' => 'btnExcelResumen', 'class' => 'btn btn-theme')); ?>
                         <?php $this->endWidget(); ?>
                     </fieldset>
                 </div>
@@ -182,8 +195,8 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
     </div>     
 </section>
 
-<div>
-    <div  style="display: flex; justify-content: flex-start;">
+<div style="align-content:center; align-items: center">
+    <div style="display: flex; justify-content: flex-start;" >
         <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
             <table id="tblGridSupervisores" class="table table-condensed"></table>
         </div>
@@ -193,26 +206,31 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
     </div>
 </div>
 <br>
+<br>
 
-<table style="border: 1px solid black;">
+<table style="border: 1px solid black; width:100%">
+    <tr style="border: 1px solid black;">
+        <td style="border: 1px solid black; text-align:center; vertical-align:middle;"><strong>DATOS SUPERVISOR</strong></td>
+        <td style="border: 1px solid black; text-align:center; vertical-align:middle;"><strong>DATOS EJECUTIVO</strong></td>
+    </tr>
     <tr style="border: 1px solid black;">
         <td style="border: 1px solid black;">
-            <div  style="display: flex; justify-content: flex-start;">
+            <div  style="margin-left: 20px;display: flex; justify-content: flex-start;">
                 <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                    <table id="tblVisitasSupervisor" class="table table-condensed"></table>
+                    <table id="tblCumplimientoSupervisor" class="table table-condensed"></table>
                 </div>
-                <div style="margin-left: 10px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                <div style="margin-left: 20px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
                     <table id="tblResumenVisitasValidasInvalidasSupervisor" class="table table-condensed"></table>
                 </div>
             </div>
         </td>
         <td style="border: 1px solid black;">
-            <div  style="display: flex; justify-content: flex-start;">
+            <div  style="display: flex; justify-content: flex-end">
                 <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
                     <table id="tblResumenVisitasValidasInvalidasEjecutivo" class="table table-condensed"></table>
                 </div>
                 <div style="margin-left: 10px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                    <table id="tblVisitasEjecutivo" class="table table-condensed"></table>
+                    <table id="tblCumplimientoEjecutivo" class="table table-condensed"></table>
                 </div>
             </div>
         </td>
@@ -221,14 +239,14 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
         <td style="border: 1px solid black;" >
             <div  style="display: flex; justify-content: flex-start;">
                 <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                    <table id="tblCumplimientoSupervisor" class="table table-condensed"></table>                
+                    <table id="tblVisitasSupervisor" class="table table-condensed"></table>                
                 </div>
             </div>
         </td>
         <td style="border: 1px solid black;">
             <div  style="display: flex; justify-content: flex-end;">
-                <div style="margin-right: 20px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                    <table id="tblCumplimientoEjecutivo" class="table table-condensed"></table>                
+                <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                    <table id="tblVisitasEjecutivo" class="table table-condensed"></table>                
                 </div>
             </div>
 
@@ -246,20 +264,13 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
     <div id="pagGrid"> </div>
 </div>
 
-<br/><h1>Mapa</h1>
-<div id="map"></div>
+<!--<br/><h1>Mapa</h1>-->
+<!--<div id="map"></div>-->
 
 <?php // endif;    ?>
 
 <script>
-    function setComentarioSupervisor($comentario) {
-//        alert($valor);
-        $("#RptResumenDiarioHistorialForm_comentarioSupervision").val($comentario);
-    }
-    function setEnlaceMapa($enlace) {
-//        alert($valor);
-        $("#RptResumenDiarioHistorialForm_enlaceMapa").val($enlace);
-    }
+  
     function openMapsWindow()
     {
         var url = $("#d_enlaceMapa").val();

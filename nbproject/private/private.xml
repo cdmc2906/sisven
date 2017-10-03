@@ -41,8 +41,13 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/xampp/htdocs/sisven_2/protected/controllers/ReporteInicioFinJornadaxFechaController.php</file>
-            <file>file:/C:/xampp/htdocs/sisven_2/protected/views/reportes/rptInicioFinJornadaxFecha.php</file>
-            <file>file:/C:/xampp/htdocs/sisven_2/js/RptInicioFinJornadaxFecha.js</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/protected/controllers/RptResumenDiarioHistorialController.php</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/js/RptSupervisorVsEjecutivoHistorial.js</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/protected/controllers/RptSupervisorVsEjecutivoHistorialController.php</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/protected/views/historialmb/rptSupervisorVsEjecutivoHistorial.php</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/protected/models/FHistorialModel.php</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/protected/models/ReportesModel.php</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/protected/models/FRutaModel.php</file>
         </group>
     </open-files>
 </project-private>

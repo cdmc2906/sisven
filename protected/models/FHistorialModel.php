@@ -41,11 +41,9 @@ class FHistorialModel extends DAOModel {
     }
 
     public function getHistorialxVendedorxFechaxHoraInicioxHoraFin($accion = 'Inicio Visita', $fechagestion, $horaInicio, $horaFin, $ejecutivo) {
-//        $anio = $datos['anio'];
-//        $horaInicio = '10:00';
         $fechaInicio = $fechagestion . ' ' . $horaInicio;
         $fechaFin = $fechagestion . ' ' . $horaFin;
-//        var_dump($fechaInicio, $fechaFin);        die();
+
         $sql = "
             SELECT 
                     -- DATE(H_FECHA) as FECHAVISITA
@@ -62,10 +60,40 @@ class FHistorialModel extends DAOModel {
                     AND H_ACCION='" . $accion . "'
                 ORDER BY H_FECHA ;
             ";
-//   var_dump($sql);        die();
+        //var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
-//        var_dump($data);        die();
+        //var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getHistorialxVendedorxFechaxHoraInicioxHoraFinxRuta($accion = 'Inicio Visita', $fechagestion, $horaInicio, $horaFin, $ejecutivo, $ruta) {
+        $fechaInicio = $fechagestion . ' ' . $horaInicio;
+        $fechaFin = $fechagestion . ' ' . $horaFin;
+
+        $sql = "
+            SELECT 
+                    -- DATE(H_FECHA) as FECHAVISITA
+                    DATE_FORMAT(H_FECHA, '%Y-%m-%d %H:%i') AS FECHAVISITA
+                    ,H_COD_CLIENTE AS CODIGOCLIENTE
+                    ,H_NOM_CLIENTE AS NOMBRECLIENTE
+                    ,H_RUTA AS RUTAVISITA
+                    ,h_latitud AS LATITUD
+                    ,h_longitud AS LONGITUD
+                FROM tb_historial_mb
+                WHERE 1=1
+                    AND H_FECHA BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
+                    AND H_USUARIO='" . $ejecutivo . "'
+                    AND H_ACCION='" . $accion . "'
+                    AND H_ruta='" . $ruta . "'
+                        
+                ORDER BY H_FECHA ;
+            ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+        //var_dump($data);        die();
         $this->Close();
         return $data;
     }
@@ -195,7 +223,6 @@ class FHistorialModel extends DAOModel {
     }
 
     public function getCantidadVisitasxEjecutivoxFecha($accion = 'Inicio Visita', $codigoejecutivo, $fecha, $ruta) {
-//        $anio = $datos['anio'];
         $sql = "
             SELECT 
                    count(distinct h_cod_cliente) as visitas_en_ruta
@@ -207,6 +234,72 @@ class FHistorialModel extends DAOModel {
                     AND H_RUTA='" . $ruta . "'
                 ORDER BY H_FECHA ;
             ";
+//   var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    /**
+     * 
+     * @param type $accion
+     * @param type $codigoejecutivo
+     * @param type $fecha
+     * @param type $ruta
+     * @param type $horaInicio
+     * @param type $horaFin
+     * @return type
+     */
+    public function getCantidadVisitasxEjecutivoxFechaxHoraInicioxHoraFin($accion = 'Inicio Visita', $codigoejecutivo, $fecha, $ruta, $horaInicio, $horaFin) {
+        $fechaInicio = $fecha . ' ' . $horaInicio;
+        $fechaFin = $fecha . ' ' . $horaFin;
+        $sql = "
+            SELECT 
+                   count(distinct h_cod_cliente) as VISITASENRUTA
+                FROM tb_historial_mb
+                WHERE 1=1
+                    AND H_FECHA BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
+                    AND H_USUARIO='" . $codigoejecutivo . "'
+                    AND H_ACCION='" . $accion . "'
+                    AND H_RUTA='" . $ruta . "'
+                ORDER BY H_FECHA ;
+            ";
+//   var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+    
+    public function getDatosUltimaVisitaxEjecutivoxAccionxCodClientexFechaInicioxFechaFinxHoraInicioxHoraFinxRuta(
+            $codigoEjecutivo
+            ,$accion = 'Inicio Visita'
+            , $codigoCliente
+            , $fechaInicio
+            , $fechaFin
+            , $horaInicio
+            , $horaFin
+            , $ruta) {
+        $sql = "
+              SELECT 
+                   -- * -- count(distinct h_cod_cliente) as VISITASENRUTA
+                   h_fecha
+                   ,h_latitud AS LATITUDEJECUTIVO
+                   ,h_longitud AS LONGITUDEJECUTIVO
+                FROM tb_historial_mb
+                WHERE 1=1
+                    AND H_FECHA BETWEEN '".$fechaInicio."' AND '".$fechaFin."'
+                    AND DATE_FORMAT(H_FECHA,'%H:%i') between '".$horaInicio."' AND '".$horaFin."'
+                    AND H_USUARIO='".$codigoEjecutivo."'
+                    AND H_ACCION='".$accion."'
+                    AND H_RUTA='".$ruta."'
+                    AND h_cod_cliente='".$codigoCliente."'
+                ORDER BY H_FECHA DESC
+                LIMIT 1;
+                ";
 //   var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();

@@ -10,11 +10,12 @@ class RptSupervisorVsEjecutivoHistorialForm extends CFormModel {
 //    public $anio;
 //    public $mes;
     public $fechagestion;
+//    public $fechaGestionEjecutivo;
     public $accionHistorial;
     public $precisionVisitas;
     public $horaInicioGestion;
     public $horaFinGestion;
-    
+
 //    public $ejecutivo;
 //    public $comentarioSupervision;
 //    public $enlaceMapa;
@@ -25,8 +26,8 @@ class RptSupervisorVsEjecutivoHistorialForm extends CFormModel {
      */
     public function rules() {
         return array(
-//            array('fechagestion, precisionVisitas,horaFinGestion,accionHistorial', 'required'),
-//            array('fechagestion,ejecutivo,precisionVisitas,horaInicioGestion,horaFinGestion,comentarioSupervision,enlaceMapa,accionHistorial', 'safe'),
+//            array('fechagestion', 'required'),
+            array('fechagestion,fechaGestionEjecutivo,precisionVisitas,horaInicioGestion,horaFinGestion,accionHistorial', 'safe'),
         );
     }
 
@@ -37,7 +38,8 @@ class RptSupervisorVsEjecutivoHistorialForm extends CFormModel {
      */
     public function attributeLabels() {
         return array(
-            'fechagestion' => 'Fecha gestion en ruta',
+            'fechagestion' => 'Fecha gestion Supervisor',
+//            'fechaGestionEjecutivo' => 'Fecha gestion Ejecutivo',
 //            'ejecutivo' => 'Ejecutivo asignado ruta',
             'precisionVisitas' => 'Precision visita (metros)',
             'horaInicioGestion' => 'Seleccione la hora de inicio gestion',

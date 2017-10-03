@@ -2,16 +2,16 @@
 
 class ReportesModel extends DAOModel {
 
-    public function getTotalOrdenesxFecha($datos,$grupoEjecutivos) {
+    public function getTotalOrdenesxFecha($datos, $grupoEjecutivos) {
         $hora_inicio = "09:00:00";
 //        $hora_fin = "23:59:59";
 
         $fechaInicioA = $datos['fechaOrdenesInicio'];
         $fechaFinA = $datos['fechaOrdenesFin'];
-        
+
         $fechaInicioB = $fechaInicioA . " " . $hora_inicio;
 //        $fechaFinB = $fechaFinA . " " . $hora_fin;
-        $fechaFinB = date('Y-m-d', strtotime($fechaFinA. ' + 1 days')) . ' 09:00';
+        $fechaFinB = date('Y-m-d', strtotime($fechaFinA . ' + 1 days')) . ' 09:00';
         $sql = "
             SELECT
                     o_usuario AS CODIGOEJECUTIVO                
@@ -21,7 +21,7 @@ class ReportesModel extends DAOModel {
                 WHERE 1 = 1
                     AND o_fch_creacion >= '" . $fechaInicioB . "'
                     AND o_fch_creacion<'" . $fechaFinB . "'	
-                    AND o_usuario in(" . $grupoEjecutivos. ")	
+                    AND o_usuario in(" . $grupoEjecutivos . ")	
                 GROUP BY o_usuario
                 ORDER BY o_usuario;";
 
@@ -32,7 +32,7 @@ class ReportesModel extends DAOModel {
         return $data;
     }
 
-    public function getOrdenesxFecha($fechaInicio,$fechaFin) {
+    public function getOrdenesxFecha($fechaInicio, $fechaFin) {
         $hora_inicio = "00:00:00";
         $hora_fin = "23:59:59";
 
@@ -59,18 +59,18 @@ class ReportesModel extends DAOModel {
         $this->Close();
         return $data;
     }
-    
-    public function getOrdenesxEjecutivoxFecha($ejecutivo,$fechaInicio,$fechaFin) {
+
+    public function getOrdenesxEjecutivoxFecha($ejecutivo, $fechaInicio, $fechaFin) {
         $hora_inicio = "09:00:00";
 //        $hora_fin = "23:59:59";
-        
+
 
         $fechaInicioA = $fechaInicio;
         $fechaFinA = $fechaFin;
         $fechaInicioB = $fechaInicioA . " " . $hora_inicio;
 //        $fechaFinB = $fechaFinA . " " . $hora_fin;
-        
-        $fechaFinB = date('Y-m-d', strtotime($fechaFinA. ' + 1 days')) . ' 09:00';
+
+        $fechaFinB = date('Y-m-d', strtotime($fechaFinA . ' + 1 days')) . ' 09:00';
 
         $sql = "
         SELECT
@@ -83,7 +83,7 @@ class ReportesModel extends DAOModel {
                 , DATE(o_fch_creacion) AS PERIODO
             FROM tb_ordenes_mb
             WHERE 1 = 1
-                AND o_usuario='".$ejecutivo."'
+                AND o_usuario='" . $ejecutivo . "'
                 AND o_fch_creacion >= '" . $fechaInicioB . "'
                 AND o_fch_creacion<'" . $fechaFinB . "'
 			ORDER BY o_usuario;";
@@ -95,7 +95,7 @@ class ReportesModel extends DAOModel {
         return $data;
     }
 
-    public function getInicioJornadaxFecha($usuario, $fecha) {
+    public function getInicioJornadaxFecha($usuario, $fecha, $inicioJornada) {
 //        var_dump($datos);die();
 //        $fechaInicioA = $datos['fechaOrdenesInicio'];
 
@@ -107,7 +107,7 @@ class ReportesModel extends DAOModel {
             FROM tb_historial_mb 
             WHERE 1=1
                 AND DATE(h_fecha) ='" . $fecha . "'
-                AND TIME_FORMAT(h_fecha, '%H:%i') >='10:00'
+                AND TIME_FORMAT(h_fecha, '%H:%i') >='" . $inicioJornada . "'
 		AND h_accion='Inicio visita'
 		AND h_usuario='" . $usuario . "'
             ORDER BY h_fecha
@@ -121,7 +121,7 @@ class ReportesModel extends DAOModel {
         return $data;
     }
 
-    public function getFinJornadaxUsuarioxFecha($usuario, $fecha) {
+    public function getFinJornadaxUsuarioxFecha($usuario, $fecha, $finJornada) {
 //        var_dump($datos);die();
 //        $fechaInicioA = $datos['fechaOrdenesInicio'];
 
@@ -133,7 +133,7 @@ class ReportesModel extends DAOModel {
             FROM tb_historial_mb 
             WHERE 1=1
                 AND DATE(h_fecha) ='" . $fecha . "'
-                AND TIME_FORMAT(h_fecha, '%H:%i') <='19:30'
+                AND TIME_FORMAT(h_fecha, '%H:%i') <='" . $finJornada . "'
 		AND h_accion='Fin de visita'
 		AND h_usuario='" . $usuario . "'
             ORDER BY h_fecha desc
@@ -304,6 +304,66 @@ class ReportesModel extends DAOModel {
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
         $this->Close();
+        return $data;
+    }
+
+    public function getUsuariosGestionxFecha($fechaGestion, $accionRevisar, $grupoEjecutivosRevisar, $horaInicio, $horaFin) {
+        $fechaInicio = $fechaGestion . ' ' . $horaInicio;
+        $fechaFin = $fechaGestion . ' ' . $horaFin;
+        
+        $sql = "
+            select 
+                distinct 
+                    h_usuario as CODIGOEJECUTIVO
+                    ,h_usuario_nombre as SUPERVISOR
+                    -- ,h_ruta
+                    ,count(DISTINCT h_cod_cliente) as VISITAS
+                from tb_historial_mb 
+                where 1=1
+                    -- and date(h_fecha)='" . $fechaGestion . "'
+                    AND h_fecha BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
+                    and  h_accion='" . $accionRevisar . "'
+                    and h_usuario in (" . $grupoEjecutivosRevisar . ")	
+                group by 
+                    h_usuario
+                   -- ,h_ruta
+                order by 1;";
+//        var_dump($sql);die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+        $this->Close();
+        return $data;
+    }
+
+    public function getGestionxUsuarioxFecha($usuario, $fechaGestion, $accionRevisar, $horaInicio, $horaFin) {
+         $fechaInicio = $fechaGestion . ' ' . $horaInicio;
+        $fechaFin = $fechaGestion . ' ' . $horaFin;
+        $sql = "
+            select 
+                    h_usuario as CODIGOSUPERVISOR
+                    ,case left(right(h_ruta,4),1)
+                        when '-' then right(h_ruta,3)
+                        else h_ruta end as CODIGOEJECUTIVO
+                    ,h_ruta as RUTACOMPLETA
+                    ,case left(right(h_ruta,4),1)
+                        when '-' then left(right(h_ruta,5),1)
+                        else h_ruta end as RUTA
+                    ,count(distinct h_cod_cliente) as VISITAS
+                from tb_historial_mb 
+                where 1=1
+                    -- and date(h_fecha)='" . $fechaGestion . "'
+                    AND h_fecha BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
+                    and  h_accion='" . $accionRevisar . "'
+                    and h_usuario = '" . $usuario . "'	
+                group by 
+                    h_usuario
+                    ,h_ruta
+                order by 1;";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+        $this->Close();
+//        var_dump($data);die();
         return $data;
     }
 

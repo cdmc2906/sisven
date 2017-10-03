@@ -33,6 +33,7 @@ define('GRUPO_EJECUTIVOS_ZONA', '\'QU17\',\'QU19\',\'QU21\',\'QU22\',\'QU26\',\'
 define('GRUPO_SUPERVISORES', '\'QU20\',\'QU39\',\'QU47\'');
 define('GRUPO_SERVICIO_CLIENTE', '\'QU23\',\'QU24\'');
 define('GRUPO_TODOS', '\'QU17\',\'QU19\',\'QU21\',\'QU22\',\'QU26\',\'QU25\',\'QU23\',\'QU24\',\'QU20\',\'QU39\',\'QU47\'');
+define('RUTASNOREVISAR', '\'RZS 47\',\'RZS 39\',\'RZS 20\'');
 
 define('COPYRIGHT', 'TECECAB');
 define('LEYENDA_COPYRIGHT', 'Todos los derechos reservados &copy;');
