@@ -375,4 +375,28 @@ class FRutaModel extends DAOModel {
         return $data;
     }
 
+    public function getClientesNoVisitadosxRutaxEjecutivoxDia($ejecutivo, $ruta, $dia, $fechaGestionado, $accionRevisar = 'Inicio visita') {
+        $sql = "
+            select r_cod_cliente, r_nom_cliente
+            from tb_ruta_mb 
+            where 1=1
+            and r_dia=" . $dia . "
+            and r_ruta='" . $ruta . "'
+            and r_cod_cliente not in (
+                select distinct h_cod_cliente
+                from tb_historial_mb
+                where 1=1
+                and date(h_fecha) ='" . $fechaGestionado . "'
+                and h_usuario='" . $ejecutivo . "'
+                and h_ruta='" . $ruta . "'
+                and h_accion='" . $accionRevisar . "' )
+            ;";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
 }

@@ -8,9 +8,6 @@
 class RptResumenDiarioHistorialController extends Controller {
 
     public function actionIndex() {
-//        $solicitarLogin = true;
-//        if (Yii::app()->user->id <> intval(USUARIO_INVITADO)) {
-//            $solicitarLogin = false;
         Yii::app()->user->setFlash('resultadoGuardar', null);
         if (Yii::app()->request->isAjaxRequest) {
             return;
@@ -19,15 +16,6 @@ class RptResumenDiarioHistorialController extends Controller {
             $model = new RptResumenDiarioHistorialForm();
             $this->render('/historialmb/rptResumenDiarioHistorial', array('model' => $model));
         }
-//        }
-//        if ($solicitarLogin) {
-//            Yii::app()->user->setFlash('resultadoGuardar', "Por favor inicie sesion para continuar");
-//            $returnUri = '/' . SISTEMA . '/cruge/ui/login';
-//            Yii::app()->clientScript->registerMetaTag("" . INTERVALO_REFRESCO_INMEDIATO . ";url={$returnUri}", null, 'refresh');
-////            $this->render('/historialmb/rptResumenDiarioHistorial', array('model' => $model));
-//        } else {
-//            $this->render('/historialmb/rptResumenDiarioHistorial', array('model' => $model));
-//        }
     }
 
     public function actionRevisarHistorial() {
@@ -36,6 +24,11 @@ class RptResumenDiarioHistorialController extends Controller {
         $datosResumenGrid = array();
         $datosResumenGridIzquierda = array();
         $datosResumenGridDerecha = array();
+
+        $coordenadasClientes = array();
+        $coordenadasVisitas = array();
+        $itemCoordenadaCliente = array();
+        $itemCoordenadaVisita = array();
 
         $_totalVentaDia = 0;
         $_totalVentaRuta = 0;
@@ -64,7 +57,7 @@ class RptResumenDiarioHistorialController extends Controller {
                         $libreriaFunciones = new Libreria();
 //                    var_dump($model->ejecutivo,$model->fechagestion);die();
                         $fComentarioOficina = new FComentariosOficinaModel();
-                        
+
                         $enlaceMapa = $fComentarioOficina->getUltimoEnlaceMapaxVendedorxFecha($model->ejecutivo, $model->fechagestion, TIPOCOMENTARIOENLACEMAPA);
 
                         if (count($enlaceMapa) > 0) {
@@ -92,7 +85,15 @@ class RptResumenDiarioHistorialController extends Controller {
                         $fHistorial = new FHistorialModel();
                         $fOrden = new FOrdenModel();
                         $fRuta = new FRutaModel();
-                        $historial = $fHistorial->getHistorialxVendedorxFechaxHoraInicioxHoraFin($model->accionHistorial, $model->fechagestion, $model->horaInicioGestion, $model->horaFinGestion, $ejecutivo[0]['e_usr_mobilvendor']);
+                        if (isset($ejecutivo[0]['e_usr_mobilvendor'])) {
+                            $historial = $fHistorial->getHistorialxVendedorxFechaxHoraInicioxHoraFin(
+                                    $model->accionHistorial
+                                    , $model->fechagestion
+                                    , $model->horaInicioGestion
+                                    , $model->horaFinGestion
+                                    , $ejecutivo[0]['e_usr_mobilvendor']
+                            );
+                        }
 
                         if (count($historial)) {
                             $primeraVisita = $fHistorial->getPrimeraVisitaxEjecutivoxFechaxHoraInicioxHoraFin($model->accionHistorial, $model->fechagestion, $model->horaInicioGestion, $model->horaFinGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESULTADO'];
@@ -123,7 +124,7 @@ class RptResumenDiarioHistorialController extends Controller {
                             $rsTotales = new FRutaModel();
                             $mesAnterior = date("m", strtotime(date("Y-m-t", strtotime(date('Y-m-d', strtotime($model->fechagestion . ' - 1 days'))))));
                             $mesGestion = date("m", strtotime($model->fechagestion));
-//                        var_dump($mesGestion,$mesAnterior);die();
+
                             if ($mesAnterior == $mesGestion - 1) {
                                 if ($diaGestion == 1) {//1--> Lunes
                                     $fechaViernes = date('Y-m-d', strtotime($model->fechagestion . ' - 3 days'));
@@ -203,6 +204,22 @@ class RptResumenDiarioHistorialController extends Controller {
                                 }
                                 $latitudHistorial = floatval(str_replace(",", ".", $itemHistorial['LATITUD']));
                                 $longitudHistorial = floatval(str_replace(",", ".", $itemHistorial['LONGITUD']));
+
+                                $itemCoordenadaCliente = array(
+                                    'LATITUD' => $latitudCliente,
+                                    'LONGITUD' => $longitudCliente,
+                                    'LABEL' => $itemHistorial['CODIGOCLIENTE']
+                                );
+                                array_push($coordenadasClientes, $itemCoordenadaCliente);
+                                unset($itemCoordenadaCliente);
+                                $itemCoordenadaVisita = array(
+                                    'LATITUD' => $latitudHistorial,
+                                    'LONGITUD' => $longitudHistorial,
+//                                    'LABEL' => $ejecutivo[0]->e_usr_mobilvendor . '-' . $itemHistorial['CODIGOCLIENTE']
+                                    'LABEL' => $itemHistorial['CODIGOCLIENTE']
+                                );
+                                array_push($coordenadasVisitas, $itemCoordenadaVisita);
+                                unset($itemCoordenadaVisita);
 
                                 $distancia = $libreriaFunciones->DistanciaEntreCoordenadas($latitudCliente, $longitudCliente, $latitudHistorial, $longitudHistorial);
                                 if ($model->precisionVisitas != 0) {
@@ -371,10 +388,14 @@ class RptResumenDiarioHistorialController extends Controller {
 
                             $_SESSION['detallerevisionhistorialitem'] = $datosDetalleGrid;
                             $_SESSION['resumenrevisionhistorialitem'] = $datosResumenGridIzquierda;
-
                             Yii::app()->session['detallerevisionhistorialitem'] = $datosDetalleGrid;
                             Yii::app()->session['resumenrevisionhistorialitem'] = $datosResumenGridIzquierda;
 
+                            $datos['coordenadasClientes'] = $coordenadasClientes;
+                            $datos['coordenadasVisitas'] = $coordenadasVisitas;
+                            Yii::app()->session['coordenadasClientes'] = $coordenadasClientes;
+                            Yii::app()->session['coordenadasVisitas'] = $coordenadasVisitas;
+//                            var_dump(json_encode(Yii::app()->session['coordenadasClientes']));die();
                             $response->Message = "Historial revisado exitosamente";
                             $response->Status = SUCCESS;
                             $response->Result = $datos; // $datosGrid;
@@ -896,6 +917,71 @@ class RptResumenDiarioHistorialController extends Controller {
 
             $excel->CrearArchivo('Excel2007', $NombreArchivo);
             $excel->GuardarArchivo();
+        } catch (Exception $e) {
+            $mensaje = array(
+                'code' => $e->getCode(),
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            );
+            $response->Message = Yii::app()->params['mensajeExcepcion'];
+            $response->Status = ERROR;
+        }
+        return;
+    }
+
+    public function actionGenerateExcelNoVisitados() {
+        $response = new Response();
+        try {
+            $clientesNoVisitados = array();
+            $fRuta = new FRutaModel();
+            $filtros = array();
+            $filtros = Yii::app()->session['ModelForm'];
+            if ($filtros) {
+                $ejecutivo = EjecutivoModel::model()->findAllByAttributes(array('e_usr_mobilvendor' => $filtros['ejecutivo']));
+                $diaGestion = date("w", strtotime($filtros['fechagestion']));
+                $ruta_dia_gestion = "R" . $diaGestion . '-' . $ejecutivo[0]['e_iniciales'];
+                $fRutaA = $fRuta->getClientesNoVisitadosxRutaxEjecutivoxDia($filtros['ejecutivo'], $ruta_dia_gestion, $diaGestion + 1, $filtros['fechagestion'], $filtros['accionHistorial']);
+
+                foreach ($fRutaA as $clienteNoVisitado) {
+                    $dat = array(
+                        'FECHA_GESTION' => $filtros['fechagestion'],
+                        'RUTA' => $ruta_dia_gestion,
+                        'CODIGO EJECUTIVO' => $ejecutivo[0]['e_usr_mobilvendor'],
+                        'EJECUTIVO' => $ejecutivo[0]['e_nombre'],
+                        'COD_CLIENTE' => $clienteNoVisitado['r_cod_cliente'],
+                        'NOMBRE CLIENTE' => $clienteNoVisitado['r_nom_cliente']
+                    );
+                    array_push($clientesNoVisitados, $dat);
+                }
+
+                $NombreArchivo = "clientes_no_visitados";
+                $NombreHoja = "clientes_no_visitados";
+
+                $autor = "Tececab"; //$_SESSION['CUENTA'];
+                $titulo = "clientes_no_visitados";
+                $tema = "clientes_no_visitados";
+                $keywords = "office 2007";
+
+                $excel = new excel();
+
+                $excel->getObjPHPExcel()->getProperties()
+                        ->setCreator($autor)
+                        ->setLastModifiedBy($autor)
+                        ->setTitle($titulo)
+                        ->setSubject($tema)
+                        ->setDescription($tema)
+                        ->setKeywords($keywords)
+                        ->setCategory($tema);
+
+                $excel->SetHojaDefault(0);
+                $excel->SetNombreHojaActiva($NombreHoja);
+
+                $excel->Mapeo($clientesNoVisitados);
+
+                $excel->CrearArchivo('Excel2007', $NombreArchivo);
+                $excel->GuardarArchivo();
+            }
         } catch (Exception $e) {
             $mensaje = array(
                 'code' => $e->getCode(),

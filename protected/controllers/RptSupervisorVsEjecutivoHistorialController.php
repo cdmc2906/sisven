@@ -166,7 +166,10 @@ class RptSupervisorVsEjecutivoHistorialController extends Controller {
             if (strlen($_POST['diaRuta']) == 1 || strlen($_POST['diaRuta']) == 2) {
                 $dia_menos_siete_dias = date('Y-m-d', strtotime($_POST['fechaGestion'] . ' - 7 days'));
                 $fechaInicioRango = date('Y-m-d', strtotime("last Monday", strtotime($dia_menos_siete_dias)));
-                $fechaFinRango = $_POST['fechaGestion'];
+
+                /*Se suma un dia para que en la consulta se incluya el dia de gestion*/
+                $fechaFinRango = date('Y-m-d', strtotime($_POST['fechaGestion'] . ' + 1 days'));
+                
                 $dia = 1;
                 $fecha = $_POST['fechaGestion'];
                 $nombreDia = '';
@@ -193,10 +196,17 @@ class RptSupervisorVsEjecutivoHistorialController extends Controller {
                         $nombreDia = 'last Sunday';
                         break;
                 }
-
+//                var_dump($fechaInicioRango,$fechaFinRango);die();
                 $visitaEjecutivo = $fHistorial->getDatosUltimaVisitaxEjecutivoxAccionxCodClientexFechaInicioxFechaFinxHoraInicioxHoraFinxRuta(
-                        $ejecutivo[0]['e_usr_mobilvendor'], $_POST['accionHistorial'], $itemHistorialSupervisor['CODIGOCLIENTE']
-                        , $fechaInicioRango, $fechaFinRango, $_POST['horaInicio'], $_POST['horaFin'], $_POST['rutaEjecutivo']);
+                        $ejecutivo[0]['e_usr_mobilvendor']
+                        , $_POST['accionHistorial']
+                        , $itemHistorialSupervisor['CODIGOCLIENTE']
+                        , $fechaInicioRango
+                        , $fechaFinRango
+                        , $_POST['horaInicio']
+                        , $_POST['horaFin']
+                        , $_POST['rutaEjecutivo']);
+//                var_dump($fechaInicioRango,$fechaFinRango,$visitaEjecutivo);die();
 
                 if (isset($visitaEjecutivo[0])) {
 //                    if ($visitaRepetida)

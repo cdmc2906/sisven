@@ -126,9 +126,10 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConsultarReporte"'
                             'type' => 'post',
                             'beforeSend' => 'function() {blockUIOpen();}',
                             'success' => 'function(data) {
-                            blockUIClose();
+                                //alert(data.toSource());
+                                blockUIClose();
                             
-                            if(data.Status==1){
+                                if(data.Status==1){
                             var datosResult = data.Result;
                             
                             //alert(datosResult.toSource());
@@ -159,10 +160,10 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConsultarReporte"'
             </div>
         </div>
         <?php $this->renderPartial('/shared/_bodygrid'); ?>
-        <?php echo CHtml::Button('Editar', array('id' => 'btnEditarRegistro', 'class' => 'btn btn-theme')); ?>
+        <?php // echo CHtml::Button('Editar', array('id' => 'btnEditarRegistro', 'class' => 'btn btn-theme')); ?>
         <?php // echo CHtml::button('Guardar', array('submit' => array('ReporteInicioFinJornadaxFecha/GuardarRevision'),'id' => 'btnGuardarRegistro', 'class' => 'btn btn-theme')); ?>          
-        <?php echo CHtml::Button('Guardar', array('id' => 'btnGuardarRegistro', 'class' => 'btn btn-theme')); ?>
-        <?php echo CHtml::Button('Cancelar', array('id' => 'btnCancelar', 'class' => 'btn btn-theme')); ?>
+        <?php // echo CHtml::Button('Guardar', array('id' => 'btnGuardarRegistro', 'class' => 'btn btn-theme')); ?>
+        <?php // echo CHtml::Button('Cancelar', array('id' => 'btnCancelar', 'class' => 'btn btn-theme')); ?>
         <?php $this->renderPartial('/shared/_dialog'); ?>
 
         <!--<div id="grilla" class="_grilla">-->

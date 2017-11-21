@@ -7,24 +7,24 @@
  */
 class RptResumenDiarioHistorialSupervisionForm extends CFormModel {
 
+//    public $anio;
+//    public $mes;
     public $fechagestion;
     public $horaInicioGestion;
     public $horaFinGestion;
-    public $supervisor;
+    public $ejecutivo;
     public $precisionVisitas;
+//    public $comentarioSupervision;
     public $enlaceMapa;
-    public $ejecutivoSupervisar;
     public $rutaSupervisar;
-    public $comentarioSupervision;
-    public $accionHistorial;
 
     /**
      * Declares the validation rules.
      */
     public function rules() {
         return array(
-            array('fechagestion,supervisor,ejecutivoSupervisar,rutaSupervisar,precisionVisitas,horaFinGestion,accionHistorial', 'required'),
-            array('fechagestion,supervisor,ejecutivoSupervisar,rutaSupervisar,precisionVisitas,horaInicioGestion,horaFinGestion,enlaceMapa,comentarioSupervision,accionHistorial', 'safe'),
+            array('fechagestion, ejecutivo,precisionVisitas,horaFinGestion', 'required'),
+            array('fechagestion,ejecutivo,precisionVisitas,horaInicioGestion,horaFinGestion,enlaceMapa,rutaSupervisar', 'safe'),
         );
     }
 
@@ -36,14 +36,13 @@ class RptResumenDiarioHistorialSupervisionForm extends CFormModel {
     public function attributeLabels() {
         return array(
             'fechagestion' => 'Fecha gestion en ruta',
-            'supervisor' => 'Supervisor de Ruta',
+            'ejecutivo' => 'Ejecutivo asignado ruta',
             'precisionVisitas' => 'Precision visita (metros)',
             'horaInicioGestion' => 'Seleccione la hora de inicio gestion',
             'horaFinGestion' => 'Seleccione la hora de fin gestion',
+//            'comentarioSupervision' => 'Ingresar el comentario de supervision',
             'enlaceMapa' => 'Ingresar el enlace del mapa',
-            'ejecutivoSupervisar' => 'Seleccione Ejecutivo',
-            'rutaSupervisar' => 'Seleccione la ruta del Ejecutivo',
-            'accionHistorial' => 'Seleccione la accion a evaluar'
+            'rutaSupervisar' => 'Seleccione la ruta a supervisar'
         );
     }
 

@@ -115,6 +115,7 @@ function ConfigurarGrids() {
                     'EJECUTIVO',
                     'RUTACOMPLETA',
                     'RUTA',
+                    'RUTA',
                     'VISITAS'
                 ]
                 , colModel:
@@ -122,7 +123,9 @@ function ConfigurarGrids() {
                             {name: 'CODIGOSUPERVISOR', index: 'CODIGOEJECUTIVO', width: 40, hidden: true, align: "center"}
                             , {name: 'CODIGOEJECUTIVO', index: 'CODIGOEJECUTIVO', width: 40, align: "center"}
                             , {name: 'RUTACOMPLETA', index: 'RUTACOMPLETA', width: 40, hidden: true, align: "center"}
-                            , {name: 'RUTA', index: 'RUTA', width: 50, align: "center"}
+                            , {name: 'RUTAEJECUTIVO', index: 'RUTAEJECUTIVO', width: 40, align: "center"}
+                            , {name: 'RUTA', index: 'RUTA', width: 40, hidden: true, align: "center"}
+//                            , {name: 'RUTA', index: 'RUTA', width: 50, align: "center"}
                             , {name: 'VISITAS', index: 'VISITAS', width: 40, align: "center"}
                         ]
                 , rowNum: 1000
@@ -180,7 +183,7 @@ function ConfigurarGrids() {
             {name: 'ESTADOE', index: 'ESTADOE', width: 100, sortable: false, frozen: true, align: "center"},
 //            {name: 'DISTANCIA_SC', index: 'DISTANCIA_SC', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},
 //            {name: 'DISTANCIA_EC', index: 'DISTANCIA_EC', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},
-            {name: 'DISTANCIA_SE', index: 'DISTANCIA_SE', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},
+            {name: 'DISTANCIA_SE', index: 'DISTANCIA_SE', width: 95, sortable: false, frozen: true, align: "center"},
             {name: 'LATITUD_CLIENTE', index: 'LATITUD_CLIENTE', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},
             {name: 'LONGITUD_CLIENTE', index: 'LONGITUD_CLIENTE', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},
             {name: 'LATITUD_SUPERVISOR', index: 'LATITUD_SUPERVISOR', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},

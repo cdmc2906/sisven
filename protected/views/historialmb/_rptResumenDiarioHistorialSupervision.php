@@ -3,6 +3,7 @@
 $this->breadcrumbs = array('Resumen diario historial supervision',);
 $this->renderPartial('/shared/_blockUI');
 $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'));
+$this->pageTitle = 'Analisis reemplazo ruta'
 ?>
 
 <link type="text/css" rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/datepicker.css" />

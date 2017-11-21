@@ -30,6 +30,9 @@ $(document).ready(function () {
     $("#btnExcel").click(function () {
         GenerarDocumentoReporte('GenerateExcel');
     });
+    $("#btnExcelNoVisitados").click(function () {
+        GenerarDocumentoReporte('GenerateExcelNoVisitados');
+    });
     $("#btnExcelResumen").click(function () {
         GenerarDocumentoReporte('GenerateExcelResumen');
     });
@@ -57,7 +60,7 @@ function ConfigurarGrids() {
             'ESTADO SEC',
             'CHIPS',
             'METROS',
-            'VALIDACION',
+            'VALIDACION'
         ],
         colModel: [
 //            {name: 'FECHAREVISION', index: 'FECHAREVISION', width: 100, sortable: false, frozen: true},
@@ -291,7 +294,7 @@ function ConfigurarGrids() {
 
 function GenerarDocumentoReporte(accion) {
     if (true) {
-        window.open('/sisven/RptResumenDiarioHistorial/' + accion);
+        window.open('/sisven_2/RptResumenDiarioHistorial/' + accion);
     } else {
         mostrarVentanaMensaje("Ingrese los parámetros necesarios para generar el reporte", 'Alerta');
     }

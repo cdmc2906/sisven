@@ -6,7 +6,7 @@
 // CWebApplication properties can be configured here.
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
-    'name' => 'Sistema Control Zona Sur TECECAB',
+    'name' => 'TECECAB - SISVEN',
     'language' => 'es',
     'sourceLanguage' => 'en',
     // preloading 'log' component

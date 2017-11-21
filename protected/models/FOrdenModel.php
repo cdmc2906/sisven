@@ -53,7 +53,7 @@ class FOrdenModel extends DAOModel {
         $sqlFechaFinVisita = "
             SELECT
                     H_FECHA            
-                FROM TB_HISTORIAL_MB
+                FROM tb_historial_mb
                 WHERE H_ACCION='Fin de visita'
                     AND H_FECHA>='" . $fechaOrden . "'
                     AND H_COD_CLIENTE='TCQU190004'

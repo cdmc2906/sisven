@@ -41,7 +41,11 @@ class RevisionRutaController extends Controller {
                     $fOrden = new FOrdenModel();
                     foreach ($rutaEjecutivo as $itemRuta) {
                         $estadoRevision = '';
-                        $historial = $fHistorial->getHistorialVisitaxEjecutivoxClientexFecha($model->ejecutivo, $itemRuta['CODIGOCLIENTE'], $model->fechagestion);
+                        $historial = $fHistorial->getHistorialVisitaxEjecutivoxClientexFecha(
+                                'Inicio Visita'
+                                ,$model->ejecutivo
+                                , $itemRuta['CODIGOCLIENTE']
+                                , $model->fechagestion);
                         if (count($historial) > 0) {
                             $fechaVisita = $historial[0]['FECHAVISITA'];
                             $rutaVisita = $historial[0]['RUTAVISITA'];
@@ -78,6 +82,7 @@ class RevisionRutaController extends Controller {
                     }
 
                     $_SESSION['rutaitem'] = $datosGrid;
+                    Yii::app()->session['rutaitem'] = $datosGrid;
 //                    var_dump(2);                            die();
                     $response->Message = "Ruta revisada exitosamente";
                     $response->Status = SUCCESS;
@@ -102,8 +107,10 @@ class RevisionRutaController extends Controller {
 
         $response = new Response();
         try {
-            $response->Result = $_SESSION['indicadorItems'];
-            unset($_SESSION['indicadorItems']);
+//            $response->Result = $_SESSION['indicadorItems'];
+            $response->Result = Yii::app()->session['indicadorItems'];
+//            unset($_SESSION['indicadorItems']);
+            unset(Yii::app()->session['indicadorItems']);
         } catch (Exception $e) {
             $mensaje = array(
                 'code' => $e->getCode(),
@@ -148,7 +155,7 @@ class RevisionRutaController extends Controller {
         $response = new Response();
         try {
             $revisionRuta = array();
-            $datos = $_SESSION['rutaitem'];
+            $datos = Yii::app()->session['rutaitem'];
             foreach ($datos as $value) {
                 $dat = array(
                     'FECHAREVISION' => $value['FECHAREVISION'],

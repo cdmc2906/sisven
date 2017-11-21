@@ -3,6 +3,7 @@
 $this->breadcrumbs = array('Resumen diario historial ejecutivo',);
 $this->renderPartial('/shared/_blockUI');
 $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'));
+$this->pageTitle = 'Analisis diario ejecutivo'
 ?>
 
 <link type="text/css" rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/datepicker.css" />
@@ -69,13 +70,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                         <legend style="border:1px solid green;">Filtros tiempo</legend>
                         <?php
                         echo $form->labelEx($model, 'horaInicioGestion');
-                        echo $form->dropDownList(
-                                $model, 'horaInicioGestion', array(
-                            '10:00' => '10:00'
-                                )
-                                //, array("disabled" => "disabled",)
-                        );
-
+                        echo $form->dropDownList($model, 'horaInicioGestion', array('10:00' => '10:00'));
                         echo $form->error($model, 'horaInicioGestion');
                         ?>
                         <?php
@@ -166,8 +161,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                         setMensaje(data.ClassMessage, data.Message);
                         if(data.Status==1){
                              var datosResult = data.Result;
-                             //console.log(JSON.stringify(datosResult[\'detalle\']));
-                             //console.log(datosResult.toSource());
+
                             $("#tblGridDetalle").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'detalle\']}).trigger(\'reloadGrid\');
                             $("#tblResumenGeneral").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenGeneral\']}).trigger(\'reloadGrid\');
                             $("#tblResumenVisitas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitas\']}).trigger(\'reloadGrid\');
@@ -179,7 +173,8 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
 
                             $("#RptResumenDiarioHistorialForm_enlaceMapa").val(datosResult[\'enlaceMapa\']);
                             $("#d_enlaceMapa").val(datosResult[\'enlaceMapa\']);
-
+                            
+                            mostrarVisitasEnMapa();
 
                         } else{
                             $.each(data, function(key, val) {
@@ -271,25 +266,26 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
 <br>
 
 <div>
-    <h1>Enlace mapa</h1>
+    <!--<h1>Enlace mapa</h1>-->
     <?php
-    echo CHtml::textField('d_enlaceMapa', '', array(
-        'placeholder' => 'Ingrese el enlace'
-        , 'size' => '125px'
-        , 'onblur' => 'setEnlaceMapa(document.getElementById(\'d_enlaceMapa\').value)'
-        , 'id' => 'd_enlaceMapa'
-        , 'maxlength' => 500)
-    );
+//    echo CHtml::textField('d_enlaceMapa', '', array(
+//        'placeholder' => 'Ingrese el enlace'
+//        , 'size' => '125px'
+//        , 'onblur' => 'setEnlaceMapa(document.getElementById(\'d_enlaceMapa\').value)'
+//        , 'id' => 'd_enlaceMapa'
+//        , 'maxlength' => 500)
+//    );
     ?>    
     <?php // echo CHtml::Button('Abrir enlace', array('id' => 'btnAbrirEnlace', 'class' => 'btn btn-theme')); ?>
     <?php // echo CHtml::link('Abrir Enlace', 'https://www.google.com/maps/d/',array('target' => '_blank'));?>
     <?php // echo CHtml::Button('Abrir enlace', array('id' => 'btnAbrirEnlace', 'class' => 'btn btn-theme')); ?>
 
-    <?php echo CHtml::Button("Abrir enlace", array('id' => 'btnAbrirEnlace', 'class' => 'btn btn-theme', 'title' => "Abrir enlace de mapa en google maps", 'onclick' => 'js:openMapsWindow();')); ?>
+    <?php // echo CHtml::Button("Abrir enlace", array('id' => 'btnAbrirEnlace', 'class' => 'btn btn-theme', 'title' => "Abrir enlace de mapa en google maps", 'onclick' => 'js:openMapsWindow();')); ?>
 
 </div>
 
 <br/><br/> <?php echo CHtml::Button('Exportar Detalle', array('id' => 'btnExcel', 'class' => 'btn btn-theme')); ?>
+<?php echo CHtml::Button('Exportar Clientes no visitados', array('id' => 'btnExcelNoVisitados', 'class' => 'btn btn-theme')); ?>
 
 <br>    
 <!--<div id="grilla" class="_grilla">-->
@@ -300,7 +296,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
 
 <br/><h1>Mapa</h1>
 <div id="map"></div>
-
+<div id="legend"><h3>Leyenda</h3></div>
 <?php // endif;    ?>
 
 <script>
@@ -312,8 +308,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
 //        alert($valor);
         $("#RptResumenDiarioHistorialForm_enlaceMapa").val($enlace);
     }
-    function openMapsWindow()
-    {
+    function openMapsWindow() {
         var url = $("#d_enlaceMapa").val();
 //        alert(url)
         if (url.length > 0)
@@ -322,32 +317,6 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
             alert('No existe un enlace de mapas para abrir')
     }
 
-    var customLabel =
-            {
-                restaurant: {label: 'R'},
-                bar: {label: 'B'}
-            };
-
-
-// -0.204788, -78.494610
-//-0.205155, -78.493426
-//-0.205226, -78.495739
-    function initMap() {
-        var uluru = {lat: -0.205226, lng: -78.495739};
-//        var uluru2 = {lat: -0.204788, lng: -78.494610};
-//        var uluru = {lat: -25.363, lng: 131.044};
-
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 15,
-            center: uluru,
-            panControl: true
-
-        });
-        var marker = new google.maps.Marker({
-            position: uluru,
-            map: map
-        });
-    }
 
     function initMap2() {
 
@@ -356,74 +325,58 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
             center: {lat: -0.205226, lng: -78.495739}
         });
 
-        // Create an array of alphabetical characters used to label the markers.
-        var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-        // Add some markers to the map.
-        // Note: The code uses the JavaScript Array.prototype.map() method to
-        // create an array of markers based on a given "locations" array.
-        // The map() method here has nothing to do with the Google Maps API.
-        var markers = locations.map(function (location, i) {
-            return new google.maps.Marker
-                    (
-                            {
-                                position: location,
-                                label: labels[i % labels.length]
-                            }
-                    );
-        });
-
-        // Add a marker clusterer to manage the markers.
-        var markerCluster = new MarkerClusterer(map, markers,
-                {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
     }
-    var locations = [
-//        {lat: -31.563910, lng: 147.154312},
-//        {lat: -33.718234, lng: 150.363181},
-//        {lat: -33.727111, lng: 150.371124},
-//        {lat: -33.848588, lng: 151.209834},
-//        {lat: -33.851702, lng: 151.216968},
-//        {lat: -34.671264, lng: 150.863657},
-//        {lat: -35.304724, lng: 148.662905},
-//        {lat: -36.817685, lng: 175.699196},
-//        {lat: -36.828611, lng: 175.790222},
-//        {lat: -37.750000, lng: 145.116667},
-//        {lat: -37.759859, lng: 145.128708},
-//        {lat: -37.765015, lng: 145.133858},
-//        {lat: -37.770104, lng: 145.143299},
-//        {lat: -37.773700, lng: 145.145187},
-//        {lat: -37.774785, lng: 145.137978},
-//        {lat: -37.819616, lng: 144.968119},
-//        {lat: -38.330766, lng: 144.695692},
-//        {lat: -39.927193, lng: 175.053218},
-//        {lat: -41.330162, lng: 174.865694},
-//        {lat: -42.734358, lng: 147.439506},
-//        {lat: -42.734358, lng: 147.501315},
-//        {lat: -42.735258, lng: 147.438000},
-//        {lat: -43.999792, lng: 170.463352}
-        {lat: -0.205136, lng: -78.4957},
-        {lat: -0.310308, lng: -78.5416},
-        {lat: -0.310704, lng: -78.5416},
-        {lat: -0.310276, lng: -78.5416},
-        {lat: -0.311242, lng: -78.5432},
-        {lat: -0.311379, lng: -78.5434},
-        {lat: -0.311493, lng: -78.5441},
-        {lat: -0.312119, lng: -78.5442},
-        {lat: -0.311969, lng: -78.5444},
-        {lat: -0.311362, lng: -78.5449},
-        {lat: -0.311411, lng: -78.5452},
-        {lat: -0.311262, lng: -78.5454},
-        {lat: -0.311055, lng: -78.5457},
-        {lat: -0.310766, lng: -78.5458},
-        {lat: -0.311234, lng: -78.546}
-    ]
+    function mostrarVisitasEnMapa() {
+
+        var coordsClientes =<?php echo(json_encode(Yii::app()->session['coordenadasClientes'])); ?>;
+
+        var coordsVisitas =<?php echo(json_encode(Yii::app()->session['coordenadasVisitas'])); ?>;
+
+        var opcionesMapa = {
+            zoom: 14, center: {lat: parseFloat(coordsVisitas[0].LATITUD), lng: parseFloat(coordsVisitas[0].LONGITUD)},
+        }
+        ;
+        var mapa = new google.maps.Map(document.getElementById('map'), opcionesMapa);
+
+        for (var iterador in coordsClientes) {
+            var marcadorCliente = new google.maps.Marker({
+                position: {lat: parseFloat(coordsClientes[iterador].LATITUD), lng: parseFloat(coordsClientes[iterador].LONGITUD)},
+                map: mapa,
+                title: coordsClientes[iterador].LABEL,
+                label: coordsClientes[iterador].LABEL,
+                icon: pinSymbol('#dd4b4b')
+            });
+
+            var marcadorVisitas = new google.maps.Marker({
+                position: {lat: parseFloat(coordsVisitas[iterador].LATITUD), lng: parseFloat(coordsVisitas[iterador].LONGITUD)},
+                map: mapa,
+                title: coordsVisitas[iterador].LABEL,
+                label: coordsVisitas[iterador].LABEL,
+                icon: pinSymbol('#0288d1')
+            });
+        }
+        var legend = document.getElementById('legend');
+        var div = document.createElement('div');
+        div.innerHTML = '\
+    <div style="width:10px;height:10px;background-color: #dd4b4b"></div>CLIENTE \n\
+    <br/><div style="width:10px;height:10px;background-color: #0288d1"></div>' + 'VISITA';
+        legend.appendChild(div);
+
+        mapa.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
+    }
+
+    function pinSymbol(color) {
+        return {
+            path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
+            fillColor: color,
+            fillOpacity: 1,
+            strokeColor: '#ffffff',
+            strokeWeight: 2,
+            scale: 1
+        };
+    }
 
 
 
 </script>
-<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
-</script>
-
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhiK7uebbisx_CB2FDABn9sRlti0YZqUM&callback=initMap2">
-</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuuHti_DAalAmyJGqZNBv71AcUBBmzcI0&callback=initMap2"></script>

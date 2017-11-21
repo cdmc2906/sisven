@@ -60,7 +60,35 @@ class FHistorialModel extends DAOModel {
                     AND H_ACCION='" . $accion . "'
                 ORDER BY H_FECHA ;
             ";
-        //var_dump($sql);        die();
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+        //var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+    public function getHistorialxSupervisorxFechaxHoraInicioxHoraFin($accion = 'Inicio Visita', $fechagestion, $horaInicio, $horaFin, $ejecutivo,$ruta) {
+        $fechaInicio = $fechagestion . ' ' . $horaInicio;
+        $fechaFin = $fechagestion . ' ' . $horaFin;
+
+        $sql = "
+            SELECT 
+                    -- DATE(H_FECHA) as FECHAVISITA
+                    DATE_FORMAT(H_FECHA, '%Y-%m-%d %H:%i') AS FECHAVISITA
+                    ,H_COD_CLIENTE AS CODIGOCLIENTE
+                    ,H_NOM_CLIENTE AS NOMBRECLIENTE
+                    ,H_RUTA AS RUTAVISITA
+                    ,h_latitud AS LATITUD
+                    ,h_longitud AS LONGITUD
+                FROM tb_historial_mb
+                WHERE 1=1
+                    AND H_FECHA BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
+                    AND H_USUARIO='" . $ejecutivo . "'
+                    AND H_ACCION='" . $accion . "'
+                    AND h_ruta='".$ruta."'
+                ORDER BY H_FECHA ;
+            ";
+//        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
         //var_dump($data);        die();
@@ -160,8 +188,7 @@ class FHistorialModel extends DAOModel {
                     AND H_ACCION='" . $accion . "'
                 ORDER BY H_FECHA ;
             ";
-        var_dump($sql);
-        die();
+//        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
 //        var_dump($data);        die();
@@ -188,8 +215,7 @@ class FHistorialModel extends DAOModel {
                     AND H_ACCION='" . $accion . "'
                 ORDER BY H_FECHA ;
             ";
-        var_dump($sql);
-        die();
+//        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
 //        var_dump($data);        die();
@@ -197,7 +223,11 @@ class FHistorialModel extends DAOModel {
         return $data;
     }
 
-    public function getHistorialVisitaxEjecutivoxClientexFecha($accion = 'Inicio Visita', $codigoejecutivo, $codigocliente, $fecha) {
+    public function getHistorialVisitaxEjecutivoxClientexFecha(
+            $accion = 'Inicio Visita'
+            , $codigoejecutivo
+            , $codigocliente
+            , $fecha) {
 //        $anio = $datos['anio'];
         $sql = "
             SELECT 
@@ -322,6 +352,7 @@ class FHistorialModel extends DAOModel {
             and rhd_cod_ejecutivo='" . $codigoejecutivo . "'
             and rhd_parametro IN ('VISITAS-EFECTUADAS-EN-RUTA','VISITAS-FUERA-RUTA'); 
             ";
+//        var_dump($sql1);die();
         $command = $this->connection->createCommand($sql1);
         $datos1 = $command->queryAll();
         $resultado [$txt1] = (isset($datos1[0])) ? intval($datos1[0][$txt1]) : 0;

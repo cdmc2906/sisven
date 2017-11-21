@@ -6,17 +6,27 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
 <html lang="es">
     <head>
         <style>
+            /*INICIO ESTILOS PARA LOS ELEMENTOS DEL MAPA*/
             #map {
-                height: 400px;
                 width: 100%;
+                height: 400px;
             }
             /* Optional: Makes the sample page fill the window. */
-            html, body {
-                height: 100%;
-                margin: 0;
-                padding: 0;
+            html, body {height: 100%;margin: 0;padding: 0;}
+            #legend {
+                font-family: Arial, sans-serif;
+                background: #fff;
+                padding: 10px;
+                margin: 10px;
+                border: 1px solid #6e9fef;
+                /*width: 100px;*/
             }
-
+            #legend h3 {
+                margin-top: 0;
+            }
+            #legend img {
+                vertical-align: middle;
+            }/*FIN ESTILOS PARA LOS ELEMENTOS DEL MAPA*/
         </style>
 
         <!-- Meta information -->
@@ -186,7 +196,7 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
                         array('label' => 'Analisis ejecutivos', 'url' => array('/RptResumenDiarioHistorial/'), 'visible' => $verMenuRevision),
-                        array('label' => 'Analisis reemplazo ruta', 'url' => array('/RptResumenDiarioHistorialSupervision/'), 'visible' => $verMenusAdmin),
+                        array('label' => 'Analisis reemplazo ruta', 'url' => array('/RptReemplazoRuta/'), 'visible' => $verMenusAdmin),
                         array('label' => 'Analisis supervisor vs ejecutivo', 'url' => array('/RptSupervisorVsEjecutivoHistorial/'), 'visible' => $verMenusAdmin),
 //                        array('label' => 'Resumen semanal historial', 'url' => array('/RptResumenSemanalHistorial/'), 'visible' => $verMenuRevision),
                         array('label' => 'Revision ruta', 'url' => array('/RevisionRuta/'), 'visible' => $verMenuRevision),

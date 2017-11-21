@@ -31,6 +31,7 @@ class ReporteInicioFinJornadaxFechaController extends Controller {
         $datosGridVisitas = array();
         $response = new Response();
         $solicitarLogin = true;
+        $mensaje='';
         try {
 
             if (Yii::app()->user->id <> intval(USUARIO_INVITADO)) {
@@ -72,8 +73,8 @@ class ReporteInicioFinJornadaxFechaController extends Controller {
                             $diaGestion = date("w", strtotime($model->fechaInicioFinJornadaInicio));
                             $ruta_dia_gestion = "R" . $diaGestion . '-' . $ejecutivo['e_iniciales'];
                             $comentarioDiaSupervisor = '';
-                            $rsTotalClientesRuta = $fRuta->getTotalClientesxRutaxEjecutivoxDia($ejecutivo['e_iniciales'], $diaGestion + 1);
-                            $totalClientesRuta = $rsTotalClientesRuta[0]["TOTALCLIENTES"];
+                            $totalClientesRuta = $fRuta->getTotalClientesxRutaxEjecutivoxDia($ejecutivo['e_iniciales'], $diaGestion + 1)[0]["TOTALCLIENTES"];
+
                             $visitasValidasRuta = $fHistorial->getCantidadVisitasxEjecutivoxFecha($accion, $ejecutivo['e_usr_mobilvendor'], $model->fechaInicioFinJornadaInicio, $ruta_dia_gestion);
 
                             if (count($visitasValidasRuta) == 0) {
@@ -113,25 +114,35 @@ class ReporteInicioFinJornadaxFechaController extends Controller {
 
                             $cantidad = $fHistorial->getCantidadClientesVisitadosxEjecutivoxFecha($ejecutivo['e_usr_mobilvendor'], $model->fechaInicioFinJornadaInicio);
 //                        var_dump($cantidad['VISITAS']);die();
+                            if ($cantidad['TODAS'] != 0) {
+                                $infoVisitas = array(
+                                    'EJECUTIVO' => $ejecutivo['e_nombre'],
+                                    'VISITAS' => (isset($cantidad['VISITAS'])) ? intval($cantidad['VISITAS']) : 0,
+                                    'VISITASDUPLICADAS' => (isset($cantidad['REPETIDAS'])) ? intval($cantidad['REPETIDAS']) : 0,
+                                    'TOTALVISITAS' => (isset($cantidad['TODAS'])) ? intval($cantidad['TODAS']) : 0,
+                                );
 
-                            $infoVisitas = array(
-                                'EJECUTIVO' => $ejecutivo['e_nombre'],
-                                'VISITAS' => (isset($cantidad['VISITAS'])) ? intval($cantidad['VISITAS']) : 0,
-                                'VISITASDUPLICADAS' => (isset($cantidad['REPETIDAS'])) ? intval($cantidad['REPETIDAS']) : 0,
-                                'TOTALVISITAS' => (isset($cantidad['TODAS'])) ? intval($cantidad['TODAS']) : 0,
-                            );
-
-                            array_push($datosGridVisitas, $infoVisitas);
-                            unset($infoVisitas);
+                                array_push($datosGridVisitas, $infoVisitas);
+                                unset($infoVisitas);
+                                $mensaje = "Detalle generado correctamente";
+                            } else {
+                                if ($model['tipoUsuario'] == 1) {
+                                    $mensaje = "No ha realizado la revisión individual de los ejecutivos en la fecha seleccionada";
+                                }
+                            }
                         }
                     }
 
                     $datosGrid['infoJornada'] = $datosGridJornada;
                     $datosGrid['infoVisitas'] = $datosGridVisitas;
+//                    var_dump($datosGrid);die();
 
                     $_SESSION['revisionJornada'] = $datosGrid;
                     Yii::app()->session['revisionJornada'] = $datosGridJornada;
+                    $response->Message = $mensaje;
+                    $response->Status = SUCCESS;
                     $response->Result = $datosGrid;
+//                    var_dump($response);die();
                 } else {
                     echo CActiveForm::validate($model);
                     Yii::app()->end();

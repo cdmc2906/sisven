@@ -345,6 +345,7 @@ class ReportesModel extends DAOModel {
                         when '-' then right(h_ruta,3)
                         else h_ruta end as CODIGOEJECUTIVO
                     ,h_ruta as RUTACOMPLETA
+                    ,h_ruta as RUTAEJECUTIVO
                     ,case left(right(h_ruta,4),1)
                         when '-' then left(right(h_ruta,5),1)
                         else h_ruta end as RUTA
