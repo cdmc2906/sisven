@@ -35,13 +35,17 @@ class RptResumenDiarioHistorialController extends Controller {
         $_totalVentaFueraRuta = 0;
         $_totalClientesVenta = 0;
 
+        $detalleGestionEjecutivo = array();
+        $codigosInicios = array();
+
         $datosResumenGridGeneral = array();
         $datosResumenGridVisitas = array();
         $datosResumenGridVisitasValidasInvalidas = array();
         $datosResumenGridPrimeraUltimaVisita = array();
         $datosResumenGridVentas = array();
+        unset(Yii::app()->session['coordenadasClientes']);
+        unset(Yii::app()->session['coordenadasVisitas']);
 
-//        $modelo = new RptResumenDiarioHistorialForm ();
         $response = new Response();
         try {
             $solicitarLogin = true;
@@ -55,15 +59,8 @@ class RptResumenDiarioHistorialController extends Controller {
 
                     if ($model->validate()) {
                         $libreriaFunciones = new Libreria();
-//                    var_dump($model->ejecutivo,$model->fechagestion);die();
+                        $fLibreria = new Libreria();
                         $fComentarioOficina = new FComentariosOficinaModel();
-
-                        $enlaceMapa = $fComentarioOficina->getUltimoEnlaceMapaxVendedorxFecha($model->ejecutivo, $model->fechagestion, TIPOCOMENTARIOENLACEMAPA);
-
-                        if (count($enlaceMapa) > 0) {
-//                        var_dump($enlaceMapa[0]['co_enlace_mapa']);                        die();
-                            $datos['enlaceMapa'] = $enlaceMapa[0]['co_enlace_mapa'];
-                        }
 
                         $fComentarioSupervision = new FComentariosSupervisionModel ();
                         $comentarioSupervisor = $fComentarioSupervision->getComentariosSupervisionxEjecutivoxFecha($model->ejecutivo, $model->fechagestion);
@@ -71,15 +68,11 @@ class RptResumenDiarioHistorialController extends Controller {
                         $comentarios = '';
                         if (count($comentarioSupervisor) > 0) {
                             foreach ($comentarioSupervisor as $key => $comentario) {
-//                            var_dump($value['username']);die();
                                 $comentarios .= intval($key + 1) . '.- ' . substr($comentario['username'], 0, 2) . "-" . $comentario['fecha'] . "-(" . $comentario['cs_comentario'] . ') ' . "\n";
                             }
-//                        foreach ($comentarioSupervisor as $comentario) {
-//                            $comentarios .= $comentario['username'] . "-" . $comentario['fecha'] . "-(" . $comentario['cs_comentario'] . ') ' . "\n";
-//                        }
                             $datos['comentarioSupervisor'] = $comentarios;
                         }
-//                    var_dump($model);                    die();
+
                         $ejecutivo = EjecutivoModel::model()->findAllByAttributes(array('e_usr_mobilvendor' => $model->ejecutivo));
                         $fila = 1;
                         $fHistorial = new FHistorialModel();
@@ -96,6 +89,117 @@ class RptResumenDiarioHistorialController extends Controller {
                         }
 
                         if (count($historial)) {
+
+                            #INICIO CALCULO TIEMPO GESTION
+                            $latitudClienteAnterior = 0;
+                            $longitudClienteAnterior = 0;
+                            $ultimoCodigoHistorial = 1;
+                            $finVisitaAnterior = new DateTime('00:00:00');
+                            $tiempoTraslado = '00:00:00';
+                            $totalGestion = '00:00:00';
+                            $totalTraslados = '00:00:00';
+                            foreach ($historial as $itemHistorialEjecutivo) {
+//                                var_dump($itemHistorialEjecutivo);die();
+                                $cliente = ClienteModel::model()->findAllByAttributes(array('cli_codigo_cliente' => $itemHistorialEjecutivo['CODIGOCLIENTE']));
+                                if (count($cliente) > 0) {
+                                    $latitudCliente = str_replace(',', '.', $cliente[0]['cli_latitud']);
+                                    $longitudCliente = str_replace(',', '.', $cliente[0]['cli_longitud']);
+                                    $distanciaEntreEjecutivoCliente = $libreriaFunciones->DistanciaEntreCoordenadas(
+                                            $itemHistorialEjecutivo["LATITUD"]
+                                            , $itemHistorialEjecutivo["LONGITUD"]
+                                            , $latitudCliente
+                                            , $longitudCliente);
+                                    $distanciaEntreEjecutivoCliente = number_format($distanciaEntreEjecutivoCliente, 2, '.', '');
+
+                                    $distanciaEntreCliente = $libreriaFunciones->DistanciaEntreCoordenadas(
+                                            $latitudCliente
+                                            , $longitudCliente
+                                            , $latitudClienteAnterior
+                                            , $longitudClienteAnterior
+                                    );
+
+                                    if ($latitudClienteAnterior == 0 && $latitudClienteAnterior == 0) {
+                                        if (count($detalleGestionEjecutivo) > 0)
+                                            $distanciaEntreCliente = 'Sin coordenadas cliente anterior';
+                                        else
+                                            $distanciaEntreCliente = '-';
+                                    } else
+                                        $distanciaEntreCliente = number_format($distanciaEntreCliente, 2, '.', '');
+
+                                    if ($itemHistorialEjecutivo["LATITUD"] == 0 && $itemHistorialEjecutivo["LONGITUD"] == 0)
+                                        $distanciaEntreEjecutivoCliente = 'Sin coordenadas ejecutivo';
+                                } else {
+                                    $latitudCliente = 0;
+                                    $longitudCliente = 0;
+
+                                    if ($itemHistorialEjecutivo["LATITUD"] == 0 && $itemHistorialEjecutivo["LONGITUD"] == 0)
+                                        $distanciaEntreEjecutivoCliente = 'Sin coordenadas cliente y supervisor';
+                                    else
+                                        $distanciaEntreEjecutivoCliente = 'Sin coordenadas cliente';
+                                }
+                                $fechaGestion = DateTime::createFromFormat('Y-m-d H:i', $itemHistorialEjecutivo['FECHAVISITA'])->format(FORMATO_FECHA);
+
+                                $I = $fHistorial->getInicioFinVisitaClientexEjecutivoxFecha('Inicio visita', $fechaGestion, $ejecutivo[0]['e_usr_mobilvendor'], $itemHistorialEjecutivo['CODIGOCLIENTE'], $ultimoCodigoHistorial);
+                                $F = $fHistorial->getInicioFinVisitaClientexEjecutivoxFecha('Fin de visita', $fechaGestion, $ejecutivo[0]['e_usr_mobilvendor'], $itemHistorialEjecutivo['CODIGOCLIENTE'], $ultimoCodigoHistorial);
+                                $inicioVisita = new DateTime($I[0]["HORAVISITA"]);
+                                $finVisita = new DateTime($F[0]["HORAVISITA"]);
+                                $tiempoGestion = $inicioVisita->diff($finVisita)->format("%h:%I:%S");
+                                $totalGestion = $libreriaFunciones->SumaHoras($totalGestion, $tiempoGestion);
+
+//                                var_dump(count($detalleGestionEjecutivo));
+                                if (count($detalleGestionEjecutivo) > 0) {
+                                    $tiempoTraslado = $inicioVisita->diff($finVisitaAnterior)->format("%h:%I:%S");
+                                    $totalTraslados = $libreriaFunciones->SumaHoras($totalTraslados, $tiempoTraslado);
+                                }
+
+                                $nombre = array();
+                                $nombre = explode(' ', $itemHistorialEjecutivo['NOMBRECLIENTE']);
+                                $primerApellido = $nombre[0];
+                                $primerNombre = (isset($nombre[2]) && strlen($nombre[2]) > 0) ? $nombre[2] : $nombre[1];
+
+                                $dat = array(
+                                    'FECHA_GESTION' => $itemHistorialEjecutivo['FECHAVISITA'],
+                                    'CODIGO_CLIENTE' => $itemHistorialEjecutivo['CODIGOCLIENTE'],
+                                    'CLIENTE' => $primerApellido . ' ' . $primerNombre, //$itemHistorialSupervisor['NOMBRECLIENTE'],
+                                    'RUTA' => $itemHistorialEjecutivo['RUTAVISITA'],
+                                    'INICIO_VISITA' => $inicioVisita->format(FORMATO_HORA),
+                                    'FIN_VISITA' => $finVisita->format(FORMATO_HORA),
+                                    'T_GESTION' => $tiempoGestion,
+                                    'T_TRASLADO' => $tiempoTraslado,
+                                    'DISTANCIA_EJECUTIVO_CLIENTE' => $distanciaEntreEjecutivoCliente,
+                                    'DISTANCIA_CLIENTES' => $distanciaEntreCliente,
+                                );
+                                $finVisitaAnterior = $finVisita;
+                                $latitudClienteAnterior = str_replace(',', '.', $cliente[0]['cli_latitud']);
+                                $longitudClienteAnterior = str_replace(',', '.', $cliente[0]['cli_longitud']);
+                                $ultimoCodigoHistorial = $I[0]['IDHISTORIAL'];
+//                                var_dump($dat);die();
+
+
+                                array_push($codigosInicios, array('cod' => $ultimoCodigoHistorial, 'pdv' => $itemHistorialEjecutivo['CODIGOCLIENTE']));
+                                array_push($detalleGestionEjecutivo, $dat);
+                                unset($dat);
+                            }
+//                            var_dump($codigosInicios);die();
+                            $dat = array(
+                                'FECHA_GESTION' => '',
+                                'CODIGO_CLIENTE' => '',
+                                'CLIENTE' => '',
+                                'RUTA' => '',
+                                'INICIO_VISITA' => '',
+                                'FIN_VISITA' => 'TOTALES: ',
+                                'T_GESTION' => $totalGestion,
+                                'T_TRASLADO' => $totalTraslados,
+                                'DISTANCIA_EJECUTIVO_CLIENTE' => '',
+                                'DISTANCIA_CLIENTES' => '',
+                            );
+//                            die();
+                            array_push($detalleGestionEjecutivo, $dat);
+                            unset($dat);
+//                            var_dump($detalleGestionEjecutivo);die();
+                            Yii::app()->session['tiemposGestionEjecutivo'] = $detalleGestionEjecutivo;
+
+                            #FIN CALCULO DE TIEMPOS GESTION
                             $primeraVisita = $fHistorial->getPrimeraVisitaxEjecutivoxFechaxHoraInicioxHoraFin($model->accionHistorial, $model->fechagestion, $model->horaInicioGestion, $model->horaFinGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESULTADO'];
                             $ultimaVisita = $fHistorial->getUltimaVisitaxEjecutivoxFechaxHoraInicioxHoraFin($model->accionHistorial, $model->fechagestion, $model->horaInicioGestion, $model->horaFinGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESULTADO'];
 
@@ -378,24 +482,28 @@ class RptResumenDiarioHistorialController extends Controller {
                             unset($resumenRutaDerecha);
                             $datos['resumenVisitasValidasInvalidas'] = $datosResumenGridVisitasValidasInvalidas;
 
-                            $resumenPrimeraUltima = array('VISITA' => 'Primera', 'CANTIDAD' => $primeraVisita);
+                            $resumenPrimeraUltima = array('VISITA' => 'Primera Visita', 'CANTIDAD' => $primeraVisita);
                             array_push($datosResumenGridPrimeraUltimaVisita, $resumenPrimeraUltima);
                             unset($resumenPrimeraUltima);
-                            $resumenPrimeraUltima = array('VISITA' => 'Ultima', 'CANTIDAD' => $ultimaVisita);
+                            $resumenPrimeraUltima = array('VISITA' => 'Ultima Visita', 'CANTIDAD' => $ultimaVisita);
                             array_push($datosResumenGridPrimeraUltimaVisita, $resumenPrimeraUltima);
                             unset($resumenPrimeraUltima);
                             $datos['resumenPrimeraUltima'] = $datosResumenGridPrimeraUltimaVisita;
+                            Yii::app()->session['resumenPrimeraUltima'] = $datos['resumenPrimeraUltima'];
 
                             $_SESSION['detallerevisionhistorialitem'] = $datosDetalleGrid;
                             $_SESSION['resumenrevisionhistorialitem'] = $datosResumenGridIzquierda;
                             Yii::app()->session['detallerevisionhistorialitem'] = $datosDetalleGrid;
                             Yii::app()->session['resumenrevisionhistorialitem'] = $datosResumenGridIzquierda;
 
+
                             $datos['coordenadasClientes'] = $coordenadasClientes;
                             $datos['coordenadasVisitas'] = $coordenadasVisitas;
+
                             Yii::app()->session['coordenadasClientes'] = $coordenadasClientes;
                             Yii::app()->session['coordenadasVisitas'] = $coordenadasVisitas;
-//                            var_dump(json_encode(Yii::app()->session['coordenadasClientes']));die();
+
+//                            var_dump(Yii::app()->session['coordenadasClientes']);die();    
                             $response->Message = "Historial revisado exitosamente";
                             $response->Status = SUCCESS;
                             $response->Result = $datos; // $datosGrid;
@@ -403,13 +511,11 @@ class RptResumenDiarioHistorialController extends Controller {
                         else {
                             $response->Message = "No existen datos para los filtros usados";
                             $response->ClassMessage = CLASS_MENSAJE_NOTICE;
-//                $response->Result = $datos; // $datosGrid;
                         }
                     }//fin model->validate
                     else {
                         $response->Message = "Debe seleccionar todos los filtros";
                         $response->ClassMessage = CLASS_MENSAJE_NOTICE;
-//                $response->Result = $datos; // $datosGrid;
                     }
                 }
             }
@@ -424,7 +530,6 @@ class RptResumenDiarioHistorialController extends Controller {
             Yii::app()->clientScript->registerMetaTag("" . INTERVALO_REFRESCO_INMEDIATO . ";url={$returnUri}", null, 'refresh');
 //            $this->render('/historialmb/rptResumenDiarioHistorial', array('model' => $model));
         } else {
-//            var_dump("ssss");die();
             $this->actionResponse(null, null, $response);
         }
 //        $this->actionResponse(null, $model, $response);
@@ -880,6 +985,7 @@ class RptResumenDiarioHistorialController extends Controller {
         try {
             $revisionRuta = array();
             $datosResumenDiario = Yii::app()->session['resumenrevisionhistorialitem'];
+            $datosPrimeraUltima = Yii::app()->session['resumenPrimeraUltima'];
 
             foreach ($datosResumenDiario as $value) {
                 $dat = array(
@@ -888,6 +994,16 @@ class RptResumenDiarioHistorialController extends Controller {
                     'FECHA_GESTION' => strval(Yii::app()->session['ModelForm']['fechagestion']),
                     'EJECUTIVO' => strval(Yii::app()->session['ModelForm']['ejecutivo'])
                 );
+                array_push($revisionRuta, $dat);
+            }
+            foreach ($datosPrimeraUltima as $filaGrid) {
+//                var_dump($key );die();
+                    $dat = array(
+                        'PARAMETRO' => $filaGrid["VISITA"],
+                        'VALOR' => $filaGrid["CANTIDAD"],
+                        'FECHA_GESTION' => strval(Yii::app()->session['ModelForm']['fechagestion']),
+                        'EJECUTIVO' => strval(Yii::app()->session['ModelForm']['ejecutivo'])
+                    );
                 array_push($revisionRuta, $dat);
             }
 
@@ -978,6 +1094,83 @@ class RptResumenDiarioHistorialController extends Controller {
                 $excel->SetNombreHojaActiva($NombreHoja);
 
                 $excel->Mapeo($clientesNoVisitados);
+
+                $excel->CrearArchivo('Excel2007', $NombreArchivo);
+                $excel->GuardarArchivo();
+            }
+        } catch (Exception $e) {
+            $mensaje = array(
+                'code' => $e->getCode(),
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            );
+            $response->Message = Yii::app()->params['mensajeExcepcion'];
+            $response->Status = ERROR;
+        }
+        return;
+    }
+
+    public function actionGenerateExcelTiemposGestion() {
+        $response = new Response();
+        try {
+            $filtros = array();
+            $filtros = Yii::app()->session['ModelForm'];
+
+            if ($filtros) {
+                $ejecutivo = EjecutivoModel::model()->findAllByAttributes(array('e_usr_mobilvendor' => $filtros['ejecutivo']));
+
+                $detalleTiemposGestion = array();
+                $detalleGestionEjecutivo = Yii::app()->session['tiemposGestionEjecutivo'];
+                foreach ($detalleGestionEjecutivo as $item) {
+                    $dat = array(
+                        'FECHA_GESTION' => $item["FECHA_GESTION"],
+                        'CODIGO_CLIENTE' => $item["CODIGO_CLIENTE"],
+                        'NOMBRE_CLIENTE' => $item["CLIENTE"],
+                        'RUTA' => $item["RUTA"],
+                        'INICIO_VISITA' => $item["INICIO_VISITA"],
+                        'FIN_VISITA' => $item["FIN_VISITA"],
+                        'TIEMPO_GESTION' => $item["T_GESTION"],
+                        'TIEMPO_TRASLADO' => $item["T_TRASLADO"],
+                        'DISTANCIA_EJE_CLIENTE' => $item["DISTANCIA_EJECUTIVO_CLIENTE"],
+                        'DISTANCIA_CLIENTES' => $item["DISTANCIA_CLIENTES"],
+                    );
+                    array_push($detalleTiemposGestion, $dat);
+                }
+                $columnasCentrar = array();
+                array_push($columnasCentrar, array('NUMCOLUMNA' => '3')); #RUTA
+                array_push($columnasCentrar, array('NUMCOLUMNA' => '4')); #INICIO_VISITA
+                array_push($columnasCentrar, array('NUMCOLUMNA' => '5')); #FIN_VISITA
+                array_push($columnasCentrar, array('NUMCOLUMNA' => '6')); #T_GESTION
+                array_push($columnasCentrar, array('NUMCOLUMNA' => '7')); #T_TRASLADO
+                array_push($columnasCentrar, array('NUMCOLUMNA' => '8')); #DISTANCIA_CLIENTE_SUP
+                array_push($columnasCentrar, array('NUMCOLUMNA' => '9')); #DISTANCIA_CLIENTES
+                $NombreArchivo = "tiempos_gestion_ejecutivo";
+                $NombreHoja = "tiempos_gestion_ejecutivo";
+
+                $autor = "Tececab"; //$_SESSION['CUENTA'];
+                $titulo = "tiempos_gestion_ejecutivo";
+                $tema = "tiempos_gestion_ejecutivo";
+                $keywords = "office 2007";
+
+                $excel = new excel();
+
+                $excel->getObjPHPExcel()->getProperties()
+                        ->setCreator($autor)
+                        ->setLastModifiedBy($autor)
+                        ->setTitle($titulo)
+                        ->setSubject($tema)
+                        ->setDescription($tema)
+                        ->setKeywords($keywords)
+                        ->setCategory($tema);
+
+                $excel->SetHojaDefault(0);
+                $excel->SetNombreHojaActiva($NombreHoja);
+
+                $encabezadoImprimir = 'DETALLE GESTION  ' . $filtros['fechagestion'] . ' - ' . $ejecutivo[0]['e_nombre'];
+                $footerImprimir = Yii::app()->user->name . ' - ' . date('Y/m/d h:i A');
+
+                $excel->Mapeo($detalleTiemposGestion, $encabezadoImprimir, $footerImprimir, $columnasCentrar);
 
                 $excel->CrearArchivo('Excel2007', $NombreArchivo);
                 $excel->GuardarArchivo();

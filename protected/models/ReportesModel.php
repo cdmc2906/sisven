@@ -313,20 +313,16 @@ class ReportesModel extends DAOModel {
         
         $sql = "
             select 
-                distinct 
                     h_usuario as CODIGOEJECUTIVO
                     ,h_usuario_nombre as SUPERVISOR
-                    -- ,h_ruta
-                    ,count(DISTINCT h_cod_cliente) as VISITAS
+                    ,count(h_cod_cliente) as VISITAS
                 from tb_historial_mb 
                 where 1=1
-                    -- and date(h_fecha)='" . $fechaGestion . "'
                     AND h_fecha BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
                     and  h_accion='" . $accionRevisar . "'
                     and h_usuario in (" . $grupoEjecutivosRevisar . ")	
                 group by 
                     h_usuario
-                   -- ,h_ruta
                 order by 1;";
 //        var_dump($sql);die();
         $command = $this->connection->createCommand($sql);
@@ -349,7 +345,7 @@ class ReportesModel extends DAOModel {
                     ,case left(right(h_ruta,4),1)
                         when '-' then left(right(h_ruta,5),1)
                         else h_ruta end as RUTA
-                    ,count(distinct h_cod_cliente) as VISITAS
+                    ,count(h_cod_cliente) as VISITAS
                 from tb_historial_mb 
                 where 1=1
                     -- and date(h_fecha)='" . $fechaGestion . "'
@@ -359,7 +355,7 @@ class ReportesModel extends DAOModel {
                 group by 
                     h_usuario
                     ,h_ruta
-                order by 1;";
+                order by VISITAS DESC;";
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();

@@ -3,29 +3,7 @@ $(document).ready(function () {
 
     ConfigurarGrids();
     $("#btnLimpiar").click(function () {
-        $("#RptResumenDiarioHistorialForm_fechagestion").val('');
-        $("#RptResumenDiarioHistorialForm_ejecutivo").val('');
-        
-        $("#RptResumenDiarioHistorialForm_horaInicioGestion").val('');
-        $("#RptResumenDiarioHistorialForm_horaFinGestion").val('');
-        
-        $("#RptResumenDiarioHistorialForm_precisionVisitas").val('');
-
-        $("#RptResumenDiarioHistorialForm_comentarioSupervision").val('');
-        $("#RptResumenDiarioHistorialForm_enlaceMapa").val('');
-
-        
-        $("#d_comentariosSupervision").val('');
-        $("#d_comentarioSupervision").val('');
-        $("#d_enlaceMapa").val('');
-        
-        $("#tblGridDetalle").jqGrid("clearGridData", true).trigger("reloadGrid");
-        $("#tblResumenGeneral").jqGrid("clearGridData", true).trigger("reloadGrid");
-        $("#tblResumenVisitas").jqGrid("clearGridData", true).trigger("reloadGrid");
-        $("#tblResumenVisitasValidasInvalidas").jqGrid("clearGridData", true).trigger("reloadGrid");
-        $("#tblPrimeraUltimaVisita").jqGrid("clearGridData", true).trigger("reloadGrid");
-        $("#tblResumenVentas").jqGrid("clearGridData", true).trigger("reloadGrid");
-        
+        LimpiarGrids();
     });
     $("#btnExcel").click(function () {
         GenerarDocumentoReporte('GenerateExcel');
@@ -36,7 +14,52 @@ $(document).ready(function () {
     $("#btnExcelResumen").click(function () {
         GenerarDocumentoReporte('GenerateExcelResumen');
     });
+    
+    $("#btnExcelTiemposGestion").click(function () {
+        GenerarDocumentoReporte('GenerateExcelTiemposGestion');
+    });
+    
+    
+    $('#RptResumenDiarioHistorialForm_ejecutivo').on('change', function (e) {
+        LimpiarGrids();
+    });
+    $('#RptResumenDiarioHistorialForm_horaInicioGestion').on('change', function (e) {
+        LimpiarGrids();
+    });
+    $('#RptResumenDiarioHistorialForm_horaFinGestion').on('change', function (e) {
+        LimpiarGrids();
+    });
+     $('#RptResumenDiarioHistorialForm_precisionVisitas').on('change', function (e) {
+        LimpiarGrids();
+    });
+     $('#RptResumenDiarioHistorialForm_accionHistorial').on('change', function (e) {
+        LimpiarGrids();
+    });
+
 });
+function LimpiarGrids() {
+//    $("#RptResumenDiarioHistorialForm_fechagestion").val('');
+//    $("#RptResumenDiarioHistorialForm_ejecutivo").val('');
+
+//    $("#RptResumenDiarioHistorialForm_horaInicioGestion").val('');
+//    $("#RptResumenDiarioHistorialForm_horaFinGestion").val('');
+//    $("#RptResumenDiarioHistorialForm_precisionVisitas").val('');
+
+//    $("#RptResumenDiarioHistorialForm_comentarioSupervision").val('');
+//    $("#RptResumenDiarioHistorialForm_enlaceMapa").val('');
+
+    $("#d_comentariosSupervision").val('');
+    $("#d_comentarioSupervision").val('');
+//    $("#d_enlaceMapa").val('');
+
+    $("#tblGridDetalle").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblResumenGeneral").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblResumenVisitas").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblResumenVisitasValidasInvalidas").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblPrimeraUltimaVisita").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblResumenVentas").jqGrid("clearGridData", true).trigger("reloadGrid");
+    initMap2();
+}
 
 function ConfigurarGrids() {
 //    console.log(datosResult);
@@ -76,7 +99,7 @@ function ConfigurarGrids() {
             {name: 'ESTADOREVISIONR', index: 'ESTADOREVISIONR', width: 100, sortable: false, frozen: true, align: "center"},
             {name: 'ESTADOREVISIONS', index: 'ESTADOREVISIONS', width: 95, sortable: false, frozen: true, align: "center"},
             {name: 'CHIPSCOMPRADOS', index: 'CHIPSCOMPRADOS', width: 40, sortable: false, formatter: "integer", summaryType: 'sum', align: "center"},
-            {name: 'METROS', index: 'METROS', width: 60, sortable: false, formatter: "number", decimalSeparator: ".", thousandsSeparator: "", decimalPlaces: 2, defaultValue: '0.00', summaryType: 'sum',align: "right"},
+            {name: 'METROS', index: 'METROS', width: 60, sortable: false, formatter: "number", decimalSeparator: ".", thousandsSeparator: "", decimalPlaces: 2, defaultValue: '0.00', summaryType: 'sum', align: "right"},
             {name: 'VALIDACION', index: 'VALIDACION', width: 80, sortable: false, align: "center"},
         ],
         pager: '#pagGrid',

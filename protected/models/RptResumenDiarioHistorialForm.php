@@ -35,11 +35,11 @@ class RptResumenDiarioHistorialForm extends CFormModel {
      */
     public function attributeLabels() {
         return array(
-            'fechagestion' => 'Fecha gestion en ruta',
-            'ejecutivo' => 'Ejecutivo asignado ruta',
-            'precisionVisitas' => 'Precision visita (metros)',
-            'horaInicioGestion' => 'Seleccione la hora de inicio gestion',
-            'horaFinGestion' => 'Seleccione la hora de fin gestion',
+            'fechagestion' => 'Fecha gestion',
+            'ejecutivo' => 'Ejecutivo ruta',
+            'precisionVisitas' => 'Precision visita',
+            'horaInicioGestion' => 'Hora de inicio gestion',
+            'horaFinGestion' => 'Hora de fin gestion',
             'comentarioSupervision' => 'Ingresar el comentario de supervision',
             'enlaceMapa' => 'Ingresar el enlace del mapa',
             'accionHistorial' => 'Seleccione la accion a evaluar'

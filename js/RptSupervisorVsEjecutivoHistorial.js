@@ -1,55 +1,47 @@
 $(document).ready(function () {
     ConfigDatePickersReporte('.txtfechagestion');
-//    ConfigDatePickersReporte('.txtFechaGestionEjecutivo');
-
     ConfigurarGrids();
 
     $("#btnExcel").click(function () {
         GenerarDocumentoReporte('GenerateExcel');
     });
 
+    $("#btnGenerate").click(function () {
+        $("#tblGridRutas").jqGrid("clearGridData", true).trigger("reloadGrid");
+        $("#tblGridDetalle").jqGrid("clearGridData", true).trigger("reloadGrid");
+        $("#tblVisitasSupervisor").jqGrid("clearGridData", true).trigger("reloadGrid");
+        $("#tblCumplimientoSupervisor").jqGrid("clearGridData", true).trigger("reloadGrid");
+        $("#tblResumenVisitasValidasInvalidasSupervisor").jqGrid("clearGridData", true).trigger("reloadGrid");
+
+        $("#tblVisitasEjecutivo").jqGrid("clearGridData", true).trigger("reloadGrid");
+        $("#tblCumplimientoEjecutivo").jqGrid("clearGridData", true).trigger("reloadGrid");
+        $("#tblResumenVisitasValidasInvalidasEjecutivo").jqGrid("clearGridData", true).trigger("reloadGrid");
+
+        document.getElementById("btnRepDetalleSupervisor").disabled = true;
+        document.getElementById("btnExcel").disabled = true;
+        
+    });
+
+    $("#btnRepDetalleSupervisor").click(function () {
+        GenerarDocumentoReporte('GenerateExcelDetalleSupervisor');
+    });
+
     $("#btnLimpiar").click(function () {
         $("#RptSupervisorVsEjecutivoHistorialForm _fechagestion").val('');
         $("#RptResumenDiarioHistorialForm_ejecutivo").val('');
-
-//        $("#RptResumenDiarioHistorialForm_horaInicioGestion").val('');
-//        $("#RptResumenDiarioHistorialForm_horaFinGestion").val('');
-//        
-//        $("#RptResumenDiarioHistorialForm_precisionVisitas").val('');
-//
-//        $("#RptResumenDiarioHistorialForm_comentarioSupervision").val('');
-//        $("#RptResumenDiarioHistorialForm_enlaceMapa").val('');
-
-
-//        $("#d_comentariosSupervision").val('');
-//        $("#d_comentarioSupervision").val('');
-//        $("#d_enlaceMapa").val('');
-
         LimpiarGrids();
     });
 
     $('#RptSupervisorVsEjecutivoHistorialForm_accionHistorial').on('change', function (e) {
-//        var optionSelected = $("option:selected", this);
-//        var valueSelected = this.value;
-        alert('Cambio detectado');
         LimpiarGrids();
     });
     $('#RptSupervisorVsEjecutivoHistorialForm_precisionVisitas').on('change', function (e) {
-//        var optionSelected = $("option:selected", this);
-//        var valueSelected = this.value;
-        alert('Cambio detectado');
         LimpiarGrids();
     });
     $('#RptSupervisorVsEjecutivoHistorialForm_horaInicioGestion').on('change', function (e) {
-//        var optionSelected = $("option:selected", this);
-//        var valueSelected = this.value;
-        alert('Cambio detectado');
         LimpiarGrids();
     });
     $('#RptSupervisorVsEjecutivoHistorialForm_horaFinGestion').on('change', function (e) {
-//        var optionSelected = $("option:selected", this);
-//        var valueSelected = this.value;
-        alert('Cambio detectado');
         LimpiarGrids();
     });
 });
@@ -65,6 +57,9 @@ function LimpiarGrids() {
     $("#tblVisitasEjecutivo").jqGrid("clearGridData", true).trigger("reloadGrid");
     $("#tblCumplimientoEjecutivo").jqGrid("clearGridData", true).trigger("reloadGrid");
     $("#tblResumenVisitasValidasInvalidasEjecutivo").jqGrid("clearGridData", true).trigger("reloadGrid");
+
+    document.getElementById("btnRepDetalleSupervisor").disabled = true;
+    document.getElementById("btnExcel").disabled = true;
 }
 function ConfigurarGrids() {
 
@@ -102,7 +97,7 @@ function ConfigurarGrids() {
                 , onSelectRow: function (idFilaSeleccionada) {
                     var fila = jQuery("#tblGridSupervisores").jqGrid('getRowData', idFilaSeleccionada);
                     jQuery("#tblGridRutas").jqGrid('setCaption', "Detalle rutas visitadas: " + fila.SUPERVISOR).trigger('reloadGrid');
-                    cargarDetalleRutas(fila.CODIGOEJECUTIVO);
+                    cargarDetalleRutas(fila.CODIGOEJECUTIVO,fila.SUPERVISOR);
                 }
             });
     jQuery("#tblGridRutas").jqGrid(
@@ -156,11 +151,12 @@ function ConfigurarGrids() {
         mtype: 'POST',
         url: 'ConfigurarGrid',
         colNames: [
-            'FECHA GESTION',
+            'FECHA GESTION S',
+            'FECHA GESTION E',
             'CODIGO',
             'CLIENTE',
-            'METROS SUV',
-            'ESTADO SUV',
+            'METROS SUP',
+            'ESTADO SUP',
             'METROS EJE',
             'ESTADO EJE',
 //            'DISTANCIA_SC',
@@ -174,7 +170,8 @@ function ConfigurarGrids() {
             'LONGITID_EJECUTIVO'
         ],
         colModel: [
-            {name: 'FECHAGESTION', index: 'FECHAGESTION', hidden: true, width: 80, sortable: false, frozen: true},
+            {name: 'FECHAGESTIONS', index: 'FECHAGESTIONS', hidden: true, width: 80, sortable: false, frozen: true},
+            {name: 'FECHAGESTIONE', index: 'FECHAGESTIONE', hidden: true, width: 80, sortable: false, frozen: true},
             {name: 'CODIGOCLIENTE', index: 'CODIGOCLIENTE', width: 80, sortable: false, frozen: true},
             {name: 'CLIENTE', index: 'CLIENTE', width: 230, sortable: false, frozen: true},
             {name: 'METROSS', index: 'METROSS', width: 95, sortable: false, frozen: true, align: "center"},
@@ -429,12 +426,22 @@ function ConfigurarGrids() {
     );
 }
 
-function cargarDetalleRutas(codigoEjecutivoFila) {
+function cargarDetalleRutas(codigoEjecutivoFila,nombreEjecutivo) {
+    document.getElementById("btnRepDetalleSupervisor").disabled = false;
+    $("#tblGridDetalle").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblVisitasSupervisor").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblCumplimientoSupervisor").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblResumenVisitasValidasInvalidasSupervisor").jqGrid("clearGridData", true).trigger("reloadGrid");
+
+    $("#tblVisitasEjecutivo").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblCumplimientoEjecutivo").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblResumenVisitasValidasInvalidasEjecutivo").jqGrid("clearGridData", true).trigger("reloadGrid");
     $.ajax(
             {
                 method: "POST",
                 url: "RptSupervisorVsEjecutivoHistorial/CargarGridDetalleRuta",
                 data: {
+                    nombreEjecutivo: nombreEjecutivo,
                     ejecutivo: codigoEjecutivoFila,
                     fechaGestion: $("#RptSupervisorVsEjecutivoHistorialForm_fechagestion").val(),
                     accionHistorial: $("#RptSupervisorVsEjecutivoHistorialForm_accionHistorial").val(),
@@ -468,6 +475,15 @@ function cargarDetalleRutas(codigoEjecutivoFila) {
 }
 
 function cargarInformes(codigoSupervisor, codigoEjecutivo, ruta, diaRuta) {
+    document.getElementById("btnExcel").disabled = false;
+    $("#tblGridDetalle").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblVisitasSupervisor").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblCumplimientoSupervisor").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblResumenVisitasValidasInvalidasSupervisor").jqGrid("clearGridData", true).trigger("reloadGrid");
+
+    $("#tblVisitasEjecutivo").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblCumplimientoEjecutivo").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblResumenVisitasValidasInvalidasEjecutivo").jqGrid("clearGridData", true).trigger("reloadGrid");
     $.ajax(
             {
                 method: "POST",

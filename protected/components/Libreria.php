@@ -40,4 +40,25 @@ class Libreria {
         return $angle * $earthRadius;
     }
 
+    // funcion que devuelve un array con los elementos de una hora
+
+    public function parteHora($hora) {
+        $horaSplit = explode(":", $hora);
+
+        if (count($horaSplit) < 3) {
+            $horaSplit[2] = 0;
+        }
+
+        return $horaSplit;
+    }
+
+    // funcion que devuelve la suma de dos horas en formato horas:minutos:segundos
+    // Devuelve FALSE si se ha producido algun error
+    function SumaHoras($time1, $time2) {
+        list($hour1, $min1, $sec1) = $this->parteHora($time1);
+        list($hour2, $min2, $sec2) = $this->parteHora($time2);
+
+        return date('H:i:s', mktime($hour1 + $hour2, $min1 + $min2, $sec1 + $sec2));
+    }
+
 }

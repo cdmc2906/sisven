@@ -70,7 +70,14 @@ $this->pageTitle = 'Analisis diario ejecutivo'
                         <legend style="border:1px solid green;">Filtros tiempo</legend>
                         <?php
                         echo $form->labelEx($model, 'horaInicioGestion');
-                        echo $form->dropDownList($model, 'horaInicioGestion', array('10:00' => '10:00'));
+                        echo $form->dropDownList(
+                                $model, 'horaInicioGestion', array(
+                                    '08:00' => '08:00',
+                                    '09:00' => '09:00',
+                                    '10:00' => '10:00'
+                                    )
+                                   , array('options' => array('10:00' => array('selected' => true)))
+                                );
                         echo $form->error($model, 'horaInicioGestion');
                         ?>
                         <?php
@@ -172,9 +179,11 @@ $this->pageTitle = 'Analisis diario ejecutivo'
                             $("#d_comentariosSupervision").val(datosResult[\'comentarioSupervisor\']);;
 
                             $("#RptResumenDiarioHistorialForm_enlaceMapa").val(datosResult[\'enlaceMapa\']);
-                            $("#d_enlaceMapa").val(datosResult[\'enlaceMapa\']);
+//                            $("#d_enlaceMapa").val(datosResult[\'enlaceMapa\']);
                             
-                            mostrarVisitasEnMapa();
+//                          mostrarVisitasEnMapa();
+                            mostrarVisitasEnMapa2(datosResult[\'coordenadasClientes\'],datosResult[\'coordenadasVisitas\']);
+
 
                         } else{
                             $.each(data, function(key, val) {
@@ -193,7 +202,6 @@ $this->pageTitle = 'Analisis diario ejecutivo'
                         <br>
                         <?php echo CHtml::button('Guardar Revision', array('submit' => array('rptResumenDiarioHistorial/GuardarRevision'))); ?>          
                         <br>
-                        <?php echo CHtml::Button('Exportar Resumen', array('id' => 'btnExcelResumen', 'class' => 'btn btn-theme')); ?>
                         <?php $this->endWidget(); ?>
                     </fieldset>
                 </div>
@@ -201,7 +209,6 @@ $this->pageTitle = 'Analisis diario ejecutivo'
         </div>
     </div>     
 </section>
-
 <div>
     <div>
 
@@ -263,29 +270,12 @@ $this->pageTitle = 'Analisis diario ejecutivo'
 
     </div>
 </div>
-<br>
-
-<div>
-    <!--<h1>Enlace mapa</h1>-->
-    <?php
-//    echo CHtml::textField('d_enlaceMapa', '', array(
-//        'placeholder' => 'Ingrese el enlace'
-//        , 'size' => '125px'
-//        , 'onblur' => 'setEnlaceMapa(document.getElementById(\'d_enlaceMapa\').value)'
-//        , 'id' => 'd_enlaceMapa'
-//        , 'maxlength' => 500)
-//    );
-    ?>    
-    <?php // echo CHtml::Button('Abrir enlace', array('id' => 'btnAbrirEnlace', 'class' => 'btn btn-theme')); ?>
-    <?php // echo CHtml::link('Abrir Enlace', 'https://www.google.com/maps/d/',array('target' => '_blank'));?>
-    <?php // echo CHtml::Button('Abrir enlace', array('id' => 'btnAbrirEnlace', 'class' => 'btn btn-theme')); ?>
-
-    <?php // echo CHtml::Button("Abrir enlace", array('id' => 'btnAbrirEnlace', 'class' => 'btn btn-theme', 'title' => "Abrir enlace de mapa en google maps", 'onclick' => 'js:openMapsWindow();')); ?>
-
-</div>
-
-<br/><br/> <?php echo CHtml::Button('Exportar Detalle', array('id' => 'btnExcel', 'class' => 'btn btn-theme')); ?>
+<br/>
+<br/>
+<?php echo CHtml::Button('Exportar Resumen', array('id' => 'btnExcelResumen', 'class' => 'btn btn-theme')); ?>
+<?php echo CHtml::Button('Exportar Detalle', array('id' => 'btnExcel', 'class' => 'btn btn-theme')); ?>
 <?php echo CHtml::Button('Exportar Clientes no visitados', array('id' => 'btnExcelNoVisitados', 'class' => 'btn btn-theme')); ?>
+<?php echo CHtml::Button('Exportar Tiempos gestion', array('id' => 'btnExcelTiemposGestion', 'class' => 'btn btn-theme')); ?>
 
 <br>    
 <!--<div id="grilla" class="_grilla">-->
@@ -295,8 +285,9 @@ $this->pageTitle = 'Analisis diario ejecutivo'
 </div>
 
 <br/><h1>Mapa</h1>
-<div id="map"></div>
 <div id="legend"><h3>Leyenda</h3></div>
+<div id="map"></div>
+
 <?php // endif;    ?>
 
 <script>
@@ -339,6 +330,7 @@ $this->pageTitle = 'Analisis diario ejecutivo'
         var mapa = new google.maps.Map(document.getElementById('map'), opcionesMapa);
 
         for (var iterador in coordsClientes) {
+            alert(coordsClientes[iterador]);
             var marcadorCliente = new google.maps.Marker({
                 position: {lat: parseFloat(coordsClientes[iterador].LATITUD), lng: parseFloat(coordsClientes[iterador].LONGITUD)},
                 map: mapa,
@@ -363,6 +355,47 @@ $this->pageTitle = 'Analisis diario ejecutivo'
         legend.appendChild(div);
 
         mapa.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
+    }
+    function mostrarVisitasEnMapa2(coordsClientes, coordsVisitas) {
+
+//        var coordsClientes =<?php echo(json_encode(Yii::app()->session['coordenadasClientes'])); ?>;
+//
+//        var coordsVisitas =<?php echo(json_encode(Yii::app()->session['coordenadasVisitas'])); ?>;
+
+        var opcionesMapa = {
+            zoom: 14, center: {lat: parseFloat(coordsVisitas[0].LATITUD), lng: parseFloat(coordsVisitas[0].LONGITUD)},
+        }
+        ;
+        var mapa = new google.maps.Map(document.getElementById('map'), opcionesMapa);
+
+        for (var iterador in coordsClientes) {
+//            alert(coordsClientes[iterador]);
+            var marcadorCliente = new google.maps.Marker({
+                position: {lat: parseFloat(coordsClientes[iterador].LATITUD), lng: parseFloat(coordsClientes[iterador].LONGITUD)},
+                map: mapa,
+                title: coordsClientes[iterador].LABEL,
+                label: coordsClientes[iterador].LABEL,
+                icon: pinSymbol('#dd4b4b')
+            });
+
+            var marcadorVisitas = new google.maps.Marker({
+                position: {lat: parseFloat(coordsVisitas[iterador].LATITUD), lng: parseFloat(coordsVisitas[iterador].LONGITUD)},
+                map: mapa,
+                title: coordsVisitas[iterador].LABEL,
+                label: coordsVisitas[iterador].LABEL,
+                icon: pinSymbol('#0288d1')
+            });
+        }
+
+        var legend = document.getElementById('legend');
+        var div = document.createElement('div');
+        div.innerHTML = '\
+        <div style="width:10px;height:10px;background-color: #dd4b4b"></div>CLIENTE \n\
+        <br/><div style="width:10px;height:10px;background-color: #0288d1"></div>' + 'VISITA';
+        legend.appendChild(div);
+
+        mapa.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
+
     }
 
     function pinSymbol(color) {

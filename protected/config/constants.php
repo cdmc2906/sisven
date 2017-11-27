@@ -60,8 +60,15 @@ define('FLASH_NOTICE', 'notice');
 
 define('FORMATO_FECHA_LONG', 'Y/m/d G:i:s');
 define('FORMATO_FECHA_LONG_2', 'Y/m/d G:i');
+define('FORMATO_FECHA_LONG_3', 'Y-m-d G:i');
+
 define('FORMATO_FECHA', 'Y/m/d');
 define('FORMATO_FECHA_2', 'd-m');
+define('FORMATO_FECHA_3', 'Y-m-d');
+
+define('FORMATO_HORA', 'H:i:s');
+define('FORMATO_HORA_2', 'H:i');
+
 define('FORMATO_FECHA_BDD', '\'YYYY/MM/DD\'');
 define('FORMATO_FECHA_BDD_LONG', '\'YYYY/MM/DD HH24:MI:SS\'');
 define('FORMATO_NUMERO_ERROR', 'YmdGis');

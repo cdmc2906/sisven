@@ -3,6 +3,7 @@
 $this->breadcrumbs = array('Comparacion Supervisor Vs Ejecutivo',);
 $this->renderPartial('/shared/_blockUI');
 $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'));
+$this->pageTitle = 'Analisis supervisor vs ejecutivo'
 ?>
 
 <link type="text/css" rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/datepicker.css" />
@@ -71,7 +72,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                             'Nuevo cliente' => 'Nuevo cliente',
                             'Estatus' => 'Estatus'
                                 )
-//                                    , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+//                                , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
                         );
                         ?>
                         <?php echo $form->error($model, 'accionHistorial'); ?>
@@ -104,8 +105,11 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                         echo $form->labelEx($model, 'horaInicioGestion');
                         echo $form->dropDownList(
                                 $model, 'horaInicioGestion', array(
+                            '08:00' => '08:00',
+                            '09:00' => '09:00',
                             '10:00' => '10:00'
                                 )
+                                , array('options' => array('10:00' => array('selected' => true)))
                                 //, array("disabled" => "disabled",)
                         );
 
@@ -155,21 +159,10 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                         setMensaje(data.ClassMessage, data.Message);
                         if(data.Status==1){
                              var datosResult = data.Result;
-                             //console.log(JSON.stringify(datosResult[\'detalle\']));
-                             //console.log(datosResult.toSource());
-                            //$("#tblGridDetalle").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'detalle\']}).trigger(\'reloadGrid\');
-                            //$("#tblResumenGeneral").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenGeneral\']}).trigger(\'reloadGrid\');
-                            //$("#tblResumenVisitas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitas\']}).trigger(\'reloadGrid\');
-                            //$("#tblResumenVisitasValidasInvalidas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitasValidasInvalidas\']}).trigger(\'reloadGrid\');
-                            //$("#tblPrimeraUltimaVisita").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenPrimeraUltima\']}).trigger(\'reloadGrid\');
-                            //$("#tblResumenVentas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVentas\']}).trigger(\'reloadGrid\');
                             $("#tblGridSupervisores").setGridParam({datatype: \'jsonstring\', datastr: datosResult}).trigger(\'reloadGrid\');
-                           
                             $("#tblGridSupervisores").val(datosResult);
-
                             $("#RptResumenDiarioHistorialForm_enlaceMapa").val(datosResult[\'enlaceMapa\']);
                             $("#d_enlaceMapa").val(datosResult[\'enlaceMapa\']);
-
 
                         } else{
                             $.each(data, function(key, val) {
@@ -187,6 +180,8 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                         <?php echo CHtml::Button('Limpiar', array('id' => 'btnLimpiar', 'class' => 'btn btn-theme')); ?>
                         <br>
                         <?php // echo CHtml::Button('Exportar Resumen', array('id' => 'btnExcelResumen', 'class' => 'btn btn-theme')); ?>
+                        <?php echo CHtml::Button('Exportar Detalle Supervisor', array('id' => 'btnRepDetalleSupervisor', 'class' => 'btn btn-theme', 'disabled' => 'true')); ?>
+                        <?php echo CHtml::Button('Exportar Detalle Ruta', array('id' => 'btnExcel', 'class' => 'btn btn-theme', 'disabled' => 'true')); ?>
                         <?php $this->endWidget(); ?>
                     </fieldset>
                 </div>
@@ -249,16 +244,11 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
                     <table id="tblVisitasEjecutivo" class="table table-condensed"></table>                
                 </div>
             </div>
-
-            </div>
         </td>
     </tr>
 </table>
 <br/>
-<?php echo CHtml::Button('Exportar Detalle', array('id' => 'btnExcel', 'class' => 'btn btn-theme')); ?>
 
-<br>    
-<!--<div id="grilla" class="_grilla">-->
 <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
     <table id="tblGridDetalle" class="table table-condensed"></table>
     <div id="pagGrid"> </div>
@@ -270,7 +260,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'))
 <?php // endif;    ?>
 
 <script>
-  
+
     function openMapsWindow()
     {
         var url = $("#d_enlaceMapa").val();
