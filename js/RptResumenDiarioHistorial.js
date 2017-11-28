@@ -14,12 +14,11 @@ $(document).ready(function () {
     $("#btnExcelResumen").click(function () {
         GenerarDocumentoReporte('GenerateExcelResumen');
     });
-    
+
     $("#btnExcelTiemposGestion").click(function () {
         GenerarDocumentoReporte('GenerateExcelTiemposGestion');
     });
-    
-    
+
     $('#RptResumenDiarioHistorialForm_ejecutivo').on('change', function (e) {
         LimpiarGrids();
     });
@@ -29,10 +28,10 @@ $(document).ready(function () {
     $('#RptResumenDiarioHistorialForm_horaFinGestion').on('change', function (e) {
         LimpiarGrids();
     });
-     $('#RptResumenDiarioHistorialForm_precisionVisitas').on('change', function (e) {
+    $('#RptResumenDiarioHistorialForm_precisionVisitas').on('change', function (e) {
         LimpiarGrids();
     });
-     $('#RptResumenDiarioHistorialForm_accionHistorial').on('change', function (e) {
+    $('#RptResumenDiarioHistorialForm_accionHistorial').on('change', function (e) {
         LimpiarGrids();
     });
 
@@ -58,6 +57,7 @@ function LimpiarGrids() {
     $("#tblResumenVisitasValidasInvalidas").jqGrid("clearGridData", true).trigger("reloadGrid");
     $("#tblPrimeraUltimaVisita").jqGrid("clearGridData", true).trigger("reloadGrid");
     $("#tblResumenVentas").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblResumenTiempos").jqGrid("clearGridData", true).trigger("reloadGrid");
     initMap2();
 }
 
@@ -302,6 +302,46 @@ function ConfigurarGrids() {
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
         caption: "Detalle ventas",
         hidegrid: false,
+        jsonReader: {
+            root: "Result",
+            repeatitems: false, //cuando el array de la data son object
+            id: "id" //representa el �ndice del identificador �nico de la entidad
+        }
+        ,
+        beforeRequest: function () { }
+        ,
+        loadError: function (xhr, st, err) { }
+    }
+    );
+    jQuery("#tblResumenTiempos").jqGrid({
+        loadonce: true,
+        datatype: 'json',
+        mtype: 'POST',
+        url: 'ConfigurarGrid',
+        colNames: ['Parametro', 'Valor'],
+        colModel: [
+            {name: 'PARAMETRO', index: 'PARAMETRO', width: 200, sortable: false, frozen: true},
+            {name: 'VALOR', index: 'VALOR', width: 90, sortable: false, frozen: true, align: 'center'}
+        ],
+//        pager: '#pagGrid',
+        rowNum: 60,
+        rowList: ElementosPagina,
+        sortorder: 'ASC',
+        viewrecords: true,
+        height: 70,
+        width: 300,
+        gridview: true,
+        shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
+//        footerrow: true,
+        caption: "Detalle tiempos",
+        hidegrid: false,
+//        gridComplete: function () {
+//            var $grid = $('#tblResumenTiempos');
+//            var colSum = $grid.jqGrid('getCol', 'VALOR', false, 'sum');
+//            $grid.jqGrid('footerData', 'set', {'PARAMETRO': 'Total '});
+//            $grid.jqGrid('footerData', 'set', {'VALOR': colSum});
+//
+//        },
         jsonReader: {
             root: "Result",
             repeatitems: false, //cuando el array de la data son object

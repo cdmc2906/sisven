@@ -51,7 +51,7 @@ class FHistorialModel extends DAOModel {
                     AND H_USUARIO='" . $ejecutivo . "'
                     AND H_ACCION='" . $accion . "'
                     AND H_COD_CLIENTE='" . $codCliente . "'
-                    AND H_ID>'" . $codigoHistorial . "'
+                    AND H_ID>='" . $codigoHistorial . "'
                 ORDER BY H_ID
                     ;
             ";
@@ -80,6 +80,7 @@ class FHistorialModel extends DAOModel {
                     ,H_RUTA AS RUTAVISITA
                     ,h_latitud AS LATITUD
                     ,h_longitud AS LONGITUD
+                    ,h_id AS IDHISTORIAL
                 FROM tb_historial_mb
                 WHERE 1=1
                     AND H_FECHA BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'

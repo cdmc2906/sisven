@@ -43,6 +43,7 @@ class RptResumenDiarioHistorialController extends Controller {
         $datosResumenGridVisitasValidasInvalidas = array();
         $datosResumenGridPrimeraUltimaVisita = array();
         $datosResumenGridVentas = array();
+        $datosResumenGridTiempos = array();
         unset(Yii::app()->session['coordenadasClientes']);
         unset(Yii::app()->session['coordenadasVisitas']);
 
@@ -95,6 +96,10 @@ class RptResumenDiarioHistorialController extends Controller {
                             $longitudClienteAnterior = 0;
                             $ultimoCodigoHistorial = 1;
                             $finVisitaAnterior = new DateTime('00:00:00');
+
+                            $inicioVisita = new DateTime('00:00:00');
+                            $finVisita = new DateTime('00:00:00');
+
                             $tiempoTraslado = '00:00:00';
                             $totalGestion = '00:00:00';
                             $totalTraslados = '00:00:00';
@@ -139,10 +144,24 @@ class RptResumenDiarioHistorialController extends Controller {
                                 }
                                 $fechaGestion = DateTime::createFromFormat('Y-m-d H:i', $itemHistorialEjecutivo['FECHAVISITA'])->format(FORMATO_FECHA);
 
-                                $I = $fHistorial->getInicioFinVisitaClientexEjecutivoxFecha('Inicio visita', $fechaGestion, $ejecutivo[0]['e_usr_mobilvendor'], $itemHistorialEjecutivo['CODIGOCLIENTE'], $ultimoCodigoHistorial);
-                                $F = $fHistorial->getInicioFinVisitaClientexEjecutivoxFecha('Fin de visita', $fechaGestion, $ejecutivo[0]['e_usr_mobilvendor'], $itemHistorialEjecutivo['CODIGOCLIENTE'], $ultimoCodigoHistorial);
-                                $inicioVisita = new DateTime($I[0]["HORAVISITA"]);
-                                $finVisita = new DateTime($F[0]["HORAVISITA"]);
+                                $I = $fHistorial->getInicioFinVisitaClientexEjecutivoxFecha(
+                                        'Inicio visita'
+                                        , $fechaGestion
+                                        , $ejecutivo[0]['e_usr_mobilvendor']
+                                        , $itemHistorialEjecutivo['CODIGOCLIENTE']
+                                        , $itemHistorialEjecutivo['IDHISTORIAL']);
+                                
+                                $F = $fHistorial->getInicioFinVisitaClientexEjecutivoxFecha(
+                                        'Fin de visita'
+                                        , $fechaGestion
+                                        , $ejecutivo[0]['e_usr_mobilvendor']
+                                        , $itemHistorialEjecutivo['CODIGOCLIENTE']
+                                        , $I[0]['IDHISTORIAL']);
+
+                                if (isset($I[0]))
+                                    $inicioVisita = new DateTime($I[0]["HORAVISITA"]);
+                                if (isset($F[0]))
+                                    $finVisita = new DateTime($F[0]["HORAVISITA"]);
                                 $tiempoGestion = $inicioVisita->diff($finVisita)->format("%h:%I:%S");
                                 $totalGestion = $libreriaFunciones->SumaHoras($totalGestion, $tiempoGestion);
 
@@ -170,9 +189,12 @@ class RptResumenDiarioHistorialController extends Controller {
                                     'DISTANCIA_CLIENTES' => $distanciaEntreCliente,
                                 );
                                 $finVisitaAnterior = $finVisita;
-                                $latitudClienteAnterior = str_replace(',', '.', $cliente[0]['cli_latitud']);
-                                $longitudClienteAnterior = str_replace(',', '.', $cliente[0]['cli_longitud']);
-                                $ultimoCodigoHistorial = $I[0]['IDHISTORIAL'];
+                                if (isset($cliente[0]['cli_latitud']) && $cliente[0]['cli_longitud']) {
+                                    $latitudClienteAnterior = str_replace(',', '.', $cliente[0]['cli_latitud']);
+                                    $longitudClienteAnterior = str_replace(',', '.', $cliente[0]['cli_longitud']);
+                                    if (isset($I[0]))
+                                        $ultimoCodigoHistorial = $I[0]['IDHISTORIAL'];
+                                }
 //                                var_dump($dat);die();
 
 
@@ -445,6 +467,8 @@ class RptResumenDiarioHistorialController extends Controller {
                                 'CLIENTES-VENTA' => ($_totalClientesVenta == null) ? 0 : $_totalClientesVenta,
                                 'CANTIDAD-VENTA-RUTA' => ($_totalVentaRuta == null) ? 0 : $_totalVentaRuta,
                                 'CANTIDAD-VENTA-FUERA-RUTA' => ($_totalVentaFueraRuta == null) ? 0 : $_totalVentaFueraRuta,
+                                'TOTAL-GESTION' => ($totalGestion == null) ? 0 : $totalGestion,
+                                'TOTAL-TRASLADO' => ($totalTraslados == null) ? 0 : $totalTraslados,
                             );
                             array_push($datosResumenGrid, $resumenRuta);
                             unset($resumenRuta);
@@ -465,6 +489,8 @@ class RptResumenDiarioHistorialController extends Controller {
                                         array_push($datosResumenGridVisitas, $resumenRuta);
                                     if ($clave == 'CLIENTES-VENTA' || $clave == 'CANTIDAD-VENTA-RUTA' || $clave == 'CANTIDAD-VENTA-FUERA-RUTA')
                                         array_push($datosResumenGridVentas, $resumenRuta);
+                                    if ($clave == 'TOTAL-GESTION' || $clave == 'TOTAL-TRASLADO')
+                                        array_push($datosResumenGridTiempos, $resumenRuta);
 
                                     array_push($datosResumenGridIzquierda, $resumenRuta);
                                     unset($resumenRuta);
@@ -473,6 +499,7 @@ class RptResumenDiarioHistorialController extends Controller {
                             $datos['resumenGeneral'] = $datosResumenGridGeneral;
                             $datos['resumenVisitas'] = $datosResumenGridVisitas;
                             $datos['resumenVentas'] = $datosResumenGridVentas;
+                            $datos['resumenTiempos'] = $datosResumenGridTiempos;
 
                             $resumenRutaDerecha = array('VISITA' => 'Validas', 'CANTIDAD' => $visitasValidas);
                             array_push($datosResumenGridVisitasValidasInvalidas, $resumenRutaDerecha);
@@ -998,12 +1025,12 @@ class RptResumenDiarioHistorialController extends Controller {
             }
             foreach ($datosPrimeraUltima as $filaGrid) {
 //                var_dump($key );die();
-                    $dat = array(
-                        'PARAMETRO' => $filaGrid["VISITA"],
-                        'VALOR' => $filaGrid["CANTIDAD"],
-                        'FECHA_GESTION' => strval(Yii::app()->session['ModelForm']['fechagestion']),
-                        'EJECUTIVO' => strval(Yii::app()->session['ModelForm']['ejecutivo'])
-                    );
+                $dat = array(
+                    'PARAMETRO' => $filaGrid["VISITA"],
+                    'VALOR' => $filaGrid["CANTIDAD"],
+                    'FECHA_GESTION' => strval(Yii::app()->session['ModelForm']['fechagestion']),
+                    'EJECUTIVO' => strval(Yii::app()->session['ModelForm']['ejecutivo'])
+                );
                 array_push($revisionRuta, $dat);
             }
 

@@ -72,12 +72,12 @@ $this->pageTitle = 'Analisis diario ejecutivo'
                         echo $form->labelEx($model, 'horaInicioGestion');
                         echo $form->dropDownList(
                                 $model, 'horaInicioGestion', array(
-                                    '08:00' => '08:00',
-                                    '09:00' => '09:00',
-                                    '10:00' => '10:00'
-                                    )
-                                   , array('options' => array('10:00' => array('selected' => true)))
-                                );
+                            '08:00' => '08:00',
+                            '09:00' => '09:00',
+                            '10:00' => '10:00'
+                                )
+                                , array('options' => array('10:00' => array('selected' => true)))
+                        );
                         echo $form->error($model, 'horaInicioGestion');
                         ?>
                         <?php
@@ -175,6 +175,7 @@ $this->pageTitle = 'Analisis diario ejecutivo'
                             $("#tblResumenVisitasValidasInvalidas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitasValidasInvalidas\']}).trigger(\'reloadGrid\');
                             $("#tblPrimeraUltimaVisita").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenPrimeraUltima\']}).trigger(\'reloadGrid\');
                             $("#tblResumenVentas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVentas\']}).trigger(\'reloadGrid\');
+                            $("#tblResumenTiempos").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenTiempos\']}).trigger(\'reloadGrid\');
                            
                             $("#d_comentariosSupervision").val(datosResult[\'comentarioSupervisor\']);;
 
@@ -233,6 +234,9 @@ $this->pageTitle = 'Analisis diario ejecutivo'
         <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
             <table id="tblResumenVentas" class="table table-condensed"></table>                
         </div>
+        <div id="grilla" class="_grilla panel panel-shadow" style="margin-left: 50px;background-color: transparent">
+            <table id="tblResumenTiempos" class="table table-condensed"></table>                
+        </div>
 
     </div>
 </div>
@@ -285,23 +289,31 @@ $this->pageTitle = 'Analisis diario ejecutivo'
 </div>
 
 <br/><h1>Mapa</h1>
-<div id="legend"><h3>Leyenda</h3></div>
+<div  style="display: flex; justify-content: flex-start; border:1px solid green; width: 300px">
+    <h3 style="margin-top: 5px">Leyenda :</h3>
+    <div style="margin-top: 10px;margin-left: 30px; width:10px;height:10px;background-color: #dd4b4b; " id="grilla" class="_grilla panel panel-shadow"></div>
+    <div style="margin-top: 10px;margin-left: 5px; background-color: transparent; " id="grilla" class="_grilla panel panel-shadow">CLIENTE</div>
+    <div style="margin-top: 10px;margin-left: 50px; width:10px;height:10px;background-color: #0288d1; " id="grilla" class="_grilla panel panel-shadow"></div>
+    <div style="margin-top: 10px;margin-left: 5px; background-color: transparent; " id="grilla" class="_grilla panel panel-shadow">VISITA</div>
+</div>
+
+
 <div id="map"></div>
 
 <?php // endif;    ?>
 
 <script>
     function setComentarioSupervisor($comentario) {
-//        alert($valor);
+        //        alert($valor);
         $("#RptResumenDiarioHistorialForm_comentarioSupervision").val($comentario);
     }
     function setEnlaceMapa($enlace) {
-//        alert($valor);
+        //        alert($valor);
         $("#RptResumenDiarioHistorialForm_enlaceMapa").val($enlace);
     }
     function openMapsWindow() {
         var url = $("#d_enlaceMapa").val();
-//        alert(url)
+        //        alert(url)
         if (url.length > 0)
             var win = window.open(url, '_blank');
         else
@@ -315,53 +327,12 @@ $this->pageTitle = 'Analisis diario ejecutivo'
             zoom: 15,
             center: {lat: -0.205226, lng: -78.495739}
         });
+        //        mapa.controls[google.maps.ControlPosition.RIGHT_TOP].pop(legend);
 
     }
-    function mostrarVisitasEnMapa() {
 
-        var coordsClientes =<?php echo(json_encode(Yii::app()->session['coordenadasClientes'])); ?>;
-
-        var coordsVisitas =<?php echo(json_encode(Yii::app()->session['coordenadasVisitas'])); ?>;
-
-        var opcionesMapa = {
-            zoom: 14, center: {lat: parseFloat(coordsVisitas[0].LATITUD), lng: parseFloat(coordsVisitas[0].LONGITUD)},
-        }
-        ;
-        var mapa = new google.maps.Map(document.getElementById('map'), opcionesMapa);
-
-        for (var iterador in coordsClientes) {
-            alert(coordsClientes[iterador]);
-            var marcadorCliente = new google.maps.Marker({
-                position: {lat: parseFloat(coordsClientes[iterador].LATITUD), lng: parseFloat(coordsClientes[iterador].LONGITUD)},
-                map: mapa,
-                title: coordsClientes[iterador].LABEL,
-                label: coordsClientes[iterador].LABEL,
-                icon: pinSymbol('#dd4b4b')
-            });
-
-            var marcadorVisitas = new google.maps.Marker({
-                position: {lat: parseFloat(coordsVisitas[iterador].LATITUD), lng: parseFloat(coordsVisitas[iterador].LONGITUD)},
-                map: mapa,
-                title: coordsVisitas[iterador].LABEL,
-                label: coordsVisitas[iterador].LABEL,
-                icon: pinSymbol('#0288d1')
-            });
-        }
-        var legend = document.getElementById('legend');
-        var div = document.createElement('div');
-        div.innerHTML = '\
-    <div style="width:10px;height:10px;background-color: #dd4b4b"></div>CLIENTE \n\
-    <br/><div style="width:10px;height:10px;background-color: #0288d1"></div>' + 'VISITA';
-        legend.appendChild(div);
-
-        mapa.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
-    }
     function mostrarVisitasEnMapa2(coordsClientes, coordsVisitas) {
 
-//        var coordsClientes =<?php echo(json_encode(Yii::app()->session['coordenadasClientes'])); ?>;
-//
-//        var coordsVisitas =<?php echo(json_encode(Yii::app()->session['coordenadasVisitas'])); ?>;
-
         var opcionesMapa = {
             zoom: 14, center: {lat: parseFloat(coordsVisitas[0].LATITUD), lng: parseFloat(coordsVisitas[0].LONGITUD)},
         }
@@ -369,7 +340,7 @@ $this->pageTitle = 'Analisis diario ejecutivo'
         var mapa = new google.maps.Map(document.getElementById('map'), opcionesMapa);
 
         for (var iterador in coordsClientes) {
-//            alert(coordsClientes[iterador]);
+            //            alert(coordsClientes[iterador]);
             var marcadorCliente = new google.maps.Marker({
                 position: {lat: parseFloat(coordsClientes[iterador].LATITUD), lng: parseFloat(coordsClientes[iterador].LONGITUD)},
                 map: mapa,
@@ -386,16 +357,6 @@ $this->pageTitle = 'Analisis diario ejecutivo'
                 icon: pinSymbol('#0288d1')
             });
         }
-
-        var legend = document.getElementById('legend');
-        var div = document.createElement('div');
-        div.innerHTML = '\
-        <div style="width:10px;height:10px;background-color: #dd4b4b"></div>CLIENTE \n\
-        <br/><div style="width:10px;height:10px;background-color: #0288d1"></div>' + 'VISITA';
-        legend.appendChild(div);
-
-        mapa.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
-
     }
 
     function pinSymbol(color) {
