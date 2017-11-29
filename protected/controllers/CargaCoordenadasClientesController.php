@@ -13,7 +13,7 @@ class CargaCoordenadasClientesController extends Controller {
         } else {
             unset(Yii::app()->session['coordenadasClientes']);
             $model = new CargaCoordenadasClientesForm();
-            $this->render('/cliente/cargaCoordenadasClientes', array('model' => $model));
+            $this->render('/carga/cargaCoordenadasClientes', array('model' => $model));
         }
     }
 
@@ -49,6 +49,8 @@ class CargaCoordenadasClientesController extends Controller {
                         while ($numeroBloque <= intval($totalBloques)) {
                             $file = new File($filePath, $operation, $delimiter);
                             $registroInicio = (($numeroBloque - 1) * $tamanioBloque) + 1;
+                            $registroInicio = 2;//(($numeroBloque - 1) * $tamanioBloque) + 1;
+//                            var_dump($numeroBloque,$tamanioBloque,$registroInicio);die();
                             $dataInsert = $this->getDatosMostrar($file, $registroInicio, $tamanioBloque);
 //                            var_dump($dataInsert);die();
                             if (count($dataInsert) > 0) {
@@ -74,7 +76,7 @@ class CargaCoordenadasClientesController extends Controller {
             $response->ClassMessage = CLASS_MENSAJE_ERROR;
         }
 //        var_dump($_SESSION['historialMbItems']);die();
-        $this->render('/cliente/cargaCoordenadasClientes', array('model' => $model));
+        $this->render('/carga/cargaCoordenadasClientes', array('model' => $model));
         return;
     }
 

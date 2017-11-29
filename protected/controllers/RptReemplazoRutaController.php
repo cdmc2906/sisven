@@ -14,7 +14,7 @@ class RptReemplazoRutaController extends Controller {
         } else {
             Yii::app()->session['RptReemplazoRutaForm '] = '';
             $model = new RptReemplazoRutaForm ();
-            $this->render('/historialmb/rptReemplazoRuta', array('model' => $model));
+            $this->render('/reportes/rptReemplazoRuta', array('model' => $model));
         }
     }
 

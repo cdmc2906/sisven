@@ -13,7 +13,7 @@ class CargaOrdenesMbController extends Controller {
         } else {
             unset(Yii::app()->session['ordenesMbItems']);
             $model = new CargaOrdenesMbForm();
-            $this->render('/ordenesmb/cargaOrdenesMb', array('model' => $model));
+            $this->render('/carga/cargaOrdenesMb', array('model' => $model));
         }
     }
 
@@ -71,7 +71,7 @@ class CargaOrdenesMbController extends Controller {
             $response->Status = ERROR;
             $response->ClassMessage = CLASS_MENSAJE_ERROR;
         }
-        $this->render('/ordenesMb/cargaOrdenesMb', array('model' => $model));
+        $this->render('/carga/cargaOrdenesMb', array('model' => $model));
         return;
     }
 

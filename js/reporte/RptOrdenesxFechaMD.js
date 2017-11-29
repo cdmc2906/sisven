@@ -78,7 +78,7 @@ function configurarMaestroDetalle()
     jQuery("#tblGridMaestro").jqGrid(
             {
                 loadonce: true
-                , height: 200
+                , height: 150
                 , width: 520
                 , mtype: 'POST'
                 , url: 'VerDatosArchivo'

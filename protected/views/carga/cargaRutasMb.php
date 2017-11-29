@@ -2,6 +2,7 @@
 $this->breadcrumbs = array('Carga Rutas Mobilvendor',);
 $this->renderPartial('/shared/_blockUI');
 $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"'));
+$this->pageTitle = 'Carga Rutas Mobilvendor';
 ?>
 
 <link type="text/css" rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/datepicker.css" />
@@ -10,7 +11,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.es.js"></script>
 
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/CargaRutasMb.js"; ?>"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/carga/CargaRutasMb.js"; ?>"></script>
 
 <section class="">
     <div class="">

@@ -1,5 +1,5 @@
 <?php
-$this->breadcrumbs = array('Carga Indicadores',);
+$this->breadcrumbs = array('Carga Historial Mobilvendor',);
 $this->renderPartial('/shared/_blockUI');
 $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"'));
 ?>
@@ -10,7 +10,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.es.js"></script>
 
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/CargaIndicadores.js"; ?>"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/carga/CargaHistorialMb.js"; ?>"></script>
 
 <section class="">
     <div class="">
@@ -25,7 +25,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                     'validateOnSubmit' => true,
                 ),
                 'htmlOptions' => array("enctype" => "multipart/form-data"),
-                'action' => Yii::app()->request->baseUrl . '/CargaIndicador/SubirArchivo'
+                'action' => Yii::app()->request->baseUrl . '/CargaHistorialMb/SubirArchivo'
             ));
             ?>
             <div class="row">
@@ -34,19 +34,20 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                     <?php
 //                    $ventas= VentaMovistarModel::model()->
                     $command = Yii::app()->db->createCommand('
-                        SELECT DATE(i_fecha) as fecha 
-                            FROM tb_indicadores 
-                            order by i_fecha desc 
-                            limit 1');
+                        select 
+                                 h_fch_ingreso as fecha 
+                            from tb_historial_mb 
+                            order by h_fch_ingreso desc 
+                            limit 1;');
                     $resultado = $command->queryRow();
-                    $ultimaFecha = DateTime::createFromFormat('Y-m-d', $resultado['fecha'])->format(FORMATO_FECHA);
+                    $ultimaFecha = DateTime::createFromFormat('Y-m-d H:i:s', $resultado['fecha'])->format(FORMATO_FECHA_LONG_2);
 
                     echo $form->textField($model, 'fechaUltimaCarga'
                             , array(
                         'value' => $ultimaFecha
                         , 'class' => 'txtUltimaCarga'
                         , 'disabled' => 'disabled'
-                        , 'style' => 'text-align:center; color:orange; width:150px; height:30px; font-size:22px')
+                        , 'style' => 'text-align:center; color:orange; width:200px; height:30px; font-size:22px')
                     )
                     ?>
                 </div>
@@ -58,17 +59,14 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                     <?php echo $form->labelEx($model, 'rutaArchivo'); ?>
                     <?php echo $form->fileField($model, 'rutaArchivo'); ?>
                     <?php echo $form->error($model, 'rutaArchivo'); ?>
-
                     <?php echo $form->labelEx($model, 'delimitadorColumnas'); ?>
                     <?php
                     echo $form->dropDownList(
-                            $model, 'delimitadorColumnas'
-                            , array(
-                        ';' => 'Punto y Coma'
-                        , ',' => 'Coma')
-                            , array(
-                        'empty' => TEXT_OPCION_SELECCIONE
-                        , 'options' => array(0 => array('selected' => true)))
+                            $model, 'delimitadorColumnas', array(
+                        ';' => 'Punto y Coma',
+                        ',' => 'Coma'
+                            ), array(
+                        'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
                     );
                     ?>
                     <?php echo $form->error($model, 'delimitadorColumnas'); ?>
@@ -79,7 +77,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                 <?php echo CHtml::submitButton('Cargar', array('id' => 'btnCargar')); ?>
                 <?php // echo CHtml::button('Guardar', array('submit' => array('cargaConsumo/GuardarConsumo'))); ?>
                 <?php
-                echo CHtml::ajaxSubmitButton('Guardar', CHtml::normalizeUrl(array('CargaIndicador/GuardarIndicadores', 'render' => true)), array(
+                echo CHtml::ajaxSubmitButton('Guardar', CHtml::normalizeUrl(array('cargahistorialmb/guardarHistorial', 'render' => true)), array(
                     'dataType' => 'json',
                     'type' => 'post',
                     'beforeSend' => 'function() {
@@ -90,6 +88,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                         setMensaje(data.ClassMessage, data.Message);
                         if(data.Status==1){
                             var datosResult = data.Result;
+                            aler(datosResult);
                             $("#tblGridResumen").setGridParam({datatype: \'jsonstring\', datastr: datosResult}).trigger(\'reloadGrid\');
                             
                         } else{

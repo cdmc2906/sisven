@@ -1,10 +1,9 @@
 <?php
 /* @var $this TiemposGestionController */
-$this->breadcrumbs = array(
-    'Ordenes por fecha',
-);
+$this->breadcrumbs = array('Ordenes por fecha');
 $this->renderPartial('/shared/_blockUI');
 $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConsultarReporte"'));
+$this->pageTitle = 'Ordenes por fecha';
 ?>
 
 <link type="text/css" rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/datepicker.css" />
@@ -13,7 +12,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConsultarReporte"'
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.es.js"></script>
 
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/RptOrdenesxFechaMD.js"; ?>"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/reporte/RptOrdenesxFechaMD.js"; ?>"></script>
 
 <div class="">
     <header class="">

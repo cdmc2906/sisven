@@ -14,7 +14,7 @@ class CargaVentasMovistarController extends Controller {
 //            unset($_SESSION['ventasMovistarItems']);
             unset(Yii::app()->session['ventasMovistarItems']);
             $model = new CargaVentasMovistarForm();
-            $this->render('/ventaMovistar/cargaVentasMovistar', array('model' => $model));
+            $this->render('/carga/cargaVentasMovistar', array('model' => $model));
         }
     }
 
@@ -83,7 +83,7 @@ class CargaVentasMovistarController extends Controller {
         }
 //        var_dump($_SESSION['ordenesMbItems']);die();
 //        var_dump($model);die();
-        $this->render('/ventamovistar/cargaVentasMovistar', array('model' => $model));
+        $this->render('/carga/cargaVentasMovistar', array('model' => $model));
         return;
     }
 

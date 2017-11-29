@@ -1,5 +1,5 @@
 <?php
-$this->breadcrumbs = array('Carga Historial Mobilvendor',);
+$this->breadcrumbs = array('Carga Coordenadas Clientes',);
 $this->renderPartial('/shared/_blockUI');
 $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"'));
 ?>
@@ -10,7 +10,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.es.js"></script>
 
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/CargaHistorialMb.js"; ?>"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/carga/CargaCoordenadasClientes.js"; ?>"></script>
 
 <section class="">
     <div class="">
@@ -25,19 +25,18 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                     'validateOnSubmit' => true,
                 ),
                 'htmlOptions' => array("enctype" => "multipart/form-data"),
-                'action' => Yii::app()->request->baseUrl . '/CargaHistorialMb/SubirArchivo'
+                'action' => Yii::app()->request->baseUrl . '/cargaCoordenadasClientes/SubirArchivo'
             ));
             ?>
             <div class="row">
-                <div align="center">
+                 <div align="center">
                     <?php echo $form->labelEx($model, 'fechaUltimaCarga'); ?>
                     <?php
 //                    $ventas= VentaMovistarModel::model()->
                     $command = Yii::app()->db->createCommand('
-                        select 
-                                 h_fch_ingreso as fecha 
-                            from tb_historial_mb 
-                            order by h_fch_ingreso desc 
+                        SELECT cli_fecha_modificacion as fecha 
+                            FROM tb_cliente 
+                            order by cli_fecha_modificacion desc 
                             limit 1;');
                     $resultado = $command->queryRow();
                     $ultimaFecha = DateTime::createFromFormat('Y-m-d H:i:s', $resultado['fecha'])->format(FORMATO_FECHA_LONG_2);
@@ -59,14 +58,16 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                     <?php echo $form->labelEx($model, 'rutaArchivo'); ?>
                     <?php echo $form->fileField($model, 'rutaArchivo'); ?>
                     <?php echo $form->error($model, 'rutaArchivo'); ?>
-                    <?php echo $form->labelEx($model, 'delimitadorColumnas'); ?>
+                      <?php echo $form->labelEx($model, 'delimitadorColumnas'); ?>
                     <?php
                     echo $form->dropDownList(
-                            $model, 'delimitadorColumnas', array(
-                        ';' => 'Punto y Coma',
-                        ',' => 'Coma'
-                            ), array(
-                        'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+                            $model, 'delimitadorColumnas'
+                            , array(
+                        ';' => 'Punto y Coma'
+                        , ',' => 'Coma')
+                            , array(
+                        'empty' => TEXT_OPCION_SELECCIONE
+                        , 'options' => array(0 => array('selected' => true)))
                     );
                     ?>
                     <?php echo $form->error($model, 'delimitadorColumnas'); ?>
@@ -77,7 +78,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                 <?php echo CHtml::submitButton('Cargar', array('id' => 'btnCargar')); ?>
                 <?php // echo CHtml::button('Guardar', array('submit' => array('cargaConsumo/GuardarConsumo'))); ?>
                 <?php
-                echo CHtml::ajaxSubmitButton('Guardar', CHtml::normalizeUrl(array('cargahistorialmb/guardarHistorial', 'render' => true)), array(
+                echo CHtml::ajaxSubmitButton('Guardar', CHtml::normalizeUrl(array('CargaCoordenadasClientes/GuardarCoordenadasClientes', 'render' => true)), array(
                     'dataType' => 'json',
                     'type' => 'post',
                     'beforeSend' => 'function() {
@@ -115,6 +116,9 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
 
 <br><br>
 <section class="">
+    <header class="">
+        <h2><strong>Detalle archivo Coordenadas</strong></h2>
+    </header>
     <div class="">
         <?php $this->renderPartial('/shared/_bodygrid'); ?>
     </div>

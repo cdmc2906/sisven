@@ -5,7 +5,7 @@
  * @fecha 
  * @author 
  */
-class RevisaMinesDesconocidosController extends Controller {
+class CargaMinesDesconocidosController extends Controller {
 
     public function actionIndex() {
         if (Yii::app()->request->isAjaxRequest) {
@@ -14,7 +14,7 @@ class RevisaMinesDesconocidosController extends Controller {
 //            unset($_SESSION['rutasMbItems']);
             unset(Yii::app()->session['minesDesconocidosItems']);
             $model = new CargaMinesDesconocidosForm();
-            $this->render('/producto/cargaMinesDesconocidos', array('model' => $model));
+            $this->render('/carga/cargaMinesDesconocidos', array('model' => $model));
         }
     }
 
@@ -73,7 +73,7 @@ class RevisaMinesDesconocidosController extends Controller {
             $response->Status = ERROR;
             $response->ClassMessage = CLASS_MENSAJE_ERROR;
         }
-        $this->render('/producto/cargaMinesDesconocidos', array('model' => $model));
+        $this->render('/carga/cargaMinesDesconocidos', array('model' => $model));
         return;
     }
 

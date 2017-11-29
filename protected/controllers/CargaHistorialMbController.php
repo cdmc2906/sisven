@@ -14,7 +14,7 @@ class CargaHistorialMbController extends Controller {
 //            unset($_SESSION['historialMbItems']);
             unset(Yii::app()->session['historialMbItems']);
             $model = new CargaHistorialMbForm();
-            $this->render('/historialmb/cargaHistorialMb', array('model' => $model));
+            $this->render('/carga/cargaHistorialMb', array('model' => $model));
         }
     }
 
@@ -79,7 +79,7 @@ class CargaHistorialMbController extends Controller {
             $response->ClassMessage = CLASS_MENSAJE_ERROR;
         }
 //        var_dump($_SESSION['historialMbItems']);die();
-        $this->render('/historialmb/cargaHistorialMb', array('model' => $model));
+        $this->render('/carga/cargaHistorialMb', array('model' => $model));
         return;
     }
 

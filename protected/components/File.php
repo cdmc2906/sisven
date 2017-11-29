@@ -393,23 +393,18 @@ class File {
                 $strFilas = fgets($data, 4096);
                 if ($lineNumber >= $start && $lineNumber <= ($start + $blockSize) - 1) {
                     $arrColumnas = explode($this->Delimitador, $strFilas);
-//                    var_dump($arrColumnas);die();
-//                    var_dump(utf8_encode($arrColumnas[0]));                    die();
-                    if (isset($arrColumnas[3])) {
+//                    var_dump(utf8_encode($arrColumnas[0]));die();
+//                    var_dump($arrColumnas[22]);die();
+//                    var_dump(count($arrColumnas));die();
+                    if (isset($arrColumnas[22])) {
                         if (utf8_encode($arrColumnas[0]) != 'Codigo') { // Quita la fila de encabezados
-//                            if(trim($arrColumnas[0])=='TCQU310036'){
-//                                var_dump(trim(trim($arrColumnas[1],'\"')));die();
-//                                var_dump(trim($arrColumnas[1]));die();
-//                                var_dump(trim(trim(trim($arrColumnas[1]),'\"')));die();
-//                                var_dump(substr(trim($arrColumnas[1]), -1),trim($arrColumnas[1]));die();
-//                            }
                             $datos = array(
-                                'CODIGO' => utf8_encode(trim($arrColumnas[0])),
-                                'CLIENTENOMBRE' => utf8_encode(trim(trim($arrColumnas[1], '\"'))),
-                                'LATITUD' => trim($arrColumnas[2]),
-                                'LONGITUD' => trim($arrColumnas[3]),
+                                'CODIGO' => utf8_encode(trim($arrColumnas[1])),
+                                'CLIENTENOMBRE' => utf8_encode(trim(trim($arrColumnas[2], '\"'))),
+                                'LATITUD' => trim($arrColumnas[20]),
+                                'LONGITUD' => trim($arrColumnas[21]),
                             );
-
+//                            var_dump($datos);die();
                             array_push($datosCarga, $datos);
                             unset($datos);
                         }
@@ -423,8 +418,6 @@ class File {
                 $lineNumber++;
             }
         }
-//        var_dump($datosCarga);                        die();
-//        die();
         unset($data);
         $this->Close();
         return $datosCarga;
@@ -710,20 +703,19 @@ class File {
 //                    var_dump($arrColumnas[1]);                    die();
                     if (isset($arrColumnas[9])) {
                         if ($arrColumnas[0] != 'Ruta') { // Quita la fila de encabezados
-//                        var_dump($arrColumnas[1]);                    die();
                             $datos = array(
                                 'RUTA' => utf8_encode(trim($arrColumnas[0])),
                                 'CLIENTE' => utf8_encode(trim($arrColumnas[1])),
-                                'NOMBRE' => utf8_encode(trim($arrColumnas[2])),
+                                'NOMBRE' => trim(trim(utf8_encode($arrColumnas[2]),'"'),' 	'),//utf8_encode(trim($arrColumnas[2])),
                                 'DIRECCION' => utf8_encode(trim($arrColumnas[3])),
-                                'DIRECCIONDESCRIPCION' => utf8_encode(trim($arrColumnas[4])),
-                                'REFERENCIA' => utf8_encode(trim($arrColumnas[5])),
+                                'DIRECCIONDESCRIPCION' => trim(trim(utf8_encode($arrColumnas[4]),'"'),'	'),//utf8_encode(trim($arrColumnas[4])),
+                                'REFERENCIA' => trim(trim(utf8_encode($arrColumnas[5]),'"'),'	'),//utf8_encode(trim($arrColumnas[5])),
                                 'SEMANA' => trim($arrColumnas[6]),
                                 'DIA' => trim($arrColumnas[7]),
                                 'SECUENCIA' => trim($arrColumnas[8]),
                                 'ESTATUS' => trim($arrColumnas[9]),
                             );
-
+//                            var_dump($datos["NOMBRE"]);die();
                             array_push($datosCarga, $datos);
                             unset($datos);
                         }

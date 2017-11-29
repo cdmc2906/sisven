@@ -12,7 +12,7 @@ class RevisionRutaController extends Controller {
             return;
         } else {
             $model = new RevisionRutaForm();
-            $this->render('/rutasMb/revisionRuta', array('model' => $model));
+            $this->render('/reportes/rptRevisionRuta', array('model' => $model));
         }
     }
 

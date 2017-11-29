@@ -14,7 +14,7 @@ class CargaRutasMbController extends Controller {
 //            unset($_SESSION['rutasMbItems']);
             unset(Yii::app()->session['rutasMbItems']);
             $model = new CargaRutasMbForm();
-            $this->render('/rutasMb/cargaRutasMb', array('model' => $model));
+            $this->render('/carga/cargaRutasMb', array('model' => $model));
         }
     }
 
@@ -75,7 +75,7 @@ class CargaRutasMbController extends Controller {
             $response->Status = ERROR;
             $response->ClassMessage = CLASS_MENSAJE_ERROR;
         }
-        $this->render('/rutasMb/cargaRutasMb', array('model' => $model));
+        $this->render('/carga/cargaRutasMb', array('model' => $model));
         return;
     }
 

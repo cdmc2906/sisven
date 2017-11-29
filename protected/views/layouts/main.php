@@ -1,7 +1,3 @@
-<?php
-/* @var $this Controller */
-ini_set('max_execution_time', 600); //300 seconds = 5 minutes
-?>
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -51,79 +47,25 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
     </head>
 
     <body>
-
         <div class="container" id="page">
-
             <div id="header">
                 <div id="logo"><?php echo CHtml::encode(Yii::app()->name); ?></div>
             </div><!-- header -->
+
             <div id="mainmenu">
                 <?php
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
                         array('label' => 'Inicio', 'url' => array('/site/index')),
-//                        array('label' => 'Inicio', 'url' => array('/site/contact')),
-////                        array('label' => 'About', 'url' => array('/site/page', 'view' => 'about')),
-//                        array('label' => 'Empresa', 'url' => array('/empresa/index'), 'visible' => !Yii::app()->user->isGuest),
-//                        array('label' => 'Sucursales', 'url' => array('/sucursal/index'), 'visible' => !Yii::app()->user->isGuest),
-//                        array('label' => 'Tipo de Clientes', 'url' => array('/tipocliente/index'), 'visible' => !Yii::app()->user->isGuest),
-//                        array('label' => 'Tipos de Producto', 'url' => array('/tipoproducto/index'), 'visible' => !Yii::app()->user->isGuest),
-//                        array('label' => 'Estados', 'url' => array('/estado/index'), 'visible' => !Yii::app()->user->isGuest),
-//                        array('label' => 'Bodegas', 'url' => array('/bodega/index'), 'visible' => !Yii::app()->user->isGuest),
-//                        array('label' => 'Productos', 'url' => array('/producto/index'), 'visible' => !Yii::app()->user->isGuest),
-//                        array('label' => 'Clientes', 'url' => array('/cliente/index'), 'visible' => !Yii::app()->user->isGuest),
-                    ),
-                ));
-                ?>
-            </div><!-- mainmenu -->
-            <div id="mainmenu">
-                <?php
-                $this->widget('zii.widgets.CMenu', array(
-                    'items' => array(
-//                        array('label' => 'Rango Comision', 'url' => array('/rangocomision/index'), 'visible' => !Yii::app()->user->isGuest),    
-//                        array('label' => 'Tipo Vendedor', 'url' => array('/tipovendedor/index'), 'visible' => !Yii::app()->user->isGuest),
-                    ),
-                ));
-                ?>
-            </div><!-- mainmenu -->
-            <div id="mainmenu">
-                <?php
-                $this->widget('zii.widgets.CMenu', array(
-                    'items' => array(
-//                        array('label' => 'Carga Indicadores', 'url' => array('/cargaindicador/index'), 'visible' => !Yii::app()->user->isGuest),
-//                        array('label' => 'Carga Consumo', 'url' => array('/cargaconsumo/index'), 'visible' => !Yii::app()->user->isGuest),
                     ),
                 ));
                 ?>
             </div><!-- mainmenu -->
 
-            <div id="mainmenu">
-                <?php
-                $this->widget('zii.widgets.CMenu', array(
-                    'items' => array(
-//                        array('label' => 'Reporte Totales por fecha', 'url' => array('/reportetotalplan/'), 'visible' => !Yii::app()->user->isGuest),
-//                        array('label' => 'Reporte Ventas por mes', 'url' => array('/reporteventasxmes/'), 'visible' => !Yii::app()->user->isGuest),
-//                        array('label' => 'Reporte Ventas por vendedor', 'url' => array('/reporteventasxvendedor/'), 'visible' => !Yii::app()->user->isGuest),
-//                        array('label' => 'Reporte Ventas y consumos por mes', 'url' => array('/reporteventasconsumosxmes/'), 'visible' => !Yii::app()->user->isGuest),
-                    ),
-                ));
-                ?>
-            </div><!-- mainmenu -->
-
-            <div id="mainmenu">
-                <?php
-                $this->widget('zii.widgets.CMenu', array(
-                    'items' => array(
-//                        array('label' => 'Reporte Totales por fecha', 'url' => array('/reportetotalplan/'), 'visible' => !Yii::app()->user->isGuest),
-                    ),
-                ));
-                ?>
-            </div><!--mainmenu--> 
             <div id="mainmenu">
                 <?php
                 $verMenuRevision = false;
                 $verMenusAdmin = false;
-//                var_dump(Yii::app()->user->id);die();
 
                 if (Yii::app()->user->id == 1 || Yii::app()->user->id == 3 || Yii::app()->user->id == 4 || Yii::app()->user->id == 5 || Yii::app()->user->id == 6 || Yii::app()->user->id == 7 || Yii::app()->user->id == 8 || Yii::app()->user->id == 9 || Yii::app()->user->id == 10)
                     $verMenuRevision = true;
@@ -134,7 +76,6 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                         array('label' => 'Admin Historial', 'url' => array('/HistorialMb/admin'), 'visible' => $verMenusAdmin),
                         array('label' => 'Admin Ordenes', 'url' => array('/OrdenesMb/admin'), 'visible' => $verMenusAdmin),
                         array('label' => 'Admin Ruta', 'url' => array('/RutasMb/admin'), 'visible' => $verMenusAdmin),
-//                        array('label' => 'Admin Rangos cumplimiento', 'url' => array('/RangoCumplimiento/admin'), 'visible' => !Yii::app()->user->isGuest),
                         array('label' => 'Admin Ventas Movistar', 'url' => array('/VentaMovistar/admin'), 'visible' => $verMenusAdmin),
                         array('label' => 'Admin Transferencias Movistar', 'url' => array('/TransferenciaMovistar/admin'), 'visible' => $verMenusAdmin),
                         array('label' => 'Admin Indicadores', 'url' => array('/Indicadores/admin'), 'visible' => $verMenusAdmin),
@@ -143,6 +84,7 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 ));
                 ?>
             </div><!-- mainmenu -->
+
             <div id="mainmenu">
                 <?php
                 $this->widget('zii.widgets.CMenu', array(
@@ -153,6 +95,7 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 ));
                 ?>
             </div><!-- mainmenu -->
+
             <div id="mainmenu">
                 <?php
                 $this->widget('zii.widgets.CMenu', array(
@@ -174,7 +117,7 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                         array('label' => 'Carga Transferencias Movistar', 'url' => array('/CargaTransferenciasMovistar/index'), 'visible' => $verMenusAdmin),
                         array('label' => 'Carga Indicadores', 'url' => array('/CargaIndicador/index'), 'visible' => $verMenusAdmin),
                         array('label' => 'Reporte Factura-Transferencia', 'url' => array('/ReporteChipsFacturadosTransferidos/index'), 'visible' => $verMenusAdmin),
-                        array('label' => 'Revision Mines Desconocidos', 'url' => array('/RevisaMinesDesconocidos/index'), 'visible' => $verMenusAdmin),
+                        array('label' => 'Revision Mines Desconocidos', 'url' => array('/CargaMinesDesconocidos/index'), 'visible' => $verMenusAdmin),
                     ),
                 ));
                 ?>
@@ -184,7 +127,7 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 <?php
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
-                        array('label' => 'Reporte Ordenes', 'url' => array('/ReporteOrdenesxFecha/'), 'visible' => $verMenusAdmin),
+                        array('label' => 'Reporte Ordenes', 'url' => array('/ReporteOrdenesxFecha/'), 'visible' => $verMenuRevision),
                         array('label' => 'Reporte Jornada', 'url' => array('/ReporteInicioFinJornadaxFecha/'), 'visible' => $verMenuRevision),
                     ),
                 ));
@@ -209,13 +152,16 @@ ini_set('max_execution_time', 600); //300 seconds = 5 minutes
                 <?php
                 $this->widget('zii.widgets.CMenu', array(
                     'items' => array(
-                        array('label' => 'Administrar Usuarios'
+                        array(
+                            'label' => 'Administrar Usuarios'
                             , 'url' => Yii::app()->user->ui->userManagementAdminUrl
                             , 'visible' => $verMenusAdmin),
-                        array('label' => 'Ingresar'
+                        array(
+                            'label' => 'Ingresar'
                             , 'url' => Yii::app()->user->ui->loginUrl
                             , 'visible' => Yii::app()->user->isGuest),
-                        array('label' => 'Salir (' . Yii::app()->user->name . ')'
+                        array(
+                            'label' => 'Salir (' . Yii::app()->user->name . ')'
                             , 'url' => Yii::app()->user->ui->logoutUrl
                             , 'visible' => !Yii::app()->user->isGuest),
                     ),

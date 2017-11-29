@@ -3,7 +3,7 @@
 $this->breadcrumbs = array('Resumen diario historial ejecutivo',);
 $this->renderPartial('/shared/_blockUI');
 $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'));
-$this->pageTitle = 'Analisis diario ejecutivo'
+$this->pageTitle = 'Analisis diario ejecutivo';
 ?>
 
 <link type="text/css" rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/datepicker.css" />
@@ -12,7 +12,7 @@ $this->pageTitle = 'Analisis diario ejecutivo'
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.es.js"></script>
 
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/RptResumenDiarioHistorial.js"; ?>"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/reporte/RptResumenDiarioHistorial.js"; ?>"></script>
 
 <?php if (Yii::app()->user->hasFlash('resultadoGuardar')): ?>
     <div class="flash-success">

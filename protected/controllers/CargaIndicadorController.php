@@ -14,7 +14,7 @@ class CargaIndicadorController extends Controller {
 //            unset($_SESSION['indicadorItems']);
             unset(Yii::app()->session['indicadorItems']);
             $model = new CargaIndicadorForm();
-            $this->render('/indicadores/cargaIndicador', array('model' => $model));
+            $this->render('/carga/cargaIndicador', array('model' => $model));
         }
     }
 
@@ -82,7 +82,7 @@ class CargaIndicadorController extends Controller {
             $response->ClassMessage = CLASS_MENSAJE_ERROR;
         }
 
-        $this->render('/indicadores/cargaIndicador', array('model' => $model));
+        $this->render('/carga/cargaIndicador', array('model' => $model));
         return;
     }
 

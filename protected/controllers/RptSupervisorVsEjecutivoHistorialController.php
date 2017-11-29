@@ -14,7 +14,7 @@ class RptSupervisorVsEjecutivoHistorialController extends Controller {
         } else {
             Yii::app()->session['RptSupervisorVsEjecutivoHistorialForm '] = '';
             $model = new RptSupervisorVsEjecutivoHistorialForm ();
-            $this->render('/historialmb/rptSupervisorVsEjecutivoHistorial', array('model' => $model));
+            $this->render('/reportes/rptSupervisorVsEjecutivoHistorial', array('model' => $model));
         }
     }
 

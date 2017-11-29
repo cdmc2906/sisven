@@ -14,7 +14,7 @@ class CargaTransferenciasMovistarController extends Controller {
 //            unset($_SESSION['ventasMovistarItems']);
             unset(Yii::app()->session['transferenciasMovistarItems']);
             $model = new CargaTransferenciasMovistarForm();
-            $this->render('/transferenciaMovistar/cargaTransferenciasMovistar', array('model' => $model));
+            $this->render('/carga/cargaTransferenciasMovistar', array('model' => $model));
         }
     }
 
@@ -83,7 +83,7 @@ class CargaTransferenciasMovistarController extends Controller {
         }
 //        var_dump($_SESSION['ordenesMbItems']);die();
 //        var_dump($model);die();
-        $this->render('/transferenciaMovistar/cargaTransferenciasMovistar', array('model' => $model));
+        $this->render('/carga/cargaTransferenciasMovistar', array('model' => $model));
         return;
     }
 

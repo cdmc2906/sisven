@@ -3,6 +3,7 @@
 $this->breadcrumbs = array('Chips Facturados - Transferidos');
 $this->renderPartial('/shared/_blockUI');
 $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConsultarReporte"'));
+$this->pageTitle = 'Chips Facturados -  Transferidos';
 ?>
 
 <link type="text/css" rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/datepicker.css" />
@@ -11,7 +12,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConsultarReporte"'
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.es.js"></script>
 
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/RptChipsFacturadosTransferidos.js"; ?>"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/reporte/RptChipsFacturadosTransferidos.js"; ?>"></script>
 
 <div class="">
     <header class="">
@@ -27,10 +28,56 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConsultarReporte"'
                 'enableClientValidation' => true
             ));
             ?>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div>
+                        <div>
+                            <?php echo $form->hiddenField($model, 'mesConsulta'); ?>
+                            <?php // echo $form->labelEx($model, 'anioConsulta'); ?>
+                            <?php // echo $form->textField($model, 'mesConsulta', array('class' => 'txtfechaFin')) ?>
+
+                            <?php
+//                            echo $form->dropDownList(
+//                                    $model, 'anioConsulta', array(
+//                                '0' => 'Todos',
+//                                '2017' => '2017',
+//                                '2016' => '2016'
+//                                    ), array(
+//                                'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+//                            );
+                            ?>
+                            <?php // echo $form->error($model, 'anioConsulta'); ?>
+
+                            <?php // echo $form->labelEx($model, 'mesConsulta'); ?>
+                            <?php // echo $form->textField($model, 'mesConsulta', array('class' => 'txtfechaFin')) ?>
+
+                            <?php
+//                            echo $form->dropDownList(
+//                                    $model, 'mesConsulta', array(
+//                                '0' => 'Todos',
+//                                '1' => 'Enero',
+//                                '2' => 'Febrero',
+//                                '3' => 'Marzo',
+//                                '4' => 'Abril',
+//                                '5' => 'Mayo',
+//                                '6' => 'Junio',
+//                                '7' => 'Julio',
+//                                '8' => 'Agosto',
+//                                '9' => 'Septiembre',
+//                                '10' => 'Octubre',
+//                                '11' => 'Noviembre',
+//                                '12' => 'Diciembre',
+//                                    ), array(
+//                                'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+//                            );
+                            ?>
+                            <?php // echo $form->error($model, 'mesConsulta'); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div  style="display: flex; justify-content: flex-start; text-align:center;">
                 <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent; margin:auto;">
-
-
                     <?php
                     //$ventas= VentaMovistarModel::model()->
                     $command = Yii::app()->db->createCommand('
@@ -107,7 +154,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConsultarReporte"'
                             limit 1');
                     $resultado = $command->queryRow();
                     $ultimaFechaFactura = DateTime::createFromFormat('Y-m-d', $resultado['fecha'])->format(FORMATO_FECHA);
-                    
+
                     $consulta = "SELECT 
                             sum(i_cantidad) as cantidad 
                             FROM tb_indicadores 
@@ -117,11 +164,11 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConsultarReporte"'
                             ;";
                     $command = Yii::app()->db->createCommand($consulta);
                     $resultado = $command->queryRow();
-                    $cantidadFacturado = intval($resultado['cantidad']);
+                    $cantidadFacturado = number_format(intval($resultado['cantidad']),0,'','.');
 
                     echo CHtml::label('Cantidad facturados', '_cantidaMinesFactura');
                     echo CHtml::textField(
-                            'Text', $cantidadFacturado.' mines', array(
+                            'Text', $cantidadFacturado. ' mines', array(
                         'id' => '_cantidaMinesFactura',
                         'disabled' => 'disabled',
                         'width' => 100,
@@ -149,11 +196,12 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConsultarReporte"'
                             ;";
                     $command = Yii::app()->db->createCommand($consulta);
                     $resultado = $command->queryRow();
-                    $cantidadTransferencia = intval($resultado['cantidad']);
-                    
+
+                    $cantidadTransferencia =number_format(intval($resultado['cantidad']),0,'','.');
+
                     echo CHtml::label('Cantidad transferidos', '_cantidadMinesTransferidos');
                     echo CHtml::textField(
-                            'Text', $cantidadTransferencia.' mines', array(
+                            'Text', $cantidadTransferencia . ' mines', array(
                         'id' => '_cantidadMinesTransferidos',
                         'disabled' => 'disabled',
                         'width' => 100,
@@ -181,11 +229,11 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConsultarReporte"'
                             limit 1;";
                     $command = Yii::app()->db->createCommand($consulta);
                     $resultado = $command->queryRow();
-                    $cantidadVenta = intval($resultado['cantidad']);
+                    $cantidadVenta = number_format(intval($resultado['cantidad']),0,'','.');
 
                     echo CHtml::label('Cantidad venta', '_cantidadMinesVenta');
                     echo CHtml::textField(
-                            'Text', $cantidadVenta.' mines', array(
+                            'Text', $cantidadVenta . ' mines', array(
                         'id' => '_ultimaFechaVenta',
                         'disabled' => 'disabled',
                         'width' => 100,

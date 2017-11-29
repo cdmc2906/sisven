@@ -14,7 +14,7 @@ class RptResumenDiarioHistorialController extends Controller {
         } else {
             Yii::app()->session['RptResumenDiarioHistorialForm'] = '';
             $model = new RptResumenDiarioHistorialForm();
-            $this->render('/historialmb/rptResumenDiarioHistorial', array('model' => $model));
+            $this->render('/reportes/rptResumenDiarioHistorial', array('model' => $model));
         }
     }
 

@@ -1,9 +1,9 @@
 <?php
 //session_start();
-$this->breadcrumbs = array('Comparacion Supervisor Vs Ejecutivo',);
+$this->breadcrumbs = array('Reemplazos ruta',);
 $this->renderPartial('/shared/_blockUI');
 $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConfigurarGrid"'));
-$this->pageTitle = 'Analisis supervisor vs ejecutivo'
+$this->pageTitle = 'Reemplazo ruta';
 ?>
 
 <link type="text/css" rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/datepicker.css" />
@@ -12,7 +12,7 @@ $this->pageTitle = 'Analisis supervisor vs ejecutivo'
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.es.js"></script>
 
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/RptSupervisorVsEjecutivoHistorial.js"; ?>"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/reporte/RptReemplazoRuta.js"; ?>"></script>
 
 <?php if (Yii::app()->user->hasFlash('resultadoGuardar')): ?>
     <div class="flash-success">
@@ -72,7 +72,7 @@ $this->pageTitle = 'Analisis supervisor vs ejecutivo'
                             'Nuevo cliente' => 'Nuevo cliente',
                             'Estatus' => 'Estatus'
                                 )
-//                                , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+//                                    , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
                         );
                         ?>
                         <?php echo $form->error($model, 'accionHistorial'); ?>
@@ -105,11 +105,8 @@ $this->pageTitle = 'Analisis supervisor vs ejecutivo'
                         echo $form->labelEx($model, 'horaInicioGestion');
                         echo $form->dropDownList(
                                 $model, 'horaInicioGestion', array(
-                            '08:00' => '08:00',
-                            '09:00' => '09:00',
                             '10:00' => '10:00'
                                 )
-                                , array('options' => array('10:00' => array('selected' => true)))
                                 //, array("disabled" => "disabled",)
                         );
 
@@ -147,7 +144,7 @@ $this->pageTitle = 'Analisis supervisor vs ejecutivo'
                         <?php
                         echo CHtml::ajaxSubmitButton(
                                 'Revisar historial', CHtml
-                                ::normalizeUrl(array('RptSupervisorVsEjecutivoHistorial/revisarhistorial', 'render' => true)), array(
+                                ::normalizeUrl(array('RptReemplazoRuta/RevisarHistorial', 'render' => true)), array(
                             'dataType' => 'json',
                             'type' => 'post',
                             'beforeSend' => 'function() {
@@ -159,10 +156,14 @@ $this->pageTitle = 'Analisis supervisor vs ejecutivo'
                         setMensaje(data.ClassMessage, data.Message);
                         if(data.Status==1){
                              var datosResult = data.Result;
+                             
                             $("#tblGridSupervisores").setGridParam({datatype: \'jsonstring\', datastr: datosResult}).trigger(\'reloadGrid\');
+                           
                             $("#tblGridSupervisores").val(datosResult);
+
                             $("#RptResumenDiarioHistorialForm_enlaceMapa").val(datosResult[\'enlaceMapa\']);
                             $("#d_enlaceMapa").val(datosResult[\'enlaceMapa\']);
+
 
                         } else{
                             $.each(data, function(key, val) {
@@ -180,8 +181,6 @@ $this->pageTitle = 'Analisis supervisor vs ejecutivo'
                         <?php echo CHtml::Button('Limpiar', array('id' => 'btnLimpiar', 'class' => 'btn btn-theme')); ?>
                         <br>
                         <?php // echo CHtml::Button('Exportar Resumen', array('id' => 'btnExcelResumen', 'class' => 'btn btn-theme')); ?>
-                        <?php echo CHtml::Button('Exportar Detalle Supervisor', array('id' => 'btnRepDetalleSupervisor', 'class' => 'btn btn-theme', 'disabled' => 'true')); ?>
-                        <?php echo CHtml::Button('Exportar Detalle Ruta', array('id' => 'btnExcel', 'class' => 'btn btn-theme', 'disabled' => 'true')); ?>
                         <?php $this->endWidget(); ?>
                     </fieldset>
                 </div>
@@ -190,114 +189,63 @@ $this->pageTitle = 'Analisis supervisor vs ejecutivo'
     </div>     
 </section>
 
-<div style="align-content:center; align-items: center">
-    <div style="display: flex; justify-content: flex-start;" >
-        <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-            <table id="tblGridSupervisores" class="table table-condensed"></table>
-        </div>
-        <div style="margin-left: 50px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-            <table id="tblGridRutas" class="table table-condensed"></table>
-        </div>
+<div style="display: flex; justify-content: flex-start;" >
+    <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+        <table id="tblGridSupervisores" class="table table-condensed"></table>
+    </div>
+    <div style="margin-left: 50px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+        <table id="tblGridRutas" class="table table-condensed"></table>
     </div>
 </div>
 <br>
-<br>
 
-<table style="border: 1px solid black; width:100%">
-    <tr style="border: 1px solid black;">
-        <td style="border: 1px solid black; text-align:center; vertical-align:middle;"><strong>DATOS SUPERVISOR</strong></td>
-        <td style="border: 1px solid black; text-align:center; vertical-align:middle;"><strong>DATOS EJECUTIVO</strong></td>
-    </tr>
-    <tr style="border: 1px solid black;">
-        <td style="border: 1px solid black;">
-            <div  style="margin-left: 20px;display: flex; justify-content: flex-start;">
-                <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                    <table id="tblCumplimientoSupervisor" class="table table-condensed"></table>
-                </div>
-                <div style="margin-left: 20px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                    <table id="tblResumenVisitasValidasInvalidasSupervisor" class="table table-condensed"></table>
-                </div>
+<div>
+    <div>
+
+        <div class="">
+            <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                <table id="tblResumenGeneral" class="table table-condensed"></table>
             </div>
-        </td>
-        <td style="border: 1px solid black;">
-            <div  style="display: flex; justify-content: flex-end">
-                <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                    <table id="tblResumenVisitasValidasInvalidasEjecutivo" class="table table-condensed"></table>
-                </div>
-                <div style="margin-left: 10px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                    <table id="tblCumplimientoEjecutivo" class="table table-condensed"></table>
-                </div>
-            </div>
-        </td>
-    </tr>
-    <tr style="border: 1px solid black;">
-        <td style="border: 1px solid black;" >
-            <div  style="display: flex; justify-content: flex-start;">
-                <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                    <table id="tblVisitasSupervisor" class="table table-condensed"></table>                
-                </div>
-            </div>
-        </td>
-        <td style="border: 1px solid black;">
-            <div  style="display: flex; justify-content: flex-end;">
-                <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                    <table id="tblVisitasEjecutivo" class="table table-condensed"></table>                
-                </div>
-            </div>
-        </td>
-    </tr>
-</table>
+        </div>
+    </div>
+    <br>
+    <div  style="display: flex; justify-content: flex-start;">
+        <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+            <table id="tblResumenVisitas" class="table table-condensed"></table>
+        </div>
+        <div style="margin-left: 50px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+            <table id="tblResumenVisitasValidasInvalidas" class="table table-condensed"></table>
+        </div>
+        <div style="margin-left: 50px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+            <table id="tblPrimeraUltimaVisita" class="table table-condensed"></table>
+        </div>
+    </div>
+    <br>
+    <div  style="display: flex; justify-content: flex-start;">
+        <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+            <table id="tblResumenVentas" class="table table-condensed"></table>                
+        </div>
+
+    </div>
+</div>
 <br/>
+<?php echo CHtml::Button('Exportar Resumen', array('id' => 'btnExcelResumen', 'class' => 'btn btn-theme')); ?>
+<?php echo CHtml::Button('Exportar Detalle', array('id' => 'btnExcelDetalle', 'class' => 'btn btn-theme')); ?>
+<?php // echo CHtml::Button('Exportar No Visitados', array('id' => 'btnExcelNoVisitados', 'class' => 'btn btn-theme')); ?>
 
+<br>    
+<!--<div id="grilla" class="_grilla">-->
 <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
     <table id="tblGridDetalle" class="table table-condensed"></table>
     <div id="pagGrid"> </div>
 </div>
 
-<!--<br/><h1>Mapa</h1>-->
-<!--<div id="map"></div>-->
-
+<br/><h1>Mapa</h1>
+<div id="map"></div>
+<div id="legend"><h3>Leyenda</h3></div>
 <?php // endif;    ?>
 
 <script>
-
-    function openMapsWindow()
-    {
-        var url = $("#d_enlaceMapa").val();
-//        alert(url)
-        if (url.length > 0)
-            var win = window.open(url, '_blank');
-        else
-            alert('No existe un enlace de mapas para abrir')
-    }
-
-    var customLabel =
-            {
-                restaurant: {label: 'R'},
-                bar: {label: 'B'}
-            };
-
-
-// -0.204788, -78.494610
-//-0.205155, -78.493426
-//-0.205226, -78.495739
-    function initMap() {
-        var uluru = {lat: -0.205226, lng: -78.495739};
-//        var uluru2 = {lat: -0.204788, lng: -78.494610};
-//        var uluru = {lat: -25.363, lng: 131.044};
-
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 15,
-            center: uluru,
-            panControl: true
-
-        });
-        var marker = new google.maps.Marker({
-            position: uluru,
-            map: map
-        });
-    }
-
     function initMap2() {
 
         var map = new google.maps.Map(document.getElementById('map'), {
@@ -305,74 +253,58 @@ $this->pageTitle = 'Analisis supervisor vs ejecutivo'
             center: {lat: -0.205226, lng: -78.495739}
         });
 
-        // Create an array of alphabetical characters used to label the markers.
-        var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-        // Add some markers to the map.
-        // Note: The code uses the JavaScript Array.prototype.map() method to
-        // create an array of markers based on a given "locations" array.
-        // The map() method here has nothing to do with the Google Maps API.
-        var markers = locations.map(function (location, i) {
-            return new google.maps.Marker
-                    (
-                            {
-                                position: location,
-                                label: labels[i % labels.length]
-                            }
-                    );
-        });
-
-        // Add a marker clusterer to manage the markers.
-        var markerCluster = new MarkerClusterer(map, markers,
-                {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
     }
-    var locations = [
-//        {lat: -31.563910, lng: 147.154312},
-//        {lat: -33.718234, lng: 150.363181},
-//        {lat: -33.727111, lng: 150.371124},
-//        {lat: -33.848588, lng: 151.209834},
-//        {lat: -33.851702, lng: 151.216968},
-//        {lat: -34.671264, lng: 150.863657},
-//        {lat: -35.304724, lng: 148.662905},
-//        {lat: -36.817685, lng: 175.699196},
-//        {lat: -36.828611, lng: 175.790222},
-//        {lat: -37.750000, lng: 145.116667},
-//        {lat: -37.759859, lng: 145.128708},
-//        {lat: -37.765015, lng: 145.133858},
-//        {lat: -37.770104, lng: 145.143299},
-//        {lat: -37.773700, lng: 145.145187},
-//        {lat: -37.774785, lng: 145.137978},
-//        {lat: -37.819616, lng: 144.968119},
-//        {lat: -38.330766, lng: 144.695692},
-//        {lat: -39.927193, lng: 175.053218},
-//        {lat: -41.330162, lng: 174.865694},
-//        {lat: -42.734358, lng: 147.439506},
-//        {lat: -42.734358, lng: 147.501315},
-//        {lat: -42.735258, lng: 147.438000},
-//        {lat: -43.999792, lng: 170.463352}
-        {lat: -0.205136, lng: -78.4957},
-        {lat: -0.310308, lng: -78.5416},
-        {lat: -0.310704, lng: -78.5416},
-        {lat: -0.310276, lng: -78.5416},
-        {lat: -0.311242, lng: -78.5432},
-        {lat: -0.311379, lng: -78.5434},
-        {lat: -0.311493, lng: -78.5441},
-        {lat: -0.312119, lng: -78.5442},
-        {lat: -0.311969, lng: -78.5444},
-        {lat: -0.311362, lng: -78.5449},
-        {lat: -0.311411, lng: -78.5452},
-        {lat: -0.311262, lng: -78.5454},
-        {lat: -0.311055, lng: -78.5457},
-        {lat: -0.310766, lng: -78.5458},
-        {lat: -0.311234, lng: -78.546}
-    ]
+    function mostrarVisitasEnMapa() {
+
+        var coordsClientes =<?php echo(json_encode(Yii::app()->session['coordenadasClientes'])); ?>;
+
+        var coordsVisitas =<?php echo(json_encode(Yii::app()->session['coordenadasVisitas'])); ?>;
+
+        var opcionesMapa = {
+            zoom: 14, center: {lat: parseFloat(coordsVisitas[0].LATITUD), lng: parseFloat(coordsVisitas[0].LONGITUD)},
+        }
+        ;
+        var mapa = new google.maps.Map(document.getElementById('map'), opcionesMapa);
+
+        for (var iterador in coordsClientes) {
+            var marcadorCliente = new google.maps.Marker({
+                position: {lat: parseFloat(coordsClientes[iterador].LATITUD), lng: parseFloat(coordsClientes[iterador].LONGITUD)},
+                map: mapa,
+                title: coordsClientes[iterador].LABEL,
+                label: coordsClientes[iterador].LABEL,
+                icon: pinSymbol('#dd4b4b')
+            });
+
+            var marcadorVisitas = new google.maps.Marker({
+                position: {lat: parseFloat(coordsVisitas[iterador].LATITUD), lng: parseFloat(coordsVisitas[iterador].LONGITUD)},
+                map: mapa,
+                title: coordsVisitas[iterador].LABEL,
+                label: coordsVisitas[iterador].LABEL,
+                icon: pinSymbol('#0288d1')
+            });
+        }
+        var legend = document.getElementById('legend');
+        var div = document.createElement('div');
+        div.innerHTML = '\
+    <div style="width:10px;height:10px;background-color: #dd4b4b"></div>CLIENTE \n\
+    <br/><div style="width:10px;height:10px;background-color: #0288d1"></div>' + 'VISITA';
+        legend.appendChild(div);
+
+        mapa.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
+    }
+
+    function pinSymbol(color) {
+        return {
+            path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z',
+            fillColor: color,
+            fillOpacity: 1,
+            strokeColor: '#ffffff',
+            strokeWeight: 2,
+            scale: 1
+        };
+    }
 
 
 
 </script>
-<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
-</script>
-
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBhiK7uebbisx_CB2FDABn9sRlti0YZqUM&callback=initMap2">
-</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuuHti_DAalAmyJGqZNBv71AcUBBmzcI0&callback=initMap2"></script>

@@ -1,7 +1,8 @@
 <?php
-$this->breadcrumbs = array('Carga Transferencias Movistar',);
+$this->breadcrumbs = array('Carga Ventas Movistar',);
 $this->renderPartial('/shared/_blockUI');
 $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"'));
+$this->pageTitle = 'Carga Ventas Movistar';
 ?>
 
 <link type="text/css" rel="stylesheet" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/css/datepicker.css" />
@@ -10,7 +11,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.es.js"></script>
 
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/CargaTransferenciasMovistar.js"; ?>"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/carga/cargaVentasMovistar.js"; ?>"></script>
 
 <section class="">
     <div class="">
@@ -25,7 +26,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                     'validateOnSubmit' => true,
                 ),
                 'htmlOptions' => array("enctype" => "multipart/form-data"),
-                'action' => Yii::app()->request->baseUrl . '/CargaTransferenciasMovistar/SubirArchivo'
+                'action' => Yii::app()->request->baseUrl . '/CargaVentasMovistar/SubirArchivo'
             ));
             ?>
             <div class="row">
@@ -34,9 +35,9 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                     <?php
 //                    $ventas= VentaMovistarModel::model()->
                     $command = Yii::app()->db->createCommand('
-                        SELECT DATE(tm_fecha) as fecha 
-                            FROM tb_transferencia_movistar
-                            order by tm_fecha desc
+                        SELECT DATE(vm_fecha) as fecha 
+                            FROM tb_venta_movistar 
+                            order by vm_fecha desc 
                             limit 1');
                     $resultado = $command->queryRow();                    
                     $ultimaFecha = DateTime::createFromFormat('Y-m-d', $resultado['fecha'])->format(FORMATO_FECHA);
@@ -73,7 +74,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                 <?php echo CHtml::submitButton('Cargar', array('id' => 'btnCargar')); ?>
                 <?php // echo CHtml::button('Guardar', array('submit' => array('cargaConsumo/GuardarConsumo'))); ?>
                 <?php
-                echo CHtml::ajaxSubmitButton('Guardar', CHtml::normalizeUrl(array('cargaTransferenciasMovistar/GuardarTransferenciasMovistar', 'render' => true)), array(
+                echo CHtml::ajaxSubmitButton('Guardar', CHtml::normalizeUrl(array('cargaVentasMovistar/GuardarVentasMovistar', 'render' => true)), array(
                     'dataType' => 'json',
                     'type' => 'post',
                     'beforeSend' => 'function() {
@@ -84,7 +85,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
                         setMensaje(data.ClassMessage, data.Message);
                         if(data.Status==1){
                             var datosResult = data.Result;
-                            //alert(datosResult.toSource());
+                            // alert(datosResult.toSource());
                             $("#tblGrid").trigger(\'reloadGrid\');                            
                             $("#tblGridChipsDuplicadosVentaMovistar").setGridParam({datatype: \'jsonstring\', datastr: datosResult}).trigger(\'reloadGrid\');
                             
@@ -113,7 +114,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"')
 <br><br>
 <section class="">
     <header class="">
-        <h2><strong>Datos archivo transferencias</strong></h2>
+        <h2><strong>Datos archivo ventas</strong></h2>
     </header>
     <div class="">
         <?php $this->renderPartial('/shared/_bodygrid'); ?>
