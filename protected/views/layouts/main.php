@@ -141,7 +141,7 @@
                         array('label' => 'Analisis ejecutivos', 'url' => array('/RptResumenDiarioHistorial/'), 'visible' => $verMenuRevision),
                         array('label' => 'Analisis reemplazo ruta', 'url' => array('/RptReemplazoRuta/'), 'visible' => $verMenusAdmin),
                         array('label' => 'Analisis supervisor vs ejecutivo', 'url' => array('/RptSupervisorVsEjecutivoHistorial/'), 'visible' => $verMenusAdmin),
-//                        array('label' => 'Resumen semanal historial', 'url' => array('/RptResumenSemanalHistorial/'), 'visible' => $verMenuRevision),
+                        array('label' => 'Resumen semanal historial', 'url' => array('/RptResumenHistorialPorFecha/'), 'visible' => $verMenuRevision),
                         array('label' => 'Revision ruta', 'url' => array('/RevisionRuta/'), 'visible' => $verMenuRevision),
                     ),
                 ));

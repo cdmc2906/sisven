@@ -34,11 +34,12 @@ class excel {
     }
 
     public function CrearArchivo($VersionArchivo, $NombreArchivo) {
-
+//        var_dump($VersionArchivo);        die();
+//        var_dump($this->objPHPExcel);        die();
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename= "' . $NombreArchivo . '.xlsx"');
         header('Cache-Control: max-age=0');
-
+//        var_dump($this->objPHPExcel);        die();
         $this->objWriter = PHPExcel_IOFactory::createWriter($this->objPHPExcel, $VersionArchivo);
     }
 
@@ -59,6 +60,75 @@ class excel {
                 $this->MapeoDefault($result, $encabezado, $footer, $columnasCentrar);
                 break;
         }
+    }
+
+    public function MapeoCustomizado($fechasRevisadas, $parametrosAlmacenados, $ejecutivo, $encabezado, $footer) {
+//        var_dump($parametrosAlmacenados);die();
+        $row_offset = 1;
+        $styleArrayCell = array(
+            'font' => array(
+                'bold' => true,
+            ),
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+            'borders' => array(
+                'outline' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                    'color' => array('argb' => '00000000'),
+                ),
+            ),
+        );
+        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row_offset, 'PARAMETRO');
+        $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn(0)->setAutoSize(true);
+        $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row_offset)->applyFromArray($styleArrayCell);
+        for ($iteradorTitulos = 1; $iteradorTitulos <= count($fechasRevisadas); $iteradorTitulos++) {
+            $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($iteradorTitulos, $row_offset, $fechasRevisadas[$iteradorTitulos - 1]);
+            $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($iteradorTitulos)->setAutoSize(true);
+            $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($iteradorTitulos, $row_offset)->applyFromArray($styleArrayCell);
+        }
+        $row_offset++;
+        $fResumenHistorial = new FResumenDiarioHistorialModel();
+        #DEFINICION DE ESTILO PARA CADA CELDA
+        $styleArray = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+            'borders' => array(
+                'outline' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                    'color' => array('argb' => '00000000'),
+                ),
+            ),
+        );
+        for ($fila = 0; $fila < count($parametrosAlmacenados); $fila++) {
+            for ($columna = 0; $columna <= count($fechasRevisadas); $columna++) {
+                if ($columna == 0)
+                    $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($columna, ($fila + $row_offset), $parametrosAlmacenados[$fila]);
+                else {
+                    $valoresHistorial = $fResumenHistorial->getValoresRevisionesEjecutivo(
+                            $fechasRevisadas[$columna - 1]
+                            , $parametrosAlmacenados[$fila]
+                            , $ejecutivo);
+                    $valorCelda = isset($valoresHistorial[0]) ? $valoresHistorial[0]["valor"] : 'SinDatos';
+                    $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($columna, ($fila + $row_offset), $valorCelda);
+                }
+                if ($columna > 0) {
+                    $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($columna, $fila + $row_offset)
+                            ->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                    $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($columna, $fila + $row_offset)
+                            ->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                }#FIN DE IF COMPRUEBA COLUMNA EN ID COLUMNAS CENTRAR
+                #APLICACION DE ESTILO A LA CELDA
+                $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($columna, ($fila + $row_offset))->applyFromArray($styleArray);
+            }#FIN ITERACION SOBRE COLUMNAS
+        }/* FIN ITERACION SOBRE FILAS */
+
+//        /* CONFIGURACION DE ENCABEZADOS Y PIE DE PAGINA DE IMPRESION */
+        $this->objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddHeader('&C&H' . $encabezado);
+        $this->objPHPExcel->getActiveSheet()->getHeaderFooter()->
+                setOddFooter('&L&B' . $this->objPHPExcel->getProperties()->getTitle() . '&C&B' . $footer . '&RPag. &P de &N');
+        $this->objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT);
     }
 
     public function MapeoDefault($result, $encabezado, $footer, $columnasCentrar) {
@@ -129,7 +199,7 @@ class excel {
 
                     #APLICACION DE ESTILO A LA CELDA
                     $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($c, ($r + $row_offset))->applyFromArray($styleArray);
-                    
+
                     #VALIDACION QUE SE ENVIO COMO PARAMETROS LOS ID DE LAS COLUMNAS PARA CENTRAR
                     if (isset($columnasCentrar[0]["NUMCOLUMNA"])) {
                         foreach ($columnasCentrar as $item) {
@@ -144,7 +214,6 @@ class excel {
                     }#FIN VALIDACION ENVIO DE COLUMNAS CENTRAR
                 }#FIN ITERACION SOBRE COLUMNAS
             }#FIN ITERACION SOBRE FILAS
-
             #CONFIGURACION DE ENCABEZADOS Y PIE DE PAGINA DE IMPRESION
             $this->objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddHeader('&C&H' . $encabezado);
             $this->objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddFooter('&L&B' . $this->objPHPExcel->getProperties()->getTitle() . '&C&B' . $footer . '&RPag. &P de &N');

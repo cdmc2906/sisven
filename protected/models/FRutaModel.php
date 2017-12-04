@@ -164,9 +164,12 @@ class FRutaModel extends DAOModel {
         return $data;
     }
 
-    public function getTotalChipsVentaDia($fechaGestion, $codEjecutivo) {
-        $fechaHoraGestion = $fechaGestion . ' 09:00';
-        $fechaHoraDiaDespues = date('Y-m-d', strtotime($fechaGestion . ' + 1 days')) . ' 09:00';
+    public function getTotalChipsVentaDia($fechaGestion, $horaInicio, $codEjecutivo) {
+//        $fechaHoraGestion = $fechaGestion . ' 09:00';
+//        $fechaHoraDiaDespues = date('Y-m-d', strtotime($fechaGestion . ' + 1 days')) . ' 09:00';
+        $fechaHoraGestion = $fechaGestion . ' ' . $horaInicio;
+        $fechaHoraDiaDespues = date('Y-m-d', strtotime($fechaGestion . ' + 1 days')) . ' ' . $horaInicio;
+
         $sql = "
             -- VENTA DEL DIA
             SELECT IFNULL(SUM(O_SUBTOTAL),0) AS RESPUESTA
@@ -209,9 +212,9 @@ class FRutaModel extends DAOModel {
         return $data;
     }
 
-    public function getTotalChipsVentaRuta($inicialesEjecutivo, $dia, $fechaGestion, $codEjecutivo) {
-        $fechaHoraGestion = $fechaGestion . ' 09:00';
-        $fechaHoraDiaDespues = date('Y-m-d', strtotime($fechaGestion . ' + 1 days')) . ' 09:00';
+    public function getTotalChipsVentaRuta($inicialesEjecutivo, $dia, $fechaGestion, $horaInicio, $codEjecutivo) {
+        $fechaHoraGestion = $fechaGestion . ' ' . $horaInicio;
+        $fechaHoraDiaDespues = date('Y-m-d', strtotime($fechaGestion . ' + 1 days')) . ' ' . $horaInicio;
 
         $sql = "
             -- VENTA EN LA RUTA

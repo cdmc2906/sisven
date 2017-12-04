@@ -1,8 +1,6 @@
 $(document).ready(function () {
     configurarMaestroDetalle();
-
-    ConfigDatePickersReporte('.txtfechaOrdenesInicio');
-    ConfigDatePickersReporte('.txtfechaOrdenesFin');
+    ConfigDatePickersReporte('.txtfechaOrdenesInicio','.txtfechaOrdenesFin');
 
     $("#btnLimpiar").click(function () {
         $("#ReporteOrdenesxFechaForm_fechaOrdenesInicio").val('');

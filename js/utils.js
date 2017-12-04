@@ -96,6 +96,7 @@ function mostrarVentanaMensaje(mensaje, tituloDialogo, clase) {
 }
 
 function ConfigDatePickersReporte(inicio, fin) {
+//    alert(inicio+'-'+fin);
     $(inicio)
             .datepicker({
                 format: "yyyy-mm-dd",
@@ -107,30 +108,31 @@ function ConfigDatePickersReporte(inicio, fin) {
             .on('changeDate', function (e) {
                 var selectedDate = $(inicio).val();
                 $(fin).datepicker('setStartDate', selectedDate);
-
+//                alert(selectedDate);
                 var fechaHoy = new Date();
+//                alert(fechaHoy);
                 var fechaMaxima = new Date(e.date);
                 fechaMaxima.setMonth(fechaMaxima.getMonth() + 12);
                 var anio = fechaMaxima.getFullYear();
                 var mes = fechaMaxima.getMonth();
                 var dia = new Date(fechaMaxima.getFullYear(), fechaMaxima.getMonth(), 0).getDate();
 
-                if (fechaHoy > fechaMaxima)
-                {
-                    var fecha = anio + "/" + mes + "/" + dia;
-                    $(fin).datepicker('setEndDate', fecha);
-                    $(fin).datepicker('setDate', fecha);
-                } else
-                {
+//                if (fechaHoy > fechaMaxima)
+//                {
+//                    var fecha = anio + "/" + mes + "/" + dia;
+//                    $(fin).datepicker('setEndDate', fecha);
+//                    $(fin).datepicker('setDate', fecha);
+//                } else
+//                {
                     $(fin).datepicker('setEndDate', fechaHoy);
-                    $(fin).datepicker('setDate', fechaHoy.getFullYear() + '/' + (fechaHoy.getMonth() + 1) + '/' + fechaHoy.getDate());
-                }
+//                    $(fin).datepicker('setDate', fechaHoy.getFullYear() + '/' + (fechaHoy.getMonth() + 1) + '/' + fechaHoy.getDate());
+//                }
             }
             );
 
     $(fin)
             .datepicker({
-                format: "yyyy/mm/dd",
+                format: "yyyy-mm-dd",
                 startView: 1,
                 language: "es",
                 autoclose: true

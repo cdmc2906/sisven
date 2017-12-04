@@ -1,5 +1,4 @@
 <?php
-/* @var $this TiemposGestionController */
 $this->breadcrumbs = array('Ordenes por fecha');
 $this->renderPartial('/shared/_blockUI');
 $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConsultarReporte"'));
@@ -18,7 +17,6 @@ $this->pageTitle = 'Ordenes por fecha';
     <header class="">
         <h2><strong>Reporte Ordenes por fecha</strong></h2>
     </header>
-
     <div class="">    
         <div class="form">
             <?php
