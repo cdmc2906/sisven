@@ -11,6 +11,8 @@ define('NRO_FILAS', '15');
 define('ERROR', 0);
 define('SUCCESS', 1);
 define('NOTICE', 2);
+define('MAXIMO_DIAS_REPORTE_HISTORIAL', 6);
+define('COLUMNAS_RESUMEN_HISTORIAL', 14);
 define('TIMEOUT_POST', 0);
 define('MENSAJE_DEFAULT', '');
 define('HORARIO_MAXIMO', '23:59:59');

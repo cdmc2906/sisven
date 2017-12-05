@@ -27,46 +27,133 @@ $this->pageTitle = 'Exportar Resumen Historial';
             ));
             ?>
             <div class="row">
-                <div>
+                <div  style="display: flex; justify-content: flex-start;">
+                    <div style="margin-left: 50px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                        <fieldset style="border:2px groove ;">
+                            <legend style="border:1px solid green;">Filtros Fecha Usuario</legend>
+                            <?php echo $form->labelEx($model, 'fechaInicioGestion'); ?>
+                            <?php echo $form->textField($model, 'fechaInicioGestion', array('class' => 'txtFechaInicioGestion')); ?>
+                            <?php echo $form->error($model, 'fechaInicioGestion'); ?>
 
-                    <?php echo $form->labelEx($model, 'fechaInicioGestion'); ?>
-                    <?php echo $form->textField($model, 'fechaInicioGestion', array('class' => 'txtFechaInicioGestion')); ?>
-                    <?php echo $form->error($model, 'fechaInicioGestion'); ?>
+                            <?php echo $form->labelEx($model, 'fechaFinGestion'); ?>
+                            <?php echo $form->textField($model, 'fechaFinGestion', array('class' => 'txtFechaFinGestion')); ?>
+                            <?php echo $form->error($model, 'fechaFinGestion'); ?>
 
-                    <?php echo $form->labelEx($model, 'fechaFinGestion'); ?>
-                    <?php echo $form->textField($model, 'fechaFinGestion', array('class' => 'txtFechaFinGestion')); ?>
-                    <?php echo $form->error($model, 'fechaFinGestion'); ?>
+                            <?php echo $form->labelEx($model, 'ejecutivo'); ?>
+                            <?php
+                            echo $form->dropDownList(
+                                    $model, 'ejecutivo', array(
+                                'QU25' => 'EDISON CALVACHE',
+                                'QU26' => 'GIOVANA BONILLA',
+                                'QU22' => 'JOSE CHAMBA',
+                                'QU21' => 'JUAN CLAVIJO',
+                                'QU17' => 'JHONNY PLUAS',
+                                'QU19' => 'LUIS OJEDA'
+                                    ), array(
+                                'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+                            );
+                            ?>
+                            <?php echo $form->error($model, 'ejecutivo'); ?>
+                        </fieldset>
+                    </div>
+                    <div style="margin-left: 50px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                        <fieldset style="border:2px groove ;">
+                            <legend style="border:1px solid green;">Filtros tiempo</legend>
+                            <?php
+                            echo $form->labelEx($model, 'horaInicioGestion');
+                            echo $form->dropDownList(
+                                    $model, 'horaInicioGestion', array(
+                                '08:00' => '08:00',
+                                '09:00' => '09:00',
+                                '10:00' => '10:00'
+                                    )
+                                    , array('options' => array('10:00' => array('selected' => true)))
+                            );
+                            echo $form->error($model, 'horaInicioGestion');
+                            ?>
+                            <?php
+                            echo $form->labelEx($model, 'horaFinGestion');
+                            echo $form->dropDownList(
+                                    $model, 'horaFinGestion', array(
+                                '23:59' => 'Sin limite',
+                                '17:00' => '17:00',
+                                '17:00' => '17:30',
+                                '18:00' => '18:00',
+                                '18:30' => '18:30',
+                                '19:00' => '19:00',
+                                '19:30' => '19:30',
+                                '20:00' => '20:00',
+                                '20:30' => '20:30',
+                                '21:00' => '21:00',
+                                '21:30' => '21:30',
+                                '22:00' => '22:00',
+                                '22:30' => '22:30',
+                                '23:00' => '23:00',
+                                '23:30' => '23:30',
+                                    )
+                            );
 
-                    <?php echo $form->labelEx($model, 'ejecutivo'); ?>
-                    <?php
-                    echo $form->dropDownList(
-                            $model, 'ejecutivo', array(
-                        'QU25' => 'EDISON CALVACHE',
-                        'QU26' => 'GIOVANA BONILLA',
-                        'QU22' => 'JOSE CHAMBA',
-                        'QU21' => 'JUAN CLAVIJO',
-                        'QU17' => 'JHONNY PLUAS',
-                        'QU19' => 'LUIS OJEDA'
-                            ), array(
-                        'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
-                    );
-                    ?>
-                    <?php echo $form->error($model, 'ejecutivo'); ?>
-                </div>
-            </div>
+                            echo $form->error($model, 'horaFinGestion');
+                            ?>
+                        </fieldset>
+                    </div>
+                    <div style="margin-left: 50px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                        <fieldset style="border:2px groove ;">
+                            <legend style="border:1px solid green;">Filtros presicion visita</legend>
+                            <?php echo $form->labelEx($model, 'precisionVisita'); ?>
+                            <?php
+                            echo $form->dropDownList(
+                                    $model, 'precisionVisitas'
+                                    , array(
+                                '0' => 'Sin limite',
+                                '5' => '5 metros',
+                                '10' => '10 metros',
+                                '15' => '15 metros',
+                                '20' => '20 metros',
+                                '25' => '25 metros',
+                                '50' => '50 metros',
+                                '100' => '100 metros'
+                                    )
+//                                    , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+                            );
+                            ?>
+                            <?php echo $form->error($model, 'precisionVisitas'); ?>
 
-            <div class="">
-                <?php // echo CHtml::submitButton('Cargar', array('id' => 'btnCargar')); ?>
-                <?php
-                echo CHtml::ajaxSubmitButton(
-                        'Generar Reporte', CHtml
-                        ::normalizeUrl(array('RptResumenHistorialPorFecha/GenerarReporte', 'render' => true)), array(
-                    'dataType' => 'json',
-                    'type' => 'post',
-                    'beforeSend' => 'function() {
+                            <?php echo $form->labelEx($model, 'accionHistorial'); ?>
+                            <?php
+                            echo $form->dropDownList(
+                                    $model, 'accionHistorial'
+                                    , array(
+                                'Inicio visita' => 'Inicio visita',
+                                'Orden' => 'Orden',
+                                'Forma' => 'Forma',
+                                'Comentario' => 'Comentario',
+                                'Día inicio' => 'Dia inicio',
+                                'Fin de visita' => 'Fin de visita',
+                                'Día fin' => 'Dia fin',
+                                'Nuevo cliente' => 'Nuevo cliente',
+                                'Estatus' => 'Estatus'
+                                    )
+//                                    , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+                            );
+                            ?>
+                            <?php echo $form->error($model, 'accionHistorial'); ?>
+                        </fieldset>
+                    </div>
+                    <div style="margin-left: 50px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                        <fieldset style="border:2px groove ;">
+                            <legend style="border:1px solid green;">Acciones</legend>
+
+                            <?php
+                            echo CHtml::ajaxSubmitButton(
+                                    'Generar Reporte', CHtml
+                                    ::normalizeUrl(array('RptResumenHistorialPorFecha/GenerarReporte', 'render' => true)), array(
+                                'dataType' => 'json',
+                                'type' => 'post',
+                                'beforeSend' => 'function() {
                             blockUIOpen();
                             }',
-                    'success' => 'function(data) {
+                                'success' => 'function(data) {
                         
                         blockUIClose();
                         setMensaje(data.ClassMessage, data.Message);
@@ -80,16 +167,21 @@ $this->pageTitle = 'Exportar Resumen Historial';
                             });
                             }
                         } ',
-                    'error' => 'function(xhr,st,err) {
+                                'error' => 'function(xhr,st,err) {
                             blockUIClose();
                             RedirigirError(xhr.status);
                         }'
-                        ), array('id' => 'btnGenerate', 'class' => 'btn btn-theme'));
-                ?>
-                <?php echo CHtml::Button('Limpiar', array('id' => 'btnLimpiar', 'class' => 'btn btn-theme')); ?>
-                <?php echo CHtml::Button('Exportar a Excel', array('id' => 'btnExcel', 'class' => 'btn btn-theme', 'disabled' => 'true')); ?>
+                                    ), array('id' => 'btnGenerate', 'class' => 'btn btn-theme'));
+                            ?>
+                            <?php echo CHtml::Button('Limpiar', array('id' => 'btnLimpiar', 'class' => 'btn btn-theme')); ?>
+                            <?php echo CHtml::Button('Exportar a Excel', array('id' => 'btnExcel', 'class' => 'btn btn-theme', 'disabled' => 'true')); ?>
+                        </fieldset>
+                    </div>
+                    <?php $this->endWidget(); ?>
+                </div>
             </div>
-            <?php $this->endWidget(); ?>
-        </div>
-    </div>     
+        </div>     
+    </div>    
 </section>
+
+

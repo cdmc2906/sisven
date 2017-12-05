@@ -35,38 +35,14 @@ class RptResumenSemanalHistorialController extends Controller {
             if (isset($_POST['RptResumenSemanalHistorialForm'])) {
                 $model->attributes = $_POST['RptResumenSemanalHistorialForm'];
                 if ($model->validate()) {
-//                    var_dump($model);                    die();
-                    /* anio
-                     * mes
-                     * ejecutivo
-                     */
                     $primerDiaMes = date("Y-m-01", strtotime($model->anio . '-' . $model->mes . '-01'));
                     $ultimoDiaMes = date("Y-m-t", strtotime($model->anio . '-' . $model->mes . '-01'));
 
-//                    $primeraSemanaMes = $this->weekOfMonth($primerDiaMes);
                     $ultimaSemanaMes = $this->weekOfMonth($ultimoDiaMes);
-//                    $semanasMes = $this->weekOfMonth($ultimoDiaMes) - $this->weekOfMonth($primerDiaMes);
                     $consultaItemResumenDiario = new FResumenDiarioHistorialModel();
-
-//                    for ($semana = 1; $semana <= $ultimaSemanaMes; $semana++) {
                     $semana = 1;
-                    {
 
-                        $itemResumenDiario = $consultaItemResumenDiario->getItemResumenxVendedorxRangoFechaxSemana($primerDiaMes, $ultimoDiaMes, $model->ejecutivo, $semana);
-//                        var_dump($itemResumenDiario);die();
-//                        if (count($itemResumenDiario) > 0) {
-                        {
-
-//                            $datosSemanas["semana" . $semana] = $itemResumenDiario;
-//                            $data = json_encode($itemResumenDiario, true);
-                        }
-                    }
-
-//                    $data = json_decode(file_get_contents('FilmDataSet.json'), true);
-//                    var_dump($datosSemanas);die();
-//                    var_dump($primeraSemanaMes,$ultimaSemanaMes);die();
-//                    var_dump($resumenesDiarios);                    die();
-//                    var_dump($model->anio);                    die();
+                    $itemResumenDiario = $consultaItemResumenDiario->getItemResumenxVendedorxRangoFechaxSemana($primerDiaMes, $ultimoDiaMes, $model->ejecutivo, $semana);
                 }//fin model->validate
 
                 $response->Message = "Historial revisado exitosamente";

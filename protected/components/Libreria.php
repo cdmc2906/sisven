@@ -72,6 +72,7 @@ class Libreria {
      * @return \Response
      */
     public function VerificarHistorialDiarioUsuario($ejecutivo, $fechagestion, $accionHistorial, $horaInicioGestion, $horaFinGestion, $precisionVisitas) {
+
         $response = new Response();
         $datos = array();
         $datosDetalleGrid = array();
@@ -135,7 +136,7 @@ class Libreria {
                     , $ejecutivo[0]['e_usr_mobilvendor']
             );
         }
-
+//var_dump(count($historial));die();
         if (count($historial)) {
             #INICIO CALCULO TIEMPO GESTION
             $latitudClienteAnterior = 0;
@@ -407,7 +408,7 @@ class Libreria {
                 unset($itemCoordenadaVisita);
 
                 $distancia = $libreriaFunciones->DistanciaEntreCoordenadas($latitudCliente, $longitudCliente, $latitudHistorial, $longitudHistorial);
-                
+
                 if ($precisionVisitas != 0) {
                     if ($distancia <= $precisionVisitas) {
                         $visitasValidas += 1;
@@ -533,7 +534,7 @@ class Libreria {
             );
             array_push($datosResumenGrid, $resumenRuta);
             unset($resumenRuta);
-
+            $datosResumenSemana = array();
             foreach ($datosResumenGrid as $key => $filaGrid) {
                 foreach ($filaGrid as $clave => $valor) {
                     $resumenRuta = array(
@@ -543,6 +544,11 @@ class Libreria {
                         'VALOR' => strval($valor),
                         'SEMANA' => strval($libreriaFunciones->weekOfMonth($fechagestion)),
                     );
+                    $resumen = array(
+                        'PARAMETRO' => $clave,
+                        'VALOR' => strval($valor),);
+                    array_push($datosResumenSemana, $resumen);
+                    unset($resumen);
 
                     if ($clave == 'PORCENTAJE-CUMPLIMIENTO' || $clave == 'TOTAL-VENTA-REPORTADA')
                         array_push($datosResumenGridGeneral, $resumenRuta);
@@ -572,6 +578,13 @@ class Libreria {
             array_push($datosResumenGridPrimeraUltimaVisita, $resumenPrimeraUltima);
             unset($resumenPrimeraUltima);
 
+            $resumen = array('PARAMETRO' => 'PRIMERA VISITA', 'VALOR' => $primeraVisita,);
+            array_push($datosResumenSemana, $resumen);
+            unset($resumen);
+            $resumen = array('PARAMETRO' => 'ULTIMA VISITA', 'VALOR' => $ultimaVisita,);
+            array_push($datosResumenSemana, $resumen);
+            unset($resumen);
+
             $datos['resumenGeneral'] = $datosResumenGridGeneral;
             $datos['resumenVisitas'] = $datosResumenGridVisitas;
             $datos['resumenVentas'] = $datosResumenGridVentas;
@@ -580,6 +593,11 @@ class Libreria {
             $datos['resumenPrimeraUltima'] = $datosResumenGridPrimeraUltimaVisita;
             $datos['coordenadasClientes'] = $coordenadasClientes;
             $datos['coordenadasVisitas'] = $coordenadasVisitas;
+
+//            Yii::app()->session['resumenGestionDiaria'] = $datosResumenGrid;
+//            var_dump('sss');die();
+//            var_dump($datosResumenSemana);die();
+            Yii::app()->session['resumenGestionDiaria'] = $datosResumenSemana;
 
             Yii::app()->session['resumenPrimeraUltima'] = $datosResumenGridPrimeraUltimaVisita;
             Yii::app()->session['detallerevisionhistorialitem'] = $datosDetalleGrid;

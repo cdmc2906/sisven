@@ -124,9 +124,53 @@ function ConfigDatePickersReporte(inicio, fin) {
 //                    $(fin).datepicker('setDate', fecha);
 //                } else
 //                {
-                    $(fin).datepicker('setEndDate', fechaHoy);
+                $(fin).datepicker('setEndDate', fechaHoy);
 //                    $(fin).datepicker('setDate', fechaHoy.getFullYear() + '/' + (fechaHoy.getMonth() + 1) + '/' + fechaHoy.getDate());
 //                }
+            }
+            );
+
+    $(fin)
+            .datepicker({
+                format: "yyyy-mm-dd",
+                startView: 1,
+                language: "es",
+                autoclose: true
+            }
+            )
+            .on('changeDate', function (e) {
+                var maxDate = new Date();
+                $(inicio).datepicker('setEndDate', maxDate);
+            }
+            );
+}
+
+function ConfigDatePickersReporteSemana(inicio, fin) {
+//    alert(inicio+'-'+fin);
+
+    $(inicio)
+            .datepicker({
+                format: "yyyy-mm-dd",
+                startView: 1,
+                language: "es",
+                autoclose: true,
+                beforeShowDay: $(inicio).datepicker.noWeekends,
+            }
+            )
+            .on('changeDate', function (e) {
+                var selectedDate = $(inicio).val();
+                $(fin).datepicker('setStartDate', selectedDate);
+//                alert(selectedDate);
+                var fechaHoy = new Date();
+//                alert(fechaHoy);
+                var fechaMaxima = new Date(e.date);
+                fechaMaxima.setMonth(fechaMaxima.getMonth() + 12);
+                var anio = fechaMaxima.getFullYear();
+                var mes = fechaMaxima.getMonth();
+                var dia = new Date(fechaMaxima.getFullYear(), fechaMaxima.getMonth(), 0).getDate();
+
+                $(fin).datepicker('setEndDate', fechaHoy);
+
             }
             );
 

@@ -1,24 +1,77 @@
 $(document).ready(function () {
-    ConfigDatePickersReporte('.txtFechaInicioGestion','.txtFechaFinGestion');
-//    ConfigDatePicker('.txtFechaInicioGestion');
-//    ConfigDatePicker('.txtFechaFinGestion');
+    ConfigDatePickersReporte('.txtFechaInicioGestion', '.txtFechaFinGestion');
     ConfigurarGrid();
     $("#btnLimpiar").click(function () {
         $("#RptResumenHistorialPorFechaForm_fechaInicioGestion").val('');
         $("#RptResumenHistorialPorFechaForm_fechaFinGestion").val('');
         $("#RptResumenHistorialPorFechaForm_ejecutivo").val('');
-//        $("#tblGrid").jqGrid("clearGridData", true).trigger("reloadGrid");
     });
-
     $("#btnExcel").click(function () {
-        GenerarDocumentoReporte('GenerateExcel');
+        $.ajax(
+                {
+                    method: "POST",
+                    url: "RptResumenHistorialPorFecha/RevisarHabilitarExportarExcel",
+//                data: {
+//                    nombreEjecutivo: nombreEjecutivo,
+//                    ejecutivo: codigoEjecutivoFila,
+//                    fechaGestion: $("#RptSupervisorVsEjecutivoHistorialForm_fechagestion").val(),
+//                    accionHistorial: $("#RptSupervisorVsEjecutivoHistorialForm_accionHistorial").val(),
+//                    horaInicio: $("#RptSupervisorVsEjecutivoHistorialForm_horaInicioGestion").val(),
+//                    horaFin: $("#RptSupervisorVsEjecutivoHistorialForm_horaFinGestion").val()
+//                },
+                    dataType: 'json',
+                    type: 'post',
+                    beforeSend: function ()
+                    {
+                        blockUIOpen();
+                    },
+                    success: function (data)
+                    {
+                        blockUIClose();
+//                    alert(data.Result);
+                        if (data.Result == 1) {
+                            GenerarDocumentoReporte('GenerateExcel');
+                        } else {
+                            alert("Genere el reporte primero");
+                        }
+                    },
+                    error: function (xhr, st, err)
+                    {
+                        blockUIClose();
+                        alert(err);
+                    }
+                }
+        );
+
     });
-    
     $("#btnGenerate").click(function () {
         document.getElementById("btnExcel").disabled = false;
     });
+    $('#RptResumenHistorialPorFechaForm_horaInicioGestion').on('change', function (e) {
+//        $("#RptResumenHistorialPorFechaForm_fechaInicioGestion").val('');
+//        $("#RptResumenHistorialPorFechaForm_fechaFinGestion").val('');
+//        $("#RptResumenHistorialPorFechaForm_ejecutivo").val('');
+        document.getElementById("btnExcel").disabled = true;
+    });
+    $('#RptResumenHistorialPorFechaForm_horaFinGestion').on('change', function (e) {
+//        $("#RptResumenHistorialPorFechaForm_fechaInicioGestion").val('');
+//        $("#RptResumenHistorialPorFechaForm_fechaFinGestion").val('');
+//        $("#RptResumenHistorialPorFechaForm_ejecutivo").val('');
+        document.getElementById("btnExcel").disabled = true;
+    });
+    $('#RptResumenHistorialPorFechaForm_precisionVisita').on('change', function (e) {
+//        $("#RptResumenHistorialPorFechaForm_fechaInicioGestion").val('');
+//        $("#RptResumenHistorialPorFechaForm_fechaFinGestion").val('');
+//        $("#RptResumenHistorialPorFechaForm_ejecutivo").val('');
+        document.getElementById("btnExcel").disabled = true;
+    });
+    $('#RptResumenHistorialPorFechaForm_accionHistorial').on('change', function (e) {
+//        $("#RptResumenHistorialPorFechaForm_fechaInicioGestion").val('');
+//        $("#RptResumenHistorialPorFechaForm_fechaFinGestion").val('');
+//        $("#RptResumenHistorialPorFechaForm_ejecutivo").val('');
+        document.getElementById("btnExcel").disabled = true;
+    });
 });
-
 function ConfigurarGrid() {
     jQuery("#tblGrid").jqGrid({
         loadonce: true,
@@ -46,7 +99,6 @@ function ConfigurarGrid() {
             {name: 'SECUENCIARUTA', index: 'SECUENCIARUTA', width: 50, sortable: false, frozen: true},
             {name: 'RUTAUSADA', index: 'RUTAUSADA', width: 80, sortable: false, frozen: true},
             {name: 'SECUENCIAVISITA', index: 'SECUENCIAVISITA', width: 80, sortable: false, frozen: true},
-
             {name: 'ESTADOREVISION', index: 'ESTADOREVISION', width: 70, sortable: false, frozen: true},
             {name: 'CHIPSCOMPRADOS', index: 'CHIPSCOMPRADOS', width: 50, sortable: false, frozen: true},
         ],
@@ -76,7 +128,6 @@ function ConfigurarGrid() {
             // RedirigirError(xhr.status);
         }
     });
-
     jQuery("#tblGrid").jqGrid('navGrid', '#pagGrid',
             {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options 
             {}, // edit options 
@@ -134,7 +185,6 @@ function ConfigurarGridMayoristas() {
             // RedirigirError(xhr.status);
         }
     });
-
     jQuery("#tblGridMayoristas").jqGrid('navGrid', '#pagGrid',
             {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options 
             {}, // edit options 

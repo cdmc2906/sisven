@@ -101,23 +101,31 @@ class FResumenDiarioHistorialModel extends DAOModel {
     }
 
     public function getDatosRevisionesEjecutivo($fechaInicioGestion, $fechaFinGestion, $ejecutivo) {
+//        $sql = "
+//            select 
+//                    distinct rhd_fecha_historial as indicador,'1' as tipo
+//                from tb_resumen_historial_diario 
+//                where 1=1
+//                    and rhd_fecha_historial between '" . $fechaInicioGestion . "' and '" . $fechaFinGestion . "'
+//                    and rhd_cod_ejecutivo='" . $ejecutivo . "'
+//            union
+//            select 
+//                    distinct rhd_parametro as indicador,'2' as tipo
+//                from tb_resumen_historial_diario 
+//                where 1=1
+//                    and rhd_fecha_historial between '" . $fechaInicioGestion . "' and '" . $fechaFinGestion . "'
+//                    and rhd_cod_ejecutivo='" . $ejecutivo . "'
+//            ;
+//            ";
         $sql = "
-            select 
-                    distinct rhd_fecha_historial as indicador,'1' as tipo
-                from tb_resumen_historial_diario 
+            select distinct date(h_fecha) as fecha_gestion
+                from tb_historial_mb
                 where 1=1
-                    and rhd_fecha_historial between '" . $fechaInicioGestion . "' and '" . $fechaFinGestion . "'
-                    and rhd_cod_ejecutivo='" . $ejecutivo . "'
-            union
-            select 
-                    distinct rhd_parametro as indicador,'2' as tipo
-                from tb_resumen_historial_diario 
-                where 1=1
-                    and rhd_fecha_historial between '" . $fechaInicioGestion . "' and '" . $fechaFinGestion . "'
-                    and rhd_cod_ejecutivo='" . $ejecutivo . "'
-            ;
-            ";
-//   var_dump($sql);        die();
+                    and h_fecha between '" . $fechaInicioGestion . "' and '" . $fechaFinGestion . "'
+                    and h_usuario='" . $ejecutivo . "'
+                order by h_fecha     
+                ;";
+        //   var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
 //        var_dump($data);        die();
@@ -132,8 +140,8 @@ class FResumenDiarioHistorialModel extends DAOModel {
                     rhd_valor as valor
                 from tb_resumen_historial_diario 
                 where 1=1
-                    and date(rhd_fecha_historial) ='" . $fechaHistorial. "'
-                    and rhd_parametro ='".$parametro."'
+                    and date(rhd_fecha_historial) ='" . $fechaHistorial . "'
+                    and rhd_parametro ='" . $parametro . "'
                     and rhd_cod_ejecutivo='" . $ejecutivo . "'
                     ;
             ";
