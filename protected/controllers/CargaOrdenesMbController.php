@@ -155,8 +155,10 @@ class CargaOrdenesMbController extends Controller {
                         $dataInsertar = $this->getDatosGuardar($file, $registroInicio, $tamanioBloque);
                         $datosOrdenesMb = $dataInsertar['ordenesmb'];
                         if (count($datosOrdenesMb) > 0) {
+//                            var_dump($datosOrdenesMb);die();
                             $dbConnection = new CI_DB_active_record(null);
                             $sql = $dbConnection->insert_batch('tb_ordenes_mb', $datosOrdenesMb);
+//                            var_dump($sql);die();
                             $sql = str_replace('"', '', $sql);
                             $connection = Yii::app()->db_conn;
                             $connection->active = true;
@@ -237,8 +239,9 @@ class CargaOrdenesMbController extends Controller {
             }
 
             if (!$exisArray) {
-
+//                var_dump($filaArchivo['FECHACREACION']);die();
                 $fechaCreacion = DateTime::createFromFormat('d/m/Y H:i:s', $filaArchivo['FECHACREACION']);
+                
                 $sfechaCreacion = $fechaCreacion->format(FORMATO_FECHA_LONG);
 
                 $fechaDespacho = DateTime::createFromFormat('d/m/Y H:i:s', $filaArchivo['FECHADESPACHO']);

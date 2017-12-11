@@ -86,7 +86,7 @@ class ReportesModel extends DAOModel {
                 AND o_usuario='" . $ejecutivo . "'
                 AND o_fch_creacion >= '" . $fechaInicioB . "'
                 AND o_fch_creacion<'" . $fechaFinB . "'
-			ORDER BY o_usuario;";
+			ORDER BY 1;";
 
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);

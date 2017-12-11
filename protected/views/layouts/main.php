@@ -91,6 +91,7 @@
                     'items' => array(
                         array('label' => 'Admin Comentarios Ofi', 'url' => array('/ComentarioOficina/admin'), 'visible' => $verMenusAdmin),
                         array('label' => 'Admin Comentarios Supervisor', 'url' => array('/ComentarioSupervision/admin'), 'visible' => $verMenusAdmin),
+                        array('label' => 'Admin Presupuestos Venta', 'url' => array('/PresupuestoVenta/admin'), 'visible' => $verMenusAdmin),
                     ),
                 ));
                 ?>
@@ -143,6 +144,15 @@
                         array('label' => 'Analisis supervisor vs ejecutivo', 'url' => array('/RptSupervisorVsEjecutivoHistorial/'), 'visible' => $verMenusAdmin),
                         array('label' => 'Resumen semanal historial', 'url' => array('/RptResumenHistorialPorFecha/'), 'visible' => $verMenuRevision),
                         array('label' => 'Revision ruta', 'url' => array('/RevisionRuta/'), 'visible' => $verMenuRevision),
+                    ),
+                ));
+                ?>
+            </div><!-- mainmenu -->
+            <div id="mainmenu">
+                <?php
+                $this->widget('zii.widgets.CMenu', array(
+                    'items' => array(
+                        array('label' => 'Control ventas mensual', 'url' => array('/RptControlVentasMensual/'), 'visible' => $verMenuRevision),
                     ),
                 ));
                 ?>

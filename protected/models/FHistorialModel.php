@@ -155,6 +155,10 @@ class FHistorialModel extends DAOModel {
     }
 
     public function getPrimeraVisitaxEjecutivoxFechaxHoraInicioxHoraFin($accion = 'Inicio Visita', $fechagestion, $horaInicio, $horaFin, $ejecutivo) {
+//        var_dump($ejecutivo);die();
+
+
+
         $fechaInicio = $fechagestion . ' ' . $horaInicio;
         $fechaFin = $fechagestion . ' ' . $horaFin;
         $sql = "

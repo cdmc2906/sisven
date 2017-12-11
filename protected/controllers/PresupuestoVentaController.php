@@ -1,6 +1,6 @@
 <?php
 
-class OrdenesMbController extends Controller
+class PresupuestoVentaController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -11,13 +11,13 @@ class OrdenesMbController extends Controller
 	/**
 	 * @return array action filters
 	 */
-//	public function filters()
-//	{
-//		return array(
-//			'accessControl', // perform access control for CRUD operations
-//			'postOnly + delete', // we only allow deletion via POST request
-//		);
-//	}
+	public function filters()
+	{
+		return array(
+			'accessControl', // perform access control for CRUD operations
+			'postOnly + delete', // we only allow deletion via POST request
+		);
+	}
 
 	/**
 	 * Specifies the access control rules.
@@ -62,16 +62,16 @@ class OrdenesMbController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new OrdenesMbModel;
+		$model=new PresupuestoVentaModel;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['OrdenesMbModel']))
+		if(isset($_POST['PresupuestoVentaModel']))
 		{
-			$model->attributes=$_POST['OrdenesMbModel'];
+			$model->attributes=$_POST['PresupuestoVentaModel'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->o_codigo));
+				$this->redirect(array('view','id'=>$model->p_id));
 		}
 
 		$this->render('create',array(
@@ -91,11 +91,11 @@ class OrdenesMbController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['OrdenesMbModel']))
+		if(isset($_POST['PresupuestoVentaModel']))
 		{
-			$model->attributes=$_POST['OrdenesMbModel'];
+			$model->attributes=$_POST['PresupuestoVentaModel'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->o_codigo));
+				$this->redirect(array('view','id'=>$model->p_id));
 		}
 
 		$this->render('update',array(
@@ -122,7 +122,7 @@ class OrdenesMbController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('OrdenesMbModel');
+		$dataProvider=new CActiveDataProvider('PresupuestoVentaModel');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -133,10 +133,10 @@ class OrdenesMbController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new OrdenesMbModel('search');
+		$model=new PresupuestoVentaModel('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['OrdenesMbModel']))
-			$model->attributes=$_GET['OrdenesMbModel'];
+		if(isset($_GET['PresupuestoVentaModel']))
+			$model->attributes=$_GET['PresupuestoVentaModel'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -147,12 +147,12 @@ class OrdenesMbController extends Controller
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return OrdenesMbModel the loaded model
+	 * @return PresupuestoVentaModel the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)
 	{
-		$model=OrdenesMbModel::model()->findByPk($id);
+		$model=PresupuestoVentaModel::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -160,11 +160,11 @@ class OrdenesMbController extends Controller
 
 	/**
 	 * Performs the AJAX validation.
-	 * @param OrdenesMbModel $model the model to be validated
+	 * @param PresupuestoVentaModel $model the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='ordenes-mb-model-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='presupuesto-venta-model-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

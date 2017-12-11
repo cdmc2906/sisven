@@ -107,6 +107,7 @@ function ConfigDatePickersReporte(inicio, fin) {
             )
             .on('changeDate', function (e) {
                 var selectedDate = $(inicio).val();
+//        alert(selectedDate);
                 $(fin).datepicker('setStartDate', selectedDate);
 //                alert(selectedDate);
                 var fechaHoy = new Date();

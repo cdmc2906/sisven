@@ -39,6 +39,19 @@
         </file>
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/xampp/htdocs/sisven_2/protected/views/presupuestoVenta/create.php</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/protected/controllers/OrdenesMbController.php</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/protected/views/reportes/rptInicioFinJornadaxFecha.php</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/js/utils.js</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/js/proceso/IngresarPresupuesto.js</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/protected/controllers/PresupuestoVentaController.php</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/protected/models/PresupuestoVentaModel.php</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/protected/views/presupuestoVenta/_form.php</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/protected/views/reportes/rptResumenDiarioHistorial.php</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/protected/views/presupuestoVenta/view.php</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/protected/models/ReportesModel.php</file>
+            <file>file:/C:/xampp/htdocs/sisven_2/protected/controllers/ReporteOrdenesxFechaController.php</file>
+        </group>
     </open-files>
 </project-private>
