@@ -121,11 +121,11 @@ class FResumenDiarioHistorialModel extends DAOModel {
             select distinct date(h_fecha) as fecha_gestion
                 from tb_historial_mb
                 where 1=1
-                    and h_fecha between '" . $fechaInicioGestion . "' and '" . $fechaFinGestion . "'
+                    and h_fecha >='" . $fechaInicioGestion . " 00:00' and h_fecha <='" . $fechaFinGestion . " 23:59'
                     and h_usuario='" . $ejecutivo . "'
                 order by h_fecha     
                 ;";
-        //   var_dump($sql);        die();
+//           var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
 //        var_dump($data);        die();

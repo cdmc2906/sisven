@@ -7,6 +7,8 @@
  */
 class CargaTransferenciasMovistarController extends Controller {
 
+    public $layout = LAYOUT_IMPORTAR;
+
     public function actionIndex() {
         if (Yii::app()->request->isAjaxRequest) {
             return;
@@ -290,7 +292,6 @@ class CargaTransferenciasMovistarController extends Controller {
         }
 //        if (count($datosChipsRepetidos))
 //            var_dump($datosChipsRepetidos);die();
-
 //        $_SESSION['chipsDuplicados'] = $datosChipsRepetidos;
 //        $_SESSION['chipsActualizados'] = $datosChipsActualizados;
         Yii::app()->session['chipsDuplicados'] = $datosChipsRepetidos;

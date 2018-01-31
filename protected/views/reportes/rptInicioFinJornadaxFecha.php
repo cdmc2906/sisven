@@ -13,7 +13,7 @@ $this->renderPartial('/shared/_headgrid', array('metodo' => '"ConsultarReporte"'
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.es.js"></script>
 
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/RptInicioFinJornadaxFecha.js"; ?>"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/reporte/RptInicioFinJornadaxFecha.js"; ?>"></script>
 
 <style> 
     /*PERMITE QUE EL CONTENIDO DE LAS CELDAS HAGAN WRAPPING --COMENTARIOS*/

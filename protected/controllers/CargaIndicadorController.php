@@ -7,6 +7,8 @@
  */
 class CargaIndicadorController extends Controller {
 
+    public $layout = LAYOUT_IMPORTAR;
+
     public function actionIndex() {
         if (Yii::app()->request->isAjaxRequest) {
             return;
@@ -177,7 +179,6 @@ class CargaIndicadorController extends Controller {
                         $dataInsertar = $this->getDatosGuardar($file, $registroInicio, $tamanioBloque);
                         $datosIndicadores = $dataInsertar;
 //                        $_SESSION['clientesRepetidos'] = $dataInsertar['clientesRepetidos'];
-
 //                        if (isset($_SESSION['indicadoresDuplicados'])) {
                         if (isset(Yii::app()->session['indicadoresDuplicados'])) {
 //                            $totalIndicadoresDuplicados = $totalIndicadoresDuplicados + $_SESSION['indicadoresDuplicados'];

@@ -38,15 +38,15 @@ class RptReemplazoRutaForm extends CFormModel {
      */
     public function attributeLabels() {
         return array(
-            'fechagestion' => 'Fecha gestion Supervisor',
+            'fechagestion' => 'Fecha gestion',
 //            'fechaGestionEjecutivo' => 'Fecha gestion Ejecutivo',
 //            'ejecutivo' => 'Ejecutivo asignado ruta',
             'precisionVisitas' => 'Precision visita (metros)',
-            'horaInicioGestion' => 'Seleccione la hora de inicio gestion',
-            'horaFinGestion' => 'Seleccione la hora de fin gestion',
+            'horaInicioGestion' => 'Hora de inicio',
+            'horaFinGestion' => 'Hora de fin',
 //            'comentarioSupervision' => 'Ingresar el comentario de supervision',
 //            'enlaceMapa' => 'Ingresar el enlace del mapa',
-            'accionHistorial' => 'Seleccione la accion a evaluar'
+            'accionHistorial' => 'Accion historial'
         );
     }
 

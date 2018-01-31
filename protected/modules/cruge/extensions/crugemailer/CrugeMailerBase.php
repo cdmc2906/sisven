@@ -87,11 +87,52 @@ abstract class CrugeMailerBase extends CApplicationComponent
 		$headers .= $bcc;
         $headers .= "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type: text/html; charset=utf-8" . "\r\n";
-        $ret = @mail($to, $_subject, $body, $headers);
+        //var_dump($to, $_subject, $body, $headers);die();
+        //$ret = @mail($to, $_subject, $body, $headers);
+        $ret = $this->sendMail($to, $_subject, $body, $headers);
         $tmp = "to:".$to."\nsubject:".$_subject."\nheaders:\n"
 			.$headers."\nbody:".$body."\n";
         Yii::log(__METHOD__."\nreturns:".$ret."\n".$tmp,"email");
         return $ret;
     }
 
+function sendMail ($to, $subject, $message, $additional_headers = null, $additional_parameters = null) {
+    Yii::import('application.extensions.phpmailer.JPhpMailer');
+    $nameFrom = "SISVEN";
+    $from = "sisven@tececab.com.ec";
+//    $passwordFrom = "innova2013";
+    $mail = new JPhpMailer;
+    $mail->IsSMTP();
+    $mail->Host = '172.17.1.4';
+//    $mail->SMTPAuth = true;
+    $mail->Username = $from;
+//    $mail->Password = $passwordFrom;
+    $mail->SetFrom($from, $nameFrom);
+    $mail->Subject = $subject;
+    $mail->AltBody = 'Para ver el mensaje, por favor, utilice un visor de correo electrónico HTML compatible!';
+    $mail->MsgHTML($message);
+    $mail->AddAddress($to);
+    //var_dump($mail); die();
+    return $mail->Send();   
+}
+
+function sendMailFrom ($from, $to, $subject, $message) {
+    Yii::import('application.extensions.phpmailer.JPhpMailer');
+    
+    $mail = new JPhpMailer;
+    $mail->IsSMTP();
+    $mail->Host = 'mail.inen.gob.ec';
+    $mail->SMTPAuth = true;
+    $mail->Username = $from["mail"];
+    $mail->Password = $from["password"];
+    $mail->SetFrom($from["mail"], $from["name"]);
+    $mail->Subject = $subject;
+    $mail->AltBody = 'Para ver el mensaje, por favor, utilice un visor de correo electrónico HTML compatible!';
+    $mail->MsgHTML($message);
+    $mail->AddAddress($to);
+    $mail->CharSet = 'utf-8';
+    $mail->AddCC($from["mail"]);
+    return $mail->Send();   
+}
+    
 }

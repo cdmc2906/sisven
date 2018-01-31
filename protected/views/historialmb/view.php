@@ -9,9 +9,9 @@ $this->breadcrumbs=array(
 
 $this->menu=array(
 //	array('label'=>'List HistorialMbModel', 'url'=>array('index')),
-	array('label'=>'Ingresar item Historial', 'url'=>array('create')),
+//	array('label'=>'Ingresar item Historial', 'url'=>array('create')),
 	array('label'=>'Actualizar item Historial', 'url'=>array('update', 'id'=>$model->h_cod)),
-	array('label'=>'Eliminiar item Historial', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->h_cod),'confirm'=>'Are you sure you want to delete this item?')),
+//	array('label'=>'Eliminiar item Historial', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->h_cod),'confirm'=>'Are you sure you want to delete this item?')),
 	array('label'=>'Administracion Historial', 'url'=>array('admin')),
 );
 ?>

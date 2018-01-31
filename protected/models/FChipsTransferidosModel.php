@@ -28,8 +28,10 @@ class FChipsTransferidosModel extends DAOModel {
                 ,vm_icc
                 ,vm_min
             from tb_venta_movistar
-            where vm_icc not in (select i_imei from tb_indicadores);
+            where vm_icc not in (select i_imei from tb_indicadores)
+            and vm_estado_icc ='ICC OK';
             ";
+//        var_dump($sql);die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
 //        var_dump($data);        die();

@@ -38,15 +38,11 @@ class RptSupervisorVsEjecutivoHistorialForm extends CFormModel {
      */
     public function attributeLabels() {
         return array(
-            'fechagestion' => 'Fecha gestion Supervisor',
-//            'fechaGestionEjecutivo' => 'Fecha gestion Ejecutivo',
-//            'ejecutivo' => 'Ejecutivo asignado ruta',
+            'fechagestion' => 'Fecha gestion',
             'precisionVisitas' => 'Precision visita (metros)',
-            'horaInicioGestion' => 'Seleccione la hora de inicio gestion',
-            'horaFinGestion' => 'Seleccione la hora de fin gestion',
-//            'comentarioSupervision' => 'Ingresar el comentario de supervision',
-//            'enlaceMapa' => 'Ingresar el enlace del mapa',
-            'accionHistorial' => 'Seleccione la accion a evaluar'
+            'horaInicioGestion' => 'Hora de inicio',
+            'horaFinGestion' => 'Hora de fin',
+            'accionHistorial' => 'Accion'
         );
     }
 

@@ -11,7 +11,7 @@ class RptControlVentasMensualController extends Controller {
         if (Yii::app()->request->isAjaxRequest) {
             return;
         } else {
-            $model = new RptResumenHistorialPorFechaForm();
+            $model = new RptControlVentasMensualForm();
             $this->render('/reportes/rptControlVentasMensual', array('model' => $model));
         }
     }

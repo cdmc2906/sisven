@@ -7,11 +7,12 @@
  */
 class CargaHistorialMbController extends Controller {
 
+    public $layout = LAYOUT_IMPORTAR;
+
     public function actionIndex() {
         if (Yii::app()->request->isAjaxRequest) {
             return;
         } else {
-//            unset($_SESSION['historialMbItems']);
             unset(Yii::app()->session['historialMbItems']);
             $model = new CargaHistorialMbForm();
             $this->render('/carga/cargaHistorialMb', array('model' => $model));
@@ -27,6 +28,7 @@ class CargaHistorialMbController extends Controller {
             $historialMbItems = array();
 //            var_dump($_POST);die();
             if (isset($_POST['CargaHistorialMbForm'])) {
+//                var_dump($_POST['CargaHistorialMbForm']);die();
                 $model->attributes = $_POST['CargaHistorialMbForm'];
                 if ($model->validate()) {
 //                    unset($_SESSION['historialMbItems']);
@@ -123,7 +125,7 @@ class CargaHistorialMbController extends Controller {
     public function actionGuardarHistorial() {
         $response = new Response();
         $DclientesRepetidos = '';
-        $mensaje='';
+        $mensaje = '';
         try {
 //            if (isset($_SESSION['archivosHistorialMb'])) {
             if (isset(Yii::app()->session['archivosHistorialMb'])) {
@@ -175,7 +177,7 @@ class CargaHistorialMbController extends Controller {
                                 $transaction->commit();
                                 $totalHistorialGuardados = $totalHistorialGuardados + $countInsert;
                             } else {
-                                
+
                                 $transaction->rollback();
                                 $totalHistorialNoGuardados = $totalHistorialNoGuardados + $countInsert;
                             }
@@ -186,7 +188,7 @@ class CargaHistorialMbController extends Controller {
                     }
 
                     if ($totalHistorialNoGuardados > 0) {
-                       $mensaje = 'Se produjo un error en la carga del archivo';
+                        $mensaje = 'Se produjo un error en la carga del archivo';
                     } else {
                         if ($totalHistorialGuardados > 0)
                             $mensaje = 'Se han cargado ' . $totalHistorialGuardados . ' registros correctamente.';

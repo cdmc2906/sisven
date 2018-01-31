@@ -7,6 +7,8 @@
  */
 class RptResumenHistorialPorFechaController extends Controller {
 
+    public $layout = LAYOUT_FILTRO_GRID;
+
     public function actionIndex() {
         if (Yii::app()->request->isAjaxRequest) {
             return;
@@ -59,7 +61,7 @@ class RptResumenHistorialPorFechaController extends Controller {
 //                            else if ($item['tipo'] == 2)
 //                                array_push($parametrosAlmacenados, $item["indicador"]);
                         }
-
+//                        var_dump($fechasRevisadas);die();
                         $datosResumenGrid = array();
 
                         $reporteConPrecision = array();

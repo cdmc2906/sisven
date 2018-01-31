@@ -80,7 +80,7 @@ function ConfigurarGrids() {
             'RUTA C',
             '#C',
             'ESTADO RUTA',
-            'ESTADO SEC',
+//            'ESTADO SEC',
             'CHIPS',
             'METROS',
             'VALIDACION'
@@ -97,7 +97,7 @@ function ConfigurarGrids() {
             {name: 'RUTACLIENTE', index: 'RUTACLIENTE', width: 50, sortable: false, frozen: true, align: "center"},
             {name: 'SECUENCIARUTA', index: 'SECUENCIARUTA', width: 20, sortable: false, frozen: true, align: "center"},
             {name: 'ESTADOREVISIONR', index: 'ESTADOREVISIONR', width: 100, sortable: false, frozen: true, align: "center"},
-            {name: 'ESTADOREVISIONS', index: 'ESTADOREVISIONS', width: 95, sortable: false, frozen: true, align: "center"},
+//            {name: 'ESTADOREVISIONS', index: 'ESTADOREVISIONS', width: 95, sortable: false, frozen: true, align: "center"},
             {name: 'CHIPSCOMPRADOS', index: 'CHIPSCOMPRADOS', width: 40, sortable: false, formatter: "integer", summaryType: 'sum', align: "center"},
             {name: 'METROS', index: 'METROS', width: 60, sortable: false, formatter: "number", decimalSeparator: ".", thousandsSeparator: "", decimalPlaces: 2, defaultValue: '0.00', summaryType: 'sum', align: "right"},
             {name: 'VALIDACION', index: 'VALIDACION', width: 80, sortable: false, align: "center"},
@@ -110,7 +110,7 @@ function ConfigurarGrids() {
         viewrecords: true,
 //        height: 'auto',
         height: 360,
-        width: 1000,
+        width: 700,
 //        autowidth: true,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensiï¿½n personalizada de las celdas,
@@ -357,7 +357,7 @@ function ConfigurarGrids() {
 
 function GenerarDocumentoReporte(accion) {
     if (true) {
-        window.open('/sisven_2/RptResumenDiarioHistorial/' + accion);
+        window.open('/sisven/RptResumenDiarioHistorial/' + accion);
     } else {
         mostrarVentanaMensaje("Ingrese los parámetros necesarios para generar el reporte", 'Alerta');
     }

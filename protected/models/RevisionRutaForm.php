@@ -29,8 +29,8 @@ class RevisionRutaForm extends CFormModel {
      */
     public function attributeLabels() {
         return array(
-            'fechagestion' => 'Fecha gestion en ruta',
-            'ejecutivo' => 'Ejecutivo asignado ruta',
+            'fechagestion' => 'Fecha gestion',
+            'ejecutivo' => 'Ejecutivo asignado',
         );
     }
 

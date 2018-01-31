@@ -142,7 +142,7 @@ function ConfigurarGridResumen() {
 
 function GenerarDocumentoReporte(accion) {
     if (true) {
-        window.open('/sisven_2/RevisaMinesDesconocidos/' + accion);
+        window.open('/sisven/RevisaMinesDesconocidos/' + accion);
     } else {
         mostrarVentanaMensaje("Ingrese los parámetros necesarios para generar el reporte", 'Alerta');
     }

@@ -43,5 +43,6 @@ $this->menu=array(
 		'vm_fecha_ingreso',
 		'vm_fecha_modificacion',
 		'vm_usuario_ingresa_modifica',
+		'vm_estado_icc',
 	),
 )); ?>

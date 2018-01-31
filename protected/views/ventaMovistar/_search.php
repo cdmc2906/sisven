@@ -121,6 +121,11 @@
 		<?php echo $form->textField($model,'vm_usuario_ingresa_modifica'); ?>
 	</div>
 
+	<div class="row">
+		<?php echo $form->label($model,'vm_estado_icc'); ?>
+		<?php echo $form->textField($model,'vm_estado_icc',array('size'=>60,'maxlength'=>250)); ?>
+	</div>
+
 	<div class="row buttons">
 		<?php echo CHtml::submitButton('Search'); ?>
 	</div>

@@ -67,7 +67,7 @@ function ConfigurarGrids() {
             {
                 loadonce: true
                 , height: 100
-                , width: 300
+                , width: 250
                 , mtype: 'POST'
                 , url: 'VerDatosArchivo'
                 , datatype: "json"
@@ -96,14 +96,14 @@ function ConfigurarGrids() {
                 }
                 , onSelectRow: function (idFilaSeleccionada) {
                     var fila = jQuery("#tblGridSupervisores").jqGrid('getRowData', idFilaSeleccionada);
-                    jQuery("#tblGridRutas").jqGrid('setCaption', "Detalle rutas visitadas: " + fila.SUPERVISOR).trigger('reloadGrid');
+                    jQuery("#tblGridRutas").jqGrid('setCaption', "Rutas visitadas: " + fila.SUPERVISOR).trigger('reloadGrid');
                     cargarDetalleRutas(fila.CODIGOEJECUTIVO,fila.SUPERVISOR);
                 }
             });
     jQuery("#tblGridRutas").jqGrid(
             {
                 height: 100
-                , width: 300
+                , width: 250
                 , datatype: "json"
                 , colNames: [
                     'SUPERVISOR',
@@ -155,13 +155,13 @@ function ConfigurarGrids() {
             'FECHA GESTION E',
             'CODIGO',
             'CLIENTE',
-            'METROS SUP',
-            'ESTADO SUP',
-            'METROS EJE',
-            'ESTADO EJE',
+            'METROS S',
+            'ESTADO S',
+            'METROS E',
+            'ESTADO E',
 //            'DISTANCIA_SC',
 //            'DISTANCIA_EC',
-            'DISTANCIA_SE',
+            'METROS_SE',
             'LATITUD_CLIENTE',
             'LONGITID_CLIENTE',
             'LATITUD_SUPERVISOR',
@@ -174,10 +174,10 @@ function ConfigurarGrids() {
             {name: 'FECHAGESTIONE', index: 'FECHAGESTIONE', hidden: true, width: 80, sortable: false, frozen: true},
             {name: 'CODIGOCLIENTE', index: 'CODIGOCLIENTE', width: 80, sortable: false, frozen: true},
             {name: 'CLIENTE', index: 'CLIENTE', width: 230, sortable: false, frozen: true},
-            {name: 'METROSS', index: 'METROSS', width: 95, sortable: false, frozen: true, align: "center"},
+            {name: 'METROSS', index: 'METROSS', width: 80, sortable: false, frozen: true, align: "center"},
             {name: 'ESTADOS', index: 'ESTADOS', width: 100, sortable: false, frozen: true, align: "center"},
-            {name: 'METROSE', index: 'METROSE', width: 95, sortable: false, frozen: true, align: "center"},
-            {name: 'ESTADOE', index: 'ESTADOE', width: 100, sortable: false, frozen: true, align: "center"},
+            {name: 'METROSE', index: 'METROSE', width: 80, sortable: false, frozen: true, align: "center"},
+            {name: 'ESTADOE', index: 'ESTADOE', width: 70, sortable: false, frozen: true, align: "center"},
 //            {name: 'DISTANCIA_SC', index: 'DISTANCIA_SC', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},
 //            {name: 'DISTANCIA_EC', index: 'DISTANCIA_EC', hidden: true, width: 20, sortable: false, frozen: true, align: "center"},
             {name: 'DISTANCIA_SE', index: 'DISTANCIA_SE', width: 95, sortable: false, frozen: true, align: "center"},
@@ -194,7 +194,7 @@ function ConfigurarGrids() {
         sortorder: 'ASC',
         viewrecords: true,
         height: 360,
-        width: 1000,
+//        width: 1000,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensiï¿½n personalizada de las celdas,
         caption: "Detalle revision historial",
@@ -288,15 +288,15 @@ function ConfigurarGrids() {
         url: 'ConfigurarGrid',
         colNames: ['Visita', 'Cantidad'],
         colModel: [
-            {name: 'VISITA', index: 'VISITA', width: 100, sortable: false, frozen: true},
-            {name: 'CANTIDAD', index: 'CANTIDAD', width: 90, sortable: false, frozen: true, align: 'center'}
+            {name: 'VISITA', index: 'VISITA', width:60, sortable: false, frozen: true},
+            {name: 'CANTIDAD', index: 'CANTIDAD', width: 70, sortable: false, frozen: true, align: 'center'}
         ],
         rowNum: 60,
         rowList: ElementosPagina,
         sortorder: 'ASC',
         viewrecords: true,
         height: 46,
-        width: 200,
+        width: 130,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensiï¿½n personalizada de las celdas,
         footerrow: true,
@@ -305,7 +305,7 @@ function ConfigurarGrids() {
         gridComplete: function () {
             var $grid = $('#tblResumenVisitasValidasInvalidasSupervisor');
             var colSum = $grid.jqGrid('getCol', 'CANTIDAD', false, 'sum');
-            $grid.jqGrid('footerData', 'set', {'VISITA': 'Total Visitas'});
+            $grid.jqGrid('footerData', 'set', {'VISITA': 'Total'});
             $grid.jqGrid('footerData', 'set', {'CANTIDAD': colSum});
 
         }
@@ -392,15 +392,15 @@ function ConfigurarGrids() {
         url: 'ConfigurarGrid',
         colNames: ['Visita', 'Cantidad'],
         colModel: [
-            {name: 'VISITA', index: 'VISITA', width: 100, sortable: false, frozen: true},
-            {name: 'CANTIDAD', index: 'CANTIDAD', width: 90, sortable: false, frozen: true, align: 'center'}
+            {name: 'VISITA', index: 'VISITA', width: 60, sortable: false, frozen: true},
+            {name: 'CANTIDAD', index: 'CANTIDAD', width: 70, sortable: false, frozen: true, align: 'center'}
         ],
         rowNum: 60,
         rowList: ElementosPagina,
         sortorder: 'ASC',
         viewrecords: true,
         height: 46,
-        width: 200,
+        width: 130,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensiï¿½n personalizada de las celdas,
         footerrow: true,
@@ -409,7 +409,7 @@ function ConfigurarGrids() {
         gridComplete: function () {
             var $grid = $('#tblResumenVisitasValidasInvalidasEjecutivo');
             var colSum = $grid.jqGrid('getCol', 'CANTIDAD', false, 'sum');
-            $grid.jqGrid('footerData', 'set', {'VISITA': 'Total Visitas'});
+            $grid.jqGrid('footerData', 'set', {'VISITA': 'Total'});
             $grid.jqGrid('footerData', 'set', {'CANTIDAD': colSum});
 
         }
@@ -538,7 +538,7 @@ function cargarInformes(codigoSupervisor, codigoEjecutivo, ruta, diaRuta) {
 
 function GenerarDocumentoReporte(accion) {
 //    if (true) {
-    window.open('/sisven_2/RptSupervisorVsEjecutivoHistorial/' + accion);
+    window.open('/sisven/RptSupervisorVsEjecutivoHistorial/' + accion);
 //    } else {
 //        mostrarVentanaMensaje("Ingrese los parámetros necesarios para generar el reporte", 'Alerta');
 //    }

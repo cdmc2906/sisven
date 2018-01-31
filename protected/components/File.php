@@ -381,6 +381,52 @@ class File {
         return $datosCarga;
     }
 
+    public function getDatosMinesValidacion($start, $blockSize) {
+        $this->Open();
+        $data = $this->Archivo;
+
+        if ($data) {
+            $datosCarga = array();
+            $lineNumber = 1;
+
+            while (!feof($data)) {
+                $strFilas = fgets($data, 4096);
+                if ($lineNumber >= $start && $lineNumber <= ($start + $blockSize) - 1) {
+                    $arrColumnas = explode($this->Delimitador, $strFilas);
+                    if (isset($arrColumnas[8])) {
+                        if ($arrColumnas[0] != 'FECHA') { // Quita la fila de encabezados
+                            $datos = array(
+                                'FECHA' => utf8_encode(trim($arrColumnas[0])),
+                                'BODEGA' => utf8_encode(trim($arrColumnas[1])),
+                                'NOMBRE_CLIENTE' => utf8_encode(trim($arrColumnas[2])),
+                                'CODIGO_GRUPO' => trim($arrColumnas[3]),
+                                'DETALLE' => trim($arrColumnas[4]),
+                                'IMEI' => trim($arrColumnas[5]),
+                                'MIN' => trim($arrColumnas[6]),
+                                'VENDEDOR' => utf8_encode(trim($arrColumnas[7])),
+                                'USUARIOASGINADO' => utf8_encode(trim($arrColumnas[8])),
+                            );
+
+                            array_push($datosCarga, $datos);
+                            unset($datos);
+                        }
+                    }
+                }
+
+                if ($lineNumber > ($start + $blockSize) - 1) {
+                    break;
+                }
+
+                $lineNumber++;
+            }
+        }
+//        var_dump($datosCarga);                        die();
+//        die();
+        unset($data);
+        $this->Close();
+        return $datosCarga;
+    }
+
     public function getDatosClientes($start, $blockSize) {
         $this->Open();
         $data = $this->Archivo;
@@ -394,15 +440,15 @@ class File {
                 if ($lineNumber >= $start && $lineNumber <= ($start + $blockSize) - 1) {
                     $arrColumnas = explode($this->Delimitador, $strFilas);
 //                    var_dump(utf8_encode($arrColumnas[0]));die();
-//                    var_dump($arrColumnas[22]);die();
+//                    var_dump($arrColumnas[0]);die();
 //                    var_dump(count($arrColumnas));die();
-                    if (isset($arrColumnas[22])) {
-                        if (utf8_encode($arrColumnas[0]) != 'Codigo') { // Quita la fila de encabezados
+                    if (isset($arrColumnas[3])) {
+                        if (utf8_encode($arrColumnas[0]) != 'Cliente') { // Quita la fila de encabezados
                             $datos = array(
-                                'CODIGO' => utf8_encode(trim($arrColumnas[1])),
-                                'CLIENTENOMBRE' => utf8_encode(trim(trim($arrColumnas[2], '\"'))),
-                                'LATITUD' => trim($arrColumnas[20]),
-                                'LONGITUD' => trim($arrColumnas[21]),
+                                'CODIGO' => utf8_encode(trim($arrColumnas[0])),
+                                'CLIENTENOMBRE' => utf8_encode(trim(trim($arrColumnas[1], '\"'))),
+                                'LATITUD' => (trim($arrColumnas[2]) == 'null') ? '0' : trim($arrColumnas[2]),
+                                'LONGITUD' =>(trim($arrColumnas[3]) == 'null') ? '0' : trim($arrColumnas[3]),
                             );
 //                            var_dump($datos);die();
                             array_push($datosCarga, $datos);
@@ -706,10 +752,10 @@ class File {
                             $datos = array(
                                 'RUTA' => utf8_encode(trim($arrColumnas[0])),
                                 'CLIENTE' => utf8_encode(trim($arrColumnas[1])),
-                                'NOMBRE' => trim(trim(utf8_encode($arrColumnas[2]),'"'),' 	'),//utf8_encode(trim($arrColumnas[2])),
+                                'NOMBRE' => trim(trim(utf8_encode($arrColumnas[2]), '"'), ' 	'), //utf8_encode(trim($arrColumnas[2])),
                                 'DIRECCION' => utf8_encode(trim($arrColumnas[3])),
-                                'DIRECCIONDESCRIPCION' => trim(trim(utf8_encode($arrColumnas[4]),'"'),'	'),//utf8_encode(trim($arrColumnas[4])),
-                                'REFERENCIA' => trim(trim(utf8_encode($arrColumnas[5]),'"'),'	'),//utf8_encode(trim($arrColumnas[5])),
+                                'DIRECCIONDESCRIPCION' => trim(trim(utf8_encode($arrColumnas[4]), '"'), '	'), //utf8_encode(trim($arrColumnas[4])),
+                                'REFERENCIA' => trim(trim(utf8_encode($arrColumnas[5]), '"'), '	'), //utf8_encode(trim($arrColumnas[5])),
                                 'SEMANA' => trim($arrColumnas[6]),
                                 'DIA' => trim($arrColumnas[7]),
                                 'SECUENCIA' => trim($arrColumnas[8]),

@@ -480,7 +480,7 @@ function cargarInformes(codigoSupervisor, codigoEjecutivo, ruta, diaRuta) {
 
 function GenerarDocumentoReporte(accion) {
 //    if (true) {
-    window.open('/sisven_2/RptReemplazoRuta/' + accion);
+    window.open('/sisven/RptReemplazoRuta/' + accion);
 //    } else {
 //        mostrarVentanaMensaje("Ingrese los parámetros necesarios para generar el reporte", 'Alerta');
 //    }

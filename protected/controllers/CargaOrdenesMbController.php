@@ -7,6 +7,8 @@
  */
 class CargaOrdenesMbController extends Controller {
 
+    public $layout = LAYOUT_IMPORTAR;
+
     public function actionIndex() {
         if (Yii::app()->request->isAjaxRequest) {
             return;
@@ -241,7 +243,7 @@ class CargaOrdenesMbController extends Controller {
             if (!$exisArray) {
 //                var_dump($filaArchivo['FECHACREACION']);die();
                 $fechaCreacion = DateTime::createFromFormat('d/m/Y H:i:s', $filaArchivo['FECHACREACION']);
-                
+
                 $sfechaCreacion = $fechaCreacion->format(FORMATO_FECHA_LONG);
 
                 $fechaDespacho = DateTime::createFromFormat('d/m/Y H:i:s', $filaArchivo['FECHADESPACHO']);

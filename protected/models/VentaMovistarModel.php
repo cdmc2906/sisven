@@ -26,6 +26,7 @@
  * @property string $vm_fecha_ingreso
  * @property string $vm_fecha_modificacion
  * @property integer $vm_usuario_ingresa_modifica
+ * @property string $vm_estado_icc
  */
 class VentaMovistarModel extends CActiveRecord
 {
@@ -47,10 +48,11 @@ class VentaMovistarModel extends CActiveRecord
 		return array(
 			array('vm_usuario_ingresa_modifica', 'numerical', 'integerOnly'=>true),
 			array('vm_transaccion, vm_distribuidor, vm_nombredistribuidor, vm_codigoscl, vm_inventarioanteriorfuente, vm_inventarioactualfuente, vm_tiposim, vm_icc, vm_min, vm_estado, vm_iddestino, vm_nombredestino, vm_inventarioanteriordestino, vm_inventarioactualdestino, vm_canal, vm_lote, vm_zona', 'length', 'max'=>500),
+			array('vm_estado_icc', 'length', 'max'=>250),
 			array('vm_fecha, vm_fecha_ingreso, vm_fecha_modificacion', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('vm_cod, vm_fecha, vm_transaccion, vm_distribuidor, vm_nombredistribuidor, vm_codigoscl, vm_inventarioanteriorfuente, vm_inventarioactualfuente, vm_tiposim, vm_icc, vm_min, vm_estado, vm_iddestino, vm_nombredestino, vm_inventarioanteriordestino, vm_inventarioactualdestino, vm_canal, vm_lote, vm_zona, vm_fecha_ingreso, vm_fecha_modificacion, vm_usuario_ingresa_modifica', 'safe', 'on'=>'search'),
+			array('vm_cod, vm_fecha, vm_transaccion, vm_distribuidor, vm_nombredistribuidor, vm_codigoscl, vm_inventarioanteriorfuente, vm_inventarioactualfuente, vm_tiposim, vm_icc, vm_min, vm_estado, vm_iddestino, vm_nombredestino, vm_inventarioanteriordestino, vm_inventarioactualdestino, vm_canal, vm_lote, vm_zona, vm_fecha_ingreso, vm_fecha_modificacion, vm_usuario_ingresa_modifica, vm_estado_icc', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -93,6 +95,7 @@ class VentaMovistarModel extends CActiveRecord
 			'vm_fecha_ingreso' => 'Vm Fecha Ingreso',
 			'vm_fecha_modificacion' => 'Vm Fecha Modificacion',
 			'vm_usuario_ingresa_modifica' => 'Vm Usuario Ingresa Modifica',
+			'vm_estado_icc' => 'Vm Estado Icc',
 		);
 	}
 
@@ -136,6 +139,7 @@ class VentaMovistarModel extends CActiveRecord
 		$criteria->compare('vm_fecha_ingreso',$this->vm_fecha_ingreso,true);
 		$criteria->compare('vm_fecha_modificacion',$this->vm_fecha_modificacion,true);
 		$criteria->compare('vm_usuario_ingresa_modifica',$this->vm_usuario_ingresa_modifica);
+		$criteria->compare('vm_estado_icc',$this->vm_estado_icc,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

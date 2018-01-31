@@ -196,6 +196,6 @@ function ConfigurarGridMayoristas() {
 
 function GenerarDocumentoReporte(accion) {
     if (true) {
-        window.open('/sisven_2/RptResumenHistorialPorFecha/' + accion);
+        window.open('/sisven/RptResumenHistorialPorFecha/' + accion);
     }
 }

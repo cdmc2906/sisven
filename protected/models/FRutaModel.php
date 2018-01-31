@@ -164,7 +164,7 @@ class FRutaModel extends DAOModel {
         return $data;
     }
 
-    public function getTotalChipsVentaDia($fechaGestion, $horaInicio, $codEjecutivo) {
+    public function getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechaGestion, $horaInicio, $codEjecutivo) {
 //        $fechaHoraGestion = $fechaGestion . ' 09:00';
 //        $fechaHoraDiaDespues = date('Y-m-d', strtotime($fechaGestion . ' + 1 days')) . ' 09:00';
         $fechaHoraGestion = $fechaGestion . ' ' . $horaInicio;
@@ -175,10 +175,28 @@ class FRutaModel extends DAOModel {
             SELECT IFNULL(SUM(O_SUBTOTAL),0) AS RESPUESTA
                 FROM tb_ordenes_mb  
                 WHERE 1=1 
-                    -- AND DATE(O_FCH_CREACION)='" . $fechaGestion . "' 
                     AND O_FCH_CREACION BETWEEN '" . $fechaHoraGestion . "' AND '" . $fechaHoraDiaDespues . "'
                     AND O_SUBTOTAL>0 
                     AND O_USUARIO='" . $codEjecutivo . "';
+           ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+    
+    public function getTotalChipsVentaxDiaxHoraInicioxCliente($fechaGestion, $horaInicio, $codCliente) {
+        $fechaHoraGestion = $fechaGestion . ' ' . $horaInicio;
+        $fechaHoraDiaDespues = date('Y-m-d', strtotime($fechaGestion . ' + 1 days')) . ' ' . $horaInicio;
+        $sql = "
+            SELECT IFNULL(SUM(O_SUBTOTAL),0) AS RESPUESTA
+                FROM tb_ordenes_mb  
+                WHERE 1=1 
+                    AND O_FCH_CREACION BETWEEN '" . $fechaHoraGestion . "' AND '" . $fechaHoraDiaDespues . "'
+                    AND O_SUBTOTAL>0 
+                    AND o_cod_cliente='" . $codCliente . "';
            ";
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
@@ -393,6 +411,28 @@ class FRutaModel extends DAOModel {
                 and h_usuario='" . $ejecutivo . "'
                 and h_ruta='" . $ruta . "'
                 and h_accion='" . $accionRevisar . "' )
+            ;";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getClientesxRuta($codigoRuta) {
+        $sql = "
+            select 
+                    r_cod_cliente as CODIGOCLIENTE
+                    ,r_nom_cliente as NOMBRECLIENTE
+                    ,'' as CONTACTOS
+                    ,'' as ESTADOVISITA
+                    ,'' as VENTA
+                    ,'' as LLAMADAANTERIOR
+                from tb_ruta_mb 
+                where 1=1 
+                    and r_ruta='" . $codigoRuta . "'
+                order by r_secuencia
             ;";
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);

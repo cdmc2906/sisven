@@ -94,6 +94,10 @@
 	<?php echo CHtml::encode($data->vm_usuario_ingresa_modifica); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('vm_estado_icc')); ?>:</b>
+	<?php echo CHtml::encode($data->vm_estado_icc); ?>
+	<br />
+
 	*/ ?>
 
 </div>

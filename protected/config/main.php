@@ -25,7 +25,7 @@ return array(
             'class' => 'system.gii.GiiModule',
             'password' => '1234',
             // If removed, Gii defaults to localhost only. Edit carefully to taste.
-            'ipFilters' => array('127.0.0.1', '::1','10.130.1.67'),
+            'ipFilters' => array('127.0.0.1', '::1', '10.130.1.67'),
         ),
         'cruge' => array(
             'tableprefix' => 'cruge_',
@@ -63,20 +63,27 @@ return array(
             'afterSessionExpiredUrl' => null,
             // manejo del layout con cruge.
             //
-            'loginLayout' => '//layouts/column2',
-            'registrationLayout' => '//layouts/column2',
-            'activateAccountLayout' => '//layouts/column2',
-            'editProfileLayout' => '//layouts/column2',
+//            'loginLayout' => '//layouts/column2',
+            'loginLayout' => '//layouts/main_login',
+//            'registrationLayout' => '//layouts/column2',
+            'registrationLayout' => '//layouts/main_login',
+//            'activateAccountLayout' => '//layouts/column2',
+            'activateAccountLayout' => '//layouts/main_login',
+//            'editProfileLayout' => '//layouts/column2',
+            'editProfileLayout' => '//layouts/main_login',
+            'resetPasswordLayout' => '//layouts/main_login',
             // en la siguiente puedes especificar el valor "ui" o "column2" para que use el layout
             // de fabrica, es basico pero funcional.  si pones otro valor considera que cruge
             // requerirá de un portlet para desplegar un menu con las opciones de administrador.
             //
             'generalUserManagementLayout' => 'ui',
+//            'generalUserManagementLayout' => 'layouts/main_login',
             // permite indicar un array con los nombres de campos personalizados, 
             // incluyendo username y/o email para personalizar la respuesta de una consulta a: 
             // $usuario->getUserDescription(); 
             'userDescriptionFieldsArray' => array('email'),
         ),
+        'notifyii',
     ),
     // application components
     'components' => array(
@@ -84,6 +91,13 @@ return array(
         //  IMPORTANTE:  asegurate de que la entrada 'user' (y format) que por defecto trae Yii
         //               sea sustituida por estas a continuación:
         //
+        
+        'clientScript' => array(
+            'scriptMap' => array(
+//        'jquery.js'=>false,
+                'jquery.min.js' => false,
+            )
+        ),
         'user' => array(
             'allowAutoLogin' => true,
             'class' => 'application.modules.cruge.components.CrugeWebUser',
@@ -94,8 +108,8 @@ return array(
         ),
         'crugemailer' => array(
             'class' => 'application.modules.cruge.components.CrugeMailer',
-            'mailfrom' => 'email-desde-donde-quieres-enviar-los-mensajes@xxxx.com',
-            'subjectprefix' => 'Tu Encabezado del asunto - ',
+            'mailfrom' => 'sisven@tececab.com.ec',
+            'subjectprefix' => 'SISVEN - ',
             'debug' => true,
         ),
         'format' => array(
@@ -108,6 +122,8 @@ return array(
         'urlManager' => array(
             'urlFormat' => 'path',
             'showScriptName' => false,
+            'urlSuffix' => '.jsp',
+            'caseSensitive' => true,
             'rules' => array(
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
@@ -146,7 +162,7 @@ return array(
             'routes' => array(
                 array(
                     'class' => 'CFileLogRoute',
-                    'levels' => 'error, warning',
+                    'levels' => 'error, warning, rbac',
                 ),
             // uncomment the following to show log messages on web pages
             /*
@@ -161,22 +177,21 @@ return array(
     // using Yii::app()->params['paramName']
     'params' => array(
         // this is used in contact page
-        'mensajeExcepcion'=>'Se ha generado un error en el sistema.',
+        'mensajeExcepcion' => 'Se ha generado un error en el sistema.',
         'adminEmail' => 'webmaster@example.com',
-        'accioniniciovisita'=>'Inicio visita',        
-        'ivadoce'=>'0.12',
-        'ivaincdoce'=>'1.12',
-        
+        'accioniniciovisita' => 'Inicio visita',
+        'ivadoce' => '0.12',
+        'ivaincdoce' => '1.12',
         'archivosConsumo' => 'C:\carga_mobilvendor\consumo' . date('YmdHs') . '.csv',
         'archivosCompra' => 'C:\carga_mobilvendor\compra' . date('YmdHs') . '.csv',
         'archivosIndicadores' => 'C:\carga_mobilvendor\indicador' . date('YmdHs') . '.csv',
         'archivosHistorialMb' => 'C:\carga_mobilvendor\historial' . date('YmdHs') . '.csv',
+        'archivosMinesValidacion' => 'C:\carga_mobilvendor\minesValidacion' . date('YmdHs') . '.csv',
         'archivosOrdenesMb' => 'C:\carga_mobilvendor\ordenes' . date('YmdHs') . '.csv',
         'archivosRutasMb' => 'C:\carga_mobilvendor\rutas' . date('YmdHs') . '.csv',
         'archivosVentasMovistar' => 'C:\carga_mobilvendor\ventasMovistar' . date('YmdHs') . '.csv',
         'archivosTransferenciasMovistar' => 'C:\carga_mobilvendor\transferenciasMovistar' . date('YmdHs') . '.csv',
         'archivosCoordenadasClientes' => 'C:\carga_mobilvendor\coordenadasClientes' . date('YmdHs') . '.csv',
-        
 //        'archivosConsumo' => '/var/tmp/archivos-sisven/consumo' . date('YmdHs') . '.csv',
 //        'archivosCompra' => '/var/tmp/archivos-sisven/compra' . date('YmdHs') . '.csv',
 //        'archivosIndicadores' => '/var/tmp/archivos-sisven/indicador' . date('YmdHs') . '.csv',
@@ -186,6 +201,5 @@ return array(
 //        'archivosVentasMovistar' => '/var/tmp/archivos-sisven/ventasMovistar' . date('YmdHs') . '.csv',
 //        'archivosCoordenadasClientes' => '/var/tmp/archivos-sisven/coordenadasClientes' . date('YmdHs') . '.csv',
 //        
-        
     ),
 );

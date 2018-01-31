@@ -7,11 +7,12 @@
  */
 class CargaRutasMbController extends Controller {
 
+    public $layout = LAYOUT_IMPORTAR;
+
     public function actionIndex() {
         if (Yii::app()->request->isAjaxRequest) {
             return;
         } else {
-//            unset($_SESSION['rutasMbItems']);
             unset(Yii::app()->session['rutasMbItems']);
             $model = new CargaRutasMbForm();
             $this->render('/carga/cargaRutasMb', array('model' => $model));
@@ -164,12 +165,12 @@ class CargaRutasMbController extends Controller {
                     } else {
 
                         $mensaje = 'Se han cargado ' . $totalRutasGuardados . ' registros correctamente.';
-                        
+
 //                        if ($_SESSION['itemRutaActualizado'] > 0)
 //                            $mensaje .= '<br> Se han actualizado ' . $_SESSION['itemRutaActualizado'] . ' registros.';
 //                        if ($_SESSION['itemRutaDuplicado'] > 0)
 //                            $mensaje .= '<br> Se han omitido ' . $_SESSION['itemRutaDuplicado'] . ' registros duplicados en el archivo.';
-                        
+
                         if (Yii::app()->session['itemRutaActualizado'] > 0)
                             $mensaje .= '<br> Se han actualizado ' . Yii::app()->session['itemRutaActualizado'] . ' registros.';
                         if (Yii::app()->session['itemRutaDuplicado'] > 0)

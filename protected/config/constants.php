@@ -3,7 +3,15 @@
 /**
  * Constantes ETIQUETAS
  */
-define('HOME_PRINCIPAL', '192.168.10.15:9090');
+define('LAYOUT_ADMIN_CATALOG', '//layouts/layout_admin_catalog');
+define('LAYOUT_IMPORTAR', '//layouts/layout_importar');
+define('LAYOUT_INDEX', '//layouts/main');
+define('LAYOUT_FILTRO_GRID', '//layouts/main');
+
+define('TIPO_NOVEDAD_NO_COMPRA_CHIP', 'No compra chip');
+define('TIPO_NOVEDAD_GENERAL', 'Incidente');
+
+
 define('MINMETROSVISITAVALIDA', '10');
 define('MAXMETROSVISITAVALIDA', '15');
 define('ELEMENTOS_PAGINA', '[15,30,50,100]');
@@ -32,7 +40,7 @@ define('GRUPO_USUARIOS_ADMIN', '\'QU17\',\'QU19\',\'QU21\',\'QU22\',\'QU26\',\'Q
 
 
 define('GRUPO_EJECUTIVOS_ZONA', '\'QU17\',\'QU19\',\'QU21\',\'QU22\',\'QU26\',\'QU25\'');
-define('GRUPO_SUPERVISORES', '\'QU20\',\'QU39\',\'QU47\'');
+define('GRUPO_SUPERVISORES', '\'QU20\',\'QU39\',\'QU47\',\'QU55\'');
 define('GRUPO_SERVICIO_CLIENTE', '\'QU23\',\'QU24\'');
 define('GRUPO_TODOS', '\'QU17\',\'QU19\',\'QU21\',\'QU22\',\'QU26\',\'QU25\',\'QU23\',\'QU24\',\'QU20\',\'QU39\',\'QU47\'');
 define('RUTASNOREVISAR', '\'RZS 47\',\'RZS 39\',\'RZS 20\'');

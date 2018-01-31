@@ -27,6 +27,7 @@ class Libreria {
     public function DistanciaEntreCoordenadas(
     $latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo) {
         // convert from degrees to radians
+//        var_dump($latitudeFrom,$longitudeFrom,$latitudeTo,$longitudeTo);die();
         $earthRadius = 6371000;
         $latFrom = deg2rad($latitudeFrom);
         $lonFrom = deg2rad($longitudeFrom);
@@ -102,8 +103,8 @@ class Libreria {
         unset(Yii::app()->session['coordenadasClientes']);
         unset(Yii::app()->session['coordenadasVisitas']);
 
-        $libreriaFunciones = new Libreria();
-        $fLibreria = new Libreria();
+//        $this = new Libreria();
+//        $this = new Libreria();
         $fComentarioOficina = new FComentariosOficinaModel();
 
         $fComentarioSupervision = new FComentariosSupervisionModel ();
@@ -154,16 +155,20 @@ class Libreria {
 //                                var_dump($itemHistorialEjecutivo);die();
                 $cliente = ClienteModel::model()->findAllByAttributes(array('cli_codigo_cliente' => $itemHistorialEjecutivo['CODIGOCLIENTE']));
                 if (count($cliente) > 0) {
-                    $latitudCliente = str_replace(',', '.', $cliente[0]['cli_latitud']);
-                    $longitudCliente = str_replace(',', '.', $cliente[0]['cli_longitud']);
-                    $distanciaEntreEjecutivoCliente = $libreriaFunciones->DistanciaEntreCoordenadas(
+                    $_latitudCliente = str_replace(',', '.', $cliente[0]['cli_latitud']);
+                    $_longitudCliente = str_replace(',', '.', $cliente[0]['cli_longitud']);
+
+                    $latitudCliente = $_latitudCliente;
+                    $longitudCliente = $_longitudCliente;
+
+                    $distanciaEntreEjecutivoCliente = $this->DistanciaEntreCoordenadas(
                             $itemHistorialEjecutivo["LATITUD"]
                             , $itemHistorialEjecutivo["LONGITUD"]
                             , $latitudCliente
                             , $longitudCliente);
                     $distanciaEntreEjecutivoCliente = number_format($distanciaEntreEjecutivoCliente, 2, '.', '');
 
-                    $distanciaEntreCliente = $libreriaFunciones->DistanciaEntreCoordenadas(
+                    $distanciaEntreCliente = $this->DistanciaEntreCoordenadas(
                             $latitudCliente
                             , $longitudCliente
                             , $latitudClienteAnterior
@@ -210,18 +215,20 @@ class Libreria {
                 if (isset($F[0]))
                     $finVisita = new DateTime($F[0]["HORAVISITA"]);
                 $tiempoGestion = $inicioVisita->diff($finVisita)->format("%h:%I:%S");
-                $totalGestion = $libreriaFunciones->SumaHoras($totalGestion, $tiempoGestion);
+                $totalGestion = $this->SumaHoras($totalGestion, $tiempoGestion);
 
 //                                var_dump(count($detalleGestionEjecutivo));
                 if (count($detalleGestionEjecutivo) > 0) {
                     $tiempoTraslado = $inicioVisita->diff($finVisitaAnterior)->format("%h:%I:%S");
-                    $totalTraslados = $libreriaFunciones->SumaHoras($totalTraslados, $tiempoTraslado);
+                    $totalTraslados = $this->SumaHoras($totalTraslados, $tiempoTraslado);
                 }
 
                 $nombre = array();
                 $nombre = explode(' ', $itemHistorialEjecutivo['NOMBRECLIENTE']);
                 $primerApellido = $nombre[0];
-                $primerNombre = (isset($nombre[2]) && strlen($nombre[2]) > 0) ? $nombre[2] : $nombre[1];
+//                $primerNombre =  $nombre[1];
+                $nombre1 = (isset($nombre[1]) && strlen($nombre[1]) > 0) ? $nombre[1] : '';
+                $primerNombre = (isset($nombre[2]) && strlen($nombre[2]) > 0) ? $nombre[2] : $nombre1;
 
                 $dat = array(
                     'FECHA_GESTION' => $itemHistorialEjecutivo['FECHAVISITA'],
@@ -233,12 +240,16 @@ class Libreria {
                     'T_GESTION' => $tiempoGestion,
                     'T_TRASLADO' => $tiempoTraslado,
                     'DISTANCIA_EJECUTIVO_CLIENTE' => $distanciaEntreEjecutivoCliente,
-                    'DISTANCIA_CLIENTES' => $distanciaEntreCliente,
+                    'DISTANCIA_CLIENTES' => isset($distanciaEntreCliente) ? $distanciaEntreCliente : 0,
                 );
                 $finVisitaAnterior = $finVisita;
                 if (isset($cliente[0]['cli_latitud']) && $cliente[0]['cli_longitud']) {
-                    $latitudClienteAnterior = str_replace(',', '.', $cliente[0]['cli_latitud']);
-                    $longitudClienteAnterior = str_replace(',', '.', $cliente[0]['cli_longitud']);
+                    $_latitudClienteAnterior = str_replace(',', '.', $cliente[0]['cli_latitud']);
+                    $_longitudClienteAnterior = str_replace(',', '.', $cliente[0]['cli_longitud']);
+
+                    $latitudClienteAnterior = $_latitudCliente;
+                    $longitudClienteAnterior = $_longitudCliente;
+
                     if (isset($I[0]))
                         $ultimoCodigoHistorial = $I[0]['IDHISTORIAL'];
                 }
@@ -315,7 +326,7 @@ class Libreria {
             if ($mesAnterior[0] == $mesGestion - 1) {//VENTAS DE FIN DE MES
                 if ($diaGestion == 1) {//1--> Lunes
                     $fechaViernes = date('Y-m-d', strtotime($fechagestion . ' - 3 days'));
-                    $_totalVentaViernes = intval($rsTotales->getTotalChipsVentaDia($fechaViernes, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                    $_totalVentaViernes = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechaViernes, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalVentaRutaViernes = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], 6, $fechaViernes, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalVentaFueraRutaViernes = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], 6, $fechaViernes, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalClientesVentaViernes = intval($rsTotales->getTotalClientesVenta($fechaViernes, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
@@ -324,7 +335,7 @@ class Libreria {
                     $_totalVentaRutaFinSemana = intval($rsTotales->getTotalChipsVentaFinSemana($fechaViernes, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalClientesVentaFinSemana = intval($rsTotales->getTotalClientesVentaFinSemana($fechaViernes, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
 
-                    $_totalVentaDiaLunes = intval($rsTotales->getTotalChipsVentaDia($fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                    $_totalVentaDiaLunes = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalVentaRutaLunes = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalVentaFueraRutaLunes = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalClientesVentaLunes = intval($rsTotales->getTotalClientesVenta($fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
@@ -336,12 +347,12 @@ class Libreria {
                 } else {
                     $fechaDiaAnterior = date('Y-m-d', strtotime($fechagestion . ' - 1 days'));
 
-                    $_totalVentaDiaAnterior = intval($rsTotales->getTotalChipsVentaDia($fechaDiaAnterior, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                    $_totalVentaDiaAnterior = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechaDiaAnterior, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalVentaRutaDiaAnterior = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $diaGestion, $fechaDiaAnterior, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalVentaFueraRutaDiaAnterior = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $diaGestion, $fechaDiaAnterior, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalClientesVentaDiaAnterior = intval($rsTotales->getTotalClientesVenta($fechaDiaAnterior, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
 
-                    $_totalVentaDiaE = intval($rsTotales->getTotalChipsVentaDia($fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                    $_totalVentaDiaE = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalVentaRutaDia = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalVentaFueraRutaDia = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalClientesVentaDia = intval($rsTotales->getTotalClientesVenta($fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
@@ -355,7 +366,7 @@ class Libreria {
                 }
             } else {//VENTAS MES NORMAL
                 if ($diaGestion == 5) { //5-> viernes
-                    $_totalVentaViernes = intval($rsTotales->getTotalChipsVentaDia($fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                    $_totalVentaViernes = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalVentaRutaViernes = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalVentaFueraRutaViernes = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalClientesVentaViernes = intval($rsTotales->getTotalClientesVenta($fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
@@ -369,7 +380,7 @@ class Libreria {
                     $_totalVentaFueraRuta = $_totalVentaFueraRutaViernes;
                     $_totalClientesVenta = $_totalClientesVentaViernes + $_totalClientesVentaFinSemana;
                 } else {
-                    $_totalVentaDia = intval($rsTotales->getTotalChipsVentaDia($fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                    $_totalVentaDia = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalVentaRuta = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalVentaFueraRuta = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
                     $_totalClientesVenta = intval($rsTotales->getTotalClientesVenta($fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
@@ -382,8 +393,11 @@ class Libreria {
 
                 $cliente = ClienteModel::model()->findAllByAttributes(array('cli_codigo_cliente' => $itemHistorial['CODIGOCLIENTE']));
                 if (count($cliente) > 0) {
-                    $latitudCliente = str_replace(',', '.', $cliente[0]['cli_latitud']);
-                    $longitudCliente = str_replace(',', '.', $cliente[0]['cli_longitud']);
+                    $_latitudCliente = str_replace(',', '.', $cliente[0]['cli_latitud']);
+                    $_longitudCliente = str_replace(',', '.', $cliente[0]['cli_longitud']);
+
+                    $latitudCliente = $_latitudCliente;
+                    $longitudCliente = $_longitudCliente;
                 } else {
                     $latitudCliente = 0;
                     $longitudCliente = 0;
@@ -407,7 +421,7 @@ class Libreria {
                 array_push($coordenadasVisitas, $itemCoordenadaVisita);
                 unset($itemCoordenadaVisita);
 
-                $distancia = $libreriaFunciones->DistanciaEntreCoordenadas($latitudCliente, $longitudCliente, $latitudHistorial, $longitudHistorial);
+                $distancia = $this->DistanciaEntreCoordenadas($latitudCliente, $longitudCliente, $latitudHistorial, $longitudHistorial);
 
                 if ($precisionVisitas != 0) {
                     if ($distancia <= $precisionVisitas) {
@@ -542,7 +556,7 @@ class Libreria {
                         'FECHA_HISTORIAL' => $fechagestion,
                         'PARAMETRO' => $clave,
                         'VALOR' => strval($valor),
-                        'SEMANA' => strval($libreriaFunciones->weekOfMonth($fechagestion)),
+                        'SEMANA' => strval($this->weekOfMonth($fechagestion)),
                     );
                     $resumen = array(
                         'PARAMETRO' => $clave,

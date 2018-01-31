@@ -7,6 +7,8 @@
  */
 class CargaMinesDesconocidosController extends Controller {
 
+    public $layout = LAYOUT_IMPORTAR;
+
     public function actionIndex() {
         if (Yii::app()->request->isAjaxRequest) {
             return;
@@ -309,14 +311,14 @@ class CargaMinesDesconocidosController extends Controller {
             $revisionMinesDesconocidos = array();
 //        var_dump(Yii::app()->session['detallerevisionhistorialitem']);            die();
 //            $datos = $_SESSION['detallerevisionhistorialitem']; // $_SESSION['historialitem'];
-            $datos =Yii::app()->session['minesDesconocidosItems'];
+            $datos = Yii::app()->session['minesDesconocidosItems'];
 //            var_dump($datos);die();
             foreach ($datos as $value) {
                 $dat = array(
 //                    'FECHAREVISION' => $value['FECHAREVISION'],
                     'NRO' => $value['NRO'],
-                    'ICC' => '\''.$value['ICC'],
-                    'MIN' => '\''.$value['MIN'],
+                    'ICC' => '\'' . $value['ICC'],
+                    'MIN' => '\'' . $value['MIN'],
                     'FECHAALTA' => $value['FECHAALTA'],
                     'CODIGOVENDEDOR' => $value['CODIGOVENDEDOR'],
                     'FECHATRANSFERENCIA' => $value['FECHATRANSFERENCIA']

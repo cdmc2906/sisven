@@ -7,6 +7,8 @@
  */
 class RevisionRutaController extends Controller {
 
+    public $layout = LAYOUT_FILTRO_GRID;
+
     public function actionIndex() {
         if (Yii::app()->request->isAjaxRequest) {
             return;
@@ -43,7 +45,7 @@ class RevisionRutaController extends Controller {
                         $estadoRevision = '';
                         $historial = $fHistorial->getHistorialVisitaxEjecutivoxClientexFecha(
                                 'Inicio Visita'
-                                ,$model->ejecutivo
+                                , $model->ejecutivo
                                 , $itemRuta['CODIGOCLIENTE']
                                 , $model->fechagestion);
                         if (count($historial) > 0) {
@@ -87,6 +89,10 @@ class RevisionRutaController extends Controller {
                     $response->Message = "Ruta revisada exitosamente";
                     $response->Status = SUCCESS;
                     $response->Result = $datosGrid;
+                } else {
+                    $response->Message = "Debe seleccionar todos los filtros";
+                    $response->ClassMessage = CLASS_MENSAJE_NOTICE;
+//                $response->Result = $datos; // $datosGrid;
                 }
             }
         } catch (Exception $e) {

@@ -145,6 +145,12 @@
 		<?php echo $form->error($model,'vm_usuario_ingresa_modifica'); ?>
 	</div>
 
+	<div class="row">
+		<?php echo $form->labelEx($model,'vm_estado_icc'); ?>
+		<?php echo $form->textField($model,'vm_estado_icc',array('size'=>60,'maxlength'=>250)); ?>
+		<?php echo $form->error($model,'vm_estado_icc'); ?>
+	</div>
+
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>

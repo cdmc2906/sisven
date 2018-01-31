@@ -7,6 +7,8 @@
  */
 class RptReemplazoRutaController extends Controller {
 
+    public $layout = LAYOUT_FILTRO_GRID;
+
     public function actionIndex() {
         Yii::app()->user->setFlash('resultadoGuardar', null);
         if (Yii::app()->request->isAjaxRequest) {
@@ -198,8 +200,8 @@ class RptReemplazoRutaController extends Controller {
                                 //SI ES FIN DE MES Y ES LUNES
                                 if ($diaRutaEjecutivo == 1) {//1--> Lunes
                                     $fechaViernes = date('Y-m-d', strtotime($fechaGestion . ' - 3 days'));
-                                    $_totalVentaViernes = intval($rsTotales->getTotalChipsVentaDia($fechaViernes, $usuarioSupervisor)[0]['RESPUESTA']);
-                                    $_totalVentaRutaViernes = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], 6, $fechaViernes, $usuarioSupervisor)[0]['RESPUESTA']);
+                                    $_totalVentaViernes = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechaViernes, $model->horaInicioGestion, $usuarioSupervisor)[0]['RESPUESTA']);
+                                    $_totalVentaRutaViernes = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], 6, $fechaViernes, $model->horaInicioGestion, $usuarioSupervisor)[0]['RESPUESTA']);
                                     $_totalVentaFueraRutaViernes = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], 6, $fechaViernes, $usuarioSupervisor)[0]['RESPUESTA']);
                                     $_totalClientesVentaViernes = intval($rsTotales->getTotalClientesVenta($fechaViernes, $usuarioSupervisor)[0]['RESPUESTA']);
 
@@ -207,8 +209,8 @@ class RptReemplazoRutaController extends Controller {
                                     $_totalVentaRutaFinSemana = intval($rsTotales->getTotalChipsVentaFinSemana($fechaViernes, $usuarioSupervisor)[0]['RESPUESTA']);
                                     $_totalClientesVentaFinSemana = intval($rsTotales->getTotalClientesVentaFinSemana($fechaViernes, $usuarioSupervisor)[0]['RESPUESTA']);
 
-                                    $_totalVentaDiaLunes = intval($rsTotales->getTotalChipsVentaDia($fechaGestion, $usuarioSupervisor)[0]['RESPUESTA']);
-                                    $_totalVentaRutaLunes = intval($rsTotales->getTotalChipsVentaRuta($inicialesEjecutivo, $diaRutaEjecutivo + 1, $fechaGestion, $usuarioSupervisor)[0]['RESPUESTA']);
+                                    $_totalVentaDiaLunes = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechaGestion, $model->horaInicioGestion, $usuarioSupervisor)[0]['RESPUESTA']);
+                                    $_totalVentaRutaLunes = intval($rsTotales->getTotalChipsVentaRuta($inicialesEjecutivo, $diaRutaEjecutivo + 1, $fechaGestion, $model->horaInicioGestion, $usuarioSupervisor)[0]['RESPUESTA']);
                                     $_totalVentaFueraRutaLunes = intval($rsTotales->getTotalChipsVentaFueraRuta($inicialesEjecutivo, $diaRutaEjecutivo + 1, $fechaGestion, $usuarioSupervisor)[0]['RESPUESTA']);
                                     $_totalClientesVentaLunes = intval($rsTotales->getTotalClientesVenta($fechaGestion, $usuarioSupervisor)[0]['RESPUESTA']);
 
@@ -220,13 +222,13 @@ class RptReemplazoRutaController extends Controller {
                                     //SI ES FIN DE MES EN OTRO DIA QUE NO SEA LUNES
                                     $fechaDiaAnterior = date('Y-m-d', strtotime($fechaGestion . ' - 1 days'));
 
-                                    $_totalVentaDiaAnterior = intval($rsTotales->getTotalChipsVentaDia($fechaDiaAnterior, $usuarioSupervisor)[0]['RESPUESTA']);
-                                    $_totalVentaRutaDiaAnterior = intval($rsTotales->getTotalChipsVentaRuta($inicialesEjecutivo, $diaRutaEjecutivo, $fechaDiaAnterior, $usuarioSupervisor)[0]['RESPUESTA']);
+                                    $_totalVentaDiaAnterior = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechaDiaAnterior, $model->horaInicioGestion, $usuarioSupervisor)[0]['RESPUESTA']);
+                                    $_totalVentaRutaDiaAnterior = intval($rsTotales->getTotalChipsVentaRuta($inicialesEjecutivo, $diaRutaEjecutivo, $fechaDiaAnterior, $model->horaInicioGestion, $usuarioSupervisor)[0]['RESPUESTA']);
                                     $_totalVentaFueraRutaDiaAnterior = intval($rsTotales->getTotalChipsVentaFueraRuta($inicialesEjecutivo, $diaRutaEjecutivo, $fechaDiaAnterior, $usuarioSupervisor)[0]['RESPUESTA']);
                                     $_totalClientesVentaDiaAnterior = intval($rsTotales->getTotalClientesVenta($fechaDiaAnterior, $usuarioSupervisor)[0]['RESPUESTA']);
 
-                                    $_totalVentaDiaE = intval($rsTotales->getTotalChipsVentaDia($fechaGestion, $usuarioSupervisor)[0]['RESPUESTA']);
-                                    $_totalVentaRutaDia = intval($rsTotales->getTotalChipsVentaRuta($inicialesEjecutivo, $diaRutaEjecutivo + 1, $fechaGestion, $usuarioSupervisor)[0]['RESPUESTA']);
+                                    $_totalVentaDiaE = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechaGestion, $model->horaInicioGestion, $usuarioSupervisor)[0]['RESPUESTA']);
+                                    $_totalVentaRutaDia = intval($rsTotales->getTotalChipsVentaRuta($inicialesEjecutivo, $diaRutaEjecutivo + 1, $fechaGestion, $model->horaInicioGestion, $usuarioSupervisor)[0]['RESPUESTA']);
                                     $_totalVentaFueraRutaDia = intval($rsTotales->getTotalChipsVentaFueraRuta($inicialesEjecutivo, $diaRutaEjecutivo + 1, $fechaGestion, $usuarioSupervisor)[0]['RESPUESTA']);
                                     $_totalClientesVentaDia = intval($rsTotales->getTotalClientesVenta($fechaGestion, $usuarioSupervisor)[0]['RESPUESTA']);
 
@@ -238,8 +240,8 @@ class RptReemplazoRutaController extends Controller {
                             } else {
                                 //NO ES FIN DE MES Y ES VIERNES -> SE ANALIZA LAS VENTAS DE SABADO Y DOMINGO CONSECUTIVOS AL VIERNES
                                 if ($diaGestionSupervisor == 5) { //5-> viernes
-                                    $_totalVentaViernes = intval($rsTotales->getTotalChipsVentaDia($fechaGestion, $usuarioSupervisor)[0]['RESPUESTA']);
-                                    $_totalVentaRutaViernes = intval($rsTotales->getTotalChipsVentaRuta($inicialesEjecutivo, $diaGestion + 1, $fechaGestion, $usuarioSupervisor)[0]['RESPUESTA']);
+                                    $_totalVentaViernes = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechaGestion, $model->horaInicioGestion, $usuarioSupervisor)[0]['RESPUESTA']);
+                                    $_totalVentaRutaViernes = intval($rsTotales->getTotalChipsVentaRuta($inicialesEjecutivo, $diaGestion + 1, $fechaGestion, $model->horaInicioGestion, $usuarioSupervisor)[0]['RESPUESTA']);
                                     $_totalVentaFueraRutaViernes = intval($rsTotales->getTotalChipsVentaFueraRuta($inicialesEjecutivo, $diaGestion + 1, $fechaGestion, $usuarioSupervisor)[0]['RESPUESTA']);
                                     $_totalClientesVentaViernes = intval($rsTotales->getTotalClientesVenta($fechaGestion, $usuarioSupervisor)[0]['RESPUESTA']);
 
@@ -253,8 +255,8 @@ class RptReemplazoRutaController extends Controller {
                                     $_totalClientesVenta = $_totalClientesVentaViernes + $_totalClientesVentaFinSemana;
                                 } else {
                                     //NO ES FIN DE MES -> DIA NORMAL
-                                    $_totalVentaDia = intval($rsTotales->getTotalChipsVentaDia($fechaGestion, $usuarioSupervisor)[0]['RESPUESTA']);
-                                    $_totalVentaRuta = intval($rsTotales->getTotalChipsVentaRuta($inicialesEjecutivo, $diaGestionSupervisor + 1, $fechaGestion, $usuarioSupervisor)[0]['RESPUESTA']);
+                                    $_totalVentaDia = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechaGestion, $model->horaInicioGestion, $usuarioSupervisor)[0]['RESPUESTA']);
+                                    $_totalVentaRuta = intval($rsTotales->getTotalChipsVentaRuta($inicialesEjecutivo, $diaGestionSupervisor + 1, $fechaGestion, $model->horaInicioGestion, $usuarioSupervisor)[0]['RESPUESTA']);
                                     $_totalVentaFueraRuta = intval($rsTotales->getTotalChipsVentaFueraRuta($inicialesEjecutivo, $diaGestionSupervisor + 1, $fechaGestion, $usuarioSupervisor)[0]['RESPUESTA']);
                                     $_totalClientesVenta = intval($rsTotales->getTotalClientesVenta($fechaGestion, $usuarioSupervisor)[0]['RESPUESTA']);
                                 }
@@ -600,7 +602,7 @@ class RptReemplazoRutaController extends Controller {
         try {
             $revisionRuta = array();
 
-            $datos =  Yii::app()->session['detallerevisionhistorialitem'];
+            $datos = Yii::app()->session['detallerevisionhistorialitem'];
 //            var_dump($datos);die(); 
             foreach ($datos as $itemHistorialSupervisor) {
 //                var_dump($itemHistorialSupervisor);                die();

@@ -7,6 +7,8 @@
  */
 class CargaCoordenadasClientesController extends Controller {
 
+    public $layout = LAYOUT_IMPORTAR;
+
     public function actionIndex() {
         if (Yii::app()->request->isAjaxRequest) {
             return;
@@ -26,6 +28,7 @@ class CargaCoordenadasClientesController extends Controller {
 
             if (isset($_POST['CargaCoordenadasClientesForm'])) {
                 $model->attributes = $_POST['CargaCoordenadasClientesForm'];
+
                 if ($model->validate()) {
 
                     unset(Yii::app()->session['coordenadasClientes']);
@@ -45,11 +48,11 @@ class CargaCoordenadasClientesController extends Controller {
                         $totalBloques = ceil($totalRows / TAMANIO_BLOQUE);
                         $numeroBloque = 1;
                         $tamanioBloque = TAMANIO_BLOQUE;
-
+//var_dump(3);die();
                         while ($numeroBloque <= intval($totalBloques)) {
                             $file = new File($filePath, $operation, $delimiter);
                             $registroInicio = (($numeroBloque - 1) * $tamanioBloque) + 1;
-                            $registroInicio = 2;//(($numeroBloque - 1) * $tamanioBloque) + 1;
+                            $registroInicio = 2; //(($numeroBloque - 1) * $tamanioBloque) + 1;
 //                            var_dump($numeroBloque,$tamanioBloque,$registroInicio);die();
                             $dataInsert = $this->getDatosMostrar($file, $registroInicio, $tamanioBloque);
 //                            var_dump($dataInsert);die();
@@ -111,7 +114,7 @@ class CargaCoordenadasClientesController extends Controller {
 //                var_dump($filePath);die();
                 $file = new File($filePath, $operation, $delimiter);
                 $totalRows = $file->getTotalFilas();
-                
+
                 $totalCoordenadasClientesGuardados = 0;
                 $totalCoordenadasClientesNoGuardados = 0;
 //                var_dump('jajajja');die();
@@ -123,11 +126,11 @@ class CargaCoordenadasClientesController extends Controller {
                     while ($numeroBloque <= intval($totalBloques)) {
                         $file = new File($filePath, $operation, $delimiter);
                         $registroInicio = (($numeroBloque - 1) * $tamanioBloque) + 1;
-                        
+
                         $dataInsertar = $this->getDatosGuardar($file, $registroInicio, $tamanioBloque);
                         $datosCoordenadasClientesGuardar = $dataInsertar['coordenadasClientes'];
 //                        var_dump($datosCoordenadasClientesGuardar);die();
-                        
+
                         if (count($datosCoordenadasClientesGuardar) > 0) {
                             $dbConnection = new CI_DB_active_record(null);
                             $sql = $dbConnection->insert_batch('tb_cliente', $datosCoordenadasClientesGuardar);
@@ -154,7 +157,11 @@ class CargaCoordenadasClientesController extends Controller {
                     if ($totalCoordenadasClientesNoGuardados > 0) {
                         $response->Message = 'Se produjo un error en la carga del archivo';
                     } else {
-                        $response->Message = 'Se han cargado ' . $totalCoordenadasClientesGuardados . ' registros correctamente.';
+                        $mensaje = 'Se han cargado ' . $totalCoordenadasClientesGuardados . ' registros correctamente.';
+                        if (Yii::app()->session['cantidadClientesActualizados'])
+                            $mensaje .= 'Se han actualizado ' . Yii::app()->session['cantidadClientesActualizados'] . ' registros.';
+
+                        $response->Message = $mensaje;
                     }
 
                     unlink($filePath);
@@ -185,35 +192,38 @@ class CargaCoordenadasClientesController extends Controller {
 //        var_dump($dataFile);die();
         foreach ($dataFile as $row) {
             $existeBdd = ClienteModel::model()->findByAttributes(array('cli_codigo_cliente' => $row['CODIGO']));
-//            var_dump($existeBdd);die();
+//            var_dump($existeBdd);            die();
             if ($existeBdd) {
-                $existeBdd->delete();
+                $existeBdd["cli_nombre_cliente"] = ($row['CLIENTENOMBRE'] == '') ? '' : $row['CLIENTENOMBRE'];
+                $existeBdd["cli_latitud"] = ($row['LATITUD'] == '') ? 0 : $row['LATITUD'];
+                $existeBdd["cli_longitud"] = ($row['LONGITUD'] == '') ? 0 : $row['LONGITUD'];
+                $existeBdd["cli_fecha_modificacion"] = date(FORMATO_FECHA_LONG);
+                $existeBdd->save();
                 Yii::app()->session['cantidadClientesActualizados'] += 1;
-            }
-            $exisArray = false;
-
-            foreach ($datosCoordenadasClientes as $item) {
-                $exisArray = in_array($row['CODIGO'], $item);
-                if ($exisArray)
-                    break;
-            }
-            if (!$exisArray) {
-                $data = array(
-                    'cli_codigo_cliente' => ($row['CODIGO'] == '') ? null : $row['CODIGO'],
-                    'cli_nombre_cliente' => ($row['CLIENTENOMBRE'] == '') ? null : $row['CLIENTENOMBRE'],
-                    'cli_latitud' => ($row['LATITUD'] == '') ? null : $row['LATITUD'],
-                    'cli_longitud' => ($row['LONGITUD'] == '') ? null : $row['LONGITUD'],
-                    'cli_estado' => 1,
-                    'cli_fecha_ingreso' => date(FORMATO_FECHA_LONG),
-                    'cli_fecha_modificacion' => date(FORMATO_FECHA_LONG),
-                    'cli_usuario_ingresa_modifica' => Yii::app()->user->id
-
-                );
-
-                array_push($datosCoordenadasClientes, $data);
-                unset($data);
             } else {
-                Yii::app()->session['itemClientesDuplicadoArchivo'] = Yii::app()->session['itemClientesDuplicadoArchivo'] + 1;
+                $exisArray = false;
+                foreach ($datosCoordenadasClientes as $item) {
+                    $exisArray = in_array($row['CODIGO'], $item);
+                    if ($exisArray)
+                        break;
+                }
+                if (!$exisArray) {
+                    $data = array(
+                        'cli_codigo_cliente' => ($row['CODIGO'] == '') ? null : $row['CODIGO'],
+                        'cli_nombre_cliente' => ($row['CLIENTENOMBRE'] == '') ? null : $row['CLIENTENOMBRE'],
+                        'cli_latitud' => ($row['LATITUD'] == '') ? null : $row['LATITUD'],
+                        'cli_longitud' => ($row['LONGITUD'] == '') ? null : $row['LONGITUD'],
+                        'cli_estado' => 1,
+                        'cli_fecha_ingreso' => date(FORMATO_FECHA_LONG),
+                        'cli_fecha_modificacion' => date(FORMATO_FECHA_LONG),
+                        'cli_usuario_ingresa_modifica' => Yii::app()->user->id
+                    );
+
+                    array_push($datosCoordenadasClientes, $data);
+                    unset($data);
+                } else {
+                    Yii::app()->session['itemClientesDuplicadoArchivo'] = Yii::app()->session['itemClientesDuplicadoArchivo'] + 1;
+                }
             }
         }
         $datos['coordenadasClientes'] = $datosCoordenadasClientes;

@@ -68,6 +68,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'vm_fecha_ingreso',
 		'vm_fecha_modificacion',
 		'vm_usuario_ingresa_modifica',
+		'vm_estado_icc',
 		*/
 		array(
 			'class'=>'CButtonColumn',

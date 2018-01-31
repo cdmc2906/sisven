@@ -10,8 +10,8 @@ $this->breadcrumbs=array(
 
 $this->menu=array(
 //	array('label'=>'List HistorialMbModel', 'url'=>array('index')),
-	array('label'=>'Ingresar item Historial', 'url'=>array('create')),
-	array('label'=>'Mostrar item Historial', 'url'=>array('view', 'id'=>$model->h_cod)),
+//	array('label'=>'Ingresar item Historial', 'url'=>array('create')),
+//	array('label'=>'Mostrar item Historial', 'url'=>array('view', 'id'=>$model->h_cod)),
 	array('label'=>'Administracion Historial', 'url'=>array('admin')),
 );
 ?>

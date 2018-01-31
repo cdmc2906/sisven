@@ -38,11 +38,11 @@ class RptResumenDiarioHistorialForm extends CFormModel {
             'fechagestion' => 'Fecha gestion',
             'ejecutivo' => 'Ejecutivo ruta',
             'precisionVisitas' => 'Precision visita',
-            'horaInicioGestion' => 'Hora de inicio gestion',
-            'horaFinGestion' => 'Hora de fin gestion',
+            'horaInicioGestion' => 'Hora de inicio',
+            'horaFinGestion' => 'Hora de fin',
             'comentarioSupervision' => 'Ingresar el comentario de supervision',
             'enlaceMapa' => 'Ingresar el enlace del mapa',
-            'accionHistorial' => 'Seleccione la accion a evaluar'
+            'accionHistorial' => 'Accion historial'
         );
     }
 

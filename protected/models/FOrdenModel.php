@@ -15,6 +15,30 @@
  * @property TbProducto $iDPRO
  */
 class FOrdenModel extends DAOModel {
+    /**
+     * 
+     * @param type $codigo_cliente
+     * @return type
+     */
+    public function getFechaUltimaCompraxCliente($codigo_cliente) {
+        $sql = "
+            select date(a.o_fch_creacion) as fechaultimaventa
+                from tb_ordenes_mb as a
+                where 1=1
+                    and a.o_cod_cliente='TCQU210002'
+                order by a.o_fch_creacion desc
+                limit 1;
+            ";
+
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+
+        $this->Close();
+        return $data;
+    }
+    
+    
     /*
      * Búsqueda del total de chips vendidos a cliente por fecha por ejecutivo
      * 1.- obtiene la fecha de la ultima visita
@@ -23,6 +47,7 @@ class FOrdenModel extends DAOModel {
      * 
      */
 
+    
     public function getChipsxClientexEjecutivoxFecha($codigo_cliente, $codEjecutivo, $fechaOrden) {
         $sql = "
             SELECT

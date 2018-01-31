@@ -2,6 +2,8 @@
 
 class ReporteOrdenesxFechaController extends Controller {
 
+    public $layout = LAYOUT_FILTRO_GRID;
+
     public function actionIndex() {
         if (Yii::app()->request->isAjaxRequest) {
             return;
@@ -192,7 +194,7 @@ class ReporteOrdenesxFechaController extends Controller {
         $ordenModel = new FOrdenModel();
 
         $respuestaActualizacion = $ordenModel->getEliminarOrden($_POST['CODIGOORDEN'], $_POST['ORDEN']);
-        
+
         if ($respuestaActualizacion > 0) {
             $response->Message = 'Eliminacion correcta';
             $response->Status = NOTICE;

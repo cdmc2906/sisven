@@ -7,6 +7,8 @@
  */
 class RptResumenDiarioHistorialController extends Controller {
 
+    public $layout = LAYOUT_FILTRO_GRID;
+
     public function actionIndex() {
         Yii::app()->user->setFlash('resultadoGuardar', null);
         if (Yii::app()->request->isAjaxRequest) {

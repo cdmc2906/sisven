@@ -310,7 +310,7 @@ class ReportesModel extends DAOModel {
     public function getUsuariosGestionxFecha($fechaGestion, $accionRevisar, $grupoEjecutivosRevisar, $horaInicio, $horaFin) {
         $fechaInicio = $fechaGestion . ' ' . $horaInicio;
         $fechaFin = $fechaGestion . ' ' . $horaFin;
-        
+
         $sql = "
             select 
                     h_usuario as CODIGOEJECUTIVO
@@ -332,7 +332,7 @@ class ReportesModel extends DAOModel {
     }
 
     public function getGestionxUsuarioxFecha($usuario, $fechaGestion, $accionRevisar, $horaInicio, $horaFin) {
-         $fechaInicio = $fechaGestion . ' ' . $horaInicio;
+        $fechaInicio = $fechaGestion . ' ' . $horaInicio;
         $fechaFin = $fechaGestion . ' ' . $horaFin;
         $sql = "
             select 
@@ -356,6 +356,25 @@ class ReportesModel extends DAOModel {
                     h_usuario
                     ,h_ruta
                 order by VISITAS DESC;";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+        $this->Close();
+//        var_dump($data);die();
+        return $data;
+    }
+
+    public function getUsersPorRol($rol) {
+
+        $sql = "
+            SELECT 
+                    a.iduser AS CODIGOAGENTE
+                    ,b.usrl_nombre_usuario AS NOMBREAGENTE
+                FROM cruge_user as a
+                inner join  tb_usuario_rol as b
+                    on a.iduser  =b.iduser
+                where b.r_id=" . $rol . "
+                order by 1;";
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();

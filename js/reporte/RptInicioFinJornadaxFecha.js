@@ -174,7 +174,7 @@ function ConfigGridJSON() {
 
 function GenerarDocumentoReporte(accion) {
     if ($("#ReporteInicioFinJornadaxFechaForm_fechaInicioFinJornadaInicio").val() != "") {
-        window.open('/sisven_2/reporteiniciofinjornadaxfecha/' + accion
+        window.open('/sisven/reporteiniciofinjornadaxfecha/' + accion
                 + '?startDate=' + $("#ReporteInicioFinJornadaxFechaForm_fechaInicioFinJornadaInicio").val()
                 );
     } else {

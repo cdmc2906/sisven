@@ -2,7 +2,10 @@
 
 class ReporteChipsFacturadosTransferidosController extends Controller {
 
+    public $layout = LAYOUT_IMPORTAR;
+
     public function actionIndex() {
+
         if (Yii::app()->request->isAjaxRequest) {
             return;
         } else {
@@ -18,54 +21,43 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
         $datosGridNFT = array();
         $response = new Response();
         try {
-//            var_dump(0);die();
-            $model = new ReporteChipsFacturadosTransferidosForm();
-//            var_dump($_POST);die();
-            if (isset($_POST['ReporteChipsFacturadosTransferidosForm'])) {
-//                  var_dump('0-0');die();
-                $model->attributes = $_POST['ReporteChipsFacturadosTransferidosForm'];
-//                var_dump($model->validate());die();
-//                if ($model->validate()) {
-//                    var_dump(2);                    die();
-                    $transferencias = new FTransferenciasMovistarModel();
-                    $facturadosNoTansferidos = new FChipsFacturadosModel();
-                    $datosFacturadosNoTransferidos = $facturadosNoTansferidos->getChipsFacturadosNoTransferidos();
-//                    var_dump(1);die();
-                    $noFacturadosTansferidos = new FChipsTransferidosModel();
-                    $datosNoFacturadosTransferidos = $noFacturadosTansferidos->getChipsNoFacturadosTransferidos();
-//                    var_dump($datosNoFacturadosTransferidos);die(); 
-                    foreach ($datosFacturadosNoTransferidos as $item) {
-                        $lote = $transferencias->getLotexICC($item['i_imei']);
-                        if (count($lote) > 0) {
-//                            var_dump($lote[0]["tm_numero_lote"]);die();
-                            $lote_ = $lote[0]["tm_numero_lote"];
-                        } else {
-                            $lote_ = "SIN LOTE";
-                        }
-                        $infoFacturadosNoTransferidos = array(
-                            'FECHA' => $item['i_fecha'],
-                            'BODEGA' => $item['i_bodega'],
-                            'COD_CLIENTE' => $item['I_CODIGO_GRUPO'],
-                            'CLIENTE' => $item['I_NOMBRE_CLIENTE'],
-                            'ICC' => $item['i_imei'],
-                            'MIN' => $item['i_min'],
-                            'LOTE' => $lote_// $item['tm_lote']
-                        );
-                        array_push($datosGridFNT, $infoFacturadosNoTransferidos);
-                        unset($infoFacturadosNoTransferidos);
+            if (true) {
+                $transferencias = new FTransferenciasMovistarModel();
+                $facturadosNoTansferidos = new FChipsFacturadosModel();
+                $datosFacturadosNoTransferidos = $facturadosNoTansferidos->getChipsFacturadosNoTransferidos();
+                $noFacturadosTansferidos = new FChipsTransferidosModel();
+                $datosNoFacturadosTransferidos = $noFacturadosTansferidos->getChipsNoFacturadosTransferidos();
+                foreach ($datosFacturadosNoTransferidos as $item) {
+                    $lote = $transferencias->getLotexICC($item['i_imei']);
+                    if (count($lote) > 0) {
+                        $lote_ = $lote[0]["tm_numero_lote"];
+                    } else {
+                        $lote_ = "SIN LOTE";
                     }
-                    foreach ($datosNoFacturadosTransferidos as $item) {
-                        $infoNoFacturadosTransferidos = array(
-                            'FECHA' => $item['VM_FECHA'],
-                            'EJECUTIVO' => $item['VM_NOMBREDISTRIBUIDOR'],
-                            'COD_CLIENTE' => $item['VM_IDDESTINO'],
-                            'CLIENTE' => $item['VM_NOMBREDESTINO'],
-                            'ICC' => $item['vm_icc'],
-                            'MIN' => $item['vm_min']
-                        );
-                        array_push($datosGridNFT, $infoNoFacturadosTransferidos);
-                        unset($infoNoFacturadosTransferidos);
-                    }
+                    $infoFacturadosNoTransferidos = array(
+                        'FECHA' => $item['i_fecha'],
+                        'BODEGA' => $item['i_bodega'],
+                        'COD_CLIENTE' => $item['I_CODIGO_GRUPO'],
+                        'CLIENTE' => $item['I_NOMBRE_CLIENTE'],
+                        'ICC' => $item['i_imei'],
+                        'MIN' => $item['i_min'],
+                        'LOTE' => $lote_// $item['tm_lote']
+                    );
+                    array_push($datosGridFNT, $infoFacturadosNoTransferidos);
+                    unset($infoFacturadosNoTransferidos);
+                }
+                foreach ($datosNoFacturadosTransferidos as $item) {
+                    $infoNoFacturadosTransferidos = array(
+                        'FECHA' => $item['VM_FECHA'],
+                        'EJECUTIVO' => $item['VM_NOMBREDISTRIBUIDOR'],
+                        'COD_CLIENTE' => $item['VM_IDDESTINO'],
+                        'CLIENTE' => $item['VM_NOMBREDESTINO'],
+                        'ICC' => $item['vm_icc'],
+                        'MIN' => $item['vm_min']
+                    );
+                    array_push($datosGridNFT, $infoNoFacturadosTransferidos);
+                    unset($infoNoFacturadosTransferidos);
+                }
 //                }
                 Yii::app()->session['FNT'] = $datosGridFNT;
                 Yii::app()->session['NFT'] = $datosGridNFT;
@@ -74,12 +66,10 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
                 $datosGrid['NFT'] = $datosGridNFT;
 
                 $response->Result = $datosGrid;
-//                var_dump(count($datosGridFNT),count($datosGridNFT));die();
 
                 if (count($datosGridFNT) == 0 && count($datosGridNFT) == 0) {
                     $response->Message = 'Facturacion cuadrada con Transferencias Movistar';
                     $response->ClassMessage = CLASS_MENSAJE_SUCCESS;
-
 //                    $response->Status = NOTICE;
                 } else {
                     $response->Message = 'Chips de diferencias generado correctamente';
@@ -102,14 +92,11 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
             $response->Status = ERROR;
         }
 
-//        var_dump($response);die();
         $this->actionResponse(null, null, $response);
         return;
     }
 
     public function actionGenerateExcel($opcion) {
-//        var_dump($opcion);die();
-//        var_dump( $_SESSION['FNT']);die();
         $datosGrid = array();
         $datosGridFNT = array();
         $datosGridNFT = array();
@@ -118,7 +105,6 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
         try {
             if ($opcion == 'FNT') {
                 $nombreArchivo = 'facturados_no_transferidos';
-//                var_dump(Yii::app()->session['NFT']);die();
 
                 $datosFacturadosNoTransferidos = Yii::app()->session['FNT'];
 

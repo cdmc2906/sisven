@@ -13,32 +13,106 @@ $this->pageTitle = 'Exportar Resumen Historial';
 
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/reporte/RptResumenHistorialPorFecha.js"; ?>"></script>
 
-<section class="">
-    <header class="">
-        <h2><strong>Exportar Resumen Historial</strong></h2>
-    </header>
-    <div class="">
-        <div class="form">
-            <?php
-            $form = $this->beginWidget('CActiveForm', array(
-                'id' => 'frmLoad',
-                'enableAjaxValidation' => false,
-                'enableClientValidation' => true,
-            ));
-            ?>
-            <div class="row">
-                <div  style="display: flex; justify-content: flex-start;">
-                    <div style="margin-left: 50px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                        <fieldset style="border:2px groove ;">
-                            <legend style="border:1px solid green;">Filtros Fecha Usuario</legend>
+<?php if (Yii::app()->user->hasFlash('resultadoGuardar')): ?>
+    <div class="flash-success">
+        <?php echo Yii::app()->user->getFlash('resultadoGuardar'); ?>
+    </div>
+<?php else: ?>
+    <div class=""></div>
+<?php endif; ?>
+
+<div class="row">
+    <div class="col-md-3">
+        <?php
+        $form = $this->beginWidget('CActiveForm', array(
+            'id' => 'frmLoad',
+            'enableAjaxValidation' => false,
+            'enableClientValidation' => true,
+        ));
+        ?>
+
+        <div class="mailbox-controls">
+            <div class="btn-group">
+                <?php
+                echo CHtml::ajaxSubmitButton(
+                        'Generar Reporte', CHtml
+                        ::normalizeUrl(array('RptResumenHistorialPorFecha/GenerarReporte', 'render' => true)), array(
+                    'dataType' => 'json',
+                    'type' => 'post',
+                    'beforeSend' => 'function() {
+                            blockUIOpen();
+                            }',
+                    'success' => 'function(data) {
+                        
+                        blockUIClose();
+                        setMensaje(data.ClassMessage, data.Message);
+                        if(data.Status==1){
+                             var datosResult = data.Result;
+                            $("#tblGrid").setGridParam({datatype: \'jsonstring\', datastr: datosResult}).trigger(\'reloadGrid\');
+                        } else{
+                            $.each(data, function(key, val) {
+                            $("#frmBankStat #"+key+"_em_").text(val);
+                            $("#frmBankStat #"+key+"_em_").show();
+                            });
+                            }
+                        } ',
+                    'error' => 'function(xhr,st,err) {
+                            blockUIClose();
+                            RedirigirError(xhr.status);
+                        }'
+                        )
+                        , array('id' => 'btnGenerate'
+                    , 'class' => 'btn btn-block btn-success btn-sm'));
+                ?>
+                <?php
+                echo CHtml::Button(
+                        'Limpiar'
+                        , array('id' => 'btnLimpiar'
+                    , 'class' => 'btn btn-block btn-primary btn-sm'));
+                ?>
+                <?php
+                echo CHtml::Button(
+                        'Exportar a Excel'
+                        , array('id' => 'btnExcel'
+                    , 'class' => 'btn btn-block btn-warning btn-sm', 'disabled' => 'true'));
+                ?>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <h3 class="box-title">Fecha Inicio / Fin</h3>
+                <div class="box-tools">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body no-padding">
+                <ul class="nav nav-pills nav-stacked">
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-calendar"></i>
                             <?php echo $form->labelEx($model, 'fechaInicioGestion'); ?>
                             <?php echo $form->textField($model, 'fechaInicioGestion', array('class' => 'txtFechaInicioGestion')); ?>
                             <?php echo $form->error($model, 'fechaInicioGestion'); ?>
 
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-calendar"></i>
                             <?php echo $form->labelEx($model, 'fechaFinGestion'); ?>
                             <?php echo $form->textField($model, 'fechaFinGestion', array('class' => 'txtFechaFinGestion')); ?>
                             <?php echo $form->error($model, 'fechaFinGestion'); ?>
 
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-calendar"></i>
                             <?php echo $form->labelEx($model, 'ejecutivo'); ?>
                             <?php
                             echo $form->dropDownList(
@@ -54,11 +128,26 @@ $this->pageTitle = 'Exportar Resumen Historial';
                             );
                             ?>
                             <?php echo $form->error($model, 'ejecutivo'); ?>
-                        </fieldset>
-                    </div>
-                    <div style="margin-left: 50px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                        <fieldset style="border:2px groove ;">
-                            <legend style="border:1px solid green;">Filtros tiempo</legend>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="box box-solid ">
+            <div class="box-header with-border">
+                <h3 class="box-title">Horario Gestion</h3>
+                <div class="box-tools">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body no-padding">
+                <ul class="nav nav-pills nav-stacked">
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-calendar"></i>
                             <?php
                             echo $form->labelEx($model, 'horaInicioGestion');
                             echo $form->dropDownList(
@@ -71,6 +160,12 @@ $this->pageTitle = 'Exportar Resumen Historial';
                             );
                             echo $form->error($model, 'horaInicioGestion');
                             ?>
+
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-calendar"></i>
                             <?php
                             echo $form->labelEx($model, 'horaFinGestion');
                             echo $form->dropDownList(
@@ -95,11 +190,26 @@ $this->pageTitle = 'Exportar Resumen Historial';
 
                             echo $form->error($model, 'horaFinGestion');
                             ?>
-                        </fieldset>
-                    </div>
-                    <div style="margin-left: 50px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                        <fieldset style="border:2px groove ;">
-                            <legend style="border:1px solid green;">Filtros presicion visita</legend>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <h3 class="box-title">Acciones Historial</h3>
+                <div class="box-tools">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="box-body no-padding">
+                <ul class="nav nav-pills nav-stacked">
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-calendar"></i>
                             <?php echo $form->labelEx($model, 'precisionVisita'); ?>
                             <?php
                             echo $form->dropDownList(
@@ -119,6 +229,12 @@ $this->pageTitle = 'Exportar Resumen Historial';
                             ?>
                             <?php echo $form->error($model, 'precisionVisitas'); ?>
 
+
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-calendar"></i>
                             <?php echo $form->labelEx($model, 'accionHistorial'); ?>
                             <?php
                             echo $form->dropDownList(
@@ -138,50 +254,11 @@ $this->pageTitle = 'Exportar Resumen Historial';
                             );
                             ?>
                             <?php echo $form->error($model, 'accionHistorial'); ?>
-                        </fieldset>
-                    </div>
-                    <div style="margin-left: 50px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                        <fieldset style="border:2px groove ;">
-                            <legend style="border:1px solid green;">Acciones</legend>
-
-                            <?php
-                            echo CHtml::ajaxSubmitButton(
-                                    'Generar Reporte', CHtml
-                                    ::normalizeUrl(array('RptResumenHistorialPorFecha/GenerarReporte', 'render' => true)), array(
-                                'dataType' => 'json',
-                                'type' => 'post',
-                                'beforeSend' => 'function() {
-                            blockUIOpen();
-                            }',
-                                'success' => 'function(data) {
-                        
-                        blockUIClose();
-                        setMensaje(data.ClassMessage, data.Message);
-                        if(data.Status==1){
-                             var datosResult = data.Result;
-                            $("#tblGrid").setGridParam({datatype: \'jsonstring\', datastr: datosResult}).trigger(\'reloadGrid\');
-                        } else{
-                            $.each(data, function(key, val) {
-                            $("#frmBankStat #"+key+"_em_").text(val);
-                            $("#frmBankStat #"+key+"_em_").show();
-                            });
-                            }
-                        } ',
-                                'error' => 'function(xhr,st,err) {
-                            blockUIClose();
-                            RedirigirError(xhr.status);
-                        }'
-                                    ), array('id' => 'btnGenerate', 'class' => 'btn btn-theme'));
-                            ?>
-                            <?php echo CHtml::Button('Limpiar', array('id' => 'btnLimpiar', 'class' => 'btn btn-theme')); ?>
-                            <?php echo CHtml::Button('Exportar a Excel', array('id' => 'btnExcel', 'class' => 'btn btn-theme', 'disabled' => 'true')); ?>
-                        </fieldset>
-                    </div>
-                    <?php $this->endWidget(); ?>
-                </div>
+                            <?php $this->endWidget(); ?>
+                        </a>
+                    </li>
+                </ul>
             </div>
-        </div>     
-    </div>    
-</section>
-
-
+        </div>
+    </div>
+</div>

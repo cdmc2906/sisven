@@ -357,7 +357,7 @@ function ConfigurarGrids() {
 
 function GenerarDocumentoReporte(accion) {
     if (true) {
-        window.open('/sisven_2/RptResumenDiarioHistorial/' + accion);
+        window.open('/sisven/RptResumenDiarioHistorial/' + accion);
     } else {
         mostrarVentanaMensaje("Ingrese los parámetros necesarios para generar el reporte", 'Alerta');
     }

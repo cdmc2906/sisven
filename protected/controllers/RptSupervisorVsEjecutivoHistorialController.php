@@ -7,6 +7,8 @@
  */
 class RptSupervisorVsEjecutivoHistorialController extends Controller {
 
+    public $layout = LAYOUT_FILTRO_GRID;
+
     public function actionIndex() {
         Yii::app()->user->setFlash('resultadoGuardar', null);
         if (Yii::app()->request->isAjaxRequest) {
@@ -34,7 +36,7 @@ class RptSupervisorVsEjecutivoHistorialController extends Controller {
                             , GRUPO_SUPERVISORES
                             , $model->horaInicioGestion
                             , $model->horaFinGestion);
-
+//                    var_dump($datosVisitas);die();
                     $response->Message = "Historial revisado exitosamente";
                     $response->Status = SUCCESS;
                     $response->Result = $datosVisitas;
@@ -97,7 +99,7 @@ class RptSupervisorVsEjecutivoHistorialController extends Controller {
         $datosGridVisitasVIEjecutivo = array();
         $datosGridEjecutivo = array();
         $codigosClienteVisitados = array();
-        $codVisitadosSupervisor=array();
+        $codVisitadosSupervisor = array();
         $clientesVisitadosEjecutivoRuta = 0;
 
         $datosVisitasSupervisor = array();
@@ -238,7 +240,7 @@ class RptSupervisorVsEjecutivoHistorialController extends Controller {
                         }
                     }
                 }
-                
+
                 $visitaValidaSupervisor = false;
                 if (intval($_POST['precision']) != 0) {
                     if ($distanciaEntreSupervisorCliente <= intval($_POST['precision'])) {
@@ -282,9 +284,8 @@ class RptSupervisorVsEjecutivoHistorialController extends Controller {
                 );
                 array_push($datosGridDetalleSupervisorEjecutivo, $itemGridDetalleSupervisorEjecutivo);
                 unset($itemGridDetalleSupervisorEjecutivo);
-                
-                array_push($codigosClienteVisitados, $itemGridDetalleSupervisorEjecutivo = array('CODIGO' => $itemHistorialSupervisor['CODIGOCLIENTE']));                
-                
+
+                array_push($codigosClienteVisitados, $itemGridDetalleSupervisorEjecutivo = array('CODIGO' => $itemHistorialSupervisor['CODIGOCLIENTE']));
             }#FIN CONTROL DE DIA RUTA SELECCIONADA
         }//fin de iteracion historial supervisor
 //        var_dump($codVisitadosSupervisor);die();

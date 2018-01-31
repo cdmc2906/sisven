@@ -13,49 +13,29 @@ $this->pageTitle = 'Revision ruta';
 
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/reporte/RptRevisionRuta.js"; ?>"></script>
 
-<section class="">
-    <div class="">
-        <div class="form">
+<?php if (Yii::app()->user->hasFlash('resultadoGuardar')): ?>
+    <div class="flash-success">
+        <?php echo Yii::app()->user->getFlash('resultadoGuardar'); ?>
+    </div>
+<?php else: ?>
+    <div class=""></div>
+<?php endif; ?>
 
-            <?php
-            $form = $this->beginWidget('CActiveForm', array(
-                'id' => 'frmLoad',
-//                'enableAjaxValidation' => true,
-                'enableClientValidation' => true,
-                'clientOptions' => array(
-                    'validateOnSubmit' => true,
-                ),
-                'htmlOptions' => array("enctype" => "multipart/form-data"),
-//                'action' => Yii::app()->request->baseUrl . '/CargaConsumo/SubirArchivo'
-            ));
-            ?>
-            <div class="row">
-                <div>
+<div class="row">
+    <div class="col-md-3">
+        <?php
+        $form = $this->beginWidget('CActiveForm', array(
+            'id' => 'frmLoad',
+            'enableClientValidation' => true,
+            'clientOptions' => array(
+                'validateOnSubmit' => true,
+            ),
+            'htmlOptions' => array("enctype" => "multipart/form-data"),
+        ));
+        ?>
 
-                    <?php echo $form->labelEx($model, 'fechagestion'); ?>
-                    <?php echo $form->textField($model, 'fechagestion', array('class' => 'txtfechagestion')) ?>
-                    <?php echo $form->error($model, 'fechagestion'); ?>
-
-                    <?php echo $form->labelEx($model, 'ejecutivo'); ?>
-                    <?php
-                    echo $form->dropDownList(
-                            $model, 'ejecutivo', array(
-                        'QU25' => 'EDISON CALVACHE',
-                        'QU26' => 'GIOVANA BONILLA',
-                        'QU22' => 'JOSE CHAMBA',
-                        'QU21' => 'JUAN CLAVIJO',
-                        'QU17' => 'JHONNY PLUAS',
-                        'QU19' => 'LUIS OJEDA'
-                            ), array(
-                        'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
-                    );
-                    ?>
-                    <?php echo $form->error($model, 'ejecutivo'); ?>
-                </div>
-            </div>
-
-            <div class="">
-                <?php // echo CHtml::submitButton('Cargar', array('id' => 'btnCargar')); ?>
+        <div class="mailbox-controls">
+            <div class="btn-group">
                 <?php
                 echo CHtml::ajaxSubmitButton(
                         'Revisar ruta', CHtml
@@ -83,37 +63,83 @@ $this->pageTitle = 'Revision ruta';
                             blockUIClose();
                             RedirigirError(xhr.status);
                         }'
-                        ), array('id' => 'btnGenerate', 'class' => 'btn btn-theme'));
+                        )
+                        , array('id' => 'btnGenerate'
+                    , 'class' => 'btn btn-block btn-primary btn-sm'));
                 ?>
-                <?php echo CHtml::Button('Limpiar', array('id' => 'btnLimpiar', 'class' => 'btn btn-theme')); ?>
-                <?php echo CHtml::Button('Exportar a Excel', array('id' => 'btnExcel', 'class' => 'btn btn-theme')); ?>
+                <?php
+                echo CHtml::Button(
+                        'Limpiar'
+                        , array('id' => 'btnLimpiar'
+                    , 'class' => 'btn btn-block btn-primary btn-sm'));
+                ?>
+                <?php
+                echo CHtml::Button(
+                        'Exportar a Excel', array('id' => 'btnExcel'
+                    , 'class' => 'btn btn-block btn-warning btn-sm', 'disabled' => 'true'));
+                ?>
             </div>
-
-
-            <?php $this->endWidget(); ?>
-
         </div>
-    </div>     
-</section>
-<br><br>
-<div id="comisionVendedor" >
-    <section class="">
-        <header class="">
-            <h2><strong>Resultado Analisis</strong></h2>
-        </header>
-        <div class="">
-            <?php $this->renderPartial('/shared/_bodygrid'); ?>
-        </div>
-    </section>
-</div>
 
-<div id="comisionMayorista" hidden="true" >
-    <section class="">
-        <header class="">
-            <h2><strong>Comisiones Mayoristas</strong></h2>
-        </header>
-        <div class="">
-            <?php $this->renderPartial('/shared/_bodygrid'); ?>
+        <div class="box box-solid">
+            <div class="box-header with-border">
+                <h3 class="box-title">Fecha / Ejecutivo</h3>
+                <!--<div class="box-tools">-->
+                    <!--<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>                    </button>-->
+                <!--</div>-->
+            </div>
+            <div class="box-body no-padding">
+                <ul class="nav nav-pills nav-stacked">
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-calendar"></i>
+                            <?php echo $form->labelEx($model, 'fechagestion'); ?>
+                            <?php echo $form->textField($model, 'fechagestion', array('class' => 'txtfechagestion')) ?>
+                            <?php echo $form->error($model, 'fechagestion'); ?>
+
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-calendar"></i>
+
+
+                            <?php echo $form->labelEx($model, 'ejecutivo'); ?>
+                            <?php
+                            echo $form->dropDownList(
+                                    $model, 'ejecutivo', array(
+                                'QU25' => 'EDISON CALVACHE',
+                                'QU26' => 'GIOVANA BONILLA',
+                                'QU22' => 'JOSE CHAMBA',
+                                'QU21' => 'JUAN CLAVIJO',
+                                'QU17' => 'JHONNY PLUAS',
+                                'QU19' => 'LUIS OJEDA'
+                                    ), array(
+                                'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+                            );
+                            ?>
+                            <?php echo $form->error($model, 'ejecutivo'); ?>
+                            <?php $this->endWidget(); ?>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </section>
+    </div>
+    <div class="col-md-9">
+        <div class="box box-primary">
+            <div class="box-body no-padding">
+                <div class="table-responsive mailbox-messages">
+                    <div class="">
+                        <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                            <h2><strong>Resultado Analisis</strong></h2>
+                            <div class="">
+                                <?php $this->renderPartial('/shared/_bodygrid'); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
