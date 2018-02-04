@@ -1,0 +1,91 @@
+2018/02/02 11:53:08 [error] [exception.CHttpException.404] CHttpException: No es posible resolver la solicitud "VerDatosArchivo" in C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php:286
+Stack trace:
+#0 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('VerDatosArchivo')
+#1 C:\xampp\htdocs\sisven_2\yii\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#2 C:\xampp\htdocs\sisven_2\index.php(16): CApplication->run()
+#3 {main}
+REQUEST_URI=/sisven_2/VerDatosArchivo
+HTTP_REFERER=http://10.130.1.67/sisven_2/RptResultadosRevisionMines
+---
+2018/02/02 13:07:42 [error] [exception.CHttpException.404] CHttpException: No es posible resolver la solicitud "VerDatosArchivo" in C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php:286
+Stack trace:
+#0 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('VerDatosArchivo')
+#1 C:\xampp\htdocs\sisven_2\yii\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#2 C:\xampp\htdocs\sisven_2\index.php(16): CApplication->run()
+#3 {main}
+REQUEST_URI=/sisven_2/VerDatosArchivo
+HTTP_REFERER=http://10.130.1.67/sisven_2/RptResultadosRevisionMines
+---
+2018/02/02 13:15:30 [error] [php] Undefined variable: array (C:\xampp\htdocs\sisven_2\protected\controllers\RptResultadosRevisionMinesController.php:238)
+Stack trace:
+#0 C:\xampp\htdocs\sisven_2\yii\framework\web\CController.php(286): RptResultadosRevisionMinesController->runAction()
+#1 C:\xampp\htdocs\sisven_2\yii\framework\web\CController.php(265): RptResultadosRevisionMinesController->runActionWithFilters()
+#2 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(282): RptResultadosRevisionMinesController->run()
+#3 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#4 C:\xampp\htdocs\sisven_2\yii\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#5 C:\xampp\htdocs\sisven_2\index.php(16): CWebApplication->run()
+REQUEST_URI=/sisven_2/RptResultadosRevisionMines/GenerarExcelGestion
+in C:\xampp\htdocs\sisven_2\protected\controllers\RptResultadosRevisionMinesController.php (238)
+in C:\xampp\htdocs\sisven_2\index.php (16)
+2018/02/02 14:48:05 [error] [php] json_decode() expects parameter 1 to be string, array given (C:\xampp\htdocs\sisven_2\protected\controllers\RptResultadosRevisionMinesController.php:244)
+Stack trace:
+#0 C:\xampp\htdocs\sisven_2\yii\framework\web\CController.php(308): CInlineAction->runWithParams()
+#1 C:\xampp\htdocs\sisven_2\yii\framework\web\CController.php(286): RptResultadosRevisionMinesController->runAction()
+#2 C:\xampp\htdocs\sisven_2\yii\framework\web\CController.php(265): RptResultadosRevisionMinesController->runActionWithFilters()
+#3 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(282): RptResultadosRevisionMinesController->run()
+#4 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#5 C:\xampp\htdocs\sisven_2\yii\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#6 C:\xampp\htdocs\sisven_2\index.php(16): CWebApplication->run()
+REQUEST_URI=/sisven_2/RptResultadosRevisionMines/GenerarExcelGestion
+in C:\xampp\htdocs\sisven_2\protected\controllers\RptResultadosRevisionMinesController.php (244)
+in C:\xampp\htdocs\sisven_2\index.php (16)
+2018/02/02 14:48:28 [error] [php] Undefined property: stdClass::$fecha (C:\xampp\htdocs\sisven_2\protected\controllers\RptResultadosRevisionMinesController.php:246)
+Stack trace:
+#0 C:\xampp\htdocs\sisven_2\yii\framework\web\CController.php(286): RptResultadosRevisionMinesController->runAction()
+#1 C:\xampp\htdocs\sisven_2\yii\framework\web\CController.php(265): RptResultadosRevisionMinesController->runActionWithFilters()
+#2 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(282): RptResultadosRevisionMinesController->run()
+#3 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#4 C:\xampp\htdocs\sisven_2\yii\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#5 C:\xampp\htdocs\sisven_2\index.php(16): CWebApplication->run()
+REQUEST_URI=/sisven_2/RptResultadosRevisionMines/GenerarExcelGestion
+in C:\xampp\htdocs\sisven_2\protected\controllers\RptResultadosRevisionMinesController.php (246)
+in C:\xampp\htdocs\sisven_2\index.php (16)
+2018/02/02 16:14:26 [error] [exception.CHttpException.404] CHttpException: No es posible resolver la solicitud "VerDatosArchivo" in C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php:286
+Stack trace:
+#0 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('VerDatosArchivo')
+#1 C:\xampp\htdocs\sisven_2\yii\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#2 C:\xampp\htdocs\sisven_2\index.php(16): CApplication->run()
+#3 {main}
+REQUEST_URI=/sisven_2/VerDatosArchivo
+HTTP_REFERER=http://10.130.1.67/sisven_2/RptResultadosRevisionMines.jsp
+---
+2018/02/02 16:23:55 [error] [php] Undefined index: iduser (C:\xampp\htdocs\sisven_2\protected\controllers\RptResultadosRevisionMinesController.php:236)
+Stack trace:
+#0 C:\xampp\htdocs\sisven_2\yii\framework\web\CController.php(286): RptResultadosRevisionMinesController->runAction()
+#1 C:\xampp\htdocs\sisven_2\yii\framework\web\CController.php(265): RptResultadosRevisionMinesController->runActionWithFilters()
+#2 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(282): RptResultadosRevisionMinesController->run()
+#3 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(141): CWebApplication->runController()
+#4 C:\xampp\htdocs\sisven_2\yii\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#5 C:\xampp\htdocs\sisven_2\index.php(16): CWebApplication->run()
+REQUEST_URI=/sisven_2/RptResultadosRevisionMines/GenerarExcelGestion
+in C:\xampp\htdocs\sisven_2\protected\controllers\RptResultadosRevisionMinesController.php (236)
+in C:\xampp\htdocs\sisven_2\index.php (16)
+2018/02/02 16:27:28 [error] [exception.ParseError] ParseError: syntax error, unexpected '=>' (T_DOUBLE_ARROW) in C:\xampp\htdocs\sisven_2\protected\controllers\RptResultadosRevisionMinesController.php:237
+Stack trace:
+#0 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(276): CWebApplication->createController('GenerarExcelGes...')
+#1 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('RptResultadosRe...')
+#2 C:\xampp\htdocs\sisven_2\yii\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#3 C:\xampp\htdocs\sisven_2\index.php(16): CApplication->run()
+#4 {main}
+REQUEST_URI=/sisven_2/RptResultadosRevisionMines/GenerarExcelGestion
+HTTP_REFERER=http://10.130.1.67/sisven_2/RptResultadosRevisionMines
+---
+2018/02/02 16:45:44 [error] [exception.CHttpException.404] CHttpException: No es posible resolver la solicitud "VerDatosArchivo" in C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php:286
+Stack trace:
+#0 C:\xampp\htdocs\sisven_2\yii\framework\web\CWebApplication.php(141): CWebApplication->runController('VerDatosArchivo')
+#1 C:\xampp\htdocs\sisven_2\yii\framework\base\CApplication.php(180): CWebApplication->processRequest()
+#2 C:\xampp\htdocs\sisven_2\index.php(16): CApplication->run()
+#3 {main}
+REQUEST_URI=/sisven_2/VerDatosArchivo
+HTTP_REFERER=http://10.130.1.67/sisven_2/RptResultadosRevisionMines
+---

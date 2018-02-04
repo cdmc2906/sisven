@@ -286,11 +286,11 @@ class CargaMinesValidacionController extends Controller {
                         Yii::app()->session['minesOmitidos'] += 1;
                     }
                 } else if ($minExiste['miva_estado'] == 9) {
-//                                            var_dump('vvv');die();
+
                     $fRevisionMines = new FRevisionMinesModel();
                     $gestionAnterior = $fRevisionMines->getUltimaGestionxIcc($minExiste['miva_imei']);
-//                    var_dump($gestionAnterior[0]['rmva_estado_revision']);die();
-                    if ($minExiste['miva_estado_reasignacion'] == 0 && $minExiste['iduser'] == $row['USUARIOASGINADO']) {
+
+                    if ($minExiste['miva_estado_reasignacion'] == 0 && $minExiste['iduser'] != $row['USUARIOASGINADO']) {
                         $minExiste["miva_estado_reasignacion"] = 1;
                         $minExiste["miva_usario_reasignado"] = $minExiste["iduser"];
                         $minExiste["iduser"] = ($row['USUARIOASGINADO'] == '') ? null : $row['USUARIOASGINADO'];
@@ -300,12 +300,8 @@ class CargaMinesValidacionController extends Controller {
                         $minExiste["miva_fecha_modifica"] = date(FORMATO_FECHA_LONG);
                         $minExiste["miva_cod_usuario_ing_mod"] = Yii::app()->user->id;
 
-//                        var_dump('aaa');die();
                         if ($minExiste->save()) {
-
                             Yii::app()->session['minesReprocesados'] += 1;
-//                            var_dump('djdjdj');
-//                            var_dump('sss',Yii::app()->session['minesReProcesados']);die();
                         }
                     }
                 }

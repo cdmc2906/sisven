@@ -62,7 +62,7 @@ class excel {
         }
     }
 
-    public function MapeoCustomizadoHistorial($fechasRevisadas,$cantidadFilas, $reporteConPrecision, $reporteSinPrecision, $precision, $ejecutivo, $encabezado, $footer) {
+    public function MapeoCustomizadoHistorial($fechasRevisadas, $cantidadFilas, $reporteConPrecision, $reporteSinPrecision, $precision, $ejecutivo, $encabezado, $footer) {
         $row_offset = 1;
         $styleArrayCell = array(
             'font' => array(

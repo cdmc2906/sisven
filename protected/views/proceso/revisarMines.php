@@ -134,7 +134,7 @@ $form = $this->beginWidget('CActiveForm', array(
 
             <div class="col-md-6">
                 <div class="box box-solid">
-                    <a><center><strong>GESTIONADOS</strong></center></a>
+                    <a><center><strong>POR GESTIONAR</strong></center></a>
                     <input
                         style="
                         color: red; 

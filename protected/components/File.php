@@ -483,7 +483,7 @@ class File {
                     $arrColumnas = explode($this->Delimitador, $strFilas);
 //                    var_dump($arrColumnas);die();
 //                    var_dump($arrColumnas[1]);                    die();
-                    if (isset($arrColumnas[18]) && intval($arrColumnas[0] > 0)) {
+                    if (isset($arrColumnas[19]) && intval($arrColumnas[0] > 0)) {
                         if (count($arrColumnas) > 0 && $arrColumnas[0] != 'Id') { // Quita la fila de encabezados
 //                        var_dump($arrColumnas[1]);                    die();
                             $datos = array(
@@ -498,14 +498,15 @@ class File {
                                 'CLIENTE' => utf8_encode(trim($arrColumnas[8])),
                                 'CLIENTENOMBRE' => utf8_encode(trim($arrColumnas[9])),
                                 'DIRECCION' => utf8_encode(trim($arrColumnas[10])),
-                                'ACCION' => utf8_encode(trim($arrColumnas[11])),
-                                'CODIGO' => utf8_encode(trim($arrColumnas[12])),
-                                'CODIGOCOMENTARIO' => utf8_encode(trim($arrColumnas[13])),
-                                'COMENTARIO' => utf8_encode(trim($arrColumnas[14])),
-                                'MONTO' => trim($arrColumnas[15]),
-                                'LATITUD' => trim($arrColumnas[16]),
-                                'LONGITUD' => trim($arrColumnas[17]),
-                                'ROMPERSECUENCIA' => trim($arrColumnas[18]),
+                                // agregada nueva columna
+                                'ACCION' => utf8_encode(trim($arrColumnas[12])),
+                                'CODIGO' => utf8_encode(trim($arrColumnas[13])),
+                                'CODIGOCOMENTARIO' => utf8_encode(trim($arrColumnas[14])),
+                                'COMENTARIO' => utf8_encode(trim($arrColumnas[15])),
+                                'MONTO' => trim($arrColumnas[16]),
+                                'LATITUD' => trim($arrColumnas[17]),
+                                'LONGITUD' => trim($arrColumnas[18]),
+                                'ROMPERSECUENCIA' => trim($arrColumnas[19]),
                             );
                             array_push($datosCarga, $datos);
                             unset($datos);

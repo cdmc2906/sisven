@@ -2,12 +2,6 @@
 
 class FMinesRevisionModel extends DAOModel {
 
-    /**
-     * Obtiene los mines asignados al agente
-     * 
-     * @param type $codigoUsuario Id del usuario logeado
-     * @return type Respuesta de datos de bdd
-     */
     public function getMinesxUsuario($codigoUsuario) {
         $sql = '';
         if ($codigoUsuario == 1) {
@@ -44,6 +38,63 @@ class FMinesRevisionModel extends DAOModel {
         return $data;
     }
 
+    public function getMinesSinGestionarxCarga($numeroCarga) {
+        $sql = "
+            SELECT 
+                    concat(CHAR(39),a.miva_min) as MIN
+                    ,concat(CHAR(39),a.miva_imei) as ICC
+                    ,miva_vendedor as VENDEDOR
+                    ,miva_estado as CODIGO_ESTADO
+                    ,b.est_nombre as ESTADO
+                    ,c.nombreUsuario as AGENTE_ASIGNADO
+                FROM tb_mines_validacion as a
+                inner join tb_estado as b
+                on a.miva_estado=b.est_id
+                inner join cruge_user as c
+                on a.iduser=c.iduser
+                where 1=1
+                and a.cir_id=".$numeroCarga."
+                and a.miva_estado in (8,13) -- ESTADOS CARGADO, REPROCESAR
+                ;
+            ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getCantidadMinesSinGestionarxUsuario($codigoUsuario) {
+        $sql = '';
+        if ($codigoUsuario == 1) {
+            $sql = "
+            SELECT 
+                count(*) as asignados
+                FROM tb_mines_validacion as a
+                where 1=1
+                    and a.miva_estado in (8,13) -- ESTADOS CARGADO, REPROCESAR
+                    ;
+            ";
+        } else {
+            $sql = "
+            SELECT 
+                    count(*) as asignados
+                FROM tb_mines_validacion as a
+                where 1=1
+                    and a.iduser=" . $codigoUsuario . "
+                    and a.miva_estado in (8,13) -- ESTADOS CARGADO, REPROCESAR
+                    ;
+            ";
+        }
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);die();
+        $this->Close();
+        return $data;
+    }
+
     public function getCantidadMinesAsignadosxUsuario($codigoUsuario) {
         $sql = '';
         if ($codigoUsuario == 1) {
@@ -65,6 +116,36 @@ class FMinesRevisionModel extends DAOModel {
                     and a.miva_estado in (8,9) -- ESTADOS CARGADO
                     ;
             ";
+        }
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getCantidadMinesGestionadosxUsuario($codigoUsuario) {
+        $sql = "";
+        if ($codigoUsuario == 1) {
+            $sql = "
+            SELECT 
+                    count(*) as gestionados
+                FROM tb_mines_validacion as a
+                where 1=1
+                    and a.miva_estado in (9) -- ESTADOS GESTIONADO
+                    ;
+        ";
+        } else {
+            $sql = "
+            SELECT 
+                    count(*) as gestionados
+                FROM tb_mines_validacion as a
+                where 1=1
+                    and a.iduser=" . $codigoUsuario . "
+                    and a.miva_estado in (9) -- ESTADOS GESTIONADO
+                    ;
+        ";
         }
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
@@ -107,7 +188,7 @@ class FMinesRevisionModel extends DAOModel {
         $data2 = $command->queryAll();
         $eliminados = intval($data2[0]['desasignados']);
 
-//        var_dump($agregados+$eliminados);        die();
+//        var_dump($agregadosOriginal,$eliminados);        die();
         $this->Close();
         return $agregadosOriginal + $eliminados;
     }
@@ -140,51 +221,27 @@ class FMinesRevisionModel extends DAOModel {
         $desasignados = $this->connection->createCommand($sqlDesasignados)->queryAll()[0]['eliminados'];
 //            var_dump($agregados - $desasignados);die();
         $this->Close();
-        
+
         return ($agregados - $desasignados);
     }
 
-    public function getCantidadMinesGestionadosxUsuario($codigoUsuario) {
-        $sql = "";
-        if ($codigoUsuario == 1) {
-            $sql = "
-            SELECT 
-                    count(*) as gestionados
-                FROM tb_mines_validacion as a
-                where 1=1
-                    and a.miva_estado in (9) -- ESTADOS GESTIONADO
-                    ;
-        ";
-        } else {
-            $sql = "
-            SELECT 
-                    count(*) as gestionados
-                FROM tb_mines_validacion as a
-                where 1=1
-                    and a.iduser=" . $codigoUsuario . "
-                    and a.miva_estado in (9) -- ESTADOS GESTIONADO
-                    ;
-        ";
-        }
-//        var_dump($sql);        die();
-        $command = $this->connection->createCommand($sql);
-        $data = $command->queryAll();
-//        var_dump($data);die();
-        $this->Close();
-        return $data;
-    }
-
     public function getCantidadMinesGestionadosxUsuarioxCarga($codigoUsuario, $numeroCarga) {
+//        $sql = "
+//             select count(rmva_id) as gestionados
+//                from tb_revision_mines
+//                where iduser=" . $codigoUsuario . "
+//                    and rmva_carga=" . $numeroCarga . "
+//                    and rmva_numero_revision=1
+//                    ;
+//            ";
         $sql = "
-            SELECT 
-                    count(*) as gestionados
-                FROM tb_mines_validacion as a
-                where 1=1
-                    and a.iduser=" . $codigoUsuario . "
-                    and a.miva_estado in (9) -- ESTADOS GESTIONADO
-                    and a.miva_carga=" . $numeroCarga . "
+             select count(miva_id) as gestionados
+                from tb_mines_validacion
+                where iduser=" . $codigoUsuario . "
+                    and cir_id=" . $numeroCarga . "
+                    and miva_estado in (9,14)
                     ;
-        ";
+            ";
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();

@@ -56,12 +56,8 @@ class RptResumenHistorialPorFechaController extends Controller {
                                 , $model->ejecutivo);
 
                         foreach ($datosRevisiones as $item) {
-//                            if ($item['tipo'] == 1)
                             array_push($fechasRevisadas, $item["fecha_gestion"]);
-//                            else if ($item['tipo'] == 2)
-//                                array_push($parametrosAlmacenados, $item["indicador"]);
                         }
-//                        var_dump($fechasRevisadas);die();
                         $datosResumenGrid = array();
 
                         $reporteConPrecision = array();
@@ -102,15 +98,15 @@ class RptResumenHistorialPorFechaController extends Controller {
                                 }
                             }
                         }
-//                        var_dump($reporteConPrecision);die();   
                         Yii::app()->session['fechasRevisadas'] = $fechasRevisadas;
                         Yii::app()->session['reporteConPrecision'] = $reporteConPrecision;
                         Yii::app()->session['reporteSinPrecision'] = $reporteSinPrecision;
-//                        echo '<script>var reporteGenerado = \'true\';</script>';
+
                         Yii::app()->session['precision'] = $model->precisionVisitas;
                         Yii::app()->session['ejecutivo'] = $model->ejecutivo;
                         Yii::app()->session['fechaInicio'] = $model->fechaInicioGestion;
                         Yii::app()->session['fechaFin'] = $model->fechaFinGestion;
+
                         $response->Message = "Reporte generado correctamente";
                         $response->ClassMessage = CLASS_MENSAJE_SUCCESS;
                     } else {
@@ -170,7 +166,7 @@ class RptResumenHistorialPorFechaController extends Controller {
             $fechaInicioGestion = Yii::app()->session['fechaInicio'];
             $fechaFinGestion = Yii::app()->session['fechaFin'];
 //            var_dump(count($reporteConPrecision));            die();
-            if (count($reporteConPrecision) > 0) {
+            if (count($reporteConPrecision) > 0 || count($reporteSinPrecision) > 0) {
                 $NombreArchivo = "resumen_Historial_Ejecutivo";
                 $NombreHoja = "resumen_Historial_Ejecutivo";
 

@@ -137,7 +137,7 @@ class Libreria {
                     , $ejecutivo[0]['e_usr_mobilvendor']
             );
         }
-//var_dump(count($historial));die();
+
         if (count($historial)) {
             #INICIO CALCULO TIEMPO GESTION
             $latitudClienteAnterior = 0;

@@ -176,7 +176,9 @@ $this->pageTitle = $pagina_nombre;
                             limit 1');
                     $resultado = $command->queryRow();
                     $ultimaFechaVenta = DateTime::createFromFormat('Y-m-d', $resultado['fecha'])->format(FORMATO_FECHA);
-                    $consulta = "SELECT 
+                    
+                    $command2 = Yii::app()->db->createCommand(
+                            "SELECT 
                             count(vm_icc) as cantidad 
                             FROM tb_venta_movistar 
                             WHERE 1=1
@@ -184,12 +186,14 @@ $this->pageTitle = $pagina_nombre;
                                     (select CAST(DATE_FORMAT('" . $ultimaFechaVenta . "' ,'%Y-%m-01') as DATE)) 
                                     AND (select LAST_DAY('" . $ultimaFechaVenta . "')) 
                                 and vm_estado_icc ='ICC OK'                                
-                            ;";
-                    $command = Yii::app()->db->createCommand($consulta);
-                    $resultado = $command->queryRow();
+                            ;"
+                            );
+//                            var_dump($command2);die();
+                    $resultado = $command2->queryRow();
                     $cantidadVenta = number_format(intval($resultado['cantidad']), 0, '', '.');
 
-                    $consulta1 = "
+                    $command = Yii::app()->db->createCommand(
+                            "
                             select count(vm_icc) as cantidad
                                 from tb_venta_movistar
                                 WHERE 1=1
@@ -197,8 +201,8 @@ $this->pageTitle = $pagina_nombre;
                                         (select CAST(DATE_FORMAT('" . $ultimaFechaVenta . "' ,'%Y-%m-01') as DATE)) 
                                         AND (select LAST_DAY('" . $ultimaFechaVenta . "'))
                                     and vm_estado_icc ='ICC PROMO'
-                                    ;";
-                    $command = Yii::app()->db->createCommand($consulta1);
+                                    ;"
+                            );
                     $resultado1 = $command->queryRow();
                     $cantidadVentaPromo = number_format(intval($resultado1['cantidad']), 0, '', '.');
                     ?>

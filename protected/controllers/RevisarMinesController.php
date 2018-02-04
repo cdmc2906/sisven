@@ -33,10 +33,12 @@ class RevisarMinesController extends Controller {
         $avance = '';
 
         $fRMinesRevision = new FMinesRevisionModel();
-        $cantidadAsignados = $fRMinesRevision->getCantidadMinesAsignadosxUsuario(Yii::app()->user->id);
-        $cantidadGestionados = $fRMinesRevision->getCantidadMinesGestionadosxUsuario(Yii::app()->user->id);
-//        var_dump($cantidadAsignados);        die();
-        return $cantidadGestionados[0]['gestionados'] . '/' . intval($cantidadAsignados[0]['asignados']);
+        $cantidadSinGestionar= $fRMinesRevision->getCantidadMinesSinGestionarxUsuario(Yii::app()->user->id);
+//        $cantidadGestionados = $fRMinesRevision->getCantidadMinesGestionadosxUsuario(Yii::app()->user->id);
+
+//        $porGestionar = intval($cantidadAsignados[0]['asignados']) - intval($cantidadGestionados[0]['gestionados']);
+//        return $porGestionar . ' mines';
+        return intval($cantidadSinGestionar[0]['asignados']) . ' mines';
     }
 
     public function actionSetearFilaSeleccionada() {

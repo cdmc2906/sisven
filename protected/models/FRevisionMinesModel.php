@@ -12,8 +12,9 @@ class FRevisionMinesModel extends DAOModel {
         $sql = "
                 select 
                     b.nombreUsuario as AGENTE
-                    ,a.rmva_min as MIN
-                    ,a.rmva_icc as ICC
+                    ,concat(CHAR(39),a.rmva_min) as MIN
+                    ,concat(CHAR(39),a.rmva_icc) as ICC
+                    ,a.rmva_numero_revision as REVISION
                     ,c.miva_vendedor as VENDEDOR
                     ,a.rmva_fecha_gestion as FECHAGESTION
                     ,a.rmva_resultado_llamad as RESULTADO
@@ -32,7 +33,7 @@ class FRevisionMinesModel extends DAOModel {
                     inner join tb_mines_validacion as c
                         on a.rmva_icc=c.miva_imei
                 where 1=1 
-                    and a.rmva_carga=" . $codigoCarga . ";
+                    and a.rmva_carga=" . $codigoCarga . "
                 order by a.rmva_fecha_gestion
                    ;
             ";
@@ -76,6 +77,62 @@ class FRevisionMinesModel extends DAOModel {
                 order by rmva_numero_revision desc
                 limit 1;
 
+            ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getCantidadGestionxUsuarioxCargaxAgrupadoFecha($codigoUsuario, $numeroCarga) {
+        $sql = "
+            select 
+                count(*) as cantidad
+                ,date(rmva_fecha_gestion) as fecha
+            from tb_revision_mines as a
+            where 1=1
+                and iduser=" . $codigoUsuario . "
+                and rmva_carga=" . $numeroCarga . "
+            group by date(rmva_fecha_gestion)
+            ;
+            ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getFechasGestionxCarga($numeroCarga) {
+        $sql = "
+            select distinct date(rmva_fecha_gestion)
+            from tb_revision_mines as a
+            where 1=1
+            and rmva_carga=" . $numeroCarga . "
+            ;
+            ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getUsuariosGestionxCarga($numeroCarga) {
+        $sql = "
+            select 
+                    distinct a.iduser as idusuario
+                    ,b.nombreUsuario as nombreusuario
+                from tb_revision_mines as a
+                    inner join cruge_user	as b
+                        on a.iduser=b.iduser
+                where 1=1
+                    and rmva_carga=" . $numeroCarga . "
+            ;
             ";
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);

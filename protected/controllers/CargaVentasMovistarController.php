@@ -276,6 +276,7 @@ class CargaVentasMovistarController extends Controller {
                     'vm_canal' => (trim($row['CANAL']) == '') ? null : trim($row['CANAL']),
                     'vm_lote' => (trim($row['LOTE']) == '') ? null : trim($row['LOTE']),
                     'vm_zona' => (trim($row['ZONA']) == '') ? null : trim($row['ZONA']),
+                    'vm_estado_icc'=>'ICC OK',
                     'vm_fecha_ingreso' => date(FORMATO_FECHA_LONG),
                     'vm_fecha_modificacion' => date(FORMATO_FECHA_LONG),
                     'vm_usuario_ingresa_modifica' => Yii::app()->user->id
