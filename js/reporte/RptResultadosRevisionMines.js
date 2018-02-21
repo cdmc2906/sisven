@@ -1,6 +1,5 @@
 $(document).ready(function () {
     ConfigurarGrids();
-    ConfigDatePickersReporte('.txtfechaOrdenesInicio', '.txtfechaOrdenesFin');
 
     $("#btnBuscarCargas").click(function () {
         mostrarCargas();
@@ -83,6 +82,7 @@ function ConfigurarGrids()
                 , colNames: [
 //                    'ID',
                     'AGENTE',
+                    'FECHA INDICADOR',
                     'MIN',
                     'ICC',
                     'REVISION',
@@ -101,6 +101,7 @@ function ConfigurarGrids()
                         [
 //                            {name: 'IDREVISION', index: 'IDREVISION', sortable: false, width: 20, frozen: true, align: "center", hidden:"true"},
                             {name: 'AGENTE', index: 'AGENTE', sortable: false, width: 100, frozen: true, align: "center", },
+                            {name: 'FECHA_INDICADOR', index: 'FECHA_INDICADOR', sortable: false, width: 120, frozen: true, align: "center", },
                             {name: 'MIN', index: 'MIN', sortable: false, width: 80, frozen: true, align: "center", },
                             {name: 'ICC', index: 'ICC', sortable: false, width: 150, frozen: true, align: "center", },
                             {name: 'REVISION', index: 'REVISION', sortable: false, width: 150, frozen: true, align: "center", },
@@ -243,6 +244,59 @@ function ConfigurarGrids()
             {}, // del options 
             {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
     );
+
+    jQuery("#tblReasignacion").jqGrid(
+            {
+                height: 150
+//                , width: 920
+                , autowidth: true
+
+                , datatype: "json"
+                , colNames: [
+//                    'ID',
+                    'MIN',
+                    'ICC',
+                    'VENDEDOR',
+                    'CODIGO_ESTADO',
+                    'ESTADO',
+                    'AGENTE',
+                ]
+                , colModel:
+                        [
+                            {name: 'MIN', index: 'MIN', sortable: false, width: 80, frozen: true, align: "center", },
+                            {name: 'ICC', index: 'ICC', sortable: false, width: 150, frozen: true, align: "center", },
+                            {name: 'VENDEDOR', index: 'VENDEDOR', sortable: false, width: 150, frozen: true, align: "center", },
+                            {name: 'CODIGO_ESTADO', index: 'CODIGO_ESTADO', sortable: false, width: 150, frozen: true, align: "center", },
+                            {name: 'ESTADO', index: 'ESTADO', sortable: false, width: 150, frozen: true, align: "center", },
+                            {name: 'AGENTE', index: 'AGENTE', sortable: false, width: 150, frozen: true, align: "center", },
+                        ]
+                , rowNum: 10
+                , rowList: [5, 10, 20]
+                , pager: '#pagTblReasignacion'
+                , sortname: 'item'
+                , viewrecords: true
+                , sortorder: "asc"
+                , multiselect: true
+//                , footerrow: true
+//                , grouping: true
+//                , groupingView: {
+//                    groupField: ['AGENTE']
+//                    , groupColumnShow: [false]
+//                    , groupCollapse: true
+//                    , groupText: ['<b>{0} - {1} Gestionados(s)</b>']
+//                }
+                , rownumbers: true
+                , shrinkToFit: false //permite mantener la dimensi�n personalizada de las celdas,
+                , hidegrid: false
+                , caption: "Detalle Resultados"}
+    )
+    jQuery("#tblReasignacion").jqGrid('navGrid', '#pagTblReasignacion',
+            {add: false, edit: false, del: false, search: true, refresh: false, view: false}, //options 
+            {}, // edit options 
+            {}, // add options 
+            {}, // del options 
+            {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
+    );
 }
 
 function mostrarCargas() {
@@ -306,6 +360,7 @@ function mostrarDetallesCarga(numeroCarga) {
                         $("#tblResultados").setGridParam({datatype: 'jsonstring', datastr: datosResult['resultados']}).trigger('reloadGrid');
                         $("#tblGestionxAgente").setGridParam({datatype: 'jsonstring', datastr: datosResult['gestionxAgente']}).trigger('reloadGrid');
                         $("#tblTiempoGestionxAgente").setGridParam({datatype: 'jsonstring', datastr: datosResult['tiemposxGestion']}).trigger('reloadGrid');
+                        $("#tblReasignacion").setGridParam({datatype: 'jsonstring', datastr: datosResult['minessingestion']}).trigger('reloadGrid');
 
                     } else {
                         //to do

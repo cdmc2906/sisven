@@ -83,7 +83,6 @@ $this->pageTitle = $pagina_nombre;
     </div>
 
     <div class="row">
-        <!--COLUMNA DATO-->
         <div class="col-md-12">
             <div class="box box-primary">
                 <div class="box-body no-padding">
@@ -123,6 +122,52 @@ $this->pageTitle = $pagina_nombre;
 
 
 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-body no-padding">
+                    <div class="table-responsive mailbox-messages">
+                        <?php
+                        $form = $this->beginWidget('CActiveForm', array(
+                            'id' => 'frmLoad',
+                            'enableClientValidation' => true,
+                            'clientOptions' => array(
+                                'validateOnSubmit' => true,
+                            ),
+                            'htmlOptions' => array("enctype" => "multipart/form-data"),
+                        ));
+                        ?>
+                        <div class="col-md-9">
+                            <table id="tblReasignacion" class="table table-condensed"></table>
+                            <div id="pagTblReasignacion"> </div> 
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <?php
+                                echo $form->labelEx($model, 'agenteReasignar');
+                                echo $form->dropDownList(
+                                        $model, 'agenteReasignar', array(
+                                    '0' => TEXT_OPCION_SELECCIONE,
+                                    'QU25' => 'EDISON CALVACHE',
+                                    'QU26' => 'GIOVANA BONILLA',
+                                    'QU22' => 'JOSE CHAMBA',
+                                    'QU21' => 'JUAN CLAVIJO',
+                                    'QU17' => 'JHONNY PLUAS',
+                                    'QU19' => 'LUIS OJEDA')
+                                );
+                                echo $form->error($model, 'agenteReasignar');
+                                ?>
+                            </div>
+                            <div class="row">
+                                
+                            </div>
+                            <?php $this->endWidget(); ?>
+                        </div>
                     </div>
                 </div>
             </div>

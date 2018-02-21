@@ -40,8 +40,10 @@ class RptResultadosRevisionMinesController extends Controller {
         Yii::app()->session['resultadosxCarga'] = $resultados['resultados'];
         $resultados['gestionxAgente'] = $this->DetalleAsignacionesCarga($_POST["numeroCarga"]);
         $resultados['tiemposxGestion'] = $this->DetalleTiemposGestionCarga($_POST["numeroCarga"]);
-        Yii::app()->session['minesSinGestionxCarga'] = $this->DetalleMinesSinGestion($_POST["numeroCarga"]);
-
+        $minesSinGEstion = array();
+        $minesSinGEstion=$this->DetalleMinesSinGestion($_POST["numeroCarga"]);
+        Yii::app()->session['minesSinGestionxCarga'] = $minesSinGEstion;
+        $resultados['minessingestion'] = $minesSinGEstion;
         $response->Result = $resultados;
         $this->actionResponse(null, null, $response);
         return;

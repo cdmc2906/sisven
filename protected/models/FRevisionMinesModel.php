@@ -12,6 +12,7 @@ class FRevisionMinesModel extends DAOModel {
         $sql = "
                 select 
                     b.nombreUsuario as AGENTE
+                    ,date(c.miva_fecha) as FECHA_INDICADOR
                     ,concat(CHAR(39),a.rmva_min) as MIN
                     ,concat(CHAR(39),a.rmva_icc) as ICC
                     ,a.rmva_numero_revision as REVISION
