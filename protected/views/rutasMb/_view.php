@@ -1,5 +1,5 @@
 <?php
-/* @var $this RutaMbController */
+/* @var $this RutasMbController */
 /* @var $data RutaMbModel */
 ?>
 
@@ -7,6 +7,10 @@
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('r_cod')); ?>:</b>
 	<?php echo CHtml::link(CHtml::encode($data->r_cod), array('view', 'id'=>$data->r_cod)); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('pg_id')); ?>:</b>
+	<?php echo CHtml::encode($data->pg_id); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('r_ruta')); ?>:</b>
@@ -21,10 +25,15 @@
 	<?php echo CHtml::encode($data->r_nom_cliente); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('r_tipo_negocio')); ?>:</b>
+	<?php echo CHtml::encode($data->r_tipo_negocio); ?>
+	<br />
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('r_cod_direccion')); ?>:</b>
 	<?php echo CHtml::encode($data->r_cod_direccion); ?>
 	<br />
 
+	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('r_direccion')); ?>:</b>
 	<?php echo CHtml::encode($data->r_direccion); ?>
 	<br />
@@ -33,7 +42,6 @@
 	<?php echo CHtml::encode($data->r_referencia); ?>
 	<br />
 
-	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('r_semana')); ?>:</b>
 	<?php echo CHtml::encode($data->r_semana); ?>
 	<br />
@@ -48,6 +56,10 @@
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('r_estatus')); ?>:</b>
 	<?php echo CHtml::encode($data->r_estatus); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('r_numero_carga_informacion')); ?>:</b>
+	<?php echo CHtml::encode($data->r_numero_carga_informacion); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('r_fch_ingreso')); ?>:</b>

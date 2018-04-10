@@ -1,5 +1,5 @@
 <?php
-/* @var $this HistorialMbControllerController */
+/* @var $this HistorialMbController */
 /* @var $model HistorialMbModel */
 /* @var $form CActiveForm */
 ?>
@@ -15,9 +15,15 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	<p class="note">Los campos con  <span class="required">*</span> son obligatorios.</p>
+	<p class="note">Fields with <span class="required">*</span> are required.</p>
 
 	<?php echo $form->errorSummary($model); ?>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'pg_id'); ?>
+		<?php echo $form->textField($model,'pg_id'); ?>
+		<?php echo $form->error($model,'pg_id'); ?>
+	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'h_id'); ?>
@@ -111,13 +117,13 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'h_latitud'); ?>
-		<?php echo $form->textField($model,'h_latitud',array('size'=>10,'maxlength'=>10)); ?>
+		<?php echo $form->textField($model,'h_latitud',array('size'=>30,'maxlength'=>30)); ?>
 		<?php echo $form->error($model,'h_latitud'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'h_longitud'); ?>
-		<?php echo $form->textField($model,'h_longitud',array('size'=>10,'maxlength'=>10)); ?>
+		<?php echo $form->textField($model,'h_longitud',array('size'=>30,'maxlength'=>30)); ?>
 		<?php echo $form->error($model,'h_longitud'); ?>
 	</div>
 
@@ -127,38 +133,44 @@
 		<?php echo $form->error($model,'h_romper_secuencia'); ?>
 	</div>
 
-<!--	<div class="row">
+	<div class="row">
 		<?php echo $form->labelEx($model,'h_fch_ingreso'); ?>
 		<?php echo $form->textField($model,'h_fch_ingreso'); ?>
 		<?php echo $form->error($model,'h_fch_ingreso'); ?>
-	</div>-->
+	</div>
 
-<!--	<div class="row">
+	<div class="row">
 		<?php echo $form->labelEx($model,'h_fch_modificacion'); ?>
 		<?php echo $form->textField($model,'h_fch_modificacion'); ?>
 		<?php echo $form->error($model,'h_fch_modificacion'); ?>
-	</div>-->
+	</div>
 
-<!--	<div class="row">
+	<div class="row">
 		<?php echo $form->labelEx($model,'h_fch_desde'); ?>
 		<?php echo $form->textField($model,'h_fch_desde'); ?>
 		<?php echo $form->error($model,'h_fch_desde'); ?>
-	</div>-->
-<!--
+	</div>
+
 	<div class="row">
 		<?php echo $form->labelEx($model,'h_fch_hasta'); ?>
 		<?php echo $form->textField($model,'h_fch_hasta'); ?>
 		<?php echo $form->error($model,'h_fch_hasta'); ?>
-	</div>-->
+	</div>
 
-<!--	<div class="row">
+	<div class="row">
 		<?php echo $form->labelEx($model,'h_usr_ing_mod'); ?>
 		<?php echo $form->textField($model,'h_usr_ing_mod'); ?>
 		<?php echo $form->error($model,'h_usr_ing_mod'); ?>
-	</div>-->
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'h_usuario_nombre'); ?>
+		<?php echo $form->textField($model,'h_usuario_nombre',array('size'=>60,'maxlength'=>500)); ?>
+		<?php echo $form->error($model,'h_usuario_nombre'); ?>
+	</div>
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Save'); ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

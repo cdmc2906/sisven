@@ -25,6 +25,17 @@ class FRutaModel extends DAOModel {
 
     public $campoFechaOrdenes = 'o_fch_creacion';
 
+    public function getCargaAnterior() {
+        $sql = "select max(r_numero_carga_informacion) as ultimacarga FROM tb_ruta_mb;";
+
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
     public function getRutaxCliente($codigo_cliente, $iniciales_ejecutivo) {
         $sql = "
            SELECT 
@@ -35,6 +46,25 @@ class FRutaModel extends DAOModel {
             WHERE 1=1
 		AND R_COD_CLIENTE='" . $codigo_cliente . "'
 		--  AND RIGHT(R_RUTA,3)='" . $iniciales_ejecutivo . "';
+            ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getRutaxClientexSemana($codigo_cliente, $iniciales_ejecutivo, $semana) {
+        $sql = "
+           SELECT 
+		R_DIA AS DIARUTA
+		,R_RUTA AS RUTA
+                ,R_SECUENCIA AS SECUENCIA
+            FROM tb_ruta_mb
+            WHERE 1=1
+		AND R_COD_CLIENTE='" . $codigo_cliente . "'
+		AND R_SEMANA='" . $semana . "';
             ";
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
@@ -71,6 +101,23 @@ class FRutaModel extends DAOModel {
                 FROM tb_ruta_mb 
                 WHERE 1=1
                     AND RIGHT(r_ruta,3)='" . $ejecutivo . "' 
+                    AND r_dia =" . $dia . ";";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getTotalClientesxRutaxEjecutivoxDiaxSemana($ejecutivo, $dia, $semana) {
+        $sql = "
+           SELECT 
+                    COUNT(*) AS TOTALCLIENTES
+                FROM tb_ruta_mb 
+                WHERE 1=1
+                    AND RIGHT(r_ruta,3)='" . $ejecutivo . "' 
+                    AND r_semana='" . $semana . "' 
                     AND r_dia =" . $dia . ";";
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
@@ -186,7 +233,7 @@ class FRutaModel extends DAOModel {
         $this->Close();
         return $data;
     }
-    
+
     public function getTotalChipsVentaxDiaxHoraInicioxCliente($fechaGestion, $horaInicio, $codCliente) {
         $fechaHoraGestion = $fechaGestion . ' ' . $horaInicio;
         $fechaHoraDiaDespues = date('Y-m-d', strtotime($fechaGestion . ' + 1 days')) . ' ' . $horaInicio;

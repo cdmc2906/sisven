@@ -17,6 +17,11 @@
 	</div>
 
 	<div class="row">
+		<?php echo $form->label($model,'pg_id'); ?>
+		<?php echo $form->textField($model,'pg_id'); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->label($model,'o_id'); ?>
 		<?php echo $form->textField($model,'o_id'); ?>
 	</div>

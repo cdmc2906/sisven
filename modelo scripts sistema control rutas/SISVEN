@@ -1,0 +1,61 @@
+/*==============================================================*/
+/* DBMS name:      Sybase SQL Anywhere 11                       */
+/* Created on:     28/02/2018 14:38:00                          */
+/*==============================================================*/
+
+
+if exists(
+   select 1 from sys.sysindex i, sys.systable t
+   where i.table_id=t.table_id 
+     and i.index_name='tb_resumen_historial_diario_pk'
+     and t.table_name='tb_resumen_historial_diario'
+) then
+   drop index tb_resumen_historial_diario.tb_resumen_historial_diario_pk
+end if;
+
+if exists(
+   select 1 from sys.sysconstraint k
+      join sys.systab t on (t.object_id = k.table_object_id and t.table_name='tb_resumen_historial_diario')
+   where
+      k.constraint_type = 'P'
+) then
+    alter table tb_resumen_historial_diario
+   delete primary key
+end if;
+
+if exists(
+   select 1 from sys.systable 
+   where table_name='tb_resumen_historial_diario'
+     and table_type in ('BASE', 'GBL TEMP')
+) then
+    drop table tb_resumen_historial_diario
+end if;
+
+/*==============================================================*/
+/* Table: tb_resumen_historial_diario                           */
+/*==============================================================*/
+create table tb_resumen_historial_diario 
+(
+   rhd_id               integer                        not null,
+   rhd_cod_ejecutivo    varchar(20)                    null,
+   rhd_fecha_historial  date                           null,
+   rhd_tipo             varchar(50)                    null,
+   rhd_parametro        varchar(50)                    null,
+   rhd_valor            varchar(250)                   null,
+   rhd_semana           integer                        null,
+   rhd_estado           integer                        null,
+   rhd_fecha_ingreso    timestamp                      null,
+   rhd_fecha_modificacion timestamp                      null,
+   rhd_usuario_ingresa_modifica integer                        null
+);
+
+alter table tb_resumen_historial_diario
+   add constraint pk_tb_resumen_historial_diario primary key (rhd_id);
+
+/*==============================================================*/
+/* Index: tb_resumen_historial_diario_pk                        */
+/*==============================================================*/
+create unique index tb_resumen_historial_diario_pk on tb_resumen_historial_diario (
+rhd_id asc
+);
+

@@ -9,6 +9,10 @@
 	<?php echo CHtml::link(CHtml::encode($data->o_codigo), array('view', 'id'=>$data->o_codigo)); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('pg_id')); ?>:</b>
+	<?php echo CHtml::encode($data->pg_id); ?>
+	<br />
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('o_id')); ?>:</b>
 	<?php echo CHtml::encode($data->o_id); ?>
 	<br />
@@ -29,11 +33,11 @@
 	<?php echo CHtml::encode($data->o_fch_venta); ?>
 	<br />
 
+	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('o_fch_creacion')); ?>:</b>
 	<?php echo CHtml::encode($data->o_fch_creacion); ?>
 	<br />
 
-	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('o_fch_despacho')); ?>:</b>
 	<?php echo CHtml::encode($data->o_fch_despacho); ?>
 	<br />

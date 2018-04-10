@@ -748,19 +748,21 @@ class File {
                     $arrColumnas = explode($this->Delimitador, $strFilas);
 //                    var_dump($arrColumnas);die();
 //                    var_dump($arrColumnas[1]);                    die();
-                    if (isset($arrColumnas[9])) {
-                        if ($arrColumnas[0] != 'Ruta') { // Quita la fila de encabezados
+                    if (isset($arrColumnas[11])) {
+                        if ($arrColumnas[0] != 'Código') { // Quita la fila de encabezados
                             $datos = array(
-                                'RUTA' => utf8_encode(trim($arrColumnas[0])),
-                                'CLIENTE' => utf8_encode(trim($arrColumnas[1])),
-                                'NOMBRE' => trim(trim(utf8_encode($arrColumnas[2]), '"'), ' 	'), //utf8_encode(trim($arrColumnas[2])),
-                                'DIRECCION' => utf8_encode(trim($arrColumnas[3])),
-                                'DIRECCIONDESCRIPCION' => trim(trim(utf8_encode($arrColumnas[4]), '"'), '	'), //utf8_encode(trim($arrColumnas[4])),
-                                'REFERENCIA' => trim(trim(utf8_encode($arrColumnas[5]), '"'), '	'), //utf8_encode(trim($arrColumnas[5])),
-                                'SEMANA' => trim($arrColumnas[6]),
-                                'DIA' => trim($arrColumnas[7]),
-                                'SECUENCIA' => trim($arrColumnas[8]),
-                                'ESTATUS' => trim($arrColumnas[9]),
+                                'CODIGO' => utf8_encode(trim($arrColumnas[0])),
+                                'RUTA' => utf8_encode(trim($arrColumnas[1])),
+                                'CLIENTE' => utf8_encode(trim($arrColumnas[2])),
+                                'NOMBRE' => trim(trim(utf8_encode($arrColumnas[3]), '"'), ' 	'), //utf8_encode(trim($arrColumnas[2])),
+                                'TIPODENEGOCIO' => utf8_encode(trim($arrColumnas[4])),
+                                'DIRECCION' => utf8_encode(trim($arrColumnas[5])),
+                                'DIRECCIONDESCRIPCION' => trim(trim(utf8_encode($arrColumnas[6]), '"'), '	'), //utf8_encode(trim($arrColumnas[4])),
+                                'REFERENCIA' => trim(trim(utf8_encode($arrColumnas[7]), '"'), '	'), //utf8_encode(trim($arrColumnas[5])),
+                                'SEMANA' => trim($arrColumnas[8]),
+                                'DIA' => trim($arrColumnas[9]),
+                                'SECUENCIA' => trim($arrColumnas[10]),
+                                'ESTATUS' => trim($arrColumnas[11]),
                             );
 //                            var_dump($datos["NOMBRE"]);die();
                             array_push($datosCarga, $datos);

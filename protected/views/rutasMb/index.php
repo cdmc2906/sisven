@@ -1,5 +1,5 @@
 <?php
-/* @var $this RutaMbController */
+/* @var $this RutasMbController */
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs=array(

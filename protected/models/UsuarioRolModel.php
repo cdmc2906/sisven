@@ -63,14 +63,14 @@ class UsuarioRolModel extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'usrl_id' => 'Usrl',
-			'iduser' => 'Iduser',
-			'r_id' => 'R',
-			'usrl_estado' => 'Usrl Estado',
-			'usrl_fecha_ingreso' => 'Usrl Fecha Ingreso',
-			'usrl_fecha_modifica' => 'Usrl Fecha Modifica',
-			'usrl_cod_usuario_ing_mod' => 'Usrl Cod Usuario Ing Mod',
-			'usrl_nombre_usuario' => 'Usrl Nombre Usuario',
+			'usrl_id' => 'Codigo Usuario Rol',
+			'iduser' => 'ID Usuario',
+			'r_id' => 'ID Rol',
+			'usrl_estado' => 'Estado',
+			'usrl_fecha_ingreso' => 'Fecha Ingreso',
+			'usrl_fecha_modifica' => 'Fecha Modifica',
+			'usrl_cod_usuario_ing_mod' => 'Responsable',
+			'usrl_nombre_usuario' => 'Nombre Usuario',
 		);
 	}
 

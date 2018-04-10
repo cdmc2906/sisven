@@ -14,14 +14,52 @@ $this->pageTitle = $pagina_nombre;
 
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/reporte/RptResumenDiarioHistorial.js"; ?>"></script>
 
-<?php if (Yii::app()->user->hasFlash('resultadoGuardar')): ?>
+<?php if (Yii::app()->user->hasFlash('resultadoGuardarRevisionOK')): ?>
     <div class="flash-success">
-        <?php echo Yii::app()->user->getFlash('resultadoGuardar'); ?>
+        <?php echo Yii::app()->user->getFlash('resultadoGuardarRevisionOK'); ?>
+    </div>
+<?php else: ?>
+    <div class=""></div>
+<?php endif; ?>
+<?php if (Yii::app()->user->hasFlash('resultadoGuardarRevisionAviso')): ?>
+    <div class="flash-notice">
+        <?php echo Yii::app()->user->getFlash('resultadoGuardarRevisionAviso'); ?>
     </div>
 <?php else: ?>
     <div class=""></div>
 <?php endif; ?>
 
+<div class="callout callout-info">
+    <center>
+        <p>Periodo semanal abierto : <b><?php
+                unset(Yii::app()->session['idPeriodoAbierto']);
+                unset(Yii::app()->session['fechaInicioPeriodo']);
+                unset(Yii::app()->session['fechaFinPeriodo']);
+                unset(Yii::app()->session['itemsFueraPeriodo']);
+
+                $command1 = Yii::app()->db->createCommand('
+            SELECT 
+                pg_id as idperiodo,
+                pg_fecha_inicio as fechainicio,
+                pg_fecha_fin as fechafin,
+                pg_descripcion as descripcion
+            FROM tcc_control_ruta.tb_periodo_gestion
+            WHERE 
+            pg_estado=1
+            and pg_tipo=\'SEMANAL\';');
+                $resultado1 = $command1->queryRow();
+//        var_dump($resultado1);die();
+                $periodoAbierto = $resultado1['descripcion'];
+
+                Yii::app()->session['idPeriodoAbierto'] = $resultado1['idperiodo'];
+                Yii::app()->session['fechaInicioPeriodo'] = $resultado1['fechainicio'];
+                Yii::app()->session['fechaFinPeriodo'] = $resultado1['fechafin'];
+
+
+                echo $periodoAbierto;
+                ?></b></p>
+    </center>
+</div>
 <div class="row">
     <div class="col-md-3">
         <?php
@@ -34,6 +72,7 @@ $this->pageTitle = $pagina_nombre;
             'htmlOptions' => array("enctype" => "multipart/form-data"),
         ));
         ?>
+
         <div class="mailbox-controls">
             <div class="btn-group">
                 <?php
@@ -49,19 +88,40 @@ $this->pageTitle = $pagina_nombre;
                         setMensaje(data.ClassMessage, data.Message);
                         if(data.Status==1){
                              var datosResult = data.Result;
+                            if(datosResult[\'estadoGeneracion\'])
+                            {
+                                $("#tblGridDetalle").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'detalle\']}).trigger(\'reloadGrid\');
+                                $("#tblResumenGeneral").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenGeneral\']}).trigger(\'reloadGrid\');
+                                $("#tblResumenVisitas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitas\']}).trigger(\'reloadGrid\');
+                                $("#tblResumenVisitasValidasInvalidas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitasValidasInvalidas\']}).trigger(\'reloadGrid\');
+                                $("#tblPrimeraUltimaVisita").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenPrimeraUltima\']}).trigger(\'reloadGrid\');
+                                $("#tblResumenVentas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVentas\']}).trigger(\'reloadGrid\');
+                                $("#tblResumenTiempos").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenTiempos\']}).trigger(\'reloadGrid\');
 
-                            $("#tblGridDetalle").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'detalle\']}).trigger(\'reloadGrid\');
-                            $("#tblResumenGeneral").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenGeneral\']}).trigger(\'reloadGrid\');
-                            $("#tblResumenVisitas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitas\']}).trigger(\'reloadGrid\');
-                            $("#tblResumenVisitasValidasInvalidas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitasValidasInvalidas\']}).trigger(\'reloadGrid\');
-                            $("#tblPrimeraUltimaVisita").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenPrimeraUltima\']}).trigger(\'reloadGrid\');
-                            $("#tblResumenVentas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVentas\']}).trigger(\'reloadGrid\');
-                            $("#tblResumenTiempos").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenTiempos\']}).trigger(\'reloadGrid\');
-                           
-                            $("#d_comentariosSupervision").val(datosResult[\'comentarioSupervisor\']);;
+                                $("#d_comentariosSupervision").val(datosResult[\'comentarioSupervisor\']);
 
-                            $("#RptResumenDiarioHistorialForm_enlaceMapa").val(datosResult[\'enlaceMapa\']);
-                            mostrarVisitasEnMapa2(datosResult[\'coordenadasClientes\'],datosResult[\'coordenadasVisitas\']);
+                                $("#RptResumenDiarioHistorialForm_enlaceMapa").val(datosResult[\'enlaceMapa\']);
+                                mostrarVisitasEnMapa2(datosResult[\'coordenadasClientes\'],datosResult[\'coordenadasVisitas\']);
+                                if(datosResult[\'activarGuardar\'])
+                                    document.getElementById("btnGuardar").disabled = false;
+                                else
+                                    document.getElementById("btnGuardar").disabled = true;
+                                
+                                //alert(\'end\');
+                            }
+                            else
+                            {
+                                $("#tblGridDetalle").jqGrid("clearGridData", true).trigger("reloadGrid");
+                                $("#tblResumenGeneral").jqGrid("clearGridData", true).trigger("reloadGrid");
+                                $("#tblResumenVisitas").jqGrid("clearGridData", true).trigger("reloadGrid");
+                                $("#tblResumenVisitasValidasInvalidas").jqGrid("clearGridData", true).trigger("reloadGrid");
+                                $("#tblPrimeraUltimaVisita").jqGrid("clearGridData", true).trigger("reloadGrid");
+                                $("#tblResumenVentas").jqGrid("clearGridData", true).trigger("reloadGrid");
+                                $("#tblResumenTiempos").jqGrid("clearGridData", true).trigger("reloadGrid");
+
+                                $("#d_comentariosSupervision").val(\'\');
+                                initMap2();
+                            }
                         } else{
                             $.each(data, function(key, val) {
                             $("#frmBankStat #"+key+"_em_").text(val);
@@ -85,7 +145,10 @@ $this->pageTitle = $pagina_nombre;
                 <?php
                 echo CHtml::button(
                         'Guardar Revision'
-                        , array('class' => 'btn btn-block btn-info btn-sm'
+                        , array(
+                    'id' => 'btnGuardar'
+                    , 'class' => 'btn btn-block btn-info btn-sm'
+                    , 'disabled' => 'disabled'
                     , 'submit' => array('rptResumenDiarioHistorial/GuardarRevision')));
                 ?>          
             </div>
@@ -115,7 +178,7 @@ $this->pageTitle = $pagina_nombre;
                             echo $form->labelEx($model, 'ejecutivo');
                             echo $form->dropDownList(
                                     $model, 'ejecutivo', array(
-                                '0' => TEXT_OPCION_SELECCIONE,
+                                '' => TEXT_OPCION_SELECCIONE,
                                 'QU25' => 'EDISON CALVACHE',
                                 'QU26' => 'GIOVANA BONILLA',
                                 'QU22' => 'JOSE CHAMBA',
@@ -127,9 +190,28 @@ $this->pageTitle = $pagina_nombre;
                             ?>
                         </a>
                     </li>
+                    <li><a href="#">
+                            <i class="fa  fa-clock-o"></i>
+                            <?php echo $form->labelEx($model, 'semanaRevision'); ?>
+                            <?php
+                            echo $form->dropDownList(
+                                    $model, 'semanaRevision'
+                                    , array(
+                                '1' => 'Semana 1',
+                                '2' => 'Semana 2',
+                                '3' => 'Semana 3',
+                                '4' => 'Semana 4'
+                                    )
+//                                    , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+                            );
+                            ?>
+                            <?php echo $form->error($model, 'semanaRevision'); ?>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
+
         <div class="box box-solid collapsed-box">
             <div class="box-header with-border">
                 <h3 class="box-title">Inicio/Fin Gestion</h3>
@@ -151,7 +233,7 @@ $this->pageTitle = $pagina_nombre;
                                 '09:00' => '09:00',
                                 '10:00' => '10:00'
                                     )
-                                    , array('options' => array('10:00' => array('selected' => true)))
+                                    , array('options' => array('08:00' => array('selected' => true)))
                             );
                             echo $form->error($model, 'horaInicioGestion');
                             ?>
@@ -243,6 +325,7 @@ $this->pageTitle = $pagina_nombre;
                             <?php echo $form->error($model, 'accionHistorial'); ?>
                         </a>
                     </li>
+
                 </ul>
             </div>
         </div>
@@ -275,38 +358,36 @@ $this->pageTitle = $pagina_nombre;
                             <table id="tblResumenTiempos" class="table table-condensed"></table>                
                         </div>
                     </div>
-                    <br/>
-                    <div>
-                        <div  style="display: flex; justify-content: flex-start;">
-                            <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                                <h1>Comentario del supervisor de zona:</h1>
-                                <br/>
-                                <?php
-                                echo CHtml::textArea('d_comentarioSupervision', '', array(
-                                    'placeholder' => 'Ingrese un nuevo comentario'
-                                    , 'readonly' => false
-                                    , 'onblur' => 'setComentarioSupervisor(document.getElementById(\'d_comentarioSupervision\').value)'
-                                    , 'id' => 'd_comentarioSupervision', 'cols' => 50, 'rows' => 2, 'maxlength' => 200)
-                                );
-                                ?>  
-                                <h1>Comentarios anteriores:</h1>
-                                <br/>
-                                <?php
-                                echo CHtml::textArea('d_comentariosSupervision', '', array(
-                                    'placeholder' => 'Ingrese el comentario'
-                                    , 'readonly' => TRUE
-                                    , 'disabled' => TRUE
-                                    , 'id' => 'd_comentariosSupervision'
-                                    , 'cols' => 50
-                                    , 'rows' => 5
-                                    , 'maxlength' => 100)
-                                );
-                                ?>      
-                            </div>
-
+                    <!--<br/>-->
+<!--                    <div  style="display: flex; justify-content: flex-start;">
+                        <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                            <h1>Comentario del supervisor de zona:</h1>
+                            <br/>
+                            <?php
+//                                echo CHtml::textArea('d_comentarioSupervision', '', array(
+//                                    'placeholder' => 'Ingrese un nuevo comentario'
+//                                    , 'readonly' => false
+//                                    , 'onblur' => 'setComentarioSupervisor(document.getElementById(\'d_comentarioSupervision\').value)'
+//                                    , 'id' => 'd_comentarioSupervision', 'cols' => 50, 'rows' => 2, 'maxlength' => 200)
+//                                );
+                            ?>  
+                            <h1>Comentarios anteriores:</h1>
+                            <br/>
+                            <?php
+//                                echo CHtml::textArea('d_comentariosSupervision', '', array(
+//                                    'placeholder' => 'Ingrese el comentario'
+//                                    , 'readonly' => TRUE
+//                                    , 'disabled' => TRUE
+//                                    , 'id' => 'd_comentariosSupervision'
+//                                    , 'cols' => 50
+//                                    , 'rows' => 5
+//                                    , 'maxlength' => 100)
+//                                );
+                            ?>      
                         </div>
-                    </div>
-                    <br/>
+
+                    </div>-->
+                    <!--<br/>-->
                     <div class="margin">
                         <div class="btn-group">
                             <?php
@@ -354,7 +435,7 @@ $this->pageTitle = $pagina_nombre;
                         <div style="margin-top: 10px;margin-left: 5px; background-color: transparent; " id="grilla" class="_grilla panel panel-shadow">VISITA</div>
                     </div>
                     <div id="map"></div>
-                    <?php // endif;           ?>
+                    <?php // endif;            ?>
                 </div>
             </div>
         </div>
@@ -458,7 +539,8 @@ $this->pageTitle = $pagina_nombre;
     }
 
     function mostrarVisitasEnMapa2(coordsClientes, coordsVisitas) {
-
+//        alert(coordsClientes);
+//        alert(coordsVisitas);
         var opcionesMapa = {
             zoom: 14,
             styles: estiloMapa,
@@ -468,7 +550,7 @@ $this->pageTitle = $pagina_nombre;
         var mapa = new google.maps.Map(document.getElementById('map'), opcionesMapa);
 
         for (var iterador in coordsClientes) {
-            //            alert(coordsClientes[iterador]);
+//                        alert(coordsClientes[iterador].LATITUD);
             var marcadorCliente = new google.maps.Marker({
                 position: {lat: parseFloat(coordsClientes[iterador].LATITUD), lng: parseFloat(coordsClientes[iterador].LONGITUD)},
                 map: mapa,
@@ -476,8 +558,9 @@ $this->pageTitle = $pagina_nombre;
                 label: coordsClientes[iterador].LABEL,
                 icon: pinSymbol('#dd4b4b')
             });
-
+//            alert(coordsVisitas[iterador].LATITUD);
             var marcadorVisitas = new google.maps.Marker({
+
                 position: {lat: parseFloat(coordsVisitas[iterador].LATITUD), lng: parseFloat(coordsVisitas[iterador].LONGITUD)},
                 map: mapa,
                 title: coordsVisitas[iterador].LABEL,

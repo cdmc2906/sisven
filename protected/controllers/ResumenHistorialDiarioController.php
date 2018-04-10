@@ -71,7 +71,7 @@ class ResumenHistorialDiarioController extends Controller
 		{
 			$model->attributes=$_POST['ResumenHistorialDiarioModel'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->rhd_codigo));
+				$this->redirect(array('view','id'=>$model->rhd_id));
 		}
 
 		$this->render('create',array(
@@ -95,7 +95,7 @@ class ResumenHistorialDiarioController extends Controller
 		{
 			$model->attributes=$_POST['ResumenHistorialDiarioModel'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->rhd_codigo));
+				$this->redirect(array('view','id'=>$model->rhd_id));
 		}
 
 		$this->render('update',array(

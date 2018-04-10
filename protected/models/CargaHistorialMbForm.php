@@ -7,6 +7,7 @@
 class CargaHistorialMbForm extends CFormModel {
 
     public $rutaArchivo;
+    public $periodoAbierto;
     public $fechaUltimaCarga;
     public $delimitadorColumnas;
 
@@ -32,6 +33,7 @@ class CargaHistorialMbForm extends CFormModel {
             'rutaArchivo' => 'Archivo Historial',
             'delimitadorColumnas' => 'Delimitador columnas archivo',
             'fechaUltimaCarga' => 'Ultima fecha carga historial',
+            'periodoAbierto' => 'Periodo Abierto',
         );
     }
 

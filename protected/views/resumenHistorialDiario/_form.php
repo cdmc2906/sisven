@@ -20,6 +20,12 @@
 	<?php echo $form->errorSummary($model); ?>
 
 	<div class="row">
+		<?php echo $form->labelEx($model,'pg_id'); ?>
+		<?php echo $form->textField($model,'pg_id'); ?>
+		<?php echo $form->error($model,'pg_id'); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->labelEx($model,'rhd_cod_ejecutivo'); ?>
 		<?php echo $form->textField($model,'rhd_cod_ejecutivo',array('size'=>20,'maxlength'=>20)); ?>
 		<?php echo $form->error($model,'rhd_cod_ejecutivo'); ?>
@@ -39,8 +45,26 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'rhd_valor'); ?>
-		<?php echo $form->textField($model,'rhd_valor',array('size'=>6,'maxlength'=>6)); ?>
+		<?php echo $form->textField($model,'rhd_valor',array('size'=>60,'maxlength'=>250)); ?>
 		<?php echo $form->error($model,'rhd_valor'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'rhd_semana'); ?>
+		<?php echo $form->textField($model,'rhd_semana'); ?>
+		<?php echo $form->error($model,'rhd_semana'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'rhd_tipo'); ?>
+		<?php echo $form->textField($model,'rhd_tipo',array('size'=>50,'maxlength'=>50)); ?>
+		<?php echo $form->error($model,'rhd_tipo'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'rhd_estado'); ?>
+		<?php echo $form->textField($model,'rhd_estado'); ?>
+		<?php echo $form->error($model,'rhd_estado'); ?>
 	</div>
 
 	<div class="row">
@@ -59,36 +83,6 @@
 		<?php echo $form->labelEx($model,'rhd_usuario_ingresa_modifica'); ?>
 		<?php echo $form->textField($model,'rhd_usuario_ingresa_modifica'); ?>
 		<?php echo $form->error($model,'rhd_usuario_ingresa_modifica'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'rhd_observacion_supervisor'); ?>
-		<?php echo $form->textField($model,'rhd_observacion_supervisor',array('size'=>60,'maxlength'=>250)); ?>
-		<?php echo $form->error($model,'rhd_observacion_supervisor'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'rhd_usuario_supervisor'); ?>
-		<?php echo $form->textField($model,'rhd_usuario_supervisor'); ?>
-		<?php echo $form->error($model,'rhd_usuario_supervisor'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'rhd_fecha_modifica_observacion'); ?>
-		<?php echo $form->textField($model,'rhd_fecha_modifica_observacion'); ?>
-		<?php echo $form->error($model,'rhd_fecha_modifica_observacion'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'rhd_semana'); ?>
-		<?php echo $form->textField($model,'rhd_semana'); ?>
-		<?php echo $form->error($model,'rhd_semana'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'rhd_fecha_ingreso_observacion'); ?>
-		<?php echo $form->textField($model,'rhd_fecha_ingreso_observacion'); ?>
-		<?php echo $form->error($model,'rhd_fecha_ingreso_observacion'); ?>
 	</div>
 
 	<div class="row buttons">

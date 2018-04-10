@@ -22,7 +22,7 @@ class RptResumenHistorialPorFechaForm extends CFormModel {
      */
     public function rules() {
         return array(
-            array('fechaInicioGestion,fechaFinGestion, ejecutivo,horaInicioGestion,horaFinGestion,precisionVisitas,accionHistorial', 'required'),
+            array('fechaInicioGestion,fechaFinGestion, ejecutivo', 'required'),
             array('fechaInicioGestion,fechaFinGestion, ejecutivo', 'safe'),
         );
     }
@@ -37,10 +37,10 @@ class RptResumenHistorialPorFechaForm extends CFormModel {
             'fechaInicioGestion' => 'Fecha Inicio',
             'fechaFinGestion' => 'Fecha Fin',
             'ejecutivo' => 'Ejecutivo ruta',
-            'horaInicioGestion' => 'Hora inicio ',
-            'horaFinGestion' => 'Hora fin',
-            'precisionVisitas' => 'Precision visita',
-            'accionHistorial' => 'Accion historial',
+//            'horaInicioGestion' => 'Hora inicio ',
+//            'horaFinGestion' => 'Hora fin',
+//            'precisionVisitas' => 'Precision visita',
+//            'accionHistorial' => 'Accion historial',
         );
     }
 

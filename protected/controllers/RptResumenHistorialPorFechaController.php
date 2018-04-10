@@ -37,6 +37,7 @@ class RptResumenHistorialPorFechaController extends Controller {
                     $fechasRevisadas = array();
                     $parametrosAlmacenados = array();
                     $reporteConPrecision = array();
+
                     $fila = array();
                     $valoresHistorial = '';
                     $libreria = new Libreria();
@@ -61,44 +62,38 @@ class RptResumenHistorialPorFechaController extends Controller {
                         $datosResumenGrid = array();
 
                         $reporteConPrecision = array();
+                        $_reporteConPrecision = array();
+//                        var_dump($fechasRevisadas);die();
                         foreach ($fechasRevisadas as $fechaGestion) {
-                            $cantidadEventosHistorial = $fHistorial->getCantidadClientesVisitadosxEjecutivoxFecha($model->ejecutivo, $fechaGestion);
-                            if (intval($cantidadEventosHistorial)) {
-                                $libreriaA = $libreria->VerificarHistorialDiarioUsuario(
-                                        $model->ejecutivo
-                                        , $fechaGestion
-                                        , $model->accionHistorial
-                                        , $model->horaInicioGestion
-                                        , $model->horaFinGestion
-                                        , $model->precisionVisitas);
-//                                var_dump(Yii::app()->session['resumenGestionDiaria']);die();
-                                $datosResumenGrid = Yii::app()->session['resumenGestionDiaria'];
-//                                var_dump($datosResumenGrid);                                die();
-                                array_push($reporteConPrecision, $datosResumenGrid);
-                                unset($datosResumenGrid);
-                            }
-                        }
+                            $_reporteConPrecision = array();
 
-                        $reporteSinPrecision = array();
-//                        var_dump($model->precisionVisitas);                        die();
-                        if (intval($model->precisionVisitas) > 0) {
-                            foreach ($fechasRevisadas as $fechaGestion) {
-                                $cantidadEventosHistorial = $fHistorial->getCantidadClientesVisitadosxEjecutivoxFecha($model->ejecutivo, $fechaGestion);
-                                if (intval($cantidadEventosHistorial)) {
-                                    $libreriaA = $libreria->VerificarHistorialDiarioUsuario(
-                                            $model->ejecutivo
-                                            , $fechaGestion
-                                            , $model->accionHistorial
-                                            , $model->horaInicioGestion
-                                            , $model->horaFinGestion
-                                            , 0);
-                                    $datosResumenGrid = Yii::app()->session['resumenGestionDiaria'];
-                                    array_push($reporteSinPrecision, $datosResumenGrid);
-                                    unset($datosResumenGrid);
+                            $cantidadEventosHistorial = $fHistorial->getCantidadClientesVisitadosxEjecutivoxFecha(
+                                    $model->ejecutivo
+                                    , $fechaGestion);
+                            if ($cantidadEventosHistorial > 0) {
+                                $resumenRevisionGuardado = ResumenHistorialDiarioModel::model()->findAllByAttributes(
+                                        array('rhd_cod_ejecutivo' => $model->ejecutivo,
+                                            'rhd_fecha_historial' => $fechaGestion));
+
+                                foreach ($resumenRevisionGuardado as $itemResumenRevisionGuardado) {
+
+                                    $resumenRuta = array(
+                                        'FECHA_HISTORIAL' => $itemResumenRevisionGuardado["rhd_fecha_historial"],
+                                        'PARAMETRO' => $itemResumenRevisionGuardado["rhd_parametro"],
+                                        'VALOR' => strval($itemResumenRevisionGuardado["rhd_valor"]),
+                                    );
+                                    array_push($_reporteConPrecision, $resumenRuta);
+                                    unset($resumenRuta);
                                 }
                             }
-                        }
+//                            var_dump($_reporteConPrecision);die();
+                            array_push($reporteConPrecision, $_reporteConPrecision);
+                            unset($_reporteConPrecision);
+                        }//fin iteracion fechas
+//                        var_dump($reporteConPrecision);die();
+
                         Yii::app()->session['fechasRevisadas'] = $fechasRevisadas;
+                        $reporteSinPrecision = array();
                         Yii::app()->session['reporteConPrecision'] = $reporteConPrecision;
                         Yii::app()->session['reporteSinPrecision'] = $reporteSinPrecision;
 
@@ -107,8 +102,13 @@ class RptResumenHistorialPorFechaController extends Controller {
                         Yii::app()->session['fechaInicio'] = $model->fechaInicioGestion;
                         Yii::app()->session['fechaFin'] = $model->fechaFinGestion;
 
-                        $response->Message = "Reporte generado correctamente";
-                        $response->ClassMessage = CLASS_MENSAJE_SUCCESS;
+                        if (count($reporteConPrecision) > 0) {
+                            $response->Message = "Reporte generado correctamente";
+                            $response->ClassMessage = CLASS_MENSAJE_SUCCESS;
+                        } else {
+                            $response->Message = "No existen datos para los filtros usados";
+                            $response->ClassMessage = CLASS_MENSAJE_NOTICE;
+                        }
                     } else {
                         $response->Message = "Debe seleccionar un rango de fechas menor o igual a " . MAXIMO_DIAS_REPORTE_HISTORIAL . " dias de diferencia";
                         $response->ClassMessage = CLASS_MENSAJE_NOTICE;
@@ -116,7 +116,6 @@ class RptResumenHistorialPorFechaController extends Controller {
                 } else {
                     $response->Message = "Debe seleccionar todos los filtros";
                     $response->ClassMessage = CLASS_MENSAJE_NOTICE;
-//                $response->Result = $datos; // $datosGrid;
                 }
             }
         } catch (Exception $e) {
@@ -126,7 +125,7 @@ class RptResumenHistorialPorFechaController extends Controller {
                 'file' => $e->getFile(),
                 'line' => $e->getLine()
             );
-            $response->Message = Yii::app()->params['mensajeExcepcion'];
+            $response->Message = $mensaje;
             $response->Status = ERROR;
         }
         $this->actionResponse(null, null, $response);
@@ -188,7 +187,16 @@ class RptResumenHistorialPorFechaController extends Controller {
                         ->setCategory($tema);
                 $excel->SetHojaDefault(0);
                 $excel->SetNombreHojaActiva($NombreHoja);
-                $excel->MapeoCustomizadoHistorial($fechasRevisadas, COLUMNAS_RESUMEN_HISTORIAL, $reporteConPrecision, $reporteSinPrecision, $precisionVisitas, $ejecutivo, $encabezadoImprimir, $footerImprimir);
+
+                $excel->MapeoCustomizadoHistorial(
+                        $fechasRevisadas
+                        , COLUMNAS_RESUMEN_HISTORIAL
+                        , $reporteConPrecision
+                        , $reporteSinPrecision
+                        , $precisionVisitas
+                        , $ejecutivo
+                        , $encabezadoImprimir
+                        , $footerImprimir);
                 $excel->CrearArchivo('Excel2007', $NombreArchivo);
                 $excel->GuardarArchivo();
             } else {

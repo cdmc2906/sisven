@@ -134,6 +134,7 @@ $this->pageTitle = 'Exportar Resumen Historial';
             </div>
         </div>
     </div>
+    <!--    
     <div class="col-md-3">
         <div class="box box-solid ">
             <div class="box-header with-border">
@@ -148,48 +149,48 @@ $this->pageTitle = 'Exportar Resumen Historial';
                     <li>
                         <a href="#">
                             <i class="fa fa-calendar"></i>
-                            <?php
-                            echo $form->labelEx($model, 'horaInicioGestion');
-                            echo $form->dropDownList(
-                                    $model, 'horaInicioGestion', array(
-                                '08:00' => '08:00',
-                                '09:00' => '09:00',
-                                '10:00' => '10:00'
-                                    )
-                                    , array('options' => array('10:00' => array('selected' => true)))
-                            );
-                            echo $form->error($model, 'horaInicioGestion');
-                            ?>
+    <?php
+    echo $form->labelEx($model, 'horaInicioGestion');
+    echo $form->dropDownList(
+            $model, 'horaInicioGestion', array(
+        '08:00' => '08:00',
+        '09:00' => '09:00',
+        '10:00' => '10:00'
+            )
+            , array('options' => array('10:00' => array('selected' => true)))
+    );
+    echo $form->error($model, 'horaInicioGestion');
+    ?>
 
                         </a>
                     </li>
                     <li>
                         <a href="#">
                             <i class="fa fa-calendar"></i>
-                            <?php
-                            echo $form->labelEx($model, 'horaFinGestion');
-                            echo $form->dropDownList(
-                                    $model, 'horaFinGestion', array(
-                                '23:59' => 'Sin limite',
-                                '17:00' => '17:00',
-                                '17:00' => '17:30',
-                                '18:00' => '18:00',
-                                '18:30' => '18:30',
-                                '19:00' => '19:00',
-                                '19:30' => '19:30',
-                                '20:00' => '20:00',
-                                '20:30' => '20:30',
-                                '21:00' => '21:00',
-                                '21:30' => '21:30',
-                                '22:00' => '22:00',
-                                '22:30' => '22:30',
-                                '23:00' => '23:00',
-                                '23:30' => '23:30',
-                                    )
-                            );
+    <?php
+    echo $form->labelEx($model, 'horaFinGestion');
+    echo $form->dropDownList(
+            $model, 'horaFinGestion', array(
+        '23:59' => 'Sin limite',
+        '17:00' => '17:00',
+        '17:00' => '17:30',
+        '18:00' => '18:00',
+        '18:30' => '18:30',
+        '19:00' => '19:00',
+        '19:30' => '19:30',
+        '20:00' => '20:00',
+        '20:30' => '20:30',
+        '21:00' => '21:00',
+        '21:30' => '21:30',
+        '22:00' => '22:00',
+        '22:30' => '22:30',
+        '23:00' => '23:00',
+        '23:30' => '23:30',
+            )
+    );
 
-                            echo $form->error($model, 'horaFinGestion');
-                            ?>
+    echo $form->error($model, 'horaFinGestion');
+    ?>
                         </a>
                     </li>
                 </ul>
@@ -210,24 +211,24 @@ $this->pageTitle = 'Exportar Resumen Historial';
                     <li>
                         <a href="#">
                             <i class="fa fa-calendar"></i>
-                            <?php echo $form->labelEx($model, 'precisionVisita'); ?>
-                            <?php
-                            echo $form->dropDownList(
-                                    $model, 'precisionVisitas'
-                                    , array(
-                                '0' => 'Sin limite',
-                                '5' => '5 metros',
-                                '10' => '10 metros',
-                                '15' => '15 metros',
-                                '20' => '20 metros',
-                                '25' => '25 metros',
-                                '50' => '50 metros',
-                                '100' => '100 metros'
-                                    )
+    <?php echo $form->labelEx($model, 'precisionVisita'); ?>
+    <?php
+    echo $form->dropDownList(
+            $model, 'precisionVisitas'
+            , array(
+        '0' => 'Sin limite',
+        '5' => '5 metros',
+        '10' => '10 metros',
+        '15' => '15 metros',
+        '20' => '20 metros',
+        '25' => '25 metros',
+        '50' => '50 metros',
+        '100' => '100 metros'
+            )
 //                                    , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
-                            );
-                            ?>
-                            <?php echo $form->error($model, 'precisionVisitas'); ?>
+    );
+    ?>
+    <?php echo $form->error($model, 'precisionVisitas'); ?>
 
 
                         </a>
@@ -235,30 +236,30 @@ $this->pageTitle = 'Exportar Resumen Historial';
                     <li>
                         <a href="#">
                             <i class="fa fa-calendar"></i>
-                            <?php echo $form->labelEx($model, 'accionHistorial'); ?>
-                            <?php
-                            echo $form->dropDownList(
-                                    $model, 'accionHistorial'
-                                    , array(
-                                'Inicio visita' => 'Inicio visita',
-                                'Orden' => 'Orden',
-                                'Forma' => 'Forma',
-                                'Comentario' => 'Comentario',
-                                'Día inicio' => 'Dia inicio',
-                                'Fin de visita' => 'Fin de visita',
-                                'Día fin' => 'Dia fin',
-                                'Nuevo cliente' => 'Nuevo cliente',
-                                'Estatus' => 'Estatus'
-                                    )
+    <?php echo $form->labelEx($model, 'accionHistorial'); ?>
+    <?php
+    echo $form->dropDownList(
+            $model, 'accionHistorial'
+            , array(
+        'Inicio visita' => 'Inicio visita',
+        'Orden' => 'Orden',
+        'Forma' => 'Forma',
+        'Comentario' => 'Comentario',
+        'Día inicio' => 'Dia inicio',
+        'Fin de visita' => 'Fin de visita',
+        'Día fin' => 'Dia fin',
+        'Nuevo cliente' => 'Nuevo cliente',
+        'Estatus' => 'Estatus'
+            )
 //                                    , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
-                            );
-                            ?>
-                            <?php echo $form->error($model, 'accionHistorial'); ?>
-                            <?php $this->endWidget(); ?>
+    );
+    ?>
+    <?php echo $form->error($model, 'accionHistorial'); ?>
+    <?php $this->endWidget(); ?>
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
-    </div>
+    </div>-->
 </div>

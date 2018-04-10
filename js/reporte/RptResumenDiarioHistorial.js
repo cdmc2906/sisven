@@ -5,6 +5,7 @@ $(document).ready(function () {
     $("#btnLimpiar").click(function () {
         LimpiarGrids();
     });
+    
     $("#btnExcel").click(function () {
         GenerarDocumentoReporte('GenerateExcel');
     });
@@ -19,7 +20,11 @@ $(document).ready(function () {
         GenerarDocumentoReporte('GenerateExcelTiemposGestion');
     });
 
+
     $('#RptResumenDiarioHistorialForm_ejecutivo').on('change', function (e) {
+        LimpiarGrids();
+    });
+    $('#RptResumenDiarioHistorialForm_semanaRevision').on('change', function (e) {
         LimpiarGrids();
     });
     $('#RptResumenDiarioHistorialForm_horaInicioGestion').on('change', function (e) {
@@ -216,15 +221,15 @@ function ConfigurarGrids() {
         url: 'ConfigurarGrid',
         colNames: ['Visita', 'Cantidad'],
         colModel: [
-            {name: 'VISITA', index: 'VISITA', width: 100, sortable: false, frozen: true},
-            {name: 'CANTIDAD', index: '', width: 90, sortable: false, frozen: true, align: 'center'}
+            {name: 'PARAMETRO', index: 'PARAMETRO', width: 110, sortable: false, frozen: true},
+            {name: 'VALOR', index: 'VALOR', width: 90, sortable: false, frozen: true, align: 'center'}
         ],
         rowNum: 60,
         rowList: ElementosPagina,
         sortorder: 'ASC',
         viewrecords: true,
         height: 46,
-        width: 200,
+        width: 205,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
         footerrow: true,
@@ -232,9 +237,9 @@ function ConfigurarGrids() {
         hidegrid: false,
         gridComplete: function () {
             var $grid = $('#tblResumenVisitasValidasInvalidas');
-            var colSum = $grid.jqGrid('getCol', 'CANTIDAD', false, 'sum');
-            $grid.jqGrid('footerData', 'set', {'VISITA': 'Total Visitas'});
-            $grid.jqGrid('footerData', 'set', {'CANTIDAD': colSum});
+            var colSum = $grid.jqGrid('getCol', 'VALOR', false, 'sum');
+            $grid.jqGrid('footerData', 'set', {'PARAMETRO': 'Total Visitas'});
+            $grid.jqGrid('footerData', 'set', {'VALOR': colSum});
 
         }
         , jsonReader: {
@@ -255,8 +260,8 @@ function ConfigurarGrids() {
         url: 'ConfigurarGrid',
         colNames: ['Parametro', 'Valor'],
         colModel: [
-            {name: 'VISITA', index: 'VISITA', width: 100, sortable: false, frozen: true},
-            {name: 'CANTIDAD', index: 'CANTIDAD', width: 90, sortable: false, frozen: true, align: 'center'}
+            {name: 'PARAMETRO', index: 'PARAMETRO', width: 100, sortable: false, frozen: true},
+            {name: 'VALOR', index: 'VALOR', width: 90, sortable: false, frozen: true, align: 'center'}
         ],
 //        pager: '#pagGrid',
         rowNum: 60,
@@ -264,7 +269,7 @@ function ConfigurarGrids() {
         sortorder: 'ASC',
         viewrecords: true,
         height: 46,
-        width: 200,
+        width: 195,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
         caption: "Primera Ultima visitas",

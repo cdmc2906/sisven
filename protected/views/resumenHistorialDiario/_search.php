@@ -12,8 +12,13 @@
 )); ?>
 
 	<div class="row">
-		<?php echo $form->label($model,'rhd_codigo'); ?>
-		<?php echo $form->textField($model,'rhd_codigo'); ?>
+		<?php echo $form->label($model,'rhd_id'); ?>
+		<?php echo $form->textField($model,'rhd_id'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->label($model,'pg_id'); ?>
+		<?php echo $form->textField($model,'pg_id'); ?>
 	</div>
 
 	<div class="row">
@@ -33,7 +38,22 @@
 
 	<div class="row">
 		<?php echo $form->label($model,'rhd_valor'); ?>
-		<?php echo $form->textField($model,'rhd_valor',array('size'=>6,'maxlength'=>6)); ?>
+		<?php echo $form->textField($model,'rhd_valor',array('size'=>60,'maxlength'=>250)); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->label($model,'rhd_semana'); ?>
+		<?php echo $form->textField($model,'rhd_semana'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->label($model,'rhd_tipo'); ?>
+		<?php echo $form->textField($model,'rhd_tipo',array('size'=>50,'maxlength'=>50)); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->label($model,'rhd_estado'); ?>
+		<?php echo $form->textField($model,'rhd_estado'); ?>
 	</div>
 
 	<div class="row">
@@ -49,31 +69,6 @@
 	<div class="row">
 		<?php echo $form->label($model,'rhd_usuario_ingresa_modifica'); ?>
 		<?php echo $form->textField($model,'rhd_usuario_ingresa_modifica'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'rhd_observacion_supervisor'); ?>
-		<?php echo $form->textField($model,'rhd_observacion_supervisor',array('size'=>60,'maxlength'=>250)); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'rhd_usuario_supervisor'); ?>
-		<?php echo $form->textField($model,'rhd_usuario_supervisor'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'rhd_fecha_modifica_observacion'); ?>
-		<?php echo $form->textField($model,'rhd_fecha_modifica_observacion'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'rhd_semana'); ?>
-		<?php echo $form->textField($model,'rhd_semana'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'rhd_fecha_ingreso_observacion'); ?>
-		<?php echo $form->textField($model,'rhd_fecha_ingreso_observacion'); ?>
 	</div>
 
 	<div class="row buttons">

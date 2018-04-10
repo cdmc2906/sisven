@@ -1,0 +1,72 @@
+DROP PROCEDURE IF EXISTS revisionRuta; 
+-- call revisionRuta ('2017-06-01','LOJ','QU19',5,1);
+DELIMITER //
+CREATE PROCEDURE revisionRuta(
+	IN FECHA_VISITA DATE
+	,IN INICIALES_EJECUTIVO VARCHAR(20)
+    ,IN COD_EJECUTIVO VARCHAR(5)
+    ,IN DIA_RUTA  INT
+    ,IN USUARIO_VERIFICA INT) 
+  
+BEGIN
+  DECLARE ESTADO_PROCESO int;
+  DECLARE RUTA_VISITA, RUTA_EJECUTIVO, SECUENCIA_RUTA_EJECUTIVO, COD_CLIENTE, COD_EJECUTIVO CHAR(20);
+  DECLARE OBSERVACION, ESTADO CHAR(50);
+  DECLARE FILA int;
+  DECLARE DUMMY1 VARCHAR(500);
+  DECLARE DUMMY2 VARCHAR(500);
+    -- SET FILA=0;
+  DECLARE visitas CURSOR FOR 
+		SELECT         
+				H_COD_CLIENTE
+                ,H_RUTA
+                ,H_USUARIO 
+			FROM TB_HISTORIAL_MB 
+			WHERE 1=1
+				 AND DATE(H_FECHA) BETWEEN DATE(H_FECHA)
+					 AND DATE_ADD(DATE(FECHA_VISITA),INTERVAL 1 DAY) 
+				-- AND H_COD_CLIENTE !='null'
+                 AND H_USUARIO=COD_EJECUTIVO
+                -- AND H_RUTA !='null'
+                AND H_ACCION ='Inicio visita'
+			ORDER BY H_FECHA ASC
+            LIMIT 5;
+  OPEN visitas;
+
+  read_loop: LOOP
+    FETCH visitas INTO COD_CLIENTE, RUTA_VISITA ,COD_EJECUTIVO;    
+    SET ESTADO='REVISADO';
+    SELECT FECHA_VISITA;
+    SELECT COD_EJECUTIVO;
+    SELECT COD_CLIENTE;
+    SELECT INICIALES_EJECUTIVO;
+	-- SET DUMMY1=CONCAT(FECHA_VISITA," 00:00:00");
+    -- SET DUMMY2=CONCAT(FECHA_VISITA," 23:59:59");   
+	
+    SELECT 
+			R_RUTA
+			, R_SECUENCIA 
+            INTO 
+            RUTA_EJECUTIVO
+            ,SECUENCIA_RUTA_EJECUTIVO
+		FROM TB_RUTA_MB 
+        WHERE 1=1
+			-- AND R_COD_CLIENTE=COD_CLIENTE
+			AND RIGHT(R_RUTA,3)=INICIALES_EJECUTIVO
+           -- LIMIT 1
+           ;
+            
+        
+  INSERT INTO tb_control_ruta (
+		cr_fecha_revision,cr_usuario_revisa,cr_codigo_vendedor,cr_cod_cliente
+		,cr_ruta_visita	,cr_ruta_ejecutivo,cr_orden_visita,cr_secuencia_ruta
+		,cr_observacion,cr_estado,cr_fecha_ingreso,cr_fecha_modificacion) 
+	VALUES 
+		(NOW(),USUARIO_VERIFICA,COD_EJECUTIVO,COD_CLIENTE
+		,RUTA_VISITA,RUTA_EJECUTIVO,FILA,SECUENCIA_RUTA_EJECUTIVO
+-- 		,DUMMY1,DUMMY2,NOW(), NOW());
+        ,OBSERVACION,ESTADO,NOW(), NOW());
+	SET FILA =FILA+1;
+    END LOOP;
+  CLOSE visitas;
+END//

@@ -11,9 +11,25 @@ class RptResultadosRevisionMinesController extends Controller {
             unset(Yii::app()->session['resultadosxCarga']);
             unset(Yii::app()->session['minesSinGestionxCarga']);
             unset(Yii::app()->session['numeroCargaSeleccionada']);
+            unset(Yii::app()->session['resultadosxPeriodo']);
+
             $model = new RptResultadosRevisionMinesForm();
             $this->render('/reportes/rptResultadosRevisionMines', array('model' => $model));
         }
+    }
+
+    public function actionCargasxMes() {
+        $response = new Response();
+        unset(Yii::app()->session['resultadosxCarga']);
+        unset(Yii::app()->session['minesSinGestionxCarga']);
+        unset(Yii::app()->session['numeroCargaSeleccionada']);
+        unset(Yii::app()->session['resultadosxPeriodo']);
+
+        $fRevisionMines = new FCargasInformacionModel();
+        $cargas = $fRevisionMines->getDatosPeriodosCargas();
+        $response->Result = $cargas;
+        $this->actionResponse(null, null, $response);
+        return;
     }
 
     public function actionMostrarCargas() {
@@ -22,9 +38,11 @@ class RptResultadosRevisionMinesController extends Controller {
         unset(Yii::app()->session['minesSinGestionxCarga']);
         unset(Yii::app()->session['numeroCargaSeleccionada']);
 
-        $fRevisionMines = new FCargasInformacionModel();
-        $cargas = $fRevisionMines->getDatosCargas();
-        $response->Result = $cargas;
+        $fCargas = new FCargasInformacionModel();
+        $fRevisionMines = new FRevisionMinesModel();
+        Yii::app()->session['resultadosxPeriodo'] = $fRevisionMines->getResultadosxPeriodo($_POST['mesCarga']);
+        $resultados['cargas'] = $fCargas->getDatosCargasxMes($_POST['mesCarga']);
+        $response->Result = $resultados;
         $this->actionResponse(null, null, $response);
         return;
     }
@@ -38,12 +56,15 @@ class RptResultadosRevisionMinesController extends Controller {
 
         $resultados['resultados'] = $fRevisionMines->getResultadosxCarga($_POST["numeroCarga"]);
         Yii::app()->session['resultadosxCarga'] = $resultados['resultados'];
+
         $resultados['gestionxAgente'] = $this->DetalleAsignacionesCarga($_POST["numeroCarga"]);
         $resultados['tiemposxGestion'] = $this->DetalleTiemposGestionCarga($_POST["numeroCarga"]);
+
         $minesSinGEstion = array();
-        $minesSinGEstion=$this->DetalleMinesSinGestion($_POST["numeroCarga"]);
+        $minesSinGEstion = $this->DetalleMinesSinGestion($_POST["numeroCarga"]);
         Yii::app()->session['minesSinGestionxCarga'] = $minesSinGEstion;
         $resultados['minessingestion'] = $minesSinGEstion;
+
         $response->Result = $resultados;
         $this->actionResponse(null, null, $response);
         return;
@@ -122,12 +143,96 @@ class RptResultadosRevisionMinesController extends Controller {
         return $detalleTiempos;
     }
 
-    private function actionResponse($view = 'error', $model = null, $response = null) {
-        if (Yii::app()->request->isAjaxRequest) {
-            echo json_encode($response);
-        } else {
-            $this->render($view, $model);
+    public function actionReasignarMines() {
+        $reporteModel = new ReportesModel();
+
+        $response = new Response();
+        $minesReasignar = $_POST['minesReasignar'];
+        $agenteReasignar = $_POST['agenteAsignar'];
+//        var_dump($minesReasignar,$agenteReasignar);die();
+        foreach ($minesReasignar as $min) {
+//            var_dump(trim($min, "'"));die();
+            $minExiste = MinesValidacionModel::model()->findByAttributes(array('miva_imei' => trim($min, "'")));
+//            var_dump($minExiste);die();
+            if (isset($minExiste)) {
+                if ($minExiste['iduser'] != $agenteReasignar) {
+                    $minExiste["miva_estado_reasignacion"] = 1;
+                    $minExiste["miva_usario_reasignado"] = $minExiste["iduser"];
+                    $minExiste["iduser"] = $agenteReasignar;
+                    $minExiste["miva_fecha_modifica"] = date(FORMATO_FECHA_LONG);
+                    $minExiste["miva_cod_usuario_ing_mod"] = Yii::app()->user->id;
+                    if ($minExiste->save()) {
+                        Yii::app()->session['minesReasignados'] += 1;
+                    }
+                } else
+                    Yii::app()->session['minesOmitidos'] += 1;
+            } else {
+                $response->Message = 'No se pudo encontrar el min';
+            }
         }
+
+        $fRevisionMines = new FRevisionMinesModel();
+
+//        Yii::app()->session['numeroCargaSeleccionada'] = $_POST["numeroCarga"];
+
+        $resultados['gestionxAgente'] = $this->DetalleAsignacionesCarga(Yii::app()->session['numeroCargaSeleccionada']);
+
+        $minesSinGEstion = $this->DetalleMinesSinGestion(Yii::app()->session['numeroCargaSeleccionada']);
+        Yii::app()->session['minesSinGestionxCarga'] = $minesSinGEstion;
+        $resultados['minessingestion'] = $minesSinGEstion;
+
+        $response->Result = $resultados;
+        $this->actionResponse(null, null, $response);
+        return;
+    }
+
+    #REPORTES EXCEL
+
+    public function actionGenerarExcelResultadosxPeriodo() {
+        $response = new Response();
+        try {
+//            var_dump(Yii::app()->session['resultadosxCarga']);die();
+            $reporteResultadosxCarga = array();
+            $resultadosxPeriodo = Yii::app()->session['resultadosxPeriodo'];
+
+            $NombreArchivo = "rpt_resultados_x_periodo";
+            $NombreHoja = "rpt_resultados_x_periodo";
+
+            $autor = "Tececab"; //$_SESSION['CUENTA'];
+            $titulo = "rpt_resultados_x_periodo";
+            $tema = "rpt_resultados_x_periodo";
+            $keywords = "office 2007";
+
+            $excel = new excel();
+
+            $excel->getObjPHPExcel()->getProperties()
+                    ->setCreator($autor)
+                    ->setLastModifiedBy($autor)
+                    ->setTitle($titulo)
+                    ->setSubject($tema)
+                    ->setDescription($tema)
+                    ->setKeywords($keywords)
+                    ->setCategory($tema);
+
+            $excel->SetHojaDefault(0);
+            $excel->SetNombreHojaActiva($NombreHoja);
+
+            $excel->Mapeo($resultadosxPeriodo);
+
+            $excel->CrearArchivo('Excel2007', $NombreArchivo);
+            $excel->GuardarArchivo();
+        } catch (Exception $e) {
+            $mensaje = array(
+                'code' => $e->getCode(),
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            );
+
+            $response->Message = Yii::app()->params['mensajeExcepcion'];
+            $response->Status = ERROR;
+        }
+        return;
     }
 
     public function actionGenerarExcelResultados() {
@@ -229,31 +334,27 @@ class RptResultadosRevisionMinesController extends Controller {
         try {
 
             $fRevisionMines = new FRevisionMinesModel();
-            $datosUsuarios = array();
+            $datosUsuariosxFecha = array();
+            $datosUsuariosxHora = array();
 
             $fechasGestion = $fRevisionMines->getFechasGestionxCarga(Yii::app()->session['numeroCargaSeleccionada']);
+            $horasGestion = $fRevisionMines->getHorasGestionxCarga(Yii::app()->session['numeroCargaSeleccionada']);
             $usuarios = $fRevisionMines->getUsuariosGestionxCarga(Yii::app()->session['numeroCargaSeleccionada']);
 
             foreach ($usuarios as $usuario) {
-                $dataUsuario = $fRevisionMines->getCantidadGestionxUsuarioxCargaxAgrupadoFecha($usuario ['idusuario'], Yii::app()->session['numeroCargaSeleccionada']);
-                $datosUsuarios[$usuario['idusuario']] = $dataUsuario;
+                $dataUsuarioFecha = $fRevisionMines->getCantidadGestionxUsuarioxCargaxAgrupadoFecha($usuario ['idusuario'], Yii::app()->session['numeroCargaSeleccionada']);
+                $datosUsuariosxFecha[$usuario['idusuario']] = $dataUsuarioFecha;
+
+                $dataUsuarioHora = $fRevisionMines->getCantidadGestionxUsuarioxCargaxAgrupadoHora($usuario ['idusuario'], Yii::app()->session['numeroCargaSeleccionada']);
+                $datosUsuariosxHora[$usuario['idusuario']] = $dataUsuarioHora;
             }
-            $dat = array();
 
-            foreach ($datosUsuarios as $clave => $datosUsuario) {
-                if ($clave == 13)
-                    $dat = $datosUsuario;
-            }
-            var_dump($dat);
-            die();
-
-
-            $NombreArchivo = "reporte_ordenes_x_fecha";
-            $NombreHoja = "reporte_ordenes_x_fecha";
+            $NombreArchivo = "rpt_resumen_gestion_x_carga";
+            $NombreHoja = "rpt_resumen_gestion_x_carga";
 
             $autor = "Tececab"; //$_SESSION['CUENTA'];
-            $titulo = "reporte_ordenes_x_fecha";
-            $tema = "reporte_ordenes_x_fecha";
+            $titulo = "rpt_resumen_gestion_x_carga";
+            $tema = "rpt_resumen_gestion_x_carga";
             $keywords = "office 2007";
 
             $excel = new excel();
@@ -268,9 +369,12 @@ class RptResultadosRevisionMinesController extends Controller {
                     ->setCategory($tema);
 
             $excel->SetHojaDefault(0);
+            $encabezadoImprimir = 'RESUMEN GESTION POR CARGA #' . Yii::app()->session['numeroCargaSeleccionada'];
+            $footerImprimir = Yii::app()->user->name . ' - ' . date('Y/m/d h:i A');
+
             $excel->SetNombreHojaActiva($NombreHoja);
 
-            $excel->Mapeo($reporteOrdenesxFecha);
+            $excel->MapeoCustomizadoGestionValidacionMines($usuarios, $fechasGestion, $datosUsuariosxFecha, $horasGestion, $datosUsuariosxHora, $encabezadoImprimir, $footerImprimir);
 
             $excel->CrearArchivo('Excel2007', $NombreArchivo);
             $excel->GuardarArchivo();
@@ -288,196 +392,12 @@ class RptResultadosRevisionMinesController extends Controller {
         return;
     }
 
-    public function actionGenerarResumenResultados() {
-//        var_dump($startDate." ".$endDate);die();
-        $response = new Response();
-        try {
-            $formData = new ReporteOrdenesxFechaForm();
-            $formData->fechaOrdenesInicio = $startDate;
-            $formData->fechaOrdenesFin = $endDate;
-//        var_dump($formData->fechaOrdenesFin);die();
-            $reporteModel = new ReportesModel();
-
-            $data = $reporteModel->getTotalesOrdenesxFecha($formData);
-
-            $reporteOrdenesxFecha = array();
-            foreach ($data as $value) {
-                $datos = array(
-                    'EJECUTIVO' => $value['EJECUTIVO'],
-//                    'CLIENTE' => $value['CLIENTE'],
-                    'CHIPS' => $value['TOTALORDENES'],
-                    'PERIODO' => $value['PERIODO'],
-                );
-                array_push($reporteOrdenesxFecha, $datos);
-            }
-//            var_dump($reporteOrdenesxFecha);die();
-            $NombreArchivo = "reporte_ordenes_x_fecha";
-            $NombreHoja = "reporte_ordenes_x_fecha";
-
-            $autor = "Tececab"; //$_SESSION['CUENTA'];
-            $titulo = "reporte_ordenes_x_fecha";
-            $tema = "reporte_ordenes_x_fecha";
-            $keywords = "office 2007";
-
-            $excel = new excel();
-
-            $excel->getObjPHPExcel()->getProperties()
-                    ->setCreator($autor)
-                    ->setLastModifiedBy($autor)
-                    ->setTitle($titulo)
-                    ->setSubject($tema)
-                    ->setDescription($tema)
-                    ->setKeywords($keywords)
-                    ->setCategory($tema);
-
-            $excel->SetHojaDefault(0);
-            $excel->SetNombreHojaActiva($NombreHoja);
-
-            $excel->Mapeo($reporteOrdenesxFecha);
-
-            $excel->CrearArchivo('Excel2007', $NombreArchivo);
-            $excel->GuardarArchivo();
-        } catch (Exception $e) {
-            $mensaje = array(
-                'code' => $e->getCode(),
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine()
-            );
-
-            $response->Message = Yii::app()->params['mensajeExcepcion'];
-            $response->Status = ERROR;
+    private function actionResponse($view = 'error', $model = null, $response = null) {
+        if (Yii::app()->request->isAjaxRequest) {
+            echo json_encode($response);
+        } else {
+            $this->render($view, $model);
         }
-        return;
-    }
-
-    public function actionGenerateExcel($startDate, $endDate) {
-//        var_dump($startDate." ".$endDate);die();
-        $response = new Response();
-        try {
-            $formData = new ReporteOrdenesxFechaForm();
-            $formData->fechaOrdenesInicio = $startDate;
-            $formData->fechaOrdenesFin = $endDate;
-//        var_dump($formData->fechaOrdenesFin);die();
-            $reporteModel = new ReportesModel();
-
-            $data = $reporteModel->getTotalesOrdenesxFecha($formData);
-
-            $reporteOrdenesxFecha = array();
-            foreach ($data as $value) {
-                $datos = array(
-                    'EJECUTIVO' => $value['EJECUTIVO'],
-//                    'CLIENTE' => $value['CLIENTE'],
-                    'CHIPS' => $value['TOTALORDENES'],
-                    'PERIODO' => $value['PERIODO'],
-                );
-                array_push($reporteOrdenesxFecha, $datos);
-            }
-//            var_dump($reporteOrdenesxFecha);die();
-            $NombreArchivo = "reporte_ordenes_x_fecha";
-            $NombreHoja = "reporte_ordenes_x_fecha";
-
-            $autor = "Tececab"; //$_SESSION['CUENTA'];
-            $titulo = "reporte_ordenes_x_fecha";
-            $tema = "reporte_ordenes_x_fecha";
-            $keywords = "office 2007";
-
-            $excel = new excel();
-
-            $excel->getObjPHPExcel()->getProperties()
-                    ->setCreator($autor)
-                    ->setLastModifiedBy($autor)
-                    ->setTitle($titulo)
-                    ->setSubject($tema)
-                    ->setDescription($tema)
-                    ->setKeywords($keywords)
-                    ->setCategory($tema);
-
-            $excel->SetHojaDefault(0);
-            $excel->SetNombreHojaActiva($NombreHoja);
-
-            $excel->Mapeo($reporteOrdenesxFecha);
-
-            $excel->CrearArchivo('Excel2007', $NombreArchivo);
-            $excel->GuardarArchivo();
-        } catch (Exception $e) {
-            $mensaje = array(
-                'code' => $e->getCode(),
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine()
-            );
-
-            $response->Message = Yii::app()->params['mensajeExcepcion'];
-            $response->Status = ERROR;
-        }
-        return;
-    }
-
-    public function actionConsultarReporte() {
-        if (!Yii::app()->request->isAjaxRequest) {
-            $error['message'] = Yii::app()->params['msjErrorAccesoPag'];
-            $error['code'] = Yii::app()->params['codErrorAccesoPag'];
-            $this->render(Yii::app()->params['pagError'], $error);
-        }
-
-        $response = new Response();
-        try {
-            $model = new ReporteOrdenesxFechaForm();
-
-            if (isset($_POST['ReporteOrdenesxFechaForm'])) {
-
-                $model->attributes = $_POST['ReporteOrdenesxFechaForm'];
-                if ($model->validate()) {
-                    $reporteModel = new ReportesModel();
-
-//                    var_dump($model['tipoReporte']);die();
-                    $grupoEjecutivos = '';
-                    switch ($model['tipoReporte']) {
-                        case 1: $grupoEjecutivos = GRUPO_EJECUTIVOS_ZONA;
-                            break;
-                        case 2: $grupoEjecutivos = GRUPO_SUPERVISORES;
-                            break;
-                        case 3: $grupoEjecutivos = GRUPO_SERVICIO_CLIENTE;
-                            break;
-                        default:$grupoEjecutivos = GRUPO_TODOS;
-                            break;
-                    }
-//                    var_dump($grupoEjecutivos);die();
-                    $data = $reporteModel->getTotalOrdenesxFecha($model, $grupoEjecutivos);
-                    $response->Result = $data;
-                } else {
-                    echo CActiveForm::validate($model);
-                    Yii::app()->end();
-                }
-            }
-        } catch (Exception $e) {
-            $mensaje = array(
-                'code' => $e->getCode(),
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine()
-            );
-
-            $response->Message = Yii::app()->params['mensajeExcepcion'];
-            $response->Status = ERROR;
-        }
-
-        $this->actionResponse(null, null, $response);
-        return;
-    }
-
-    public function actionCargarGridDetalle() {
-        $reporteModel = new ReportesModel();
-
-        $response = new Response();
-//        var_dump($_POST['ejecutivo'], $_POST['fechaInicio'], $_POST['fechaFin']);        die();
-        $data = $reporteModel->getOrdenesxEjecutivoxFecha($_POST['ejecutivo'], $_POST['fechaInicio'], $_POST['fechaFin']);
-//        var_dump($data);die();
-        $response->Result = $data;
-//var_dump($response);die();
-        $this->actionResponse(null, null, $response);
-        return;
     }
 
 }

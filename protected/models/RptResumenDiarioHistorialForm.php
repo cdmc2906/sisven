@@ -17,14 +17,15 @@ class RptResumenDiarioHistorialForm extends CFormModel {
     public $comentarioSupervision;
     public $enlaceMapa;
     public $accionHistorial;
+    public $semanaRevision;
 
     /**
      * Declares the validation rules.
      */
     public function rules() {
         return array(
-            array('fechagestion, ejecutivo,precisionVisitas,horaFinGestion,accionHistorial', 'required'),
-            array('fechagestion,ejecutivo,precisionVisitas,horaInicioGestion,horaFinGestion,comentarioSupervision,enlaceMapa,accionHistorial', 'safe'),
+            array('fechagestion,ejecutivo,precisionVisitas,horaFinGestion,accionHistorial,semanaRevision', 'required'),
+            array('fechagestion,ejecutivo,precisionVisitas,horaInicioGestion,horaFinGestion,comentarioSupervision,enlaceMapa,accionHistorial,semanaRevision', 'safe'),
         );
     }
 
@@ -42,7 +43,8 @@ class RptResumenDiarioHistorialForm extends CFormModel {
             'horaFinGestion' => 'Hora de fin',
             'comentarioSupervision' => 'Ingresar el comentario de supervision',
             'enlaceMapa' => 'Ingresar el enlace del mapa',
-            'accionHistorial' => 'Accion historial'
+            'accionHistorial' => 'Accion historial',
+            'semanaRevision' => 'Semana revision'
         );
     }
 

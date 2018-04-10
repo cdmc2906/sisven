@@ -96,6 +96,35 @@ class FHistorialModel extends DAOModel {
         return $data;
     }
 
+    public function getHistorialxVendedorxFechaxHoraInicioxHoraFinSemana($accion = 'Inicio Visita', $fechagestion, $horaInicio, $horaFin, $ejecutivo, $semana) {
+        $fechaInicio = $fechagestion . ' ' . $horaInicio;
+        $fechaFin = $fechagestion . ' ' . $horaFin;
+
+        $sql = "
+            SELECT 
+                    DATE_FORMAT(H_FECHA, '%Y-%m-%d %H:%i') AS FECHAVISITA
+                    ,H_COD_CLIENTE AS CODIGOCLIENTE
+                    ,H_NOM_CLIENTE AS NOMBRECLIENTE
+                    ,H_RUTA AS RUTAVISITA
+                    ,h_latitud AS LATITUD
+                    ,h_longitud AS LONGITUD
+                    ,h_id AS IDHISTORIAL
+                FROM tb_historial_mb
+                WHERE 1=1
+                    AND H_FECHA BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
+                    AND H_USUARIO='" . $ejecutivo . "'
+                    AND H_ACCION='" . $accion . "'
+                    AND h_semana='" . $semana . "'
+                ORDER BY H_FECHA ;
+            ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+        //var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
     public function getHistorialxSupervisorxFechaxHoraInicioxHoraFin($accion = 'Inicio Visita', $fechagestion, $horaInicio, $horaFin, $ejecutivo, $ruta) {
         $fechaInicio = $fechagestion . ' ' . $horaInicio;
         $fechaFin = $fechagestion . ' ' . $horaFin;
@@ -155,10 +184,6 @@ class FHistorialModel extends DAOModel {
     }
 
     public function getPrimeraVisitaxEjecutivoxFechaxHoraInicioxHoraFin($accion = 'Inicio Visita', $fechagestion, $horaInicio, $horaFin, $ejecutivo) {
-//        var_dump($ejecutivo);die();
-
-
-
         $fechaInicio = $fechagestion . ' ' . $horaInicio;
         $fechaFin = $fechagestion . ' ' . $horaFin;
         $sql = "
@@ -173,8 +198,6 @@ class FHistorialModel extends DAOModel {
                 LIMIT 1;
             ";
 //   var_dump($sql);        die();
-//        if ($ejecutivo == "QU22")
-//                var_dump($sql);die();
 
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();

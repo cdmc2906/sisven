@@ -46,12 +46,13 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'filter'=>$model,
 	'columns'=>array(
 		'o_codigo',
+		'pg_id',
 		'o_id',
 		'o_concepto',
 		'o_codigo_mb',
 		'o_comentario',
-		'o_fch_venta',
 		/*
+		'o_fch_venta',
 		'o_fch_creacion',
 		'o_fch_despacho',
 		'o_tipo',

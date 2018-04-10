@@ -1,5 +1,5 @@
 <?php
-/* @var $this RutaMbController */
+/* @var $this RutasMbController */
 /* @var $model RutaMbModel */
 
 $this->breadcrumbs=array(
@@ -22,9 +22,11 @@ $this->menu=array(
 	'data'=>$model,
 	'attributes'=>array(
 		'r_cod',
+		'pg_id',
 		'r_ruta',
 		'r_cod_cliente',
 		'r_nom_cliente',
+		'r_tipo_negocio',
 		'r_cod_direccion',
 		'r_direccion',
 		'r_referencia',
@@ -32,6 +34,7 @@ $this->menu=array(
 		'r_dia',
 		'r_secuencia',
 		'r_estatus',
+		'r_numero_carga_informacion',
 		'r_fch_ingreso',
 		'r_fch_modificacion',
 		'r_fch_desde',

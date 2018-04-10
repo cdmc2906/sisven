@@ -1,5 +1,5 @@
 <?php
-/* @var $this RutaMbController */
+/* @var $this RutasMbController */
 /* @var $model RutaMbModel */
 
 $this->breadcrumbs=array(

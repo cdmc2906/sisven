@@ -1,21 +1,21 @@
 <?php
-/* @var $this HistorialMbControllerController */
+/* @var $this HistorialMbController */
 /* @var $model HistorialMbModel */
 
 $this->breadcrumbs=array(
-	'Historial'=>array('index'),
+	'Historial Mb Models'=>array('index'),
 	$model->h_cod=>array('view','id'=>$model->h_cod),
-	'Actualizar item',
+	'Update',
 );
 
 $this->menu=array(
-//	array('label'=>'List HistorialMbModel', 'url'=>array('index')),
-//	array('label'=>'Ingresar item Historial', 'url'=>array('create')),
-//	array('label'=>'Mostrar item Historial', 'url'=>array('view', 'id'=>$model->h_cod)),
-	array('label'=>'Administracion Historial', 'url'=>array('admin')),
+	array('label'=>'List HistorialMbModel', 'url'=>array('index')),
+	array('label'=>'Create HistorialMbModel', 'url'=>array('create')),
+	array('label'=>'View HistorialMbModel', 'url'=>array('view', 'id'=>$model->h_cod)),
+	array('label'=>'Manage HistorialMbModel', 'url'=>array('admin')),
 );
 ?>
 
-<h1>Actualizacion item Historial codigo: <?php echo $model->h_id; ?></h1>
+<h1>Update HistorialMbModel <?php echo $model->h_cod; ?></h1>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

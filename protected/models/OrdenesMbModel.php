@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table 'tb_ordenes_mb':
  * @property integer $o_codigo
+ * @property integer $pg_id
  * @property integer $o_id
  * @property string $o_concepto
  * @property string $o_codigo_mb
@@ -49,6 +50,9 @@
  * @property string $o_fch_desde
  * @property string $o_fch_hasta
  * @property integer $o_usr_ing_mod
+ *
+ * The followings are the available model relations:
+ * @property TbPeriodoGestion $pg
  */
 class OrdenesMbModel extends CActiveRecord
 {
@@ -68,7 +72,7 @@ class OrdenesMbModel extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('o_id, o_usr_ing_mod', 'numerical', 'integerOnly'=>true),
+			array('pg_id, o_id, o_usr_ing_mod', 'numerical', 'integerOnly'=>true),
 			array('o_concepto, o_codigo_mb, o_comentario', 'length', 'max'=>500),
 			array('o_tipo, o_estatus, o_cod_cliente', 'length', 'max'=>50),
 			array('o_nom_cliente, o_id_cliente, o_lista_precio, o_nom_lista_precio, o_bodega_origen, o_nom_bodega_origen, o_termino_pago, o_nom_termino_pago, o_usuario, o_nom_usuario, o_oficina, o_nom_oficina, o_tipo_secuencia', 'length', 'max'=>100),
@@ -78,7 +82,7 @@ class OrdenesMbModel extends CActiveRecord
 			array('o_fch_venta, o_fch_creacion, o_fch_despacho, o_fch_ingreso, o_fch_modificacion, o_fch_desde, o_fch_hasta', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('o_codigo, o_id, o_concepto, o_codigo_mb, o_comentario, o_fch_venta, o_fch_creacion, o_fch_despacho, o_tipo, o_estatus, o_cod_cliente, o_nom_cliente, o_id_cliente, o_direccion, o_lista_precio, o_nom_lista_precio, o_bodega_origen, o_nom_bodega_origen, o_termino_pago, o_nom_termino_pago, o_usuario, o_nom_usuario, o_oficina, o_nom_oficina, o_tipo_secuencia, o_iva_12_base, o_iva_12_valor, o_iva_0_base, o_iva_0_valor, o_iva_14_base, o_iva_14_valor, o_subtotal, o_porcentaje_descuento, o_descuento, o_impuestos, o_otros_cargos, o_total, o_datos, o_referencia, o_estado_proceso, o_fch_ingreso, o_fch_modificacion, o_fch_desde, o_fch_hasta, o_usr_ing_mod', 'safe', 'on'=>'search'),
+			array('o_codigo, pg_id, o_id, o_concepto, o_codigo_mb, o_comentario, o_fch_venta, o_fch_creacion, o_fch_despacho, o_tipo, o_estatus, o_cod_cliente, o_nom_cliente, o_id_cliente, o_direccion, o_lista_precio, o_nom_lista_precio, o_bodega_origen, o_nom_bodega_origen, o_termino_pago, o_nom_termino_pago, o_usuario, o_nom_usuario, o_oficina, o_nom_oficina, o_tipo_secuencia, o_iva_12_base, o_iva_12_valor, o_iva_0_base, o_iva_0_valor, o_iva_14_base, o_iva_14_valor, o_subtotal, o_porcentaje_descuento, o_descuento, o_impuestos, o_otros_cargos, o_total, o_datos, o_referencia, o_estado_proceso, o_fch_ingreso, o_fch_modificacion, o_fch_desde, o_fch_hasta, o_usr_ing_mod', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -90,6 +94,7 @@ class OrdenesMbModel extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'pg' => array(self::BELONGS_TO, 'TbPeriodoGestion', 'pg_id'),
 		);
 	}
 
@@ -100,6 +105,7 @@ class OrdenesMbModel extends CActiveRecord
 	{
 		return array(
 			'o_codigo' => 'O Codigo',
+			'pg_id' => 'Pg',
 			'o_id' => 'O',
 			'o_concepto' => 'O Concepto',
 			'o_codigo_mb' => 'O Codigo Mb',
@@ -166,6 +172,7 @@ class OrdenesMbModel extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('o_codigo',$this->o_codigo);
+		$criteria->compare('pg_id',$this->pg_id);
 		$criteria->compare('o_id',$this->o_id);
 		$criteria->compare('o_concepto',$this->o_concepto,true);
 		$criteria->compare('o_codigo_mb',$this->o_codigo_mb,true);

@@ -71,6 +71,7 @@ define('FLASH_NOTICE', 'notice');
 define('FORMATO_FECHA_LONG', 'Y/m/d G:i:s');
 define('FORMATO_FECHA_LONG_2', 'Y/m/d G:i');
 define('FORMATO_FECHA_LONG_3', 'Y-m-d G:i');
+define('FORMATO_FECHA_LONG_4', 'Y-m-d G:i:s');
 
 define('FORMATO_FECHA', 'Y/m/d');
 define('FORMATO_FECHA_2', 'd-m');

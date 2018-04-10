@@ -5,9 +5,11 @@
  *
  * The followings are the available columns in table 'tb_ruta_mb':
  * @property integer $r_cod
+ * @property integer $pg_id
  * @property string $r_ruta
  * @property string $r_cod_cliente
  * @property string $r_nom_cliente
+ * @property string $r_tipo_negocio
  * @property string $r_cod_direccion
  * @property string $r_direccion
  * @property string $r_referencia
@@ -15,11 +17,15 @@
  * @property integer $r_dia
  * @property integer $r_secuencia
  * @property integer $r_estatus
+ * @property integer $r_numero_carga_informacion
  * @property string $r_fch_ingreso
  * @property string $r_fch_modificacion
  * @property string $r_fch_desde
  * @property string $r_fch_hasta
  * @property integer $r_usuario_ing_mod
+ *
+ * The followings are the available model relations:
+ * @property TbPeriodoGestion $pg
  */
 class RutaMbModel extends CActiveRecord
 {
@@ -39,12 +45,14 @@ class RutaMbModel extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('r_semana, r_dia, r_secuencia, r_estatus, r_usuario_ing_mod', 'numerical', 'integerOnly'=>true),
-			array('r_ruta, r_cod_cliente, r_nom_cliente, r_cod_direccion, r_direccion, r_referencia', 'length', 'max'=>1024),
+			array('pg_id, r_semana, r_dia, r_secuencia, r_estatus, r_numero_carga_informacion, r_usuario_ing_mod', 'numerical', 'integerOnly'=>true),
+			array('r_ruta, r_cod_cliente', 'length', 'max'=>100),
+			array('r_nom_cliente, r_tipo_negocio, r_cod_direccion', 'length', 'max'=>200),
+			array('r_direccion, r_referencia', 'length', 'max'=>500),
 			array('r_fch_ingreso, r_fch_modificacion, r_fch_desde, r_fch_hasta', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('r_cod, r_ruta, r_cod_cliente, r_nom_cliente, r_cod_direccion, r_direccion, r_referencia, r_semana, r_dia, r_secuencia, r_estatus, r_fch_ingreso, r_fch_modificacion, r_fch_desde, r_fch_hasta, r_usuario_ing_mod', 'safe', 'on'=>'search'),
+			array('r_cod, pg_id, r_ruta, r_cod_cliente, r_nom_cliente, r_tipo_negocio, r_cod_direccion, r_direccion, r_referencia, r_semana, r_dia, r_secuencia, r_estatus, r_numero_carga_informacion, r_fch_ingreso, r_fch_modificacion, r_fch_desde, r_fch_hasta, r_usuario_ing_mod', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -56,6 +64,7 @@ class RutaMbModel extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'pg' => array(self::BELONGS_TO, 'TbPeriodoGestion', 'pg_id'),
 		);
 	}
 
@@ -66,9 +75,11 @@ class RutaMbModel extends CActiveRecord
 	{
 		return array(
 			'r_cod' => 'R Cod',
+			'pg_id' => 'Pg',
 			'r_ruta' => 'R Ruta',
 			'r_cod_cliente' => 'R Cod Cliente',
 			'r_nom_cliente' => 'R Nom Cliente',
+			'r_tipo_negocio' => 'R Tipo Negocio',
 			'r_cod_direccion' => 'R Cod Direccion',
 			'r_direccion' => 'R Direccion',
 			'r_referencia' => 'R Referencia',
@@ -76,6 +87,7 @@ class RutaMbModel extends CActiveRecord
 			'r_dia' => 'R Dia',
 			'r_secuencia' => 'R Secuencia',
 			'r_estatus' => 'R Estatus',
+			'r_numero_carga_informacion' => 'R Numero Carga Informacion',
 			'r_fch_ingreso' => 'R Fch Ingreso',
 			'r_fch_modificacion' => 'R Fch Modificacion',
 			'r_fch_desde' => 'R Fch Desde',
@@ -103,9 +115,11 @@ class RutaMbModel extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('r_cod',$this->r_cod);
+		$criteria->compare('pg_id',$this->pg_id);
 		$criteria->compare('r_ruta',$this->r_ruta,true);
 		$criteria->compare('r_cod_cliente',$this->r_cod_cliente,true);
 		$criteria->compare('r_nom_cliente',$this->r_nom_cliente,true);
+		$criteria->compare('r_tipo_negocio',$this->r_tipo_negocio,true);
 		$criteria->compare('r_cod_direccion',$this->r_cod_direccion,true);
 		$criteria->compare('r_direccion',$this->r_direccion,true);
 		$criteria->compare('r_referencia',$this->r_referencia,true);
@@ -113,6 +127,7 @@ class RutaMbModel extends CActiveRecord
 		$criteria->compare('r_dia',$this->r_dia);
 		$criteria->compare('r_secuencia',$this->r_secuencia);
 		$criteria->compare('r_estatus',$this->r_estatus);
+		$criteria->compare('r_numero_carga_informacion',$this->r_numero_carga_informacion);
 		$criteria->compare('r_fch_ingreso',$this->r_fch_ingreso,true);
 		$criteria->compare('r_fch_modificacion',$this->r_fch_modificacion,true);
 		$criteria->compare('r_fch_desde',$this->r_fch_desde,true);

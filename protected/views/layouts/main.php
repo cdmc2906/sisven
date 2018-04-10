@@ -274,14 +274,8 @@
 //                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
                                                 ),
                                                 array(
-                                                    'label' => 'Comentarios Oficina'
-                                                    , 'url' => array('/ComentarioOficina/admin')
-                                                    , 'visible' => $verMenusAdmin
-//                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
-                                                ),
-                                                array(
-                                                    'label' => 'Comentarios Supervisor'
-                                                    , 'url' => array('/ComentarioSupervision/admin')
+                                                    'label' => 'Periodo Gestion'
+                                                    , 'url' => array('/PeriodoGestion/admin')
                                                     , 'visible' => $verMenusAdmin
 //                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
                                                 ),

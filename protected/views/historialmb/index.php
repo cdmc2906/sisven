@@ -1,18 +1,18 @@
 <?php
-/* @var $this HistorialMbControllerController */
+/* @var $this HistorialMbController */
 /* @var $dataProvider CActiveDataProvider */
 
 $this->breadcrumbs=array(
-	'Historial',
+	'Historial Mb Models',
 );
 
 $this->menu=array(
-//	array('label'=>'Ingresar item Historial', 'url'=>array('create')),
-	array('label'=>'Administrar Historial', 'url'=>array('admin')),
+	array('label'=>'Create HistorialMbModel', 'url'=>array('create')),
+	array('label'=>'Manage HistorialMbModel', 'url'=>array('admin')),
 );
 ?>
 
-<h1>Historial</h1>
+<h1>Historial Mb Models</h1>
 
 <?php $this->widget('zii.widgets.CListView', array(
 	'dataProvider'=>$dataProvider,

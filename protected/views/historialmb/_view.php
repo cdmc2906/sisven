@@ -1,5 +1,5 @@
 <?php
-/* @var $this HistorialMbControllerController */
+/* @var $this HistorialMbController */
 /* @var $data HistorialMbModel */
 ?>
 
@@ -7,6 +7,10 @@
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('h_cod')); ?>:</b>
 	<?php echo CHtml::link(CHtml::encode($data->h_cod), array('view', 'id'=>$data->h_cod)); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('pg_id')); ?>:</b>
+	<?php echo CHtml::encode($data->pg_id); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('h_id')); ?>:</b>
@@ -29,11 +33,11 @@
 	<?php echo CHtml::encode($data->h_ruta_nombre); ?>
 	<br />
 
+	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('h_semana')); ?>:</b>
 	<?php echo CHtml::encode($data->h_semana); ?>
 	<br />
 
-	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('h_dia')); ?>:</b>
 	<?php echo CHtml::encode($data->h_dia); ?>
 	<br />
@@ -100,6 +104,10 @@
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('h_usr_ing_mod')); ?>:</b>
 	<?php echo CHtml::encode($data->h_usr_ing_mod); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('h_usuario_nombre')); ?>:</b>
+	<?php echo CHtml::encode($data->h_usuario_nombre); ?>
 	<br />
 
 	*/ ?>

@@ -1,5 +1,5 @@
 <?php
-/* @var $this RutaMbController */
+/* @var $this RutasMbController */
 /* @var $model RutaMbModel */
 /* @var $form CActiveForm */
 ?>
@@ -17,33 +17,43 @@
 	</div>
 
 	<div class="row">
+		<?php echo $form->label($model,'pg_id'); ?>
+		<?php echo $form->textField($model,'pg_id'); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->label($model,'r_ruta'); ?>
-		<?php echo $form->textField($model,'r_ruta',array('size'=>60,'maxlength'=>1024)); ?>
+		<?php echo $form->textField($model,'r_ruta',array('size'=>60,'maxlength'=>100)); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'r_cod_cliente'); ?>
-		<?php echo $form->textField($model,'r_cod_cliente',array('size'=>60,'maxlength'=>1024)); ?>
+		<?php echo $form->textField($model,'r_cod_cliente',array('size'=>60,'maxlength'=>100)); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'r_nom_cliente'); ?>
-		<?php echo $form->textField($model,'r_nom_cliente',array('size'=>60,'maxlength'=>1024)); ?>
+		<?php echo $form->textField($model,'r_nom_cliente',array('size'=>60,'maxlength'=>200)); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->label($model,'r_tipo_negocio'); ?>
+		<?php echo $form->textField($model,'r_tipo_negocio',array('size'=>60,'maxlength'=>200)); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'r_cod_direccion'); ?>
-		<?php echo $form->textField($model,'r_cod_direccion',array('size'=>60,'maxlength'=>1024)); ?>
+		<?php echo $form->textField($model,'r_cod_direccion',array('size'=>60,'maxlength'=>200)); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'r_direccion'); ?>
-		<?php echo $form->textField($model,'r_direccion',array('size'=>60,'maxlength'=>1024)); ?>
+		<?php echo $form->textField($model,'r_direccion',array('size'=>60,'maxlength'=>500)); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'r_referencia'); ?>
-		<?php echo $form->textField($model,'r_referencia',array('size'=>60,'maxlength'=>1024)); ?>
+		<?php echo $form->textField($model,'r_referencia',array('size'=>60,'maxlength'=>500)); ?>
 	</div>
 
 	<div class="row">
@@ -64,6 +74,11 @@
 	<div class="row">
 		<?php echo $form->label($model,'r_estatus'); ?>
 		<?php echo $form->textField($model,'r_estatus'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->label($model,'r_numero_carga_informacion'); ?>
+		<?php echo $form->textField($model,'r_numero_carga_informacion'); ?>
 	</div>
 
 	<div class="row">

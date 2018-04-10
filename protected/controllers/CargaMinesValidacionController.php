@@ -106,7 +106,7 @@ class CargaMinesValidacionController extends Controller {
             unset($data);
         }
 
-        Yii::app()->session['filasArchivo'] = count($dataInsert);
+        Yii::app()->session['filasArchivo'] += count($dataInsert);
 //var_dump(count($dataInsert));die();
 //        var_dump($dataInsert);die();
         return $dataInsert;

@@ -5,7 +5,15 @@ $this->renderPartial('/shared/_blockUI');
 $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"'));
 $this->pageTitle = $pagina_nombre;
 ?>
+
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/carga/CargaOrdenesMb.js"; ?>"></script>
+<?php if (Yii::app()->user->hasFlash('resultadoOrdenes')): ?>
+    <div class="flash-notice">
+        <?php echo Yii::app()->user->getFlash('resultadoOrdenes'); ?>
+    </div>
+<?php else: ?>
+    <div class=""></div>
+<?php endif; ?>
 
 <div class="form">
     <?php
@@ -22,6 +30,29 @@ $this->pageTitle = $pagina_nombre;
     ?>
     <div class="row">
         <?php
+        unset(Yii::app()->session['idPeriodoAbierto']);
+        unset(Yii::app()->session['fechaInicioPeriodo']);
+        unset(Yii::app()->session['fechaFinPeriodo']);
+        unset(Yii::app()->session['itemsFueraPeriodo']);
+        
+        $command1 = Yii::app()->db->createCommand('
+            SELECT 
+                pg_id as idperiodo,
+                pg_fecha_inicio as fechainicio,
+                pg_fecha_fin as fechafin,
+                pg_descripcion as descripcion
+            FROM tcc_control_ruta.tb_periodo_gestion
+            WHERE 
+            pg_estado=1
+            and pg_tipo=\'SEMANAL\';');
+        $resultado1 = $command1->queryRow();
+//        var_dump($resultado1);die();
+        $periodoAbierto = $resultado1['descripcion'];
+
+        Yii::app()->session['idPeriodoAbierto'] = $resultado1['idperiodo'];
+        Yii::app()->session['fechaInicioPeriodo'] = $resultado1['fechainicio'];
+        Yii::app()->session['fechaFinPeriodo'] = $resultado1['fechafin'];
+
         $command = Yii::app()->db->createCommand('
                         select 
                                  o_fch_ingreso as fecha 
@@ -31,6 +62,12 @@ $this->pageTitle = $pagina_nombre;
         $resultado = $command->queryRow();
         $ultimaFecha = DateTime::createFromFormat('Y-m-d H:i:s', $resultado['fecha'])->format(FORMATO_FECHA_LONG_2);
         ?>
+        <div class="callout callout-success">
+            <center>
+                <h4><?php echo $form->labelEx($model, 'periodoAbierto'); ?></h4>
+                <p> <b><?php echo $periodoAbierto; ?></b></p>
+            </center>
+        </div>
         <div class="callout callout-info">
             <center>
                 <h4><?php echo $form->labelEx($model, 'fechaUltimaCarga'); ?></h4>

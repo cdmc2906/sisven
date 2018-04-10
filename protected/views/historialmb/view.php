@@ -1,27 +1,28 @@
 <?php
-/* @var $this HistorialMbControllerController */
+/* @var $this HistorialMbController */
 /* @var $model HistorialMbModel */
 
 $this->breadcrumbs=array(
-	'Historial'=>array('index'),
+	'Historial Mb Models'=>array('index'),
 	$model->h_cod,
 );
 
 $this->menu=array(
-//	array('label'=>'List HistorialMbModel', 'url'=>array('index')),
-//	array('label'=>'Ingresar item Historial', 'url'=>array('create')),
-	array('label'=>'Actualizar item Historial', 'url'=>array('update', 'id'=>$model->h_cod)),
-//	array('label'=>'Eliminiar item Historial', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->h_cod),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Administracion Historial', 'url'=>array('admin')),
+	array('label'=>'List HistorialMbModel', 'url'=>array('index')),
+	array('label'=>'Create HistorialMbModel', 'url'=>array('create')),
+	array('label'=>'Update HistorialMbModel', 'url'=>array('update', 'id'=>$model->h_cod)),
+	array('label'=>'Delete HistorialMbModel', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->h_cod),'confirm'=>'Are you sure you want to delete this item?')),
+	array('label'=>'Manage HistorialMbModel', 'url'=>array('admin')),
 );
 ?>
 
-<h1>Informacion item Historial codigo: <?php echo $model->h_id; ?></h1>
+<h1>View HistorialMbModel #<?php echo $model->h_cod; ?></h1>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(
 		'h_cod',
+		'pg_id',
 		'h_id',
 		'h_fecha',
 		'h_usuario',
@@ -45,5 +46,6 @@ $this->menu=array(
 		'h_fch_desde',
 		'h_fch_hasta',
 		'h_usr_ing_mod',
+		'h_usuario_nombre',
 	),
 )); ?>

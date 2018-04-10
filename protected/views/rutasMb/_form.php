@@ -1,5 +1,5 @@
 <?php
-/* @var $this RutaMbController */
+/* @var $this RutasMbController */
 /* @var $model RutaMbModel */
 /* @var $form CActiveForm */
 ?>
@@ -20,38 +20,50 @@
 	<?php echo $form->errorSummary($model); ?>
 
 	<div class="row">
+		<?php echo $form->labelEx($model,'pg_id'); ?>
+		<?php echo $form->textField($model,'pg_id'); ?>
+		<?php echo $form->error($model,'pg_id'); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->labelEx($model,'r_ruta'); ?>
-		<?php echo $form->textField($model,'r_ruta',array('size'=>60,'maxlength'=>1024)); ?>
+		<?php echo $form->textField($model,'r_ruta',array('size'=>60,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'r_ruta'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'r_cod_cliente'); ?>
-		<?php echo $form->textField($model,'r_cod_cliente',array('size'=>60,'maxlength'=>1024)); ?>
+		<?php echo $form->textField($model,'r_cod_cliente',array('size'=>60,'maxlength'=>100)); ?>
 		<?php echo $form->error($model,'r_cod_cliente'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'r_nom_cliente'); ?>
-		<?php echo $form->textField($model,'r_nom_cliente',array('size'=>60,'maxlength'=>1024)); ?>
+		<?php echo $form->textField($model,'r_nom_cliente',array('size'=>60,'maxlength'=>200)); ?>
 		<?php echo $form->error($model,'r_nom_cliente'); ?>
 	</div>
 
 	<div class="row">
+		<?php echo $form->labelEx($model,'r_tipo_negocio'); ?>
+		<?php echo $form->textField($model,'r_tipo_negocio',array('size'=>60,'maxlength'=>200)); ?>
+		<?php echo $form->error($model,'r_tipo_negocio'); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->labelEx($model,'r_cod_direccion'); ?>
-		<?php echo $form->textField($model,'r_cod_direccion',array('size'=>60,'maxlength'=>1024)); ?>
+		<?php echo $form->textField($model,'r_cod_direccion',array('size'=>60,'maxlength'=>200)); ?>
 		<?php echo $form->error($model,'r_cod_direccion'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'r_direccion'); ?>
-		<?php echo $form->textField($model,'r_direccion',array('size'=>60,'maxlength'=>1024)); ?>
+		<?php echo $form->textField($model,'r_direccion',array('size'=>60,'maxlength'=>500)); ?>
 		<?php echo $form->error($model,'r_direccion'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'r_referencia'); ?>
-		<?php echo $form->textField($model,'r_referencia',array('size'=>60,'maxlength'=>1024)); ?>
+		<?php echo $form->textField($model,'r_referencia',array('size'=>60,'maxlength'=>500)); ?>
 		<?php echo $form->error($model,'r_referencia'); ?>
 	</div>
 
@@ -77,6 +89,12 @@
 		<?php echo $form->labelEx($model,'r_estatus'); ?>
 		<?php echo $form->textField($model,'r_estatus'); ?>
 		<?php echo $form->error($model,'r_estatus'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'r_numero_carga_informacion'); ?>
+		<?php echo $form->textField($model,'r_numero_carga_informacion'); ?>
+		<?php echo $form->error($model,'r_numero_carga_informacion'); ?>
 	</div>
 
 	<div class="row">

@@ -1,5 +1,5 @@
 <?php
-/* @var $this RutaMbController */
+/* @var $this RutasMbController */
 /* @var $model RutaMbModel */
 
 $this->breadcrumbs=array(
@@ -45,22 +45,27 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
-//		'r_cod',
+		'r_cod',
+		'pg_id',
 		'r_ruta',
 		'r_cod_cliente',
 		'r_nom_cliente',
-//		'r_cod_direccion',
-//		'r_direccion',
-//		'r_referencia',
-//		'r_semana',
+		'r_tipo_negocio',
+		/*
+		'r_cod_direccion',
+		'r_direccion',
+		'r_referencia',
+		'r_semana',
 		'r_dia',
 		'r_secuencia',
 		'r_estatus',
-//		'r_fch_ingreso',
-//		'r_fch_modificacion',
-//		'r_fch_desde',
-//		'r_fch_hasta',
-//		'r_usuario_ing_mod',
+		'r_numero_carga_informacion',
+		'r_fch_ingreso',
+		'r_fch_modificacion',
+		'r_fch_desde',
+		'r_fch_hasta',
+		'r_usuario_ing_mod',
+		*/
 		array(
 			'class'=>'CButtonColumn',
 		),

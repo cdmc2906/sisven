@@ -108,6 +108,7 @@ class excel {
         );
         /* EXPORTAR DATOS DE RESUMEN CON PRECISION */
         for ($fila = 0; $fila < $cantidadFilas; $fila++) {
+//            var_dump($reporteConPrecision);die();
             $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $fila + $row_offset, $reporteConPrecision[0][$fila]['PARAMETRO']);
             $this->objPHPExcel->getActiveSheet()
                     ->getStyleByColumnAndRow(0, $fila + $row_offset)
@@ -119,6 +120,7 @@ class excel {
                     ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
             $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $fila + $row_offset)->applyFromArray($styleArray);
         }
+//        var_dump($this->objPHPExcel);die();
         $column_offset = 1;
         for ($columna = 0; $columna < count($reporteConPrecision); $columna++) {
             for ($fila = 0; $fila < $cantidadFilas; $fila++) {
@@ -127,6 +129,8 @@ class excel {
                 $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($columna + $column_offset, ($fila + $row_offset))->applyFromArray($styleArray);
             }
         }
+        
+        //AGREGO 4 FILAS PARA SEPARAR ENTRE LOS REGISTROS CON PRECISIÓN Y SIN PRESICION
         $row_offset = $cantidadFilas + 4;
 
         if (count($reporteSinPrecision)) {
@@ -169,6 +173,127 @@ class excel {
                 }
             }
         }
+        /* CONFIGURACION DE ENCABEZADOS Y PIE DE PAGINA DE IMPRESION */
+        $this->objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddHeader('&C&H' . $encabezado);
+        $this->objPHPExcel->getActiveSheet()->getHeaderFooter()->
+                setOddFooter('&L&B' . $this->objPHPExcel->getProperties()->getTitle() . '&C&B' . $footer . '&RPag. &P de &N');
+        $this->objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT);
+    }
+
+    public function MapeoCustomizadoGestionValidacionMines($usuarios, $fechasRevisadas, $datosFechas, $horasRevisadas, $datosHoras, $encabezado, $footer) {
+
+//        var_dump($fechasRevisadas,count($fechasRevisadas),$fechasRevisadas[0]['fecha']);die();
+
+        $row_offset = 1;
+        $styleArrayCell = array(
+            'font' => array(
+                'bold' => true,
+            ),
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+            'borders' => array(
+                'outline' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                    'color' => array('argb' => '00000000'),
+                ),
+            ),
+        );
+
+        #DEFINICION DE ESTILO PARA CADA CELDA
+        $styleArray = array(
+            'alignment' => array(
+                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+            ),
+            'borders' => array(
+                'outline' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN,
+                    'color' => array('argb' => '00000000'),
+                ),
+            ),
+        );
+        //INICIO DE IMPRESION DE DATOS POR FECHAS
+
+        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row_offset, 'RESUMEN GESTION CARGA POR FECHA');
+        $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn(0)->setAutoSize(true);
+        $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row_offset)->applyFromArray($styleArrayCell);
+        $row_offset++;
+        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row_offset, 'AGENTE');
+        $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row_offset)->applyFromArray($styleArrayCell);
+
+        for ($iteradorFechas = 1; $iteradorFechas <= count($fechasRevisadas); $iteradorFechas++) {
+            $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($iteradorFechas, $row_offset, $fechasRevisadas[$iteradorFechas - 1]['fecha']);
+            $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($iteradorFechas)->setAutoSize(true);
+            $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($iteradorFechas, $row_offset)->applyFromArray($styleArrayCell);
+        }
+        $row_offset++;
+
+        for ($iteradorUsuarios = 0; $iteradorUsuarios < count($usuarios); $iteradorUsuarios++) {
+            $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row_offset, $usuarios[$iteradorUsuarios]['nombreusuario']);
+            $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($iteradorFechas)->setAutoSize(true);
+            $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row_offset)->applyFromArray($styleArrayCell);
+            for ($iteradorFechas = 1; $iteradorFechas <= count($fechasRevisadas); $iteradorFechas++) {
+                $valorParametro = '';
+                foreach ($datosFechas as $clave => $itemAgente) {
+                    if ($usuarios[$iteradorUsuarios]['idusuario'] == $clave) {
+                        foreach ($itemAgente as $item) {
+                            if ($item['fecha'] == $fechasRevisadas[$iteradorFechas - 1]['fecha']) {
+                                $valorParametro = $item['cantidad'];
+                                break;
+                            }
+                        }
+                    }
+                }
+                $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($iteradorFechas, $row_offset, $valorParametro);
+                $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($iteradorFechas)->setAutoSize(true);
+                $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($iteradorFechas, $row_offset)->applyFromArray($styleArrayCell);
+            }
+            $row_offset ++;
+        }
+
+        #INICIO DE IMPRESION DE DATOS POR HORAS
+        $row_offset += 2;
+        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row_offset, 'RESUMEN GESTION CARGA POR HORA');
+        $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn(0)->setAutoSize(true);
+        $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row_offset)->applyFromArray($styleArrayCell);
+        $row_offset++;
+        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row_offset, 'AGENTE');
+        $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row_offset)->applyFromArray($styleArrayCell);
+
+        for ($iteradorHoras = 1; $iteradorHoras <= count($horasRevisadas); $iteradorHoras++) {
+            $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($iteradorHoras, $row_offset, $horasRevisadas[$iteradorHoras - 1]['hora']);
+            $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($iteradorHoras)->setAutoSize(true);
+            $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($iteradorHoras, $row_offset)->applyFromArray($styleArrayCell);
+        }
+        $row_offset++;
+
+        for ($iteradorUsuarios = 0; $iteradorUsuarios < count($usuarios); $iteradorUsuarios++) {
+            $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row_offset, $usuarios[$iteradorUsuarios]['nombreusuario']);
+            $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($iteradorFechas)->setAutoSize(true);
+            $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row_offset)->applyFromArray($styleArrayCell);
+            for ($iteradorHoras = 1; $iteradorHoras <= count($horasRevisadas); $iteradorHoras++) {
+                $valorParametro = '';
+                foreach ($datosHoras as $clave => $itemAgente) {
+//                    var_dump($clave);die();
+                    if ($usuarios[$iteradorUsuarios]['idusuario'] == $clave) {
+                        foreach ($itemAgente as $item) {
+//                        var_dump($item,$horasRevisadas[$iteradorHoras - 1]['hora']);                        die();
+//                        var_dump($item['fecha'] ,$fechasRevisadas[$iteradorFechas - 1]['fecha']);                        die();
+                            if ($item['hora'] == $horasRevisadas[$iteradorHoras - 1]['hora']) {
+                                $valorParametro = $item['cantidad'];
+//                        var_dump($item['cantidad']);                        die();
+                                break;
+                            }
+                        }
+                    }
+                }
+                $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($iteradorHoras, $row_offset, $valorParametro);
+                $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($iteradorHoras)->setAutoSize(true);
+                $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($iteradorHoras, $row_offset)->applyFromArray($styleArrayCell);
+            }
+            $row_offset ++;
+        }
+
         /* CONFIGURACION DE ENCABEZADOS Y PIE DE PAGINA DE IMPRESION */
         $this->objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddHeader('&C&H' . $encabezado);
         $this->objPHPExcel->getActiveSheet()->getHeaderFooter()->

@@ -26,7 +26,7 @@
         ));
         ?>
 
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+        <span class="glyphicon fa-user form-control-feedback"></span>
         <div class="form-group has-error">
             <?php echo $form->error($model, 'username', array('class' => 'help-block')); ?>
         </div>
@@ -36,7 +36,7 @@
     <div class="form-group has-feedback">
 
         <?php echo $form->passwordField($model, 'password', array('class' => 'form-control', 'placeholder' => 'Clave')); ?>
-        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        <span class="glyphicon fa-lock form-control-feedback"></span>
         <?php // echo $form->labelEx($model, 'password');  ?>
         <div class="form-group has-error">
             <?php echo $form->error($model, 'password', array('class' => 'help-block')); ?>

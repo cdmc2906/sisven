@@ -22,6 +22,7 @@ $this->menu=array(
 	'data'=>$model,
 	'attributes'=>array(
 		'o_codigo',
+		'pg_id',
 		'o_id',
 		'o_concepto',
 		'o_codigo_mb',

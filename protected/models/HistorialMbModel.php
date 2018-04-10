@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table 'tb_historial_mb':
  * @property integer $h_cod
+ * @property integer $pg_id
  * @property integer $h_id
  * @property string $h_fecha
  * @property string $h_usuario
@@ -29,6 +30,9 @@
  * @property string $h_fch_hasta
  * @property integer $h_usr_ing_mod
  * @property string $h_usuario_nombre
+ *
+ * The followings are the available model relations:
+ * @property TbPeriodoGestion $pg
  */
 class HistorialMbModel extends CActiveRecord
 {
@@ -48,13 +52,13 @@ class HistorialMbModel extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('h_id, h_semana, h_dia, h_romper_secuencia, h_usr_ing_mod', 'numerical', 'integerOnly'=>true),
+			array('pg_id, h_id, h_semana, h_dia, h_romper_secuencia, h_usr_ing_mod', 'numerical', 'integerOnly'=>true),
 			array('h_usuario, h_ruta, h_ruta_nombre, h_cod_cliente, h_nom_cliente, h_direccion, h_accion, h_cod_accion, h_cod_comentario, h_comentario, h_monto, h_usuario_nombre', 'length', 'max'=>500),
-			array('h_latitud, h_longitud', 'length', 'max'=>10),
+			array('h_latitud, h_longitud', 'length', 'max'=>30),
 			array('h_fecha, h_fch_ingreso, h_fch_modificacion, h_fch_desde, h_fch_hasta', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('h_cod, h_id, h_fecha, h_usuario, h_ruta, h_ruta_nombre, h_semana, h_dia, h_cod_cliente, h_nom_cliente, h_direccion, h_accion, h_cod_accion, h_cod_comentario, h_comentario, h_monto, h_latitud, h_longitud, h_romper_secuencia, h_fch_ingreso, h_fch_modificacion, h_fch_desde, h_fch_hasta, h_usr_ing_mod, h_usuario_nombre', 'safe', 'on'=>'search'),
+			array('h_cod, pg_id, h_id, h_fecha, h_usuario, h_ruta, h_ruta_nombre, h_semana, h_dia, h_cod_cliente, h_nom_cliente, h_direccion, h_accion, h_cod_accion, h_cod_comentario, h_comentario, h_monto, h_latitud, h_longitud, h_romper_secuencia, h_fch_ingreso, h_fch_modificacion, h_fch_desde, h_fch_hasta, h_usr_ing_mod, h_usuario_nombre', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -66,6 +70,7 @@ class HistorialMbModel extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'pg' => array(self::BELONGS_TO, 'TbPeriodoGestion', 'pg_id'),
 		);
 	}
 
@@ -75,31 +80,32 @@ class HistorialMbModel extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'h_cod' => 'Codigo',
-			'h_id' => 'Id historial Mb',
-			'h_fecha' => 'Fecha',
-			'h_usuario' => 'Usuario',
-			'h_ruta' => 'Ruta',
-			'h_ruta_nombre' => 'Ruta Nombre',
-			'h_semana' => 'Semana',
-			'h_dia' => 'Dia',
-			'h_cod_cliente' => 'Codigo Cliente',
-			'h_nom_cliente' => 'Nombre Cliente',
-			'h_direccion' => 'Direccion',
-			'h_accion' => 'Accion',
-			'h_cod_accion' => 'Codigo Accion',
-			'h_cod_comentario' => 'Codigo Comentario',
-			'h_comentario' => 'Comentario',
-			'h_monto' => 'Monto',
-			'h_latitud' => 'Latitud',
-			'h_longitud' => 'Longitud',
-			'h_romper_secuencia' => 'Romper Secuencia',
-			'h_fch_ingreso' => 'Fecha Ingreso',
-			'h_fch_modificacion' => 'Fecha Modificacion',
-			'h_fch_desde' => 'Fch Desde',
+			'h_cod' => 'ID HISTORIAL',
+			'pg_id' => 'ID PERIODO GESTION',
+			'h_id' => 'ID HISTORIAL MV',
+			'h_fecha' => 'FECHA HISTORIAL',
+			'h_usuario' => 'CODIGO USUARIO',
+			'h_ruta' => 'CODIGO RUTA',
+			'h_ruta_nombre' => 'NOMBRE RUTA',
+			'h_semana' => 'H Semana',
+			'h_dia' => 'H Dia',
+			'h_cod_cliente' => 'H Cod Cliente',
+			'h_nom_cliente' => 'H Nom Cliente',
+			'h_direccion' => 'H Direccion',
+			'h_accion' => 'H Accion',
+			'h_cod_accion' => 'H Cod Accion',
+			'h_cod_comentario' => 'H Cod Comentario',
+			'h_comentario' => 'H Comentario',
+			'h_monto' => 'H Monto',
+			'h_latitud' => 'H Latitud',
+			'h_longitud' => 'H Longitud',
+			'h_romper_secuencia' => 'H Romper Secuencia',
+			'h_fch_ingreso' => 'H Fch Ingreso',
+			'h_fch_modificacion' => 'H Fch Modificacion',
+			'h_fch_desde' => 'H Fch Desde',
 			'h_fch_hasta' => 'H Fch Hasta',
 			'h_usr_ing_mod' => 'H Usr Ing Mod',
-			'h_usuario_nombre' => 'Nombre Usuario',
+			'h_usuario_nombre' => 'H Usuario Nombre',
 		);
 	}
 
@@ -122,6 +128,7 @@ class HistorialMbModel extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('h_cod',$this->h_cod);
+		$criteria->compare('pg_id',$this->pg_id);
 		$criteria->compare('h_id',$this->h_id);
 		$criteria->compare('h_fecha',$this->h_fecha,true);
 		$criteria->compare('h_usuario',$this->h_usuario,true);

@@ -205,7 +205,7 @@ function cargarDetalle(codigoEjecutivoFila) {
     $.ajax(
             {
                 method: "POST",
-                url: "reporteordenesxfecha/CargarGridDetalle",
+                url: "CargarGridDetalle",
                 data: {ejecutivo: codigoEjecutivoFila,
                     fechaInicio: $("#ReporteOrdenesxFechaForm_fechaOrdenesInicio").val(),
                     fechaFin: $("#ReporteOrdenesxFechaForm_fechaOrdenesFin").val()},

@@ -12,9 +12,11 @@ function ConfigurarGrid() {
         mtype: 'POST',
         url: MetodoListar,
         colNames: [
+            'Codigo',
             'Ruta',
             'Cliente',
             'Nombre',
+            'Tipo Negocio',
             'Direccion',
             'Direccion (Descripcion)',
             'Referencia',
@@ -24,9 +26,11 @@ function ConfigurarGrid() {
             'Estatus'
         ],
         colModel: [
+            {name: 'CODIGO', index: 'CODIGO', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'RUTA', index: 'RUTA', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'CLIENTE', index: 'CLIENTE', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'NOMBRE', index: 'NOMBRE', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'TIPODENEGOCIO', index: 'TIPODENEGOCIO', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'DIRECCION', index: 'DIRECCION', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'DIRECCIONDESCRIPCION', index: 'DIRECCIONDESCRIPCION', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'REFERENCIA', index: 'REFERENCIA', width: 200, resizable: false, sortable: false, frozen: false},

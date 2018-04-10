@@ -11,10 +11,24 @@ class RptResumenDiarioHistorialController extends Controller {
 
     public function actionIndex() {
         Yii::app()->user->setFlash('resultadoGuardar', null);
+        Yii::app()->user->setFlash('resultadoGuardarRevisionAviso', null);
+        Yii::app()->user->setFlash('resultadoGuardarRevisionAviso', null);
+
         if (Yii::app()->request->isAjaxRequest) {
             return;
         } else {
             Yii::app()->session['RptResumenDiarioHistorialForm'] = '';
+
+            unset(Yii::app()->session['detalleRevisionGuardar']);
+            unset(Yii::app()->session['resumenRevisionGuardar']);
+
+            unset(Yii::app()->session['tiemposGestionEjecutivo']);
+            unset(Yii::app()->session['resultadosRevision']);
+            unset(Yii::app()->session['detallerevisionhistorialitem']);
+            unset(Yii::app()->session['resumenrevisionhistorialitem']);
+
+
+//            unset(Yii::app()->session['resumenGestion']);
             $model = new RptResumenDiarioHistorialForm();
             $this->render('/reportes/rptResumenDiarioHistorial', array('model' => $model));
         }
@@ -22,17 +36,24 @@ class RptResumenDiarioHistorialController extends Controller {
 
     public function actionRevisarHistorial() {
         $response = new Response();
+        Yii::app()->user->setFlash('resultadoGuardarRevisionOK', null);
+        Yii::app()->user->setFlash('resultadoGuardarRevisionAviso', null);
+
         try {
             $solicitarLogin = true;
             if (Yii::app()->user->id <> intval(USUARIO_INVITADO)) {
                 $solicitarLogin = false;
                 $model = new RptResumenDiarioHistorialForm();
                 if (isset($_POST['RptResumenDiarioHistorialForm'])) {
+
+
                     $model->attributes = $_POST['RptResumenDiarioHistorialForm'];
                     $_SESSION['ModelForm'] = $model;
                     Yii::app()->session['ModelForm'] = $model;
 
-                    if ($model->validate()) {
+                    if ($model->validate() && $model["ejecutivo"] != '') {
+                        Yii::app()->user->setFlash('resultadoGuardarRevisionAviso', null);
+                        Yii::app()->user->setFlash('resultadoGuardarRevisionAviso', null);
                         $fLibreria = new Libreria();
                         $response = $fLibreria->VerificarHistorialDiarioUsuario(
                                 $model->ejecutivo
@@ -40,7 +61,9 @@ class RptResumenDiarioHistorialController extends Controller {
                                 , $model->accionHistorial
                                 , $model->horaInicioGestion
                                 , $model->horaFinGestion
-                                , $model->precisionVisitas);
+                                , $model->precisionVisitas
+                                , $model->semanaRevision
+                        );
                     } else {
                         $response->Message = "Debe seleccionar todos los filtros";
                         $response->ClassMessage = CLASS_MENSAJE_NOTICE;
@@ -65,289 +88,70 @@ class RptResumenDiarioHistorialController extends Controller {
     }
 
     public function actionGuardarRevision() {
-        $response = new Response();
-
-        $model = new RptResumenDiarioHistorialForm();
-
-        $datosDetalleRevisionDiarioGuardar = array();
-        $totalDetallesGuardados = 0;
-        $totalDetallesOmitidos = 0;
-
-        $datosResumenRevisionDiarioGuardar = array();
-        $totalResumenGuardados = 0;
-        $totalResumenOmitidos = 0;
-
-        $datosComentarioOficina = array();
-        $datosComentarioSupervisor = array();
-        $mensaje = '';
         try {
-            $solicitarLogin = true;
-            if (Yii::app()->user->id <> intval(USUARIO_INVITADO)) {
-                $solicitarLogin = false;
-                if (isset(Yii::app()->session['detallerevisionhistorialitem']) && isset(Yii::app()->session['resumenrevisionhistorialitem'])) {
+            $mensaje = '';
 
-//                var_dump(Yii::app()->session['ModelForm']);die();
-                    $fechagestion = Yii::app()->session['ModelForm']['fechagestion'];
-                    $ejecutivo = Yii::app()->session['ModelForm']['ejecutivo'];
-                    $precisionVisita = Yii::app()->session['ModelForm']['precisionVisitas'];
-                    $comentarioSupervisor = $_POST['RptResumenDiarioHistorialForm']['comentarioSupervision'];
-                    $enlaceMapa = $_POST['RptResumenDiarioHistorialForm']['enlaceMapa'];
+            if (count(Yii::app()->session['resumenRevisionGuardar']) > 0 &&
+                    count(Yii::app()->session['detalleRevisionGuardar']) > 0) {
+                $totalDetallesGuardados = 0;
+                $totalDetallesOmitidos = 0;
 
-                    $model->fechagestion = $fechagestion;
-                    $model->ejecutivo = $ejecutivo;
-//                $model->
-//                $model->horaFinGestion=Yii::app()->session['ModelForm']['fechagestion']
-//                var_dump($comentarioSupervisor);die();
+                $totalResumenGuardados = 0;
+                $totalResumenOmitidos = 0;
 
-                    /* VERIFICACION PARA ELIMINACION DE REGISTROS DE RESUMEN HISTORIAL */
-                    $consultasResumenDH = new FResumenDiarioHistorialModel();
-                    $cantidadRegistrosResumen = intval($consultasResumenDH->getCantidadResumenxVendedorxFecha($fechagestion, $ejecutivo)[0]['registrosResumen']);
-                    $registrosIguales = $consultasResumenDH->getItemResumenxVendedorxFecha($fechagestion, $ejecutivo);
-                    if ($cantidadRegistrosResumen > 0) {
-                        foreach ($registrosIguales as $itemBorrar) {
-                            $existeBdd = ResumenHistorialDiarioModel::model()->findByAttributes(
-                                    array(
-                                        'rhd_fecha_historial' => $itemBorrar['rhd_fecha_historial'],
-                                        'rhd_cod_ejecutivo' => $itemBorrar['rhd_cod_ejecutivo']
-                                    )
-                            );
-                            if (isset($existeBdd)) {
-                                $existeBdd->delete();
-                            }
-                        }
-                    }
-
-                    /* GUARDAR DATOS RESUMEN REVISION */
-                    $datosResumenRevisionHistorial = Yii::app()->session['resumenrevisionhistorialitem'];
-                    if (count($datosResumenRevisionHistorial) > 0) {
-                        foreach ($datosResumenRevisionHistorial as $row) {
-                            $data = array(
-                                'rhd_cod_ejecutivo' => ($row['EJECUTIVO'] == '') ? -1 : $row['EJECUTIVO'],
-                                'rhd_fecha_historial' => ($row['FECHA_HISTORIAL'] == '') ? null : $row['FECHA_HISTORIAL'],
-                                'rhd_parametro' => ($row['PARAMETRO'] == '') ? null : $row['PARAMETRO'],
-                                'rhd_valor' => ($row['VALOR'] == '') ? 0 : $row['VALOR'],
-                                'rhd_semana' => ($row['SEMANA'] == '') ? 0 : $row['SEMANA'],
-//                                'rhd_observacion_supervisor' => (strlen(trim($comentarioSupervisor)) > 0) ? 'Comentario no ingresado' : trim($comentarioSupervisor),
-                                'rhd_usuario_supervisor' => Yii::app()->user->id,
-                                'rhd_fecha_ingreso_observacion' => date(FORMATO_FECHA_LONG),
-                                'rhd_fecha_modifica_observacion' => date(FORMATO_FECHA_LONG),
-                                'rhd_fecha_ingreso' => date(FORMATO_FECHA_LONG),
-                                'rhd_fecha_modificacion' => date(FORMATO_FECHA_LONG),
-                                'rhd_usuario_ingresa_modifica' => Yii::app()->user->id
-                            );
-                            array_push($datosResumenRevisionDiarioGuardar, $data);
-                            unset($data);
-                        }// fin iteracion filas resumen revision
-                        if (count($datosResumenRevisionDiarioGuardar) > 0) {
-                            $dbConnection = new CI_DB_active_record(null);
-                            $sql = $dbConnection->insert_batch('tb_resumen_historial_diario', $datosResumenRevisionDiarioGuardar);
-                            $sql = str_replace('"', '', $sql);
-                            $connection = Yii::app()->db_conn;
-                            $connection->active = true;
-                            $transaction = $connection->beginTransaction();
-                            $command = $connection->createCommand($sql);
-                            $countInsertResumen = $command->execute();
-                            if ($countInsertResumen > 0) {
-                                $transaction->commit();
-                                $totalResumenGuardados = $countInsertResumen;
-                            } else {
-                                $transaction->rollback();
-                                $totalResumenOmitidos += 1;
-                            }
-                            unset($datosResumenRevisionDiarioGuardar);
-                            $connection->active = false;
-                        }
-
-                        if ($totalResumenGuardados > 0)
-                            $mensaje .= '<br>Se han guardado ' . $totalResumenGuardados . ' registros resumen correctamente.';
-                        if ($totalResumenOmitidos > 0)
-                            $mensaje .= '<br>Se han omitido ' . $totalResumenOmitidos . ' resumenes.';
-                    }
-
-                    /* VERIFICACION PARA ELIMINACION DE REGISTROS DE DETALLE HISTORIAL */
-                    $consultasDetalleDH = new FDetalleDiarioHistorialModel();
-                    $cantidadRegistrosDetalle = intval($consultasDetalleDH->getCantidadDetallexVendedorxFecha($fechagestion, $ejecutivo)[0]['registrosDetalle']);
-                    $registrosIgualesDetalle = $consultasDetalleDH->getItemDetallexVendedorxFecha($fechagestion, $ejecutivo);
-                    if ($cantidadRegistrosDetalle > 0) {
-                        foreach ($registrosIgualesDetalle as $itemBorrar) {
-                            $existeBdd = DetalleHistorialDiarioModel::model()->findByAttributes(
-                                    array(
-                                        'rh_fecha_ruta' => $itemBorrar['rh_fecha_ruta'],
-                                        'rh_codigo_vendedor' => $itemBorrar['rh_codigo_vendedor']
-                            ));
-                            if (isset($existeBdd)) {
-                                $existeBdd->delete();
-                            }
-                        }
-                    }
-
-                    /* GUARDAR DATOS DETALLE REVISION */
-                    $datosDetalleRevisionHistorial = Yii::app()->session['detallerevisionhistorialitem'];
-                    if (count($datosDetalleRevisionHistorial) > 0) {
-                        foreach ($datosDetalleRevisionHistorial as $row) {
-                            $data = array(
-                                'rh_fecha_item' => ($row['FECHARUTA'] == '') ? null : $row['FECHARUTA'],
-                                'rh_fecha_revision' => ($row['FECHAREVISION'] == '') ? null : $row['FECHAREVISION'],
-                                'rh_fecha_ruta' => ($row['FECHARUTA'] == '') ? null : $row['FECHARUTA'],
-                                'rh_codigo_vendedor' => ($row['CODEJECUTIVO'] == '') ? null : $row['CODEJECUTIVO'],
-                                'rh_cod_cliente' => ($row['CODIGOCLIENTE'] == '') ? null : $row['CODIGOCLIENTE'],
-                                'rh_cliente' => ($row['CLIENTE'] == '') ? null : $row['CLIENTE'],
-                                'rh_ruta_visita' => ($row['RUTAUSADA'] == '') ? null : $row['RUTAUSADA'],
-                                'rh_orden_visita' => ($row['SECUENCIAVISITA'] == '') ? null : $row['SECUENCIAVISITA'],
-                                'rh_ruta_ejecutivo' => ($row['RUTACLIENTE'] == '') ? null : $row['RUTACLIENTE'],
-                                'rh_secuencia_ruta' => ($row['SECUENCIARUTA'] == '') ? null : $row['SECUENCIARUTA'],
-                                'rh_observacion_ruta' => ($row['ESTADOREVISIONR'] == '') ? null : $row['ESTADOREVISIONR'],
-                                'rh_observacion_secuencia' => ($row['ESTADOREVISIONS'] == '') ? null : $row['ESTADOREVISIONS'],
-                                'rh_chips_compra' => ($row['CHIPSCOMPRADOS'] == '') ? null : $row['CHIPSCOMPRADOS'],
-                                'rh_metros' => ($row['METROS'] == '') ? null : $row['METROS'],
-                                'rh_validacion' => ($row['VALIDACION'] == '') ? null : $row['VALIDACION'],
-                                'rh_precision' => ($precisionVisita == '') ? 0 : $precisionVisita,
-                                'rh_latitud_cliente' => ($row['LATITUDC'] == '') ? null : $row['LATITUDC'],
-                                'rh_longitud_cliente' => ($row['LONGITUDC'] == '') ? null : $row['LONGITUDC'],
-                                'rh_latitud_historial' => ($row['LATITUDH'] == '') ? null : $row['LATITUDH'],
-                                'rh_longitud_historial' => ($row['LONGITUDH'] == '') ? null : $row['LONGITUDH'],
-                                'rh_estado' => 'INGRESADO',
-                                'rh_fecha_ingreso' => date(FORMATO_FECHA_LONG),
-                                'rh_fecha_modificacion' => date(FORMATO_FECHA_LONG),
-                                'rh_usuario_revisa' => Yii::app()->user->id
-                            );
-                            array_push($datosDetalleRevisionDiarioGuardar, $data);
-                            unset($data);
-                        }// fin iteracion filas detalle revision
-
-                        if (count($datosDetalleRevisionDiarioGuardar) > 0) {
-                            $dbConnection = new CI_DB_active_record(null);
-                            $sql = $dbConnection->insert_batch('tb_detalle_historial_diario', $datosDetalleRevisionDiarioGuardar);
-                            $sql = str_replace('"', '', $sql);
-                            $connection = Yii::app()->db_conn;
-                            $connection->active = true;
-                            $transaction = $connection->beginTransaction();
-                            $command = $connection->createCommand($sql);
-                            $countInsertDetalles = $command->execute();
-                            if ($countInsertDetalles > 0) {
-                                $transaction->commit();
-                                $totalDetallesGuardados = $countInsertDetalles;
-                            } else {
-                                $transaction->rollback();
-                                $totalDetallesOmitidos += 1;
-                            }
-                            unset($datosDetalleRevisionDiarioGuardar);
-                            $connection->active = false;
-                        }
-
-                        if ($totalDetallesGuardados > 0)
-                            $mensaje .= '<br>Se han cargado ' . $totalDetallesGuardados . ' registros detalles correctamente.';
-                        if ($totalDetallesOmitidos > 0)
-                            $mensaje .= '<br>Se han omitido ' . $totalDetallesOmitidos . ' detalles omitidos.';
-                    }
-
-                    /* VERIFICACION PARA ELIMINACION DE COMENTARIOS SUPERVIDOR */
-                    if (strlen($comentarioSupervisor) > 0) {
-                        $existeComentarioSupervisor = ComentarioSupervisionModel::model()->findByAttributes(
-                                array(
-                                    'cs_fecha_historial_supervisado' => $fechagestion,
-                                    'cs_ejecutivo_supervisado' => $ejecutivo,
-                                    'cs_estado' => 1)
-                        );
-
-//                    if (isset($existeComentarioSupervisor)) {
-//                        $existeComentarioSupervisor->cs_estado = 0;
-//                        $existeComentarioSupervisor->cs_fecha_modificacion = date(FORMATO_FECHA_LONG);
-//                        $existeComentarioSupervisor->cs_usuario_ingresa_modifica = Yii::app()->user->id;
-//
-//                        $existeComentarioSupervisor->save();
-//                        var_dump(2);die();
-//                    }
-                        /* GUARDAR DATOS COMENTARIO SUPERVISOR */
-                        $dataComentarioSupervisor = array(
-                            'cs_fecha_historial_supervisado' => $fechagestion,
-                            'cs_ejecutivo_supervisado' => $ejecutivo,
-                            'cs_comentario' => $comentarioSupervisor,
-                            'cs_estado' => 1,
-                            'cs_fecha_ingreso' => date(FORMATO_FECHA_LONG),
-                            'cs_fecha_modificacion' => date(FORMATO_FECHA_LONG),
-                            'cs_usuario_ingresa_modifica' => Yii::app()->user->id
-                        );
-                        array_push($datosComentarioSupervisor, $dataComentarioSupervisor);
-                        unset($dataComentarioSupervisor);
-                        $dbConnection = new CI_DB_active_record(null);
-                        $sql = $dbConnection->insert_batch('tb_comentario_supervision', $datosComentarioSupervisor);
-                        $sql = str_replace('"', '', $sql);
-//                    var_dump($sql);die();
-                        $connection = Yii::app()->db_conn;
-                        $connection->active = true;
-                        $transaction = $connection->beginTransaction();
-                        $command = $connection->createCommand($sql);
-                        $countadorInsertComentarioSupervisor = $command->execute();
-                        if ($countadorInsertComentarioSupervisor > 0) {
-                            $transaction->commit();
-                        } else {
-                            $transaction->rollback();
-                        }
-                        unset($datosComentarioSupervisor);
-                        $connection->active = false;
-                    }
-
-                    /* VERIFICACION PARA ELIMINACION DE COMENTARIOS OFICINA (ENLACE MAPA) */
-                    if (strlen($enlaceMapa) > 0) {
-                        $existeComentarioOficina = ComentarioOficinaModel::model()->findByAttributes(
-                                array(
-                                    'co_fecha_historial_revisado' => $fechagestion,
-                                    'co_ejecutivo_revisado' => $ejecutivo,
-                                    'co_tipo_comentario' => TIPOCOMENTARIOENLACEMAPA, //'Enlace Mapa',
-                                    'co_estado' => 1
-                        ));
-                        /* GUARDAR DATOS COMENTARIO OFICINA */
-                        $dataComentarioOficina = array(
-                            'co_fecha_historial_revisado' => $fechagestion,
-                            'co_ejecutivo_revisado' => $ejecutivo,
-                            'co_enlace_mapa' => $enlaceMapa,
-                            'co_estado' => 1,
-                            'co_tipo_comentario' => TIPOCOMENTARIOENLACEMAPA,
-                            'co_fecha_ingreso' => date(FORMATO_FECHA_LONG),
-                            'co_fecha_modificacion' => date(FORMATO_FECHA_LONG),
-                            'co_usuario_ingresa_modifica' => Yii::app()->user->id
-                        );
-                        array_push($datosComentarioOficina, $dataComentarioOficina);
-                        unset($dataComentarioOficina);
-
-                        $dbConnection = new CI_DB_active_record(null);
-                        $sql = $dbConnection->insert_batch('tb_comentario_oficina', $datosComentarioOficina);
-                        $sql = str_replace('"', '', $sql);
-//                    var_dump($sql);                    die();
-                        $connection = Yii::app()->db_conn;
-                        $connection->active = true;
-                        $transaction = $connection->beginTransaction();
-                        $command = $connection->createCommand($sql);
-                        $countadorInsertComentarioOficina = $command->execute();
-                        if ($countadorInsertComentarioOficina > 0) {
-                            $transaction->commit();
-                        } else {
-                            $transaction->rollback();
-                        }
-//                    var_dump($countadorInsertComentarioSupervisor);die();
-//                    $mensaje .= "<br>Se guardo " . $countadorInsertComentarioOficina . " comentarios oficina";
-                        unset($datosComentarioOficina);
-                        $connection->active = false;
-                    }
+                $dbConnection = new CI_DB_active_record(null);
+                $sql = $dbConnection->insert_batch('tb_detalle_revision_historial', Yii::app()->session['detalleRevisionGuardar']);
+                $sql = str_replace('"', '', $sql);
+                $connection = Yii::app()->db_conn;
+                $connection->active = true;
+                $transaction = $connection->beginTransaction();
+                $command = $connection->createCommand($sql);
+                $countInsertDetalles = $command->execute();
+                if ($countInsertDetalles > 0) {
+                    $transaction->commit();
+                    $totalDetallesGuardados = $countInsertDetalles;
                 } else {
-                    $mensaje = 'No existen registros para guardar';
+                    $transaction->rollback();
+                    $totalDetallesOmitidos += 1;
+                }
+//                    unset(Yii::app()->session['detalleRevisionGuardar']);
+                $connection->active = false;
+
+
+                $dbConnectionRes = new CI_DB_active_record(null);
+                $sql = $dbConnectionRes->insert_batch('tb_resumen_historial_diario', Yii::app()->session['resumenRevisionGuardar']);
+                $sql = str_replace('"', '', $sql);
+                $connection = Yii::app()->db_conn;
+                $connection->active = true;
+                $transaction = $connection->beginTransaction();
+                $command = $connection->createCommand($sql);
+                $countInsertDetalles = $command->execute();
+                if ($countInsertDetalles > 0) {
+                    $transaction->commit();
+                    $totalResumenGuardados = $countInsertDetalles;
+                } else {
+                    $transaction->rollback();
+                    $totalResumenOmitidos += 1;
+                }
+
+//                    unset(Yii::app()->session['resumenRevisionGuardar']);
+                $connection->active = false;
+                if ($totalDetallesOmitidos > 0 || $totalResumenOmitidos > 0) {
+                    $mensaje = 'La revision ha sido guardada con errores';
+                    Yii::app()->user->setFlash('resultadoGuardarRevisionAviso', $mensaje);
+                } else {
+                    $mensaje = 'La revision ha sido guardada exitosamente';
+                    Yii::app()->user->setFlash('resultadoGuardarRevisionOK', $mensaje);
                 }
             }
-//            else {                $solicitarLogin = true;            }
         } catch (Exception $e) {
             $mensaje = 'Se ha producido un error al guardar los registros';
         }
-        if ($solicitarLogin) {
-            Yii::app()->user->setFlash('resultadoGuardar', "Por favor inicie sesion para continuar");
-            $returnUri = '/' . SISTEMA . '/cruge/ui/login';
-            Yii::app()->clientScript->registerMetaTag("" . INTERVALO_REFRESCO_INMEDIATO . ";url={$returnUri}", null, 'refresh');
-        } else {
-            Yii::app()->user->setFlash('resultadoGuardar', $mensaje);
-            $returnUri = '/sisven/RptResumenDiarioHistorial/';
-//        Yii::app()->clientScript->registerMetaTag("" . INTERVALO_REFRESCO_AUTOMATICO . ";url={$returnUri}", null, 'refresh');
-            $this->render('/historialmb/rptResumenDiarioHistorial', array('model' => $model));
-        }
+
+//        $returnUri = '/sisven/RptResumenDiarioHistorial/';
+        $model = new RptResumenDiarioHistorialForm();
+        $this->render('/reportes/rptResumenDiarioHistorial', array('model' => $model));
+
         return;
     }
 
@@ -513,7 +317,7 @@ class RptResumenDiarioHistorialController extends Controller {
         try {
             $revisionRuta = array();
             $datosResumenDiario = Yii::app()->session['resumenrevisionhistorialitem'];
-            $datosPrimeraUltima = Yii::app()->session['resumenPrimeraUltima'];
+//            $datosPrimeraUltima = Yii::app()->session['resumenPrimeraUltima'];
 
             foreach ($datosResumenDiario as $value) {
                 $dat = array(
@@ -524,16 +328,16 @@ class RptResumenDiarioHistorialController extends Controller {
                 );
                 array_push($revisionRuta, $dat);
             }
-            foreach ($datosPrimeraUltima as $filaGrid) {
-//                var_dump($key );die();
-                $dat = array(
-                    'PARAMETRO' => $filaGrid["VISITA"],
-                    'VALOR' => $filaGrid["CANTIDAD"],
-                    'FECHA_GESTION' => strval(Yii::app()->session['ModelForm']['fechagestion']),
-                    'EJECUTIVO' => strval(Yii::app()->session['ModelForm']['ejecutivo'])
-                );
-                array_push($revisionRuta, $dat);
-            }
+//            foreach ($datosPrimeraUltima as $filaGrid) {
+////                var_dump($key );die();
+//                $dat = array(
+//                    'PARAMETRO' => $filaGrid["VISITA"],
+//                    'VALOR' => $filaGrid["CANTIDAD"],
+//                    'FECHA_GESTION' => strval(Yii::app()->session['ModelForm']['fechagestion']),
+//                    'EJECUTIVO' => strval(Yii::app()->session['ModelForm']['ejecutivo'])
+//                );
+//                array_push($revisionRuta, $dat);
+//            }
 
             $NombreArchivo = "reporte_resumen_revision_ruta";
             $NombreHoja = "reporte_resumen_revision_ruta";

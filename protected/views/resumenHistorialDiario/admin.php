@@ -45,20 +45,19 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'dataProvider'=>$model->search(),
 	'filter'=>$model,
 	'columns'=>array(
-		'rhd_codigo',
+		'rhd_id',
+		'pg_id',
 		'rhd_cod_ejecutivo',
 		'rhd_fecha_historial',
 		'rhd_parametro',
 		'rhd_valor',
-		'rhd_fecha_ingreso',
 		/*
+		'rhd_semana',
+		'rhd_tipo',
+		'rhd_estado',
+		'rhd_fecha_ingreso',
 		'rhd_fecha_modificacion',
 		'rhd_usuario_ingresa_modifica',
-		'rhd_observacion_supervisor',
-		'rhd_usuario_supervisor',
-		'rhd_fecha_modifica_observacion',
-		'rhd_semana',
-		'rhd_fecha_ingreso_observacion',
 		*/
 		array(
 			'class'=>'CButtonColumn',

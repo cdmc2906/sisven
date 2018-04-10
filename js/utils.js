@@ -43,7 +43,7 @@ function setMensaje(clase, message)
     $("ul.flashes").html(message);
 
     showEffect();
-    hideEffect();
+//    hideEffect();
     return false;
 }
 
@@ -96,28 +96,34 @@ function mostrarVentanaMensaje(mensaje, tituloDialogo, clase) {
 }
 
 function ConfigDatePickersReporte(inicio, fin) {
-//    alert(inicio+'-'+fin);
     $(inicio)
             .datepicker({
                 format: "yyyy-mm-dd",
                 startView: 1,
                 language: "es",
                 autoclose: true
-            }
-            )
+            })
             .on('changeDate', function (e) {
                 var selectedDate = $(inicio).val();
 //        alert(selectedDate);
                 $(fin).datepicker('setStartDate', selectedDate);
 //                alert(selectedDate);
-                var fechaHoy = new Date();
+//                var fechaHoy = new Date();
 //                alert(fechaHoy);
-                var fechaMaxima = new Date(e.date);
-                fechaMaxima.setMonth(fechaMaxima.getMonth() + 12);
-                var anio = fechaMaxima.getFullYear();
-                var mes = fechaMaxima.getMonth();
-                var dia = new Date(fechaMaxima.getFullYear(), fechaMaxima.getMonth(), 0).getDate();
+//                var fechaInicio = new Date.parse(selectedDate);
+//                alert (fechaInicio)
+                var fechaInicio = new Date(e.date);
+//                fechaMaxima.setMonth(fechaMaxima.getMonth() + 12);
+//alert(fechaMaxima)
+//                var anio = selectedDate.getFullYear();
+//                var mes = selectedDate.getMonth();
+//                var dia = new Date(fechaMaxima.getFullYear(), fechaMaxima.getMonth(), 0).getDate();
 
+//alert(fechaInicio.getFullYear())
+//alert(fechaInicio.getMonth()+1)
+//                alert(fechaInicio.getDate())
+                var fechaMaxima = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth() + 2, 0);
+//                alert(fechaMaxima)
 //                if (fechaHoy > fechaMaxima)
 //                {
 //                    var fecha = anio + "/" + mes + "/" + dia;
@@ -125,7 +131,7 @@ function ConfigDatePickersReporte(inicio, fin) {
 //                    $(fin).datepicker('setDate', fecha);
 //                } else
 //                {
-                $(fin).datepicker('setEndDate', fechaHoy);
+                $(fin).datepicker('setEndDate', fechaMaxima);
 //                    $(fin).datepicker('setDate', fechaHoy.getFullYear() + '/' + (fechaHoy.getMonth() + 1) + '/' + fechaHoy.getDate());
 //                }
             }
@@ -145,10 +151,56 @@ function ConfigDatePickersReporte(inicio, fin) {
             }
             );
 }
+/*
+ * tipoRango : 1 semanal . 2 mensual
+ * 
+ */
+function ConfigDatePickersRango(inicio, fin, tipoRango, rango) {
+    var fechaHoy = new Date();
+    var fechaMinima = new Date(fechaHoy.getFullYear(), fechaHoy.getMonth(), 1);
+    $(inicio)
+            .datepicker({
+                format: "yyyy-mm-dd",
+                startView: 1,
+                language: "es",
+                autoclose: true,
+            }
+            ).datepicker('setStartDate', fechaMinima)
+            .on('changeDate', function (e) {
+                var selectedDate = $(inicio).val();
+                $(fin).datepicker('setStartDate', selectedDate);
+                var fechaInicio = new Date(e.date);
+                var fechaMaxima;
+                switch (tipoRango) {
+                    case 1:
+                        fechaMaxima = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), fechaInicio.getDate() + rango);
+                        break;
+
+                    case 2:
+                        //agrego 1 al mes porque getmonth devuelve el numero de mes mes 1. es decir enero es 0
+                        fechaMaxima = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth() + 1 + rango, 0);
+                        break;
+                }
+                $(fin).datepicker('setEndDate', fechaMaxima);
+            }
+            );
+
+    $(fin)
+            .datepicker({
+                format: "yyyy-mm-dd",
+                startView: 1,
+                language: "es",
+                autoclose: true
+            }
+            )
+            .on('changeDate', function (e) {
+                var maxDate = new Date();
+                $(inicio).datepicker('setEndDate', maxDate);
+            }
+            );
+}
 
 function ConfigDatePickersReporteSemana(inicio, fin) {
-//    alert(inicio+'-'+fin);
-
     $(inicio)
             .datepicker({
                 format: "yyyy-mm-dd",

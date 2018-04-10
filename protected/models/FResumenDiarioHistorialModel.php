@@ -101,29 +101,13 @@ class FResumenDiarioHistorialModel extends DAOModel {
     }
 
     public function getDatosRevisionesEjecutivo($fechaInicioGestion, $fechaFinGestion, $ejecutivo) {
-//        $sql = "
-//            select 
-//                    distinct rhd_fecha_historial as indicador,'1' as tipo
-//                from tb_resumen_historial_diario 
-//                where 1=1
-//                    and rhd_fecha_historial between '" . $fechaInicioGestion . "' and '" . $fechaFinGestion . "'
-//                    and rhd_cod_ejecutivo='" . $ejecutivo . "'
-//            union
-//            select 
-//                    distinct rhd_parametro as indicador,'2' as tipo
-//                from tb_resumen_historial_diario 
-//                where 1=1
-//                    and rhd_fecha_historial between '" . $fechaInicioGestion . "' and '" . $fechaFinGestion . "'
-//                    and rhd_cod_ejecutivo='" . $ejecutivo . "'
-//            ;
-//            ";
         $sql = "
-            select distinct date(h_fecha) as fecha_gestion
-                from tb_historial_mb
-                where 1=1
-                    and h_fecha >='" . $fechaInicioGestion . " 00:00' and h_fecha <='" . $fechaFinGestion . " 23:59'
-                    and h_usuario='" . $ejecutivo . "'
-                order by h_fecha     
+            select distinct date(drh_fecha_ruta) as fecha_gestion 
+                from tb_detalle_revision_historial 
+                where 1=1 
+                    and drh_fecha_ruta between '" . $fechaInicioGestion . "' and '" . $fechaFinGestion . "'
+                    and drh_codigo_ejecutivo ='" . $ejecutivo . "'
+                order by drh_fecha_ruta 
                 ;";
 //           var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
