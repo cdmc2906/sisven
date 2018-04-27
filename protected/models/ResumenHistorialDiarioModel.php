@@ -13,6 +13,7 @@
  * @property integer $rhd_semana
  * @property string $rhd_tipo
  * @property integer $rhd_estado
+ * @property integer $rhd_orden
  * @property string $rhd_fecha_ingreso
  * @property string $rhd_fecha_modificacion
  * @property integer $rhd_usuario_ingresa_modifica
@@ -38,14 +39,14 @@ class ResumenHistorialDiarioModel extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('pg_id, rhd_semana, rhd_estado, rhd_usuario_ingresa_modifica', 'numerical', 'integerOnly'=>true),
+			array('pg_id, rhd_semana, rhd_estado, rhd_orden, rhd_usuario_ingresa_modifica', 'numerical', 'integerOnly'=>true),
 			array('rhd_cod_ejecutivo', 'length', 'max'=>20),
 			array('rhd_parametro, rhd_tipo', 'length', 'max'=>50),
 			array('rhd_valor', 'length', 'max'=>250),
 			array('rhd_fecha_historial, rhd_fecha_ingreso, rhd_fecha_modificacion', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('rhd_id, pg_id, rhd_cod_ejecutivo, rhd_fecha_historial, rhd_parametro, rhd_valor, rhd_semana, rhd_tipo, rhd_estado, rhd_fecha_ingreso, rhd_fecha_modificacion, rhd_usuario_ingresa_modifica', 'safe', 'on'=>'search'),
+			array('rhd_id, pg_id, rhd_cod_ejecutivo, rhd_fecha_historial, rhd_parametro, rhd_valor, rhd_semana, rhd_tipo, rhd_estado, rhd_orden, rhd_fecha_ingreso, rhd_fecha_modificacion, rhd_usuario_ingresa_modifica', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -76,6 +77,7 @@ class ResumenHistorialDiarioModel extends CActiveRecord
 			'rhd_semana' => 'Rhd Semana',
 			'rhd_tipo' => 'Rhd Tipo',
 			'rhd_estado' => 'Rhd Estado',
+			'rhd_orden' => 'Rhd Orden',
 			'rhd_fecha_ingreso' => 'Rhd Fecha Ingreso',
 			'rhd_fecha_modificacion' => 'Rhd Fecha Modificacion',
 			'rhd_usuario_ingresa_modifica' => 'Rhd Usuario Ingresa Modifica',
@@ -109,6 +111,7 @@ class ResumenHistorialDiarioModel extends CActiveRecord
 		$criteria->compare('rhd_semana',$this->rhd_semana);
 		$criteria->compare('rhd_tipo',$this->rhd_tipo,true);
 		$criteria->compare('rhd_estado',$this->rhd_estado);
+		$criteria->compare('rhd_orden',$this->rhd_orden);
 		$criteria->compare('rhd_fecha_ingreso',$this->rhd_fecha_ingreso,true);
 		$criteria->compare('rhd_fecha_modificacion',$this->rhd_fecha_modificacion,true);
 		$criteria->compare('rhd_usuario_ingresa_modifica',$this->rhd_usuario_ingresa_modifica);

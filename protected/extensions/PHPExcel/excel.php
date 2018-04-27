@@ -62,122 +62,87 @@ class excel {
         }
     }
 
-    public function MapeoCustomizadoHistorial($fechasRevisadas, $cantidadFilas, $reporteConPrecision, $reporteSinPrecision, $precision, $ejecutivo, $encabezado, $footer) {
-        $row_offset = 1;
-        $styleArrayCell = array(
-            'font' => array(
-                'bold' => true,
-            ),
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-            ),
-            'borders' => array(
-                'outline' => array(
-                    'style' => PHPExcel_Style_Border::BORDER_THIN,
-                    'color' => array('argb' => '00000000'),
+    public function MapeoCustomizadoHistorial($cantidadFilas, $reportesConPrecision, $encabezado, $footer) {
+
+        $iterador = 0;
+        foreach ($reportesConPrecision as $itemEjecutivo) {
+            $reporteConPrecision = $itemEjecutivo["DATOS_EJECUTIVO"];
+            $fechasRevisadas = $itemEjecutivo["FECHAS_GESTION"];
+
+            $objWorkSheet = $this->objPHPExcel->createSheet($iterador); //Setting index when creating
+            $objWorkSheet->setTitle($reporteConPrecision[0][0]["EJECUTIVO"]);
+
+            $row_offset = 1;
+            $styleArrayCell = array(
+                'font' => array(
+                    'bold' => true,
                 ),
-            ),
-        );
-
-        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row_offset, 'REPORTE CON PRECISION ' . $precision . ' METROS');
-        $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn(0)->setAutoSize(true);
-        $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row_offset)->applyFromArray($styleArrayCell);
-        $row_offset++;
-        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row_offset, 'PARAMETRO');
-        $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn(0)->setAutoSize(true);
-        $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row_offset)->applyFromArray($styleArrayCell);
-
-        for ($iteradorTitulos = 1; $iteradorTitulos <= count($fechasRevisadas); $iteradorTitulos++) {
-            $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($iteradorTitulos, $row_offset, $fechasRevisadas[$iteradorTitulos - 1]);
-            $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($iteradorTitulos)->setAutoSize(true);
-            $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($iteradorTitulos, $row_offset)->applyFromArray($styleArrayCell);
-        }
-        $row_offset++;
-        $fResumenHistorial = new FResumenDiarioHistorialModel();
-        #DEFINICION DE ESTILO PARA CADA CELDA
-        $styleArray = array(
-            'alignment' => array(
-                'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-            ),
-            'borders' => array(
-                'outline' => array(
-                    'style' => PHPExcel_Style_Border::BORDER_THIN,
-                    'color' => array('argb' => '00000000'),
+                'alignment' => array(
+                    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
                 ),
-            ),
-        );
-        /* EXPORTAR DATOS DE RESUMEN CON PRECISION */
-        for ($fila = 0; $fila < $cantidadFilas; $fila++) {
-//            var_dump($reporteConPrecision);die();
-            $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $fila + $row_offset, $reporteConPrecision[0][$fila]['PARAMETRO']);
-            $this->objPHPExcel->getActiveSheet()
-                    ->getStyleByColumnAndRow(0, $fila + $row_offset)
-                    ->getAlignment()
-                    ->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-            $this->objPHPExcel->getActiveSheet()
-                    ->getStyleByColumnAndRow(0, $fila + $row_offset)
-                    ->getAlignment()
-                    ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-            $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $fila + $row_offset)->applyFromArray($styleArray);
-        }
-//        var_dump($this->objPHPExcel);die();
-        $column_offset = 1;
-        for ($columna = 0; $columna < count($reporteConPrecision); $columna++) {
-            for ($fila = 0; $fila < $cantidadFilas; $fila++) {
-                $this->objPHPExcel->getActiveSheet()
-                        ->setCellValueByColumnAndRow($columna + $column_offset, ($fila + $row_offset), $reporteConPrecision[$columna][$fila]['VALOR']);
-                $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($columna + $column_offset, ($fila + $row_offset))->applyFromArray($styleArray);
-            }
-        }
-        
-        //AGREGO 4 FILAS PARA SEPARAR ENTRE LOS REGISTROS CON PRECISIÓN Y SIN PRESICION
-        $row_offset = $cantidadFilas + 4;
+                'borders' => array(
+                    'outline' => array(
+                        'style' => PHPExcel_Style_Border::BORDER_THIN,
+                        'color' => array('argb' => '00000000'),
+                    ),
+                ),
+            );
 
-        if (count($reporteSinPrecision)) {
-            /* EXPORTAR DATOS DE RESUMEN SIN PRECISION */
-            $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row_offset, 'REPORTE SIN PRECISION');
-            $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn(0)->setAutoSize(true);
-            $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row_offset)->applyFromArray($styleArrayCell);
+            $objWorkSheet->setCellValueByColumnAndRow(0, $row_offset, 'REPORTE CON PRECISION METROS' . ' ' . $reporteConPrecision[0][0]["EJECUTIVO"]);
+            $objWorkSheet->getColumnDimensionByColumn(0)->setAutoSize(true);
+            $objWorkSheet->getStyleByColumnAndRow(0, $row_offset)->applyFromArray($styleArrayCell);
             $row_offset++;
-            $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $row_offset, 'PARAMETRO');
-            $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn(0)->setAutoSize(true);
-            $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $row_offset)->applyFromArray($styleArrayCell);
+            $objWorkSheet->setCellValueByColumnAndRow(0, $row_offset, 'PARAMETRO');
+            $objWorkSheet->getColumnDimensionByColumn(0)->setAutoSize(true);
+            $objWorkSheet->getStyleByColumnAndRow(0, $row_offset)->applyFromArray($styleArrayCell);
 
             for ($iteradorTitulos = 1; $iteradorTitulos <= count($fechasRevisadas); $iteradorTitulos++) {
-                $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($iteradorTitulos, $row_offset, $fechasRevisadas[$iteradorTitulos - 1]);
-                $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($iteradorTitulos)->setAutoSize(true);
-                $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($iteradorTitulos, $row_offset)->applyFromArray($styleArrayCell);
+                $objWorkSheet->setCellValueByColumnAndRow($iteradorTitulos, $row_offset, $fechasRevisadas[$iteradorTitulos - 1]);
+                $objWorkSheet->getColumnDimensionByColumn($iteradorTitulos)->setAutoSize(true);
+                $objWorkSheet->getStyleByColumnAndRow($iteradorTitulos, $row_offset)->applyFromArray($styleArrayCell);
             }
             $row_offset++;
-//        $cantidadFilas = 12;
-            if (count($reporteSinPrecision) > 0) {
+            $fResumenHistorial = new FResumenDiarioHistorialModel();
+            #DEFINICION DE ESTILO PARA CADA CELDA
+            $styleArray = array(
+                'alignment' => array(
+                    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                ),
+                'borders' => array(
+                    'outline' => array(
+                        'style' => PHPExcel_Style_Border::BORDER_THIN,
+                        'color' => array('argb' => '00000000'),
+                    ),
+                ),
+            );
+            /* EXPORTAR DATOS DE RESUMEN */
+            for ($fila = 0; $fila < $cantidadFilas; $fila++) {
+                $objWorkSheet->setCellValueByColumnAndRow(0, $fila + $row_offset, $reporteConPrecision[0][$fila]['PARAMETRO']);
+                $objWorkSheet
+                        ->getStyleByColumnAndRow(0, $fila + $row_offset)
+                        ->getAlignment()
+                        ->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                $objWorkSheet
+                        ->getStyleByColumnAndRow(0, $fila + $row_offset)
+                        ->getAlignment()
+                        ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                $objWorkSheet->getStyleByColumnAndRow(0, $fila + $row_offset)->applyFromArray($styleArray);
+            }
+            $column_offset = 1;
+            for ($columna = 0; $columna < count($reporteConPrecision); $columna++) {
                 for ($fila = 0; $fila < $cantidadFilas; $fila++) {
-                    $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow(0, $fila + $row_offset, $reporteSinPrecision[0][$fila]['PARAMETRO']);
-                    $this->objPHPExcel->getActiveSheet()
-                            ->getStyleByColumnAndRow(0, $fila + $row_offset)
-                            ->getAlignment()
-                            ->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-                    $this->objPHPExcel->getActiveSheet()
-                            ->getStyleByColumnAndRow(0, $fila + $row_offset)
-                            ->getAlignment()
-                            ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
-                    $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow(0, $fila + $row_offset)->applyFromArray($styleArray);
-                }
-                $column_offset = 1;
-                for ($columna = 0; $columna < count($reporteSinPrecision); $columna++) {
-                    for ($fila = 0; $fila < $cantidadFilas; $fila++) {
-                        $this->objPHPExcel->getActiveSheet()
-                                ->setCellValueByColumnAndRow($columna + $column_offset, ($fila + $row_offset), $reporteSinPrecision[$columna][$fila]['VALOR']);
-                        $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($columna + $column_offset, ($fila + $row_offset))->applyFromArray($styleArray);
-                    }
+                    $objWorkSheet->setCellValueByColumnAndRow($columna + $column_offset, ($fila + $row_offset), $reporteConPrecision[$columna][$fila]['VALOR']);
+                    $objWorkSheet->getStyleByColumnAndRow($columna + $column_offset, ($fila + $row_offset))->applyFromArray($styleArray);
                 }
             }
-        }
-        /* CONFIGURACION DE ENCABEZADOS Y PIE DE PAGINA DE IMPRESION */
-        $this->objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddHeader('&C&H' . $encabezado);
-        $this->objPHPExcel->getActiveSheet()->getHeaderFooter()->
-                setOddFooter('&L&B' . $this->objPHPExcel->getProperties()->getTitle() . '&C&B' . $footer . '&RPag. &P de &N');
-        $this->objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT);
+
+            /* CONFIGURACION DE ENCABEZADOS Y PIE DE PAGINA DE IMPRESION */
+            $objWorkSheet->getHeaderFooter()->setOddHeader('&C&H' . $encabezado);
+            $objWorkSheet->getHeaderFooter()->setOddFooter('&L&B' . $this->objPHPExcel->getProperties()->getTitle() . '&C&B' . $footer . '&RPag. &P de &N');
+            $objWorkSheet->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT);
+            $iterador++;
+        }//fin iteracion ejecutivos
+        $this->objPHPExcel->setActiveSheetIndex(0);
     }
 
     public function MapeoCustomizadoGestionValidacionMines($usuarios, $fechasRevisadas, $datosFechas, $horasRevisadas, $datosHoras, $encabezado, $footer) {

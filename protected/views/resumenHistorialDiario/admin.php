@@ -55,6 +55,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'rhd_semana',
 		'rhd_tipo',
 		'rhd_estado',
+		'rhd_orden',
 		'rhd_fecha_ingreso',
 		'rhd_fecha_modificacion',
 		'rhd_usuario_ingresa_modifica',

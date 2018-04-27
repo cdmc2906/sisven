@@ -84,6 +84,9 @@ class Libreria {
         Yii::app()->user->setFlash('resultadoGuardarRevisionAviso', null);
         Yii::app()->user->setFlash('resultadoGuardarRevisionOK', null);
 
+        unset(Yii::app()->session['detalleRevisionGuardar']);
+        unset(Yii::app()->session['resumenRevisionGuardar']);
+
         $response = new Response();
         $datos = array();
         $datosDetalleGrid = array();
@@ -194,6 +197,9 @@ class Libreria {
                         $inicioVisita = new DateTime('00:00:00');
                         $finVisita = new DateTime('00:00:00');
 
+                        $latitudHistorial = 0;
+                        $longitudHistorial = 0;
+
                         $tiempoGestion = '00:00:00';
                         $tiempoTraslado = '00:00:00';
 
@@ -219,10 +225,10 @@ class Libreria {
                                 #SE CUENTA LA CANTIDAD DE REGISTROS EN LA GESTION REVISADOS ANTES
                                 #SI ES MAYOR A CERO ENTONCES EL CLIENTE ANTERIOR NO TENIA CORDENADAS
                                 if (count($detalleTiemposGestion) > 0)
-                                    $distanciaEntreCliente = 'Sin coordenadas cliente anterior';
+                                    $distanciaEntreCliente = 0;
                                 #SI NO HAY CLIENTES ANTES, ENTONCES SE ESTA ANALIZANDO AL PRIMER CLIENTE GESTIONADO
                                 else
-                                    $distanciaEntreCliente = '-';
+                                    $distanciaEntreCliente = 0;
                             }
                             #ESTE CASO ES EL QUE APLICARIA PARA TODOS LOS CLIENTES QUE TENGAN COORDENADAS A PARTIR DEL SEGUNDO CLIENTE GESTIONADO
                             else {
@@ -391,7 +397,7 @@ class Libreria {
 
                         $totalVentaReportada = $cantidadVentaFueraRuta + $cantidadVentaRuta;
                         $totalVisitasEfectuadas = $visitasRuta + $visitasFueraRuta;
-                        $nivelCumplimiento = round(($visitasValidasRuta / $totalClientesRuta) * 100);
+                        $nivelCumplimiento = ($totalClientesRuta > 0) ? round(($visitasValidasRuta / $totalClientesRuta) * 100) : 0;
 
                         #FIN ANALISIS DE RUTA
                         #CONCATENACION DE NOMBRE CLIENTES, PARA QUE NO SE MUESTRE EL NOMBRE COMPLETO POR ESPACIO EN IMPRESION
@@ -458,7 +464,7 @@ class Libreria {
                             'drh_tipo_historial' => 'REV_HISTORIAL_DIARIO',
                             'pg_id' => Yii::app()->session['idPeriodoAbierto'],
                             'drh_semana' => $semanaRevision,
-                            'drh_fecha_revision' => date(FORMATO_FECHA),
+                            'drh_fecha_revision' => date(FORMATO_FECHA_LONG_4),
                             'drh_fecha_ruta' => $itemHistorial['FECHAVISITA'],
                             'drh_codigo_ejecutivo' => $ejecutivo[0]->e_usr_mobilvendor,
                             'drh_nombre_ejecutivo' => $ejecutivo[0]->e_nombre,
@@ -483,11 +489,12 @@ class Libreria {
                             'drh_tiempo_gestion' => $tiempoGestion,
                             'drh_tiempo_traslado' => $tiempoTraslado,
                             'drh_distancia_cli_eje' => $distanciaEntreEjecutivoCliente,
-                            'drh_distancia_cli_anterior' => $distanciaEntreCliente,
+                            'drh_distancia_cli_anterior' => isset($distanciaEntreCliente) ? $distanciaEntreCliente : 0,
                             'drh_fch_ingreso' => date(FORMATO_FECHA_LONG),
                             'drh_fch_modifica' => date(FORMATO_FECHA_LONG),
                             'drh_cod_usr_ing_mod' => Yii::app()->user->id,
                         );
+//                        var_dump($itemDetalleRevisionGuardar);die();
                         array_push($detalleRevisionGuardar, $itemDetalleRevisionGuardar);
                         unset($dat);
 
@@ -631,6 +638,7 @@ class Libreria {
 
                     $datosResumenGuardar = array();
 
+                    $iteradorOrdenResumen = 0;
                     foreach ($datosResumenGrid as $key => $filaGrid) {
                         foreach ($filaGrid as $clave => $valor) {
                             $resumenRuta = array(
@@ -649,6 +657,7 @@ class Libreria {
                                 'rhd_semana' => strval($this->weekOfMonth($fechagestion)),
                                 'rhd_tipo' => 'RES_REV_HISTORIAL_DIARIO',
                                 'rhd_estado' => 4,
+                                'rhd_orden' => $iteradorOrdenResumen,
                                 'rhd_fecha_ingreso' => date(FORMATO_FECHA_LONG),
                                 'rhd_fecha_modificacion' => date(FORMATO_FECHA_LONG),
                                 'rhd_usuario_ingresa_modifica' => Yii::app()->user->id,
@@ -679,6 +688,7 @@ class Libreria {
 
                             array_push($datosResumenGuardar, $itemResumenRutaGuardar);
                             unset($itemResumenRutaGuardar);
+                            $iteradorOrdenResumen++;
                         }//fin iteracion valores en fila
                     }//fin iteracion filas resumen
                     Yii::app()->session['resumenRevisionGuardar'] = $datosResumenGuardar;
@@ -900,6 +910,81 @@ class Libreria {
             $response->Result = $datos;
         }
         return $response;
+    }
+
+    function GuardarDetallesHistorialEjecutivo() {
+        $mensaje = '';
+        try {
+            if (count(Yii::app()->session['detalleRevisionGuardar']) > 0) {
+                $totalDetallesGuardados = 0;
+                $totalDetallesOmitidos = 0;
+
+                $dbConnection = new CI_DB_active_record(null);
+                $sql = $dbConnection->insert_batch('tb_detalle_revision_historial', Yii::app()->session['detalleRevisionGuardar']);
+                $sql = str_replace('"', '', $sql);
+                $connection = Yii::app()->db_conn;
+                $connection->active = true;
+                $transaction = $connection->beginTransaction();
+                $command = $connection->createCommand($sql);
+                $countInsertDetalles = $command->execute();
+                if ($countInsertDetalles > 0) {
+                    $transaction->commit();
+                    $totalDetallesGuardados = $countInsertDetalles;
+                } else {
+                    $transaction->rollback();
+                    $totalDetallesOmitidos += 1;
+                }
+                $connection->active = false;
+
+                if ($totalDetallesOmitidos > 0) {
+                    $mensaje = 'La revision ha sido guardada con errores';
+                    Yii::app()->user->setFlash('resultadoGuardarRevisionAviso', $mensaje);
+                } else {
+                    $mensaje = 'La revision ha sido guardada exitosamente';
+                    Yii::app()->user->setFlash('resultadoGuardarRevisionOK', $mensaje);
+                }
+            }
+        } catch (Exception $e) {
+            $mensaje = 'Se ha producido un error al guardar los registros';
+        }
+        return $mensaje;
+    }
+
+    function GuardarResumenHistorialEjecutivo() {
+        $mensaje = '';
+        try {
+            if (count(Yii::app()->session['resumenRevisionGuardar']) > 0) {
+                $totalResumenGuardados = 0;
+                $totalResumenOmitidos = 0;
+
+                $dbConnectionRes = new CI_DB_active_record(null);
+                $sql = $dbConnectionRes->insert_batch('tb_resumen_historial_diario', Yii::app()->session['resumenRevisionGuardar']);
+                $sql = str_replace('"', '', $sql);
+                $connection = Yii::app()->db_conn;
+                $connection->active = true;
+                $transaction = $connection->beginTransaction();
+                $command = $connection->createCommand($sql);
+                $countInsertDetalles = $command->execute();
+                if ($countInsertDetalles > 0) {
+                    $transaction->commit();
+                    $totalResumenGuardados = $countInsertDetalles;
+                } else {
+                    $transaction->rollback();
+                    $totalResumenOmitidos += 1;
+                }
+
+                if ($totalResumenOmitidos > 0) {
+                    $mensaje = 'La revision ha sido guardada con errores';
+                    Yii::app()->user->setFlash('resultadoGuardarRevisionAviso', $mensaje);
+                } else {
+                    $mensaje = 'La revision ha sido guardada exitosamente';
+                    Yii::app()->user->setFlash('resultadoGuardarRevisionOK', $mensaje);
+                }
+            }
+        } catch (Exception $e) {
+            $mensaje = 'Se ha producido un error al guardar los registros';
+        }
+        return $mensaje;
     }
 
 }

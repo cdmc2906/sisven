@@ -42,6 +42,10 @@
 	<?php echo CHtml::encode($data->rhd_estado); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('rhd_orden')); ?>:</b>
+	<?php echo CHtml::encode($data->rhd_orden); ?>
+	<br />
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('rhd_fecha_ingreso')); ?>:</b>
 	<?php echo CHtml::encode($data->rhd_fecha_ingreso); ?>
 	<br />

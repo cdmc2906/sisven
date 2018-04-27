@@ -68,6 +68,12 @@
 	</div>
 
 	<div class="row">
+		<?php echo $form->labelEx($model,'rhd_orden'); ?>
+		<?php echo $form->textField($model,'rhd_orden'); ?>
+		<?php echo $form->error($model,'rhd_orden'); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->labelEx($model,'rhd_fecha_ingreso'); ?>
 		<?php echo $form->textField($model,'rhd_fecha_ingreso'); ?>
 		<?php echo $form->error($model,'rhd_fecha_ingreso'); ?>

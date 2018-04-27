@@ -156,8 +156,8 @@ function ConfigDatePickersReporte(inicio, fin) {
  * 
  */
 function ConfigDatePickersRango(inicio, fin, tipoRango, rango) {
-    var fechaHoy = new Date();
-    var fechaMinima = new Date(fechaHoy.getFullYear(), fechaHoy.getMonth(), 1);
+//    var fechaHoy = new Date();
+//    var fechaMinima = new Date(fechaHoy.getFullYear(), fechaHoy.getMonth(), 1);
     $(inicio)
             .datepicker({
                 format: "yyyy-mm-dd",
@@ -165,7 +165,8 @@ function ConfigDatePickersRango(inicio, fin, tipoRango, rango) {
                 language: "es",
                 autoclose: true,
             }
-            ).datepicker('setStartDate', fechaMinima)
+            )
+//            .datepicker('setStartDate', fechaMinima)
             .on('changeDate', function (e) {
                 var selectedDate = $(inicio).val();
                 $(fin).datepicker('setStartDate', selectedDate);

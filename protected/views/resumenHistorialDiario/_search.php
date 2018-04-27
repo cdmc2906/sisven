@@ -57,6 +57,11 @@
 	</div>
 
 	<div class="row">
+		<?php echo $form->label($model,'rhd_orden'); ?>
+		<?php echo $form->textField($model,'rhd_orden'); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->label($model,'rhd_fecha_ingreso'); ?>
 		<?php echo $form->textField($model,'rhd_fecha_ingreso'); ?>
 	</div>

@@ -14,21 +14,6 @@ $this->pageTitle = $pagina_nombre;
 
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/reporte/RptResumenDiarioHistorial.js"; ?>"></script>
 
-<?php if (Yii::app()->user->hasFlash('resultadoGuardarRevisionOK')): ?>
-    <div class="flash-success">
-        <?php echo Yii::app()->user->getFlash('resultadoGuardarRevisionOK'); ?>
-    </div>
-<?php else: ?>
-    <div class=""></div>
-<?php endif; ?>
-<?php if (Yii::app()->user->hasFlash('resultadoGuardarRevisionAviso')): ?>
-    <div class="flash-notice">
-        <?php echo Yii::app()->user->getFlash('resultadoGuardarRevisionAviso'); ?>
-    </div>
-<?php else: ?>
-    <div class=""></div>
-<?php endif; ?>
-
 <div class="callout callout-info">
     <center>
         <p>Periodo semanal abierto : <b><?php
@@ -143,13 +128,13 @@ $this->pageTitle = $pagina_nombre;
                     , 'class' => 'btn btn-block btn-primary btn-sm'));
                 ?>
                 <?php
-                echo CHtml::button(
-                        'Guardar Revision'
-                        , array(
-                    'id' => 'btnGuardar'
-                    , 'class' => 'btn btn-block btn-info btn-sm'
-                    , 'disabled' => 'disabled'
-                    , 'submit' => array('rptResumenDiarioHistorial/GuardarRevision')));
+//                echo CHtml::button(
+//                        'Guardar Revision'
+//                        , array(
+//                    'id' => 'btnGuardar'
+//                    , 'class' => 'btn btn-block btn-info btn-sm'
+//                    , 'disabled' => 'disabled'
+//                    , 'submit' => array('rptResumenDiarioHistorial/GuardarRevision')));
                 ?>          
             </div>
         </div>
@@ -359,21 +344,21 @@ $this->pageTitle = $pagina_nombre;
                         </div>
                     </div>
                     <!--<br/>-->
-<!--                    <div  style="display: flex; justify-content: flex-start;">
-                        <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                            <h1>Comentario del supervisor de zona:</h1>
-                            <br/>
-                            <?php
+                    <!--                    <div  style="display: flex; justify-content: flex-start;">
+                                            <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                                                <h1>Comentario del supervisor de zona:</h1>
+                                                <br/>
+                    <?php
 //                                echo CHtml::textArea('d_comentarioSupervision', '', array(
 //                                    'placeholder' => 'Ingrese un nuevo comentario'
 //                                    , 'readonly' => false
 //                                    , 'onblur' => 'setComentarioSupervisor(document.getElementById(\'d_comentarioSupervision\').value)'
 //                                    , 'id' => 'd_comentarioSupervision', 'cols' => 50, 'rows' => 2, 'maxlength' => 200)
 //                                );
-                            ?>  
-                            <h1>Comentarios anteriores:</h1>
-                            <br/>
-                            <?php
+                    ?>  
+                                                <h1>Comentarios anteriores:</h1>
+                                                <br/>
+                    <?php
 //                                echo CHtml::textArea('d_comentariosSupervision', '', array(
 //                                    'placeholder' => 'Ingrese el comentario'
 //                                    , 'readonly' => TRUE
@@ -383,10 +368,10 @@ $this->pageTitle = $pagina_nombre;
 //                                    , 'rows' => 5
 //                                    , 'maxlength' => 100)
 //                                );
-                            ?>      
-                        </div>
-
-                    </div>-->
+                    ?>      
+                                            </div>
+                    
+                                        </div>-->
                     <!--<br/>-->
                     <div class="margin">
                         <div class="btn-group">

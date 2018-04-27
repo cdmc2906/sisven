@@ -29,6 +29,7 @@ $this->pageTitle = $pagina_nombre;
     ));
     ?>
     <div class="row">
+
         <?php
         unset(Yii::app()->session['idPeriodoAbierto']);
         unset(Yii::app()->session['fechaInicioPeriodo']);
@@ -46,13 +47,33 @@ $this->pageTitle = $pagina_nombre;
             pg_estado=1
             and pg_tipo=\'SEMANAL\';');
         $resultado1 = $command1->queryRow();
-//        var_dump($resultado1);die();
-        $periodoAbierto = $resultado1['descripcion'];
+//                var_dump($resultado1);die();
+        if ($resultado1) {
 
-        Yii::app()->session['idPeriodoAbierto'] = $resultado1['idperiodo'];
-        Yii::app()->session['fechaInicioPeriodo'] = $resultado1['fechainicio'];
-        Yii::app()->session['fechaFinPeriodo'] = $resultado1['fechafin'];
+            $periodoAbierto = $resultado1['descripcion'];
 
+            Yii::app()->session['idPeriodoAbierto'] = $resultado1['idperiodo'];
+            Yii::app()->session['fechaInicioPeriodo'] = $resultado1['fechainicio'];
+            Yii::app()->session['fechaFinPeriodo'] = $resultado1['fechafin'];
+        }
+//echo $periodoAbierto;
+        ?>
+        <?php if ($resultado1): ?>
+
+            <div class="callout callout-info">
+                <center>
+                    <p>Periodo semanal abierto : <b><?php echo $periodoAbierto; ?>
+                        </b></p>
+                </center>
+            </div>
+        <?php else: ?>
+            <div class="callout callout-danger">
+                <center>
+                    <p><b>** NO EXISTE PERIODO SEMANAL ABIERTO **</b></p>
+                </center>
+            </div>
+        <?php endif; ?>
+        <?php
         $command = Yii::app()->db->createCommand('
                         select 
                                 r_fch_ingreso AS fecha
@@ -62,12 +83,6 @@ $this->pageTitle = $pagina_nombre;
         $resultado = $command->queryRow();
         $ultimaFecha = DateTime::createFromFormat('Y-m-d H:i:s', $resultado['fecha'])->format(FORMATO_FECHA_LONG_2);
         ?>
-        <div class="callout callout-success">
-            <center>
-                <h4><?php echo $form->labelEx($model, 'periodoAbierto'); ?></h4>
-                <p> <b><?php echo $periodoAbierto; ?></b></p>
-            </center>
-        </div>
         <div class="callout callout-info">
             <center>
                 <h4><?php echo $form->labelEx($model, 'fechaUltimaCarga'); ?></h4>
@@ -100,19 +115,28 @@ $this->pageTitle = $pagina_nombre;
     </div>
     <div class="row">
         <?php
-        echo CHtml::submitButton('Cargar', array(
-            'id' => 'btnCargar',
-            'class' => 'btn btn-primary'));
+        if ($resultado1) {
+            echo CHtml::submitButton('Cargar', array(
+                'id' => 'btnCargar',
+                'class' => 'btn btn-primary'));
+        } else {
+            echo CHtml::submitButton('Cargar', array(
+                'id' => 'btnCargar',
+                'class' => 'btn btn-primary',
+                'disabled' => 'disabled'
+            ));
+        }
         ?>              
         <?php
-        echo CHtml::ajaxSubmitButton('Guardar', CHtml::normalizeUrl(
-                        array(
-                            'cargarutasmb/guardarRutas',
-                            'render' => true)), array(
-            'dataType' => 'json',
-            'type' => 'post',
-            'beforeSend' => 'function() {blockUIOpen();}',
-            'success' => 'function(data) {
+        if ($resultado1) {
+            echo CHtml::ajaxSubmitButton('Guardar', CHtml::normalizeUrl(
+                            array(
+                                'cargarutasmb/guardarRutas',
+                                'render' => true)), array(
+                'dataType' => 'json',
+                'type' => 'post',
+                'beforeSend' => 'function() {blockUIOpen();}',
+                'success' => 'function(data) {
                         blockUIClose();
                         setMensaje(data.ClassMessage, data.Message);
                         if(data.Status==1){
@@ -126,23 +150,30 @@ $this->pageTitle = $pagina_nombre;
                             });
                             }
                         } ',
-            'error' => 'function(xhr,st,err) {
+                'error' => 'function(xhr,st,err) {
                             blockUIClose();
                             RedirigirError(xhr.status);
                         }'
-                ), array('id' => 'btnGenerate', 'class' => 'btn btn-success'));
+                    ), array('id' => 'btnGenerate', 'class' => 'btn btn-success'));
+        } else {
+            echo CHtml::submitButton('Guardar', array(
+                'id' => 'btnCargar',
+                'class' => 'btn btn-success',
+                'disabled' => 'disabled'
+            ));
+        }
         ?>         
         <?php
         echo CHtml::Button('Limpiar', array('id' => 'btnLimpiar', 'class' => 'btn btn-danger'));
         ?>
     </div>
 
-    <?php $this->endWidget(); ?>
+<?php $this->endWidget(); ?>
 
     <header class="">
         <h2><strong>Detalle archivo Rutas</strong></h2>
     </header>
     <div class="row">
-        <?php $this->renderPartial('/shared/_bodygrid'); ?>
+<?php $this->renderPartial('/shared/_bodygrid'); ?>
     </div>
 </div>

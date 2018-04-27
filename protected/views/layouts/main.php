@@ -498,8 +498,8 @@
 //                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
                                                 ),
                                                 array(
-                                                    'label' => 'Resumen semanal'
-                                                    , 'url' => array('/RptResumenHistorialPorFecha/')
+                                                    'label' => 'Cierre Periodo'
+                                                    , 'url' => array('/CierrePeriodo/')
 //                                                    , 'visible' => $verMenusAdmin
 //                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
                                                 ),

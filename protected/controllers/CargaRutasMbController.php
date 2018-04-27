@@ -198,7 +198,7 @@ class CargaRutasMbController extends Controller {
         return;
     }
 
-    private function GenerarHistorial($rutaEnBase, $tipoControlCambio) {
+    private function GenerarHistorial($rutaEnBase, $tipoControlCambio, $row) {
         $cambio = '';
         switch ($tipoControlCambio) {
             case 1:
@@ -298,7 +298,7 @@ class CargaRutasMbController extends Controller {
                     $rutaEnBase["r_secuencia"] != $row['SECUENCIA'] ||
                     $rutaEnBase["r_estatus"] != $row['ESTATUS'])) {
 
-                GenerarHistorial($rutaEnBase, 1);
+                $this->GenerarHistorial($rutaEnBase, 1, $row);
                 $rutaEnBase->delete();
             }
 
@@ -345,9 +345,11 @@ class CargaRutasMbController extends Controller {
         );
 //        var_dump($rutasEliminar,Yii::app()->session['idPeriodoAbierto']);die();
 
+
         foreach ($rutasEliminar as $rutaEliminar) {
-            GenerarHistorial($rutaEliminar, 2);
-            $rutaEnBase->delete();
+            $dummy = array();
+            $this->GenerarHistorial($rutaEliminar, 2, $dummy);
+            $rutaEliminar->delete();
         }
 
         return $datos;

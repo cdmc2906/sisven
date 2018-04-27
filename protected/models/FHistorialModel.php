@@ -16,6 +16,23 @@
  */
 class FHistorialModel extends DAOModel {
 
+    public function getFechasHistorialxPeriodo($fechaInicioPeriodo, $fechaFinPeriodo, $semana, $accion = 'Inicio Visita') {
+        $sql = "
+            select distinct date(h_fecha) as fecha
+                from tb_historial_mb
+                where 1=1
+                    and h_fecha between '".$fechaInicioPeriodo."' and '".$fechaFinPeriodo."'
+                    and h_accion='".$accion."'
+                    and h_semana=".$semana.";
+            ";
+//   var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
     public function getHistorialxVendedorxFecha($accion = 'Inicio Visita', $fechagestion, $ejecutivo) {
         $sql = "
             SELECT 

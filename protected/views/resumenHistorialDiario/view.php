@@ -30,6 +30,7 @@ $this->menu=array(
 		'rhd_semana',
 		'rhd_tipo',
 		'rhd_estado',
+		'rhd_orden',
 		'rhd_fecha_ingreso',
 		'rhd_fecha_modificacion',
 		'rhd_usuario_ingresa_modifica',

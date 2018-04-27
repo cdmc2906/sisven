@@ -101,6 +101,7 @@ class FResumenDiarioHistorialModel extends DAOModel {
     }
 
     public function getDatosRevisionesEjecutivo($fechaInicioGestion, $fechaFinGestion, $ejecutivo) {
+//        var_dump($fechaInicioGestion,$fechaFinGestion);die();
         $sql = "
             select distinct date(drh_fecha_ruta) as fecha_gestion 
                 from tb_detalle_revision_historial 
