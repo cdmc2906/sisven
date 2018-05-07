@@ -303,12 +303,12 @@ class CargaRutasMbController extends Controller {
             }
 
             $exisArray = false;
-            foreach ($datosRutas as $item) {
-                $exisArray = in_array($row['CLIENTE'], $item);
-                if ($exisArray)
-                    break;
-            }
-            if (!$exisArray) {
+//            foreach ($datosRutas as $item) {
+//                $exisArray = in_array($row['CLIENTE'], $item);
+//                if ($exisArray)
+//                    break;
+//            }
+//            if (!$exisArray) {
                 $data = array(
                     'r_ruta' => ($row['RUTA'] == '') ? null : $row['RUTA'],
                     'pg_id' => Yii::app()->session['idPeriodoAbierto'],
@@ -331,9 +331,9 @@ class CargaRutasMbController extends Controller {
 
                 array_push($datosRutas, $data);
                 unset($data);
-            } else {
-                Yii::app()->session['itemRutaDuplicado'] = Yii::app()->session['itemRutaDuplicado'] + 1;
-            }
+//            } else {
+//                Yii::app()->session['itemRutaDuplicado'] = Yii::app()->session['itemRutaDuplicado'] + 1;
+//            }
         }
 
         $datos['rutasmb'] = $datosRutas;

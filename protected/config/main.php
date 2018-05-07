@@ -132,6 +132,13 @@ return array(
         ),
         // database settings are configured in database.php
         'db' => require(dirname(__FILE__) . '/database.php'),
+//        'db_conn' => array(
+//            'connectionString' => 'sqlsrv:server=localhost;database=tcc_control_ruta',
+//            'username' => 'sa',
+//            'password' => 'Admin2016..',
+//            'charset' => 'utf8',
+//        ),
+//        
         'db_conn' => array(
             // uncomment the following lines to use a PostgreSQL database
             'class' => 'CDbConnection',

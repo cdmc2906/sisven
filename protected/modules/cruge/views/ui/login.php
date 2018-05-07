@@ -19,6 +19,7 @@
     ?>
 
     <div class="form-group has-feedback">
+        <span class="input-group-addon">USUARIO <i class="fa fa-user"></i></span>
         <?php
         echo $form->textField(
                 $model, 'username', array('class' => 'form-control',
@@ -26,7 +27,8 @@
         ));
         ?>
 
-        <span class="glyphicon fa-user form-control-feedback"></span>
+            <!--<span class="glyphicon fa-user form-control-feedback"></span>-->
+
         <div class="form-group has-error">
             <?php echo $form->error($model, 'username', array('class' => 'help-block')); ?>
         </div>
@@ -35,8 +37,10 @@
 
     <div class="form-group has-feedback">
 
+        <span class="input-group-addon">CLAVE <i class="fa fa-lock"></i></span>
         <?php echo $form->passwordField($model, 'password', array('class' => 'form-control', 'placeholder' => 'Clave')); ?>
-        <span class="glyphicon fa-lock form-control-feedback"></span>
+        <!--<span class="glyphicon fa-lock form-control-feedback"></span>-->
+
         <?php // echo $form->labelEx($model, 'password');  ?>
         <div class="form-group has-error">
             <?php echo $form->error($model, 'password', array('class' => 'help-block')); ?>
@@ -61,13 +65,13 @@
     <div class="form-group has-feedback">
         <?php echo Yii::app()->user->ui->passwordRecoveryLink; ?>
     </div>
-<!--    <div class="form-group has-feedback">
+    <!--    <div class="form-group has-feedback">
 
-        <?php
+    <?php
 //        if (Yii::app()->user->um->getDefaultSystem()->getn('registrationonlogin') === 1)
 //            echo Yii::app()->user->ui->registrationLink;
-        ?>
-    </div>-->
+    ?>
+        </div>-->
     <!--</div>-->
 
     <?php

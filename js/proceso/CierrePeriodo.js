@@ -1,17 +1,16 @@
 $(document).ready(function () {
     ConfigurarGrid();
-//    $("#btnBuscarPeriodos").click(function () {
-    mostrarPeriodos();
-//    });
-    document.getElementById("btnReversarCierre").disabled = true;
-    document.getElementById("btnExportarResumen").disabled = true;
+
+    $("#btnBuscarPeriodos").click(function () {
+        mostrarPeriodos();
+        document.getElementById("btnReversarCierre").disabled = true;
+        document.getElementById("btnExportarResumen").disabled = true;
+        $("#tblGestionesPeriodo").jqGrid("clearGridData", true).trigger("reloadGrid");
+    });
 
     $("#btnExcel").click(function () {
         GenerarDocumentoReporte('GenerateExcel');
     });
-//    $("#btnGenerate").click(function () {
-//        document.getElementById("btnExcel").disabled = false;
-//    });
 
     $("#btnReversarCierre").click(function () {
         ReversarCierre();
@@ -69,16 +68,11 @@ function ConfigurarGrid() {
             , groupOrder: ['dsc', 'dsc']
                     // , groupSummary: [true, true]
         },
-//        caption:"Periodos gestion",
         onSelectRow: function (idFilaSeleccionada) {
-//            $("#tblPeriodos").jqGrid("clearGridData", true).trigger("reloadGrid");
-//            $("#tblGestionesPeriodo").jqGrid("clearGridData", true).trigger("reloadGrid");
+            $("#tblGestionesPeriodo").jqGrid("clearGridData", true).trigger("reloadGrid");
+
             var fila = jQuery("#tblPeriodos").jqGrid('getRowData', idFilaSeleccionada);
             jQuery("#tblGestionesPeriodo").jqGrid('setCaption', "Detalle " + fila.PERIODO).trigger('reloadGrid');
-
-//            
-//            $("#tblGestionesPeriodo").trigger("reloadGrid");
-
             mostrarDetallesPeriodo(fila.ID);
         }
     }
@@ -179,8 +173,6 @@ function mostrarPeriodos() {
 }
 
 function mostrarDetallesPeriodo(idPeriodo) {
-//    alert(idPeriodo)
-
     $.ajax(
             {
                 method: "POST",
@@ -197,28 +189,22 @@ function mostrarDetallesPeriodo(idPeriodo) {
                 success: function (data)
                 {
                     blockUIClose();
-//                    alert(data.Status)
                     if (data.Status == 1) {
                         var datosResult = data.Result;
-//                        alert(datosResult.toSource())
-//                        alert(datosResult['activarBotones'].toSource())
-//                        document.getElementById("btnReversarCierre").disabled = false;
-//                        document.getElementById("btnExportarResumen").disabled = false;
-alert(datosResult['activarBotones']);
-                        if (datosResult['activarBotones'])
+                        var gestiones = datosResult['resumenesPeriodo'].length;
+//                      
+                        if (gestiones > 0)
                         {
-                            $("#tblGestionesPeriodo").setGridParam({datatype: 'jsonstring', datastr: datosResult['datos']}).trigger('reloadGrid');
                             document.getElementById("btnReversarCierre").disabled = false;
                             document.getElementById("btnExportarResumen").disabled = false;
-
                         } else {
-                            alert("El periodo seleccionado se encuentra abierto");
-//                            $("#tblGestionesPeriodo").jqGrid("clearGridData", true).trigger("reloadGrid");
-//                            $("#tblGestionesPeriodo").trigger("reloadGrid");
-
+//                            alert("El periodo seleccionado se encuentra abierto");
                             document.getElementById("btnReversarCierre").disabled = true;
                             document.getElementById("btnExportarResumen").disabled = true;
                         }
+                        $("#tblGestionesPeriodo").setGridParam({datatype: 'jsonstring', datastr: datosResult['resumenesPeriodo']}).trigger('reloadGrid');
+
+
                     } else {
                         //to do
                     }

@@ -41,12 +41,11 @@ class CierrePeriodoController extends Controller {
         Yii::app()->session['finPeriodoSeleccionado'] = $periodoSeleccionado[0]['pg_fecha_fin'];
 
         $fResumenRevision = new FResumenPeriodoModel();
-        $resumenes['datos'] = $fResumenRevision->getResumenxPeriodo($_POST["idPeriodo"]);
-//        var_dump(count($resumenes['datos']));die();
-        $resumenes['activarBotones'] = (count($resumenes['datos']) > 0) ? true : false;
-//        var_dump($resumenes);die();
+
+        $resumenes['resumenesPeriodo'] = $fResumenRevision->getResumenxPeriodo($_POST["idPeriodo"]);
+
         $response->Result = $resumenes;
-        $response->Status= SUCCESS;
+        $response->Status = SUCCESS;
         $this->actionResponse(null, null, $response);
         return;
     }

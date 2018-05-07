@@ -63,9 +63,6 @@ function ConfigurarGrids()
                 , caption: "Meses carga"
                 , hidegrid: false
                 , onSelectRow: function (idFilaSeleccionada) {
-//                    document.getElementById("btnExportarResultados").disabled = false;
-//                    document.getElementById("btnExportarMinesSinGestion").disabled = false;
-//                    document.getElementById("btnExportarGestion").disabled = false;
                     $("#tblResultados").jqGrid("clearGridData", true).trigger("reloadGrid");
                     $("#tblGestionxAgente").jqGrid("clearGridData", true).trigger("reloadGrid");
                     $("#tblTiempoGestionxAgente").jqGrid("clearGridData", true).trigger("reloadGrid");
@@ -404,7 +401,6 @@ function mostrarDetallesCargaxMes(mesCarga) {
                 },
                 success: function (data)
                 {
-//                    alert(data.toSource());
                     blockUIClose();
                     if (data.Status == 1) {
                         var datosResult = data.Result;
@@ -439,14 +435,11 @@ function mostrarDetallesCarga(numeroCarga) {
                 },
                 success: function (data)
                 {
-//                    alert(data);
                     blockUIClose();
                     if (data.Status == 1) {
                         var datosResult = data.Result;
-//                        alert(datosResult);
-//alert(datosResult['minessingestion'].toSource());
                         var minesSinGestion = datosResult['minessingestion'].length;
-//                        alert(minesSinGestion)
+
                         if (minesSinGestion > 0) {
                             document.getElementById("agenteReasignar").disabled = false;
                             document.getElementById("btnReasignar").disabled = false;

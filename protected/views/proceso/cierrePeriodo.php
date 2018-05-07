@@ -94,23 +94,11 @@ if ($resultado1) {
                                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
                                     Periodos anteriores
                                 </a>
-
                             </h4>
                         </div>
 
                         <div id="collapseOne" class="panel-collapse collapse in">
                             <div class="box-body">
-                                <!--                                <div class="row">
-                                                                    <div class="col-md-6">
-                                <?php
-//                                        echo CHtml::Button(
-//                                                'BuscarPeriodos'
-//                                                , array('id' => 'btnBuscarPeriodos'
-//                                            , 'class' => 'btn btn-primary btn-sm'
-//                                        ));
-                                ?>
-                                                                    </div>
-                                                                </div>-->
                                 <div class="col-md-6">
                                     <table id="tblPeriodos" class="table table-condensed"></table>
                                     <div id="pagtblPeriodos"> </div>    
@@ -120,6 +108,13 @@ if ($resultado1) {
                                     <div id="pagtblGestionesPeriodo"> </div> 
                                 </div>
                                 <div class="col-md-2">
+                                    <?php
+                                    echo CHtml::submitButton(
+                                            'Buscar Periodos', array(
+                                        'id' => 'btnBuscarPeriodos'
+                                        , 'class' => 'btn btn-block btn-primary btn-sm'
+                                    ));
+                                    ?>      
                                     <?php
                                     echo CHtml::Button(
                                             'Reversar cierre'

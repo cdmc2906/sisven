@@ -189,7 +189,7 @@ class Libreria {
                     $longitudClienteAnterior = 0;
                     $ultimoCodigoHistorial = 1;
 
-                    $totalClientesRuta = $fRuta->getTotalClientesxRutaxEjecutivoxDia($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $semanaRevision)[0]["TOTALCLIENTES"];
+                    $totalClientesRuta = $fRuta->getTotalClientesxRutaxEjecutivoxDiaxSemana($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $semanaRevision)[0]["TOTALCLIENTES"];
                     $finVisitaAnterior = new DateTime('00:00:00');
 
                     foreach ($historial as $itemHistorial) {
