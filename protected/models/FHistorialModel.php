@@ -21,9 +21,9 @@ class FHistorialModel extends DAOModel {
             select distinct date(h_fecha) as fecha
                 from tb_historial_mb
                 where 1=1
-                    and h_fecha between '".$fechaInicioPeriodo."' and '".$fechaFinPeriodo."'
-                    and h_accion='".$accion."'
-                    and h_semana=".$semana.";
+                    and h_fecha between '" . $fechaInicioPeriodo . "' and '" . $fechaFinPeriodo . "'
+                    and h_accion='" . $accion . "'
+                    and h_semana=" . $semana . ";
             ";
 //   var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
@@ -126,6 +126,7 @@ class FHistorialModel extends DAOModel {
                     ,h_latitud AS LATITUD
                     ,h_longitud AS LONGITUD
                     ,h_id AS IDHISTORIAL
+                    ,h_semana AS SEMANAHISTORIAL
                 FROM tb_historial_mb
                 WHERE 1=1
                     AND H_FECHA BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
@@ -133,6 +134,45 @@ class FHistorialModel extends DAOModel {
                     AND H_ACCION='" . $accion . "'
                     AND h_semana='" . $semana . "'
                 ORDER BY H_FECHA ;
+            ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+        //var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getValidarVisitaClientexVendedorxFechaxPeriodo(
+    $accion = 'Inicio Visita'
+    , $codigoCliente
+    , $codigoEjecutivo
+    , $fechagestion
+    , $semana
+    , $periodo
+    ) {
+
+        $fechaInicio = $fechagestion . ' ' . '00:00:00';
+        $fechaFin = $fechagestion . ' ' . '23:59:59';
+
+        $sql = "
+            SELECT 
+                    DATE_FORMAT(H_FECHA, '%Y-%m-%d %H:%i') AS FECHAVISITA
+                    ,H_COD_CLIENTE AS CODIGOCLIENTE
+                    ,H_NOM_CLIENTE AS NOMBRECLIENTE
+                    ,H_RUTA AS RUTAVISITA
+                    ,h_latitud AS LATITUD
+                    ,h_longitud AS LONGITUD
+                    ,h_id AS IDHISTORIAL
+                FROM tb_historial_mb
+                WHERE 1=1
+                    AND H_FECHA BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
+                    AND H_COD_CLIENTE='" . $codigoCliente . "'
+                    AND H_USUARIO='" . $codigoEjecutivo . "'
+                    AND H_ACCION='" . $accion . "'
+                    AND h_semana='" . $semana . "'
+                   -- AND pg_id='" . $periodo . "'
+                ;
             ";
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);

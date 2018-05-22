@@ -243,27 +243,27 @@ if ($resultado1) {
                                                     
                                                                             </a>
                                                                         </li>-->
-                                                    <!--                    <li>
-                                                                            <a href="#">
-                                                                                <i class="fa fa-calendar"></i>
-                                                    <?php // echo $form->labelEx($model, 'ejecutivo'); ?>
-                                                    <?php
-//                            echo $form->dropDownList(
-//                                    $model, 'ejecutivo', array(
-//                                'A' => 'TODOS',
-//                                'QU25' => 'EDISON CALVACHE',
-//                                'QU26' => 'GIOVANA BONILLA',
-//                                'QU22' => 'JOSE CHAMBA',
-//                                'QU21' => 'JUAN CLAVIJO',
-//                                'QU17' => 'JHONNY PLUAS',
-//                                'QU19' => 'LUIS OJEDA'
-//                                    ), array(
-//                                'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
-//                            );
-                                                    ?>
-                                                    <?php // echo $form->error($model, 'ejecutivo');  ?>
-                                                                            </a>
-                                                                        </li>-->
+                                                    <li>
+                                                        <a href="#">
+                                                            <i class="fa fa-calendar"></i>
+                                                            <?php echo $form->labelEx($model, 'ejecutivo'); ?>
+                                                            <?php
+                                                            echo $form->dropDownList(
+                                                                    $model, 'ejecutivo', array(
+                                                                'A' => 'TODOS',
+                                                                'QU25' => 'EDISON CALVACHE',
+                                                                'QU26' => 'GIOVANA BONILLA',
+                                                                'QU22' => 'JOSE CHAMBA',
+                                                                'QU21' => 'JUAN CLAVIJO',
+                                                                'QU17' => 'JHONNY PLUAS',
+                                                                'QU19' => 'LUIS OJEDA'
+                                                                    ), array(
+                                                                'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+                                                            );
+                                                            ?>
+                                                            <?php echo $form->error($model, 'ejecutivo'); ?>
+                                                        </a>
+                                                    </li>
                                                     <li>
                                                         <a href="#">
                                                             <i class="fa  fa-clock-o"></i>

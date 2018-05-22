@@ -34,6 +34,7 @@ define('SISTEMA', 'sisven_2');
 define('USUARIO_INVITADO', '2');
 define('TIPOCOMENTARIOENLACEMAPA', 'Enlace Mapa');
 define('TIPOCOMENTARIOJORNADA', 'Comentario Jornada');
+define('PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI', '1.1160');
 
 define('GRUPO_USUARIOS_SUPERVISION', '1,2');
 define('GRUPO_USUARIOS_ADMIN', '\'QU17\',\'QU19\',\'QU21\',\'QU22\',\'QU26\',\'QU25\'');
@@ -72,6 +73,7 @@ define('FORMATO_FECHA_LONG', 'Y/m/d G:i:s');
 define('FORMATO_FECHA_LONG_2', 'Y/m/d G:i');
 define('FORMATO_FECHA_LONG_3', 'Y-m-d G:i');
 define('FORMATO_FECHA_LONG_4', 'Y-m-d G:i:s');
+define('FORMATO_FECHA_LONG_5', 'd/m/Y G:i:s');
 
 define('FORMATO_FECHA', 'Y/m/d');
 define('FORMATO_FECHA_2', 'd-m');

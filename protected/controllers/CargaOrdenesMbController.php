@@ -88,6 +88,7 @@ class CargaOrdenesMbController extends Controller {
         $dataInsert = array();
         $dataFile = $file->getDatosOrdenesMb($start, $blockSize);
         foreach ($dataFile as $row) {
+//            var_dump($row['FECHACREACION']);die();
             $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHACREACION']);
             $dateString = $date->format(FORMATO_FECHA_LONG_4);
             if ($dateString >= Yii::app()->session['fechaInicioPeriodo'] && $dateString <= Yii::app()->session['fechaFinPeriodo']) {

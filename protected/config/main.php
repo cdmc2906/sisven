@@ -122,7 +122,7 @@ return array(
         'urlManager' => array(
             'urlFormat' => 'path',
             'showScriptName' => false,
-            'urlSuffix' => '.jsp',
+//            'urlSuffix' => '.jsp',
             'caseSensitive' => true,
             'rules' => array(
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
@@ -142,7 +142,7 @@ return array(
         'db_conn' => array(
             // uncomment the following lines to use a PostgreSQL database
             'class' => 'CDbConnection',
-            'connectionString' => 'mysql:host=10.130.1.9;dbname=tcc_control_ruta',
+            'connectionString' => 'mysql:host=10.130.1.19;dbname=tcc_control_ruta',
             'emulatePrepare' => true,
             'username' => 'root',
             'password' => 'admin123',

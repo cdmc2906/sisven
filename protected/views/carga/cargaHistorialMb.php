@@ -47,7 +47,7 @@ $this->pageTitle = $pagina_nombre;
             and pg_tipo=\'SEMANAL\';');
         $resultado1 = $command1->queryRow();
 //        var_dump($resultado1);die();
-        $periodoAbierto = $resultado1['descripcion'];
+        $periodoAbierto = '('.$resultado1['idperiodo'].') '.$resultado1['descripcion'];
 
         Yii::app()->session['idPeriodoAbierto'] = $resultado1['idperiodo'];
         Yii::app()->session['fechaInicioPeriodo'] = $resultado1['fechainicio'];

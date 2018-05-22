@@ -6,7 +6,7 @@ return array(
 	// uncomment the following lines to use a MySQL database
 	
 //	'connectionString' => 'mysql:host=localhost;dbname=tcc_control_ruta',
-	'connectionString' => 'mysql:host=10.130.1.9;dbname=tcc_control_ruta',
+	'connectionString' => 'mysql:host=10.130.1.19;dbname=tcc_control_ruta',
 	'emulatePrepare' => true,
 	'username' => 'root',
 	'password' => 'admin123',

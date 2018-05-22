@@ -12,7 +12,7 @@ class CierrePeriodoForm extends CFormModel {
 //    public $fechaInicioGestion;
 //    public $fechaFinGestion;
 //    public $periodoGestion;
-//    public $ejecutivo;
+    public $ejecutivo;
     public $horaInicioGestion;
     public $horaFinGestion;
     public $precisionVisitas;
@@ -24,7 +24,7 @@ class CierrePeriodoForm extends CFormModel {
      */
     public function rules() {
         return array(
-            array('horaInicioGestion, horaFinGestion, precisionVisitas, accionHistorial, semanaRevision', 'required'),
+            array('ejecutivo,horaInicioGestion, horaFinGestion, precisionVisitas, accionHistorial, semanaRevision', 'required'),
             array('horaInicioGestion, horaFinGestion, precisionVisitas, accionHistorial, semanaRevision', 'safe'),
         );
     }
@@ -37,7 +37,7 @@ class CierrePeriodoForm extends CFormModel {
     public function attributeLabels() {
         return array(
 //            'periodoGestion' => 'Periodo Gestion',
-//            'ejecutivo' => 'Ejecutivo ruta',
+            'ejecutivo' => 'Ejecutivo ruta',
             'horaInicioGestion' => 'Hora inicio ',
             'horaFinGestion' => 'Hora fin',
             'precisionVisitas' => 'Precision visita',

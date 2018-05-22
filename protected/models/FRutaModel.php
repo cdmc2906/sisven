@@ -55,7 +55,7 @@ class FRutaModel extends DAOModel {
         return $data;
     }
 
-    public function getRutaxClientexSemana($codigo_cliente, $iniciales_ejecutivo, $semana) {
+    public function getRutaxClientexSemana($codigo_cliente, $iniciales_ejecutivo, $semana,$periodo) {
         $sql = "
            SELECT 
 		R_DIA AS DIARUTA
@@ -65,6 +65,7 @@ class FRutaModel extends DAOModel {
             WHERE 1=1
 		AND R_COD_CLIENTE='" . $codigo_cliente . "'
 		AND R_SEMANA='" . $semana . "';
+		AND pg_id='" . $periodo . "';
             ";
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
@@ -119,7 +120,7 @@ class FRutaModel extends DAOModel {
                     AND RIGHT(r_ruta,3)='" . $ejecutivo . "' 
                     AND r_semana='" . $semana . "' 
                     AND r_dia =" . $dia . ";";
-//        var_dump($sql);        die();
+//        var_dump($sql);die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
 //        var_dump($data);        die();
@@ -127,7 +128,25 @@ class FRutaModel extends DAOModel {
         return $data;
     }
 
-    public function getTotalClientesNoVisitadosxRutaxEjecutivo($inicialesEjecutivo, $dia, $fechaGestion, $codEjecutivo) {
+    public function getTotalClientesxRutaxEjecutivoxDiaxSemanaxPeriodo($ejecutivo, $dia, $semana, $periodo) {
+        $sql = "
+           SELECT 
+                    COUNT(*) AS TOTALCLIENTES
+                FROM tb_ruta_mb 
+                WHERE 1=1
+                    AND RIGHT(r_ruta,3)='" . $ejecutivo . "' 
+                    AND r_semana='" . $semana . "' 
+                    AND r_dia =" . $dia . "
+                    AND pg_id=" . $periodo . ";";
+//        var_dump($sql);        
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getTotalClientesNoVisitadosxRutaxEjecutivo($inicialesEjecutivo, $dia, $fechaGestion, $codEjecutivo, $periodoAbierto) {
         $sql = "
             SELECT 
                     COUNT(*) AS CLIENTESNOVISITADOS
@@ -135,6 +154,7 @@ class FRutaModel extends DAOModel {
                 WHERE 1=1
                     AND RIGHT(r_ruta,3)='" . $inicialesEjecutivo . "' 
                     AND r_dia ='" . $dia . "'
+                    AND pg_id='" . $periodoAbierto . "'
                     AND R_COD_CLIENTE NOT IN 
                         (SELECT H_COD_CLIENTE
                             FROM tb_historial_mb
@@ -176,8 +196,7 @@ class FRutaModel extends DAOModel {
         $fechaHoraSabado = $fechaSabado . ' 09:00';
         $fechaHoraDomingo = $fechaSabado . ' 09:00';
         $sql = "
-            -- VENTA DE FIN DE SEMANA
-            SELECT IFNULL(SUM(O_SUBTOTAL),0) AS RESPUESTA
+            SELECT IFNULL(SUM(O_SUBTOTAL/" . PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI . "),0) AS RESPUESTA
                 FROM tb_ordenes_mb  
                 WHERE 1=1 
                     -- AND DATE(O_FCH_CREACION) BETWEEN '" . $fechaSabado . "' AND '" . $fechaDomingo . "'
@@ -196,7 +215,7 @@ class FRutaModel extends DAOModel {
     public function getTotalChipsVentaDia_($fechaGestion, $codEjecutivo) {
         $sql = "
             -- VENTA DEL DIA
-            SELECT IFNULL(SUM(O_SUBTOTAL),0) AS RESPUESTA
+            SELECT IFNULL(SUM(O_SUBTOTAL/" . PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI . ")),0) AS RESPUESTA
                 FROM tb_ordenes_mb  
                 WHERE 1=1 
                     AND DATE(O_FCH_CREACION)='" . $fechaGestion . "' 
@@ -212,14 +231,11 @@ class FRutaModel extends DAOModel {
     }
 
     public function getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechaGestion, $horaInicio, $codEjecutivo) {
-//        $fechaHoraGestion = $fechaGestion . ' 09:00';
-//        $fechaHoraDiaDespues = date('Y-m-d', strtotime($fechaGestion . ' + 1 days')) . ' 09:00';
         $fechaHoraGestion = $fechaGestion . ' ' . $horaInicio;
         $fechaHoraDiaDespues = date('Y-m-d', strtotime($fechaGestion . ' + 1 days')) . ' ' . $horaInicio;
 
         $sql = "
-            -- VENTA DEL DIA
-            SELECT IFNULL(SUM(O_SUBTOTAL),0) AS RESPUESTA
+            SELECT IFNULL(SUM(O_SUBTOTAL/" . PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI . "),0) AS RESPUESTA
                 FROM tb_ordenes_mb  
                 WHERE 1=1 
                     AND O_FCH_CREACION BETWEEN '" . $fechaHoraGestion . "' AND '" . $fechaHoraDiaDespues . "'
@@ -238,7 +254,7 @@ class FRutaModel extends DAOModel {
         $fechaHoraGestion = $fechaGestion . ' ' . $horaInicio;
         $fechaHoraDiaDespues = date('Y-m-d', strtotime($fechaGestion . ' + 1 days')) . ' ' . $horaInicio;
         $sql = "
-            SELECT IFNULL(SUM(O_SUBTOTAL),0) AS RESPUESTA
+            SELECT IFNULL(SUM(O_SUBTOTAL/" . PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI . ")),0) AS RESPUESTA
                 FROM tb_ordenes_mb  
                 WHERE 1=1 
                     AND O_FCH_CREACION BETWEEN '" . $fechaHoraGestion . "' AND '" . $fechaHoraDiaDespues . "'
@@ -256,7 +272,7 @@ class FRutaModel extends DAOModel {
     public function getTotalChipsVentaRuta_($inicialesEjecutivo, $dia, $fechaGestion, $codEjecutivo) {
         $sql = "
             -- VENTA EN LA RUTA
-            SELECT IFNULL(SUM(O_SUBTOTAL),0) AS RESPUESTA
+            SELECT IFNULL(SUM(O_SUBTOTAL/" . PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI . ")),0) AS RESPUESTA
                 FROM tb_ordenes_mb  
                 WHERE 1=1 
                     AND DATE(O_FCH_CREACION)='" . $fechaGestion . "' 
@@ -283,7 +299,7 @@ class FRutaModel extends DAOModel {
 
         $sql = "
             -- VENTA EN LA RUTA
-            SELECT IFNULL(SUM(O_SUBTOTAL),0) AS RESPUESTA
+            SELECT IFNULL(SUM(O_SUBTOTAL/" . PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI . "),0) AS RESPUESTA
                 FROM tb_ordenes_mb  
                 WHERE 1=1 
                     -- AND DATE(O_FCH_CREACION)='" . $fechaGestion . "' 
@@ -308,7 +324,7 @@ class FRutaModel extends DAOModel {
     public function getTotalChipsVentaFueraRuta_($inicialesEjecutivo, $dia, $fechaGestion, $codEjecutivo) {
         $sql = "
             -- VENTA FUERA DE RUTA
-            SELECT IFNULL(SUM(O_SUBTOTAL),0) AS RESPUESTA
+            SELECT IFNULL(SUM(O_SUBTOTAL/" . PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI . "),0) AS RESPUESTA
                 FROM tb_ordenes_mb  
                 WHERE 1=1 
                     AND DATE(O_FCH_CREACION)='" . $fechaGestion . "' 
@@ -335,7 +351,7 @@ class FRutaModel extends DAOModel {
 
         $sql = "
             -- VENTA FUERA DE RUTA
-            SELECT IFNULL(SUM(O_SUBTOTAL),0) AS RESPUESTA
+            SELECT IFNULL(SUM(O_SUBTOTAL/" . PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI . "),0) AS RESPUESTA
                 FROM tb_ordenes_mb  
                 WHERE 1=1 
                     -- AND DATE(O_FCH_CREACION)='" . $fechaGestion . "' 
@@ -443,13 +459,14 @@ class FRutaModel extends DAOModel {
         return $data;
     }
 
-    public function getClientesNoVisitadosxRutaxEjecutivoxDia($ejecutivo, $ruta, $dia, $fechaGestionado, $accionRevisar = 'Inicio visita') {
+    public function getClientesNoVisitadosxRutaxEjecutivoxDiaxPeriodo($ejecutivo, $ruta, $dia, $fechaGestionado, $accionRevisar = 'Inicio visita', $periodoAbierto) {
         $sql = "
             select r_cod_cliente, r_nom_cliente
             from tb_ruta_mb 
             where 1=1
             and r_dia=" . $dia . "
             and r_ruta='" . $ruta . "'
+            and pg_id ='" . $periodoAbierto . "'                
             and r_cod_cliente not in (
                 select distinct h_cod_cliente
                 from tb_historial_mb
@@ -467,11 +484,12 @@ class FRutaModel extends DAOModel {
         return $data;
     }
 
-    public function getClientesxRuta($codigoRuta) {
+    public function getClientesxRuta($codigoRuta,$periodo) {
         $sql = "
             select 
                     r_cod_cliente as CODIGOCLIENTE
                     ,r_nom_cliente as NOMBRECLIENTE
+                    ,r_secuencia as SECUENCIARUTA
                     ,'' as CONTACTOS
                     ,'' as ESTADOVISITA
                     ,'' as VENTA
@@ -479,6 +497,7 @@ class FRutaModel extends DAOModel {
                 from tb_ruta_mb 
                 where 1=1 
                     and r_ruta='" . $codigoRuta . "'
+                    and pg_id='" . $periodo. "'
                 order by r_secuencia
             ;";
 //        var_dump($sql);        die();

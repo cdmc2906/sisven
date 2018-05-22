@@ -36,8 +36,6 @@ class RptResumenDiarioHistorialController extends Controller {
 
     public function actionRevisarHistorial() {
         $response = new Response();
-        Yii::app()->user->setFlash('resultadoGuardarRevisionOK', null);
-        Yii::app()->user->setFlash('resultadoGuardarRevisionAviso', null);
 
         try {
             $solicitarLogin = true;
@@ -46,14 +44,11 @@ class RptResumenDiarioHistorialController extends Controller {
                 $model = new RptResumenDiarioHistorialForm();
                 if (isset($_POST['RptResumenDiarioHistorialForm'])) {
 
-
                     $model->attributes = $_POST['RptResumenDiarioHistorialForm'];
                     $_SESSION['ModelForm'] = $model;
                     Yii::app()->session['ModelForm'] = $model;
 
                     if ($model->validate() && $model["ejecutivo"] != '') {
-                        Yii::app()->user->setFlash('resultadoGuardarRevisionAviso', null);
-                        Yii::app()->user->setFlash('resultadoGuardarRevisionAviso', null);
                         $fLibreria = new Libreria();
                         $response = $fLibreria->VerificarHistorialDiarioUsuario(
                                 $model->ejecutivo
@@ -230,7 +225,7 @@ class RptResumenDiarioHistorialController extends Controller {
         return;
     }
 
-    public function actionGenerateExcelNoVisitados() {
+    public function actionGenerateExcelEstadoRuta() {
         $response = new Response();
         try {
             $clientesNoVisitados = array();
@@ -238,29 +233,15 @@ class RptResumenDiarioHistorialController extends Controller {
             $filtros = array();
             $filtros = Yii::app()->session['ModelForm'];
             if ($filtros) {
-                $ejecutivo = EjecutivoModel::model()->findAllByAttributes(array('e_usr_mobilvendor' => $filtros['ejecutivo']));
-                $diaGestion = date("w", strtotime($filtros['fechagestion']));
-                $ruta_dia_gestion = "R" . $diaGestion . '-' . $ejecutivo[0]['e_iniciales'];
-                $fRutaA = $fRuta->getClientesNoVisitadosxRutaxEjecutivoxDia($filtros['ejecutivo'], $ruta_dia_gestion, $diaGestion + 1, $filtros['fechagestion'], $filtros['accionHistorial']);
+                $noVisitados=Yii::app()->session['detalleNoVisitados'];
 
-                foreach ($fRutaA as $clienteNoVisitado) {
-                    $dat = array(
-                        'FECHA_GESTION' => $filtros['fechagestion'],
-                        'RUTA' => $ruta_dia_gestion,
-                        'CODIGO EJECUTIVO' => $ejecutivo[0]['e_usr_mobilvendor'],
-                        'EJECUTIVO' => $ejecutivo[0]['e_nombre'],
-                        'COD_CLIENTE' => $clienteNoVisitado['r_cod_cliente'],
-                        'NOMBRE CLIENTE' => $clienteNoVisitado['r_nom_cliente']
-                    );
-                    array_push($clientesNoVisitados, $dat);
-                }
-
-                $NombreArchivo = "clientes_no_visitados";
-                $NombreHoja = "clientes_no_visitados";
+                
+                $NombreArchivo = "clientes_no_visitados_ruta";
+                $NombreHoja = "clientes_no_visitados_ruta";
 
                 $autor = "Tececab"; //$_SESSION['CUENTA'];
-                $titulo = "clientes_no_visitados";
-                $tema = "clientes_no_visitados";
+                $titulo = "clientes_no_visitados_ruta";
+                $tema = "clientes_no_visitados_ruta";
                 $keywords = "office 2007";
 
                 $excel = new excel();
@@ -277,7 +258,7 @@ class RptResumenDiarioHistorialController extends Controller {
                 $excel->SetHojaDefault(0);
                 $excel->SetNombreHojaActiva($NombreHoja);
 
-                $excel->Mapeo($clientesNoVisitados);
+                $excel->Mapeo($noVisitados);
 
                 $excel->CrearArchivo('Excel2007', $NombreArchivo);
                 $excel->GuardarArchivo();
@@ -355,6 +336,79 @@ class RptResumenDiarioHistorialController extends Controller {
                 $footerImprimir = Yii::app()->user->name . ' - ' . date('Y/m/d h:i A');
 
                 $excel->Mapeo($detalleTiemposGestion, $encabezadoImprimir, $footerImprimir, $columnasCentrar);
+
+                $excel->CrearArchivo('Excel2007', $NombreArchivo);
+                $excel->GuardarArchivo();
+            }
+        } catch (Exception $e) {
+            $mensaje = array(
+                'code' => $e->getCode(),
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            );
+            $response->Message = Yii::app()->params['mensajeExcepcion'];
+            $response->Status = ERROR;
+        }
+        return;
+    }
+    
+     public function actionGenerateExcelNoVisitados() {
+        $response = new Response();
+        try {
+            $clientesNoVisitados = array();
+            $fRuta = new FRutaModel();
+            $filtros = array();
+            $filtros = Yii::app()->session['ModelForm'];
+            if ($filtros) {
+                $ejecutivo = EjecutivoModel::model()->findAllByAttributes(array('e_usr_mobilvendor' => $filtros['ejecutivo']));
+                $diaGestion = date("w", strtotime($filtros['fechagestion']));
+                $ruta_dia_gestion = "R" . $diaGestion . '-' . $ejecutivo[0]['e_iniciales'];
+//                var_dump($ruta_dia_gestion);die();
+                $fRutaA = $fRuta->getClientesNoVisitadosxRutaxEjecutivoxDiaxPeriodo(
+                        $filtros['ejecutivo']
+                        , $ruta_dia_gestion
+                        , $diaGestion + 1
+                        , $filtros['fechagestion']
+                        , $filtros['accionHistorial']
+                        , Yii::app()->session['idPeriodoAbierto']
+                );
+//                var_dump($fRutaA);die();
+                foreach ($fRutaA as $clienteNoVisitado) {
+                    $dat = array(
+                        'FECHA_GESTION' => $filtros['fechagestion'],
+                        'RUTA' => $ruta_dia_gestion,
+                        'CODIGO EJECUTIVO' => $ejecutivo[0]['e_usr_mobilvendor'],
+                        'EJECUTIVO' => $ejecutivo[0]['e_nombre'],
+                        'COD_CLIENTE' => $clienteNoVisitado['r_cod_cliente'],
+                        'NOMBRE CLIENTE' => $clienteNoVisitado['r_nom_cliente']
+                    );
+                    array_push($clientesNoVisitados, $dat);
+                }
+
+                $NombreArchivo = "clientes_no_visitados";
+                $NombreHoja = "clientes_no_visitados";
+
+                $autor = "Tececab"; //$_SESSION['CUENTA'];
+                $titulo = "clientes_no_visitados";
+                $tema = "clientes_no_visitados";
+                $keywords = "office 2007";
+
+                $excel = new excel();
+
+                $excel->getObjPHPExcel()->getProperties()
+                        ->setCreator($autor)
+                        ->setLastModifiedBy($autor)
+                        ->setTitle($titulo)
+                        ->setSubject($tema)
+                        ->setDescription($tema)
+                        ->setKeywords($keywords)
+                        ->setCategory($tema);
+
+                $excel->SetHojaDefault(0);
+                $excel->SetNombreHojaActiva($NombreHoja);
+
+                $excel->Mapeo($clientesNoVisitados);
 
                 $excel->CrearArchivo('Excel2007', $NombreArchivo);
                 $excel->GuardarArchivo();

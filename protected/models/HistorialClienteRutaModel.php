@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table 'tb_historial_cliente_ruta':
  * @property integer $hcr_id
+ * @property string $hcr_codigo_cliente
  * @property string $hcr_ruta_anterior
  * @property string $hcr_ruta_nueva
  * @property string $hcr_direccion_anterior
@@ -42,12 +43,12 @@ class HistorialClienteRutaModel extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('hcr_semana_anterior, hcr_semana_nueva, hcr_dia_anterior, hcr_dia_nuevo, hcr_secuencia_anterior, hcr_secuencia_nueva, hcr_estado_anterior, hcr_estado_nuevo, hcr_cod_usuario_ing_mod', 'numerical', 'integerOnly'=>true),
-			array('hcr_ruta_anterior, hcr_ruta_nueva, hcr_direccion_anterior, hcr_direccion_nueva', 'length', 'max'=>150),
-			array('hcr_cambios', 'length', 'max'=>500),
+			array('hcr_codigo_cliente', 'length', 'max'=>50),
+			array('hcr_ruta_anterior, hcr_ruta_nueva, hcr_direccion_anterior, hcr_direccion_nueva, hcr_cambios', 'length', 'max'=>150),
 			array('hcr_fch_actualiza_ruta, hcr_fch_ingreso, hcr_fch_modificacion', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('hcr_id, hcr_ruta_anterior, hcr_ruta_nueva, hcr_direccion_anterior, hcr_direccion_nueva, hcr_semana_anterior, hcr_semana_nueva, hcr_dia_anterior, hcr_dia_nuevo, hcr_secuencia_anterior, hcr_secuencia_nueva, hcr_estado_anterior, hcr_estado_nuevo, hcr_fch_actualiza_ruta, hcr_cambios, hcr_fch_ingreso, hcr_fch_modificacion, hcr_cod_usuario_ing_mod', 'safe', 'on'=>'search'),
+			array('hcr_id, hcr_codigo_cliente, hcr_ruta_anterior, hcr_ruta_nueva, hcr_direccion_anterior, hcr_direccion_nueva, hcr_semana_anterior, hcr_semana_nueva, hcr_dia_anterior, hcr_dia_nuevo, hcr_secuencia_anterior, hcr_secuencia_nueva, hcr_estado_anterior, hcr_estado_nuevo, hcr_fch_actualiza_ruta, hcr_cambios, hcr_fch_ingreso, hcr_fch_modificacion, hcr_cod_usuario_ing_mod', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -69,6 +70,7 @@ class HistorialClienteRutaModel extends CActiveRecord
 	{
 		return array(
 			'hcr_id' => 'Hcr',
+			'hcr_codigo_cliente' => 'Hcr Codigo Cliente',
 			'hcr_ruta_anterior' => 'Hcr Ruta Anterior',
 			'hcr_ruta_nueva' => 'Hcr Ruta Nueva',
 			'hcr_direccion_anterior' => 'Hcr Direccion Anterior',
@@ -108,6 +110,7 @@ class HistorialClienteRutaModel extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('hcr_id',$this->hcr_id);
+		$criteria->compare('hcr_codigo_cliente',$this->hcr_codigo_cliente,true);
 		$criteria->compare('hcr_ruta_anterior',$this->hcr_ruta_anterior,true);
 		$criteria->compare('hcr_ruta_nueva',$this->hcr_ruta_nueva,true);
 		$criteria->compare('hcr_direccion_anterior',$this->hcr_direccion_anterior,true);

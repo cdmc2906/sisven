@@ -51,7 +51,7 @@ class FOrdenModel extends DAOModel {
     public function getChipsxClientexEjecutivoxFecha($codigo_cliente, $codEjecutivo, $fechaOrden) {
         $sql = "
             SELECT
-                    CAST(COALESCE(SUM(O_SUBTOTAL),0) AS int)AS CHIPS                          
+                    CAST(COALESCE(SUM(O_SUBTOTAL/" . PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI . "),0) AS int)AS CHIPS                          
                 FROM tb_ordenes_mb 
                 WHERE 1=1  
                     AND O_USUARIO='".$codEjecutivo."'
@@ -92,7 +92,7 @@ class FOrdenModel extends DAOModel {
         if (false) {
             $sql = "
             SELECT 
-                    CAST(COALESCE(SUM(O_SUBTOTAL),0) AS DECIMAL(6,2))AS CHIPS 
+                    CAST(COALESCE(SUM(O_SUBTOTAL/" . PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI . "),0) AS DECIMAL(6,2))AS CHIPS 
                 FROM tb_ordenes_mb 
                 WHERE 1=1  
                     AND O_COD_CLIENTE='" . $codigo_cliente . "'
@@ -103,7 +103,7 @@ class FOrdenModel extends DAOModel {
         } else {
             $sql = "
             SELECT 
-                    CAST(COALESCE(SUM(O_SUBTOTAL),0) AS DECIMAL(6,2))AS CHIPS 
+                    CAST(COALESCE(SUM(O_SUBTOTAL/" . PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI . "),0) AS DECIMAL(6,2))AS CHIPS 
                 FROM tb_ordenes_mb 
                 WHERE 1=1  
                     AND O_COD_CLIENTE='" . $codigo_cliente . "'

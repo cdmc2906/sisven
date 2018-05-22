@@ -34,7 +34,7 @@ $this->pageTitle = $pagina_nombre;
             and pg_tipo=\'SEMANAL\';');
                 $resultado1 = $command1->queryRow();
 //        var_dump($resultado1);die();
-                $periodoAbierto = $resultado1['descripcion'];
+                $periodoAbierto = '('. $resultado1['idperiodo'].') '.$resultado1['descripcion'];
 
                 Yii::app()->session['idPeriodoAbierto'] = $resultado1['idperiodo'];
                 Yii::app()->session['fechaInicioPeriodo'] = $resultado1['fechainicio'];
@@ -87,12 +87,6 @@ $this->pageTitle = $pagina_nombre;
 
                                 $("#RptResumenDiarioHistorialForm_enlaceMapa").val(datosResult[\'enlaceMapa\']);
                                 mostrarVisitasEnMapa2(datosResult[\'coordenadasClientes\'],datosResult[\'coordenadasVisitas\']);
-                                if(datosResult[\'activarGuardar\'])
-                                    document.getElementById("btnGuardar").disabled = false;
-                                else
-                                    document.getElementById("btnGuardar").disabled = true;
-                                
-                                //alert(\'end\');
                             }
                             else
                             {
@@ -403,6 +397,14 @@ $this->pageTitle = $pagina_nombre;
                             echo CHtml::Button(
                                     'Exportar Tiempos gestion'
                                     , array('id' => 'btnExcelTiemposGestion'
+                                , 'class' => 'btn btn-warning btn-sm'));
+                            ?>
+                        </div>
+                        <div class="btn-group">
+                            <?php
+                            echo CHtml::Button(
+                                    'Exportar Estado visita x Ruta'
+                                    , array('id' => 'btnExcelEstadoRuta'
                                 , 'class' => 'btn btn-warning btn-sm'));
                             ?>
                         </div>

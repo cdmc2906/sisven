@@ -3,26 +3,12 @@
 class ReporteInicioFinJornadaxFechaController extends Controller {
 
     public function actionIndex() {
-//        $solicitarLogin = true;
-//        if (Yii::app()->user->id <> intval(USUARIO_INVITADO)) {
-//        if (Yii::app()->user->id <> intval(USUARIO_INVITADO)) {
-//            $solicitarLogin = false;
-
         if (Yii::app()->request->isAjaxRequest) {
             return;
         } else {
             $model = new ReporteInicioFinJornadaxFechaForm();
             $this->render('/reportes/rptInicioFinJornadaxFecha', array('model' => $model));
         }
-//        }
-//        var_dump($solicitarLogin);die();
-//        if ($solicitarLogin) {
-//            Yii::app()->user->setFlash('resultadoGuardar', "Por favor inicie sesion para continuar");
-//            $returnUri = '/' . SISTEMA . '/cruge/ui/login';
-//            Yii::app()->clientScript->registerMetaTag("" . INTERVALO_REFRESCO_INMEDIATO . ";url={$returnUri}", null, 'refresh');
-//        } else {
-//            $this->render('/reportes/rptInicioFinJornadaxFecha', array('model' => $model));
-//        }
     }
 
     public function actionConsultarReporte() {
@@ -31,7 +17,7 @@ class ReporteInicioFinJornadaxFechaController extends Controller {
         $datosGridVisitas = array();
         $response = new Response();
         $solicitarLogin = true;
-        $mensaje='';
+        $mensaje = '';
         try {
 
             if (Yii::app()->user->id <> intval(USUARIO_INVITADO)) {

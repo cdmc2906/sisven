@@ -87,7 +87,10 @@
         )
             $verMenusCallCenter = true;
 
-        if (Yii::app()->user->id == 10
+        if (Yii::app()->user->id == 10||
+                Yii::app()->user->id == 14 ||
+                Yii::app()->user->id == 15 ||
+                Yii::app()->user->id == 16
         )
             $verMenusGerencia = true;
         ?>
@@ -488,6 +491,12 @@
                                                 array(
                                                     'label' => 'Analisis Diario'
                                                     , 'url' => array('/RptResumenDiarioHistorial/')
+//                                                    , 'visible' => $verMenusAdmin
+//                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
+                                                ),
+                                                array(
+                                                    'label' => 'Revision secuencia'
+                                                    , 'url' => array('/revisionSecuencia/')
 //                                                    , 'visible' => $verMenusAdmin
 //                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
                                                 ),

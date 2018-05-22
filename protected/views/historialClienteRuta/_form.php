@@ -20,6 +20,12 @@
 	<?php echo $form->errorSummary($model); ?>
 
 	<div class="row">
+		<?php echo $form->labelEx($model,'hcr_codigo_cliente'); ?>
+		<?php echo $form->textField($model,'hcr_codigo_cliente',array('size'=>50,'maxlength'=>50)); ?>
+		<?php echo $form->error($model,'hcr_codigo_cliente'); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->labelEx($model,'hcr_ruta_anterior'); ?>
 		<?php echo $form->textField($model,'hcr_ruta_anterior',array('size'=>60,'maxlength'=>150)); ?>
 		<?php echo $form->error($model,'hcr_ruta_anterior'); ?>
@@ -99,7 +105,7 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'hcr_cambios'); ?>
-		<?php echo $form->textField($model,'hcr_cambios',array('size'=>60,'maxlength'=>500)); ?>
+		<?php echo $form->textField($model,'hcr_cambios',array('size'=>60,'maxlength'=>150)); ?>
 		<?php echo $form->error($model,'hcr_cambios'); ?>
 	</div>
 

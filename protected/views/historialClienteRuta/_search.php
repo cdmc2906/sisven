@@ -17,6 +17,11 @@
 	</div>
 
 	<div class="row">
+		<?php echo $form->label($model,'hcr_codigo_cliente'); ?>
+		<?php echo $form->textField($model,'hcr_codigo_cliente',array('size'=>50,'maxlength'=>50)); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->label($model,'hcr_ruta_anterior'); ?>
 		<?php echo $form->textField($model,'hcr_ruta_anterior',array('size'=>60,'maxlength'=>150)); ?>
 	</div>
@@ -83,7 +88,7 @@
 
 	<div class="row">
 		<?php echo $form->label($model,'hcr_cambios'); ?>
-		<?php echo $form->textField($model,'hcr_cambios',array('size'=>60,'maxlength'=>500)); ?>
+		<?php echo $form->textField($model,'hcr_cambios',array('size'=>60,'maxlength'=>150)); ?>
 	</div>
 
 	<div class="row">

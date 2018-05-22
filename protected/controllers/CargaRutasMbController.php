@@ -14,6 +14,8 @@ class CargaRutasMbController extends Controller {
             return;
         } else {
             unset(Yii::app()->session['rutasMbItems']);
+            unset(Yii::app()->session['cargaAnterior']);
+
             $model = new CargaRutasMbForm();
             $this->render('/carga/cargaRutasMb', array('model' => $model));
         }
@@ -21,6 +23,7 @@ class CargaRutasMbController extends Controller {
 
     public function actionSubirArchivo() {
 
+        unset(Yii::app()->session['cargaAnterior']);
         Yii::app()->session['itemsFueraPeriodo'] = 0;
         $response = new Response();
         try {
@@ -118,6 +121,9 @@ class CargaRutasMbController extends Controller {
             if (isset($_SESSION['archivosRutasMb'])) {
                 $filePath = Yii::app()->session['archivosRutasMb'];
 
+                $fRutasMobilvendor = new FRutaModel();
+                Yii::app()->session['cargaAnterior'] = intval($fRutasMobilvendor->getCargaAnterior()[0]['ultimacarga']);
+
                 $operation = "r";
                 $delimiter = Yii::app()->session['ModelForm']["delimitadorColumnas"]; //';';
                 $file = new File($filePath, $operation, $delimiter);
@@ -209,6 +215,7 @@ class CargaRutasMbController extends Controller {
                 $cambio .= ($rutaEnBase["r_secuencia"] != $row['SECUENCIA'] ) ? 'secuencia_' : '';
                 $cambio .= ($rutaEnBase["r_estatus"] != $row['ESTATUS']) ? 'estado_' : '';
                 $historialClienteRuta = new HistorialClienteRutaModel();
+                $historialClienteRuta->hcr_codigo_cliente = $rutaEnBase["r_cod_cliente"];
                 $historialClienteRuta->hcr_ruta_anterior = $rutaEnBase["r_ruta"];
                 $historialClienteRuta->hcr_ruta_nueva = $row['RUTA'];
 
@@ -238,6 +245,7 @@ class CargaRutasMbController extends Controller {
             case 2:
                 $cambio = 'eliminado_de_ruta';
                 $historialClienteRuta = new HistorialClienteRutaModel();
+                $historialClienteRuta->hcr_codigo_cliente = $rutaEnBase["r_cod_cliente"];
                 $historialClienteRuta->hcr_ruta_anterior = $rutaEnBase["r_ruta"];
                 $historialClienteRuta->hcr_ruta_nueva = 'ELIMI_RUTA';
 
@@ -277,23 +285,24 @@ class CargaRutasMbController extends Controller {
         $itemRutaRepetidos = array();
         $itemRutaActualizados = array();
 
-        $fRutasMobilvendor = new FRutaModel();
-        $cargaAnterior = intval($fRutasMobilvendor->getCargaAnterior()[0]['ultimacarga']);
+
+
 //        var_dump($cargaAnterior);die();
-        $cargaNueva = $cargaAnterior + 1;
+        $cargaNueva = Yii::app()->session['cargaAnterior'] + 1;
 
         $dataFile = $file->getDatosRutasMb($start, $blockSize);
         foreach ($dataFile as $row) {
             $rutaEnBase = RutaMbModel::model()->findByAttributes(
                     array('r_cod_cliente' => $row['CLIENTE']
                         , 'pg_id' => Yii::app()->session['idPeriodoAbierto']
+                        , 'r_semana' => $row['SEMANA']
                     )
             );
 
             if ($rutaEnBase && (
                     $rutaEnBase["r_ruta"] != $row['RUTA'] ||
                     $rutaEnBase["r_cod_direccion"] != $row['DIRECCION'] ||
-                    $rutaEnBase["r_semana"] != $row['SEMANA'] ||
+//                    $rutaEnBase["r_semana"] != $row['SEMANA'] ||
                     $rutaEnBase["r_dia"] != $row['DIA'] ||
                     $rutaEnBase["r_secuencia"] != $row['SECUENCIA'] ||
                     $rutaEnBase["r_estatus"] != $row['ESTATUS'])) {
@@ -309,37 +318,38 @@ class CargaRutasMbController extends Controller {
 //                    break;
 //            }
 //            if (!$exisArray) {
-                $data = array(
-                    'r_ruta' => ($row['RUTA'] == '') ? null : $row['RUTA'],
-                    'pg_id' => Yii::app()->session['idPeriodoAbierto'],
-                    'r_cod_cliente' => ($row['CLIENTE'] == '') ? null : $row['CLIENTE'],
-                    'r_nom_cliente' => ($row['NOMBRE'] == '') ? null : $row['NOMBRE'],
-                    'r_cod_direccion' => ($row['DIRECCION'] == '') ? null : $row['DIRECCION'],
-                    'r_direccion' => ($row['DIRECCIONDESCRIPCION'] == '') ? null : $row['DIRECCIONDESCRIPCION'],
-                    'r_referencia' => ($row['REFERENCIA'] == '') ? null : $row['REFERENCIA'],
-                    'r_semana' => ($row['SEMANA'] == '') ? null : $row['SEMANA'],
-                    'r_dia' => ($row['DIA'] == '') ? null : $row['DIA'],
-                    'r_secuencia' => ($row['SECUENCIA'] == '') ? null : $row['SECUENCIA'],
-                    'r_estatus' => ($row['ESTATUS'] == '') ? null : $row['ESTATUS'],
-                    'r_numero_carga_informacion' => $cargaNueva,
-                    'r_fch_ingreso' => date(FORMATO_FECHA_LONG),
-                    'r_fch_modificacion' => date(FORMATO_FECHA_LONG),
-                    'r_fch_desde' => date(FORMATO_FECHA_LONG),
-                    'r_fch_hasta' => date(FORMATO_FECHA_LONG),
-                    'r_usuario_ing_mod ' => Yii::app()->user->id
-                );
+            $data = array(
+                'r_ruta' => ($row['RUTA'] == '') ? null : $row['RUTA'],
+                'pg_id' => Yii::app()->session['idPeriodoAbierto'],
+                'r_cod_cliente' => ($row['CLIENTE'] == '') ? null : $row['CLIENTE'],
+                'r_nom_cliente' => ($row['NOMBRE'] == '') ? null : $row['NOMBRE'],
+                'r_cod_direccion' => ($row['DIRECCION'] == '') ? null : $row['DIRECCION'],
+                'r_direccion' => ($row['DIRECCIONDESCRIPCION'] == '') ? null : $row['DIRECCIONDESCRIPCION'],
+                'r_referencia' => ($row['REFERENCIA'] == '') ? null : $row['REFERENCIA'],
+                'r_semana' => ($row['SEMANA'] == '') ? null : $row['SEMANA'],
+                'r_dia' => ($row['DIA'] == '') ? null : $row['DIA'],
+                'r_secuencia' => ($row['SECUENCIA'] == '') ? null : $row['SECUENCIA'],
+                'r_estatus' => ($row['ESTATUS'] == '') ? null : $row['ESTATUS'],
+                'r_numero_carga_informacion' => $cargaNueva,
+                'r_fch_ingreso' => date(FORMATO_FECHA_LONG),
+                'r_fch_modificacion' => date(FORMATO_FECHA_LONG),
+                'r_fch_desde' => date(FORMATO_FECHA_LONG),
+                'r_fch_hasta' => date(FORMATO_FECHA_LONG),
+                'r_usuario_ing_mod ' => Yii::app()->user->id
+            );
 
-                array_push($datosRutas, $data);
-                unset($data);
+            array_push($datosRutas, $data);
+            unset($data);
 //            } else {
 //                Yii::app()->session['itemRutaDuplicado'] = Yii::app()->session['itemRutaDuplicado'] + 1;
 //            }
         }
 
+        //eliminacion de los clientes de la carga anterior
         $datos['rutasmb'] = $datosRutas;
         $rutasEliminar = RutaMbModel::model()->findAllByAttributes(
                 array(
-                    'r_numero_carga_informacion' => $cargaAnterior
+                    'r_numero_carga_informacion' => Yii::app()->session['cargaAnterior']
                     , 'pg_id' => Yii::app()->session['idPeriodoAbierto']
                 )
         );
@@ -351,7 +361,7 @@ class CargaRutasMbController extends Controller {
             $this->GenerarHistorial($rutaEliminar, 2, $dummy);
             $rutaEliminar->delete();
         }
-
+//        var_dump($datos['rutasmb']);die();
         return $datos;
     }
 

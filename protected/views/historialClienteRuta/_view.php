@@ -9,6 +9,10 @@
 	<?php echo CHtml::link(CHtml::encode($data->hcr_id), array('view', 'id'=>$data->hcr_id)); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('hcr_codigo_cliente')); ?>:</b>
+	<?php echo CHtml::encode($data->hcr_codigo_cliente); ?>
+	<br />
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('hcr_ruta_anterior')); ?>:</b>
 	<?php echo CHtml::encode($data->hcr_ruta_anterior); ?>
 	<br />
@@ -29,11 +33,11 @@
 	<?php echo CHtml::encode($data->hcr_semana_anterior); ?>
 	<br />
 
+	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('hcr_semana_nueva')); ?>:</b>
 	<?php echo CHtml::encode($data->hcr_semana_nueva); ?>
 	<br />
 
-	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('hcr_dia_anterior')); ?>:</b>
 	<?php echo CHtml::encode($data->hcr_dia_anterior); ?>
 	<br />

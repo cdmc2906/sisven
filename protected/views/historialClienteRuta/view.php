@@ -22,6 +22,7 @@ $this->menu=array(
 	'data'=>$model,
 	'attributes'=>array(
 		'hcr_id',
+		'hcr_codigo_cliente',
 		'hcr_ruta_anterior',
 		'hcr_ruta_nueva',
 		'hcr_direccion_anterior',

@@ -46,12 +46,13 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	'filter'=>$model,
 	'columns'=>array(
 		'hcr_id',
+		'hcr_codigo_cliente',
 		'hcr_ruta_anterior',
 		'hcr_ruta_nueva',
 		'hcr_direccion_anterior',
 		'hcr_direccion_nueva',
-		'hcr_semana_anterior',
 		/*
+		'hcr_semana_anterior',
 		'hcr_semana_nueva',
 		'hcr_dia_anterior',
 		'hcr_dia_nuevo',

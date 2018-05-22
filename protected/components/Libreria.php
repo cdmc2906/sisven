@@ -81,9 +81,12 @@ class Libreria {
     , $precisionVisitas
     , $semanaRevision
     ) {
+
         Yii::app()->user->setFlash('resultadoGuardarRevisionAviso', null);
         Yii::app()->user->setFlash('resultadoGuardarRevisionOK', null);
 
+
+        unset(Yii::app()->session['detalleNoVisitados']);
         unset(Yii::app()->session['detalleRevisionGuardar']);
         unset(Yii::app()->session['resumenRevisionGuardar']);
 
@@ -108,6 +111,9 @@ class Libreria {
 
         $datosResumenGridGeneral = array();
         $datosResumenGridVisitas = array();
+        $datosResumenGridResumenRevSecuencias = array();
+        $datosRevisionRuta = array();
+
         $datosResumenGridVisitasValidasInvalidas = array();
         $datosResumenGridPrimeraUltimaVisita = array();
         $datosResumenGridVentas = array();
@@ -135,13 +141,8 @@ class Libreria {
                 array('drh_codigo_ejecutivo' => $ejecutivoSeleccionado,
                     'drh_fecha_ruta' => $fechagestion,
                     'drh_semana' => $semanaRevision,
+                    'pg_id' => Yii::app()->session['idPeriodoAbierto'],
         ));
-        $fechaGestion_ = $fechagestion . ' 00:00:00';
-        if ($fechaGestion_ >= Yii::app()->session['fechaInicioPeriodo'] && $fechaGestion_ <= Yii::app()->session['fechaFinPeriodo']) {
-            $datos['activarGuardar'] = true;
-        } else {
-            $datos['activarGuardar'] = false;
-        }
 
         if (count($detalleRevisionGuardado) == 0) {
             $ejecutivo = EjecutivoModel::model()->findAllByAttributes(array('e_usr_mobilvendor' => $ejecutivoSeleccionado));
@@ -164,6 +165,8 @@ class Libreria {
             if (isset($historial)) {
                 if (count($historial) > 0) {
                     $diaGestion = date("w", strtotime($fechagestion));
+                    $ruta_dia_gestion = "R" . $diaGestion . '-' . $ejecutivo[0]['e_iniciales'];
+
 
                     $nivelCumplimiento = 0;
                     $totalVisitasEfectuadas = 0;
@@ -189,7 +192,13 @@ class Libreria {
                     $longitudClienteAnterior = 0;
                     $ultimoCodigoHistorial = 1;
 
-                    $totalClientesRuta = $fRuta->getTotalClientesxRutaxEjecutivoxDiaxSemana($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $semanaRevision)[0]["TOTALCLIENTES"];
+                    $totalClientesRuta = $fRuta->getTotalClientesxRutaxEjecutivoxDiaxSemanaxPeriodo(
+                                    $ejecutivo[0]['e_iniciales']
+                                    , $diaGestion + 1
+                                    , $semanaRevision
+                                    , Yii::app()->session['idPeriodoAbierto']
+                            )[0]["TOTALCLIENTES"];
+//                    var_dump($totalClientesRuta);die();
                     $finVisitaAnterior = new DateTime('00:00:00');
 
                     foreach ($historial as $itemHistorial) {
@@ -272,7 +281,7 @@ class Libreria {
                         #FIN OBTENER COORDENADAS PARA MAPA GOOGLE
                         #INICIO VALIDACION VISITA (DENTRO RANGO PRESICION VISITA)
                         $distancia = $this->DistanciaEntreCoordenadas($latitudCliente, $longitudCliente, $latitudHistorial, $longitudHistorial);
-
+//                        var_dump($distancia,$precisionVisitas,$distancia <= $precisionVisitas,$itemHistorial['CODIGOCLIENTE']);
                         if ($precisionVisitas != 0) {
                             if ($distancia <= $precisionVisitas) {
                                 $visitasValidas += 1;
@@ -285,6 +294,7 @@ class Libreria {
                             $visitasValidas += 1;
                             $visitaValida = true;
                         }
+//                        var_dump($visitasValidas);
                         #FIN VALIDACION VISITA (DENTRO RANGO PRESICION VISITA)
                         #INICIO CALCULO TIEMPO GESTION
                         $fechaGestion = DateTime::createFromFormat('Y-m-d H:i', $itemHistorial['FECHAVISITA'])->format(FORMATO_FECHA);
@@ -332,7 +342,11 @@ class Libreria {
                         $fechaHistorial = $fechaHistorialSinFormato->format('Y-m-d');
 
                         $estadoRevisionRuta = '';
-                        $cantidadChips = $fOrden->getChipsxClientexEjecutivoxFecha($itemHistorial['CODIGOCLIENTE'], $ejecutivo[0]['e_usr_mobilvendor'], $fechaHistorial);
+                        $cantidadChips = $fOrden->getChipsxClientexEjecutivoxFecha(
+                                $itemHistorial['CODIGOCLIENTE']
+                                , $ejecutivo[0]['e_usr_mobilvendor']
+                                , $fechaHistorial
+                        );
                         $chips = $cantidadChips[0]['CHIPS'];
 
                         foreach ($datosDetalleGrid as $item) {
@@ -341,7 +355,13 @@ class Libreria {
                             }
                         }
 
-                        $ruta = $fRuta->getRutaxClientexSemana($itemHistorial['CODIGOCLIENTE'], $ejecutivo[0]['e_iniciales'], $semanaRevision);
+                        $ruta = $fRuta->getRutaxClientexSemana(
+                                $itemHistorial['CODIGOCLIENTE']
+                                , $ejecutivo[0]['e_iniciales']
+                                , $semanaRevision
+                                , Yii::app()->session['idPeriodoAbierto']
+                        );
+//                        var_dump($ruta);die();
                         if (count($ruta) == 0) {
                             $rutaCliente = "Sin ruta";
                             $secuenciaRutaCliente = "Sin secuencia";
@@ -356,8 +376,8 @@ class Libreria {
                         }
                         $visitaRepetida = false;
 
-                        $ruta_dia_gestion = "R" . $diaGestion . '-' . $ejecutivo[0]['e_iniciales'];
 
+//var_dump($ruta_dia_gestion,$rutaCliente);
                         if ($ruta_dia_gestion == $rutaCliente) {
                             foreach ($datosDetalleGrid as $item) {
                                 if (in_array($itemHistorial['CODIGOCLIENTE'], $item)) {
@@ -394,9 +414,10 @@ class Libreria {
                         } else {
                             $estadoRevisionS = 'Otra secuencia';
                         }
-
+//                        var_dump($visitasValidasRuta);
                         $totalVentaReportada = $cantidadVentaFueraRuta + $cantidadVentaRuta;
                         $totalVisitasEfectuadas = $visitasRuta + $visitasFueraRuta;
+//                        var_dump($visitasValidasRuta, $totalClientesRuta);                        die();
                         $nivelCumplimiento = ($totalClientesRuta > 0) ? round(($visitasValidasRuta / $totalClientesRuta) * 100) : 0;
 
                         #FIN ANALISIS DE RUTA
@@ -437,7 +458,7 @@ class Libreria {
                             if (isset($inicioVisitaHistorial[0]))
                                 $ultimoCodigoHistorial = $inicioVisitaHistorial[0]['IDHISTORIAL'];
                         }
-
+                        $mensajeRevision = '';
                         array_push($datosDetalleGrid, $revisionRuta);
                         unset($revisionRuta);
 
@@ -455,6 +476,22 @@ class Libreria {
                             'DISTANCIA_EJECUTIVO_CLIENTE' => $distanciaEntreEjecutivoCliente,
                             'DISTANCIA_CLIENTES' => isset($distanciaEntreCliente) ? $distanciaEntreCliente : 0,
                         );
+
+//                        $datosRevisionRuta = $this->AnalizarVisitasRuta(
+//                                $ejecutivoSeleccionado
+//                                , $fechagestion, $ruta_dia_gestion
+//                                , Yii::app()->session['idPeriodoAbierto']
+//                                , $semanaRevision
+//                                , $accionHistorial
+//                                , $inicioVisita
+//                                , $finVisita
+//                                , $tiempoGestion
+//                                , $tiempoTraslado
+//                                , number_format($distancia, 2, '.', '')
+//                                , $chips
+//                                , $rutaCliente
+//                                , $secuenciaRutaCliente
+//                        );
 
                         array_push($detalleTiemposGestion, $dat);
                         unset($dat);
@@ -497,10 +534,21 @@ class Libreria {
 //                        var_dump($itemDetalleRevisionGuardar);die();
                         array_push($detalleRevisionGuardar, $itemDetalleRevisionGuardar);
                         unset($dat);
-
                         #FIN CARGA DE DATOS PARA GUARDADO DE REGISTROS EN BDD
-                        #Fin iteracion items historial
-                    }
+                    }#Fin iteracion items historial
+
+                    $datosRevisionRuta = $this->AnalizarVisitasRuta(
+                            $ejecutivoSeleccionado
+                            , $fechagestion
+                            , Yii::app()->session['idPeriodoAbierto']
+                            , $ruta_dia_gestion
+                            , $semanaRevision
+                            , $accionHistorial
+                            , $historial
+                    );
+
+                    Yii::app()->session['detalleNoVisitados'] = $datosRevisionRuta;
+
                     $datos['detalle'] = $datosDetalleGrid;
                     Yii::app()->session['detalleRevisionGuardar'] = $detalleRevisionGuardar;
 
@@ -522,13 +570,15 @@ class Libreria {
                     unset($dat);
                     Yii::app()->session['tiemposGestionEjecutivo'] = $detalleTiemposGestion;
                     //IMPRESION DE TOTALES AL FINAL DEL REPORTE TIEMPOS GESTION
-                    #INICIO GENERARION DE RESULTADOS ANALISIS
-                    #GENERACION DE DATOS DE VISITAS
+                    //INICIO GENERARION DE RESULTADOS ANALISIS
+                    //GENERACION DE DATOS DE VISITAS
                     $clientesNoVisitados = $fRuta->getTotalClientesNoVisitadosxRutaxEjecutivo(
                                     $ejecutivo[0]['e_iniciales']
                                     , $diaGestion + 1 // las rutas en mobilvendor tienen los dias iniciando en 0 para el domingo
                                     , $fechagestion
-                                    , $ejecutivo[0]['e_usr_mobilvendor'])[0]['CLIENTESNOVISITADOS'];
+                                    , $ejecutivo[0]['e_usr_mobilvendor']
+                                    , Yii::app()->session['idPeriodoAbierto']
+                            )[0]['CLIENTESNOVISITADOS'];
 
                     $primeraVisita = $fHistorial->getPrimeraVisitaxEjecutivoxFechaxHoraInicioxHoraFin(
                                     $accionHistorial
@@ -674,6 +724,11 @@ class Libreria {
                                     $clave == 'VISITAS-REPETIDAS')
                                 array_push($datosResumenGridVisitas, $resumenRuta);
 
+                            if ($clave == 'CLIENTES-RUTA' ||
+                                    $clave == 'CLIENTES-VENTA' ||
+                                    $clave == 'TOTAL-VENTA-REPORTADA')
+                                array_push($datosResumenGridResumenRevSecuencias, $resumenRuta);
+
                             if ($clave == 'CLIENTES-VENTA' ||
                                     $clave == 'CANTIDAD-VENTA-RUTA' ||
                                     $clave == 'CANTIDAD-VENTA-FUERA-RUTA')
@@ -695,6 +750,9 @@ class Libreria {
 
                     $datos['resumenGeneral'] = $datosResumenGridGeneral;
                     $datos['resumenVisitas'] = $datosResumenGridVisitas;
+                    $datos['resumenRevisionSecuencia'] = $datosResumenGridResumenRevSecuencias;
+                    $datos['revisionRuta'] = $datosRevisionRuta;
+
                     $datos['resumenVentas'] = $datosResumenGridVentas;
                     $datos['resumenTiempos'] = $datosResumenGridTiempos;
 
@@ -804,15 +862,22 @@ class Libreria {
                     'CLIENTE' => $itemDetalleRevisionGuardado["drh_nombre_cliente"],
                     'RUTA' => $itemDetalleRevisionGuardado["drh_ruta_usada"],
                     'INICIO_VISITA' => $itemDetalleRevisionGuardado["drh_inicio_visita"],
-                    'FIN_VISITA' => $itemDetalleRevisionGuardado["drh_fin_visita"],
+                    'FIN_VISITA' => $itemDetalleRevisionGuardado["drh_inicio_visita"],
                     'T_GESTION' => $itemDetalleRevisionGuardado["drh_tiempo_gestion"],
                     'T_TRASLADO' => $itemDetalleRevisionGuardado["drh_tiempo_traslado"],
                     'DISTANCIA_EJECUTIVO_CLIENTE' => $itemDetalleRevisionGuardado["drh_distancia_cli_eje"],
                     'DISTANCIA_CLIENTES' => $itemDetalleRevisionGuardado["drh_distancia_cli_anterior"],
                 );
 
-                array_push($detalleTiemposGestion, $revisionTiemposGestion);
-                unset($revisionTiemposGestion);
+//                $datosRevisionRuta = $this->AnalizarVisitasRuta(
+//                        $ejecutivoSeleccionado
+//                        , $fechagestion, $ruta_dia_gestion
+//                        , Yii::app()->session['idPeriodoAbierto']
+//                        , $semanaRevision
+//                        , $accionHistorial
+//                );
+//                array_push($detalleTiemposGestion, $revisionTiemposGestion);
+//                unset($revisionTiemposGestion);
             }
 
             $datos['coordenadasClientes'] = $coordenadasClientes;
@@ -866,6 +931,18 @@ class Libreria {
                 );
                 $clave = $itemResumenRevisionGuardado["rhd_parametro"];
 
+                if ($clave == 'CLIENTES-RUTA' ||
+                        $clave == 'VISITAS-EFECTUADAS-EN-RUTA' ||
+                        $clave == 'CLIENTES-NO-VISITADOS' ||
+                        $clave == 'VISITAS-FUERA-RUTA' ||
+                        $clave == 'VISITAS-REPETIDAS')
+                    array_push($datosResumenGridVisitas, $resumenRuta);
+
+                if ($clave == 'CLIENTES-RUTA' ||
+                        $clave == 'CLIENTES-VENTA' ||
+                        $clave == 'TOTAL-VENTA-REPORTADA')
+                    array_push($datosResumenGridResumenRevSecuencias, $resumenRuta);
+
                 if ($clave == 'PORCENTAJE-CUMPLIMIENTO' ||
                         $clave == 'TOTAL-VENTA-REPORTADA') {
                     array_push($datosResumenGridGeneral, $resumenRuta);
@@ -898,6 +975,9 @@ class Libreria {
 
             $datos['resumenGeneral'] = $datosResumenGridGeneral;
             $datos['resumenVisitas'] = $datosResumenGridVisitas;
+            $datos['resumenRevisionSecuencia'] = $datosResumenGridResumenRevSecuencias;
+            $datos['revisionRuta'] = $datosRevisionRuta;
+
             $datos['resumenVentas'] = $datosResumenGridVentas;
             $datos['resumenTiempos'] = $datosResumenGridTiempos;
             $datos['resumenVisitasValidasInvalidas'] = $datosResumenGridVisitasValidasInvalidas;
@@ -909,6 +989,7 @@ class Libreria {
             $response->Status = SUCCESS;
             $response->Result = $datos;
         }
+//        var_dump($datos);die();
         return $response;
     }
 
@@ -985,6 +1066,77 @@ class Libreria {
             $mensaje = 'Se ha producido un error al guardar los registros';
         }
         return $mensaje;
+    }
+
+    function AnalizarVisitasRuta(
+    $ejecutivo
+    , $fechaGestion
+    , $periodo
+    , $ruta
+    , $semana
+    , $accion
+    , $historial
+    ) {
+        try {
+            $revisionRuta = array();
+            $frRuta = new FRutaModel();
+            $clientesRuta = $frRuta->getClientesxRuta($ruta, $periodo);
+
+            $fHistorial = new FHistorialModel();
+//            var_dump($historial);die();
+
+            $semanahistorial = '';
+            foreach ($clientesRuta as $clienteRuta) {
+//                var_dump($clienteRuta);                die();
+                $contadorFilaHistorial = 1;
+                $visitado = false;
+                foreach ($historial as $item) {
+//                    var_dump($clienteRuta['CODIGOCLIENTE'],$item,$historial,in_array($clienteRuta['CODIGOCLIENTE'], $item));die();
+                    $exisArray = in_array($clienteRuta['CODIGOCLIENTE'], $item);
+                    if ($exisArray) {
+//                        var_dump($item['SEMANAHISTORIAL']);die();
+                        $semanahistorial = $item['SEMANAHISTORIAL'];
+                        $visitado = true;
+                        break;
+                    } else
+                        $contadorFilaHistorial++;
+                }
+                $validacion = $fHistorial->getValidarVisitaClientexVendedorxFechaxPeriodo(
+                        $accion
+                        , $clienteRuta['CODIGOCLIENTE']
+                        , $ejecutivo
+                        , $fechaGestion
+                        , $semana
+                        , $periodo);
+                $estado = '';
+//                if($clienteRuta['CODIGOCLIENTE']=='TCQU160204')
+//                var_dump($validacion, $clienteRuta);
+                if (count($validacion) == 0)
+                    $estado = 'NO VISITADO';
+                else
+                    $estado = 'VISITADO';
+
+                $itemRevision = array(
+                    'RUTA' => $ruta,
+                    'FECHAHISTORIAL' => $fechaGestion,
+                    'CODIGOCLIENTE' => $clienteRuta['CODIGOCLIENTE'],
+                    'CLIENTE' => $clienteRuta['NOMBRECLIENTE'],
+                    'SEMANA' => ($visitado) ? $semanahistorial : 'NO VISITADO',
+                    'SECUENCIA_HISTORIAL' => ($visitado) ? $contadorFilaHistorial : 'NO VISITADO',
+                    'SECUENCIA_RUTA' => $clienteRuta['SECUENCIARUTA'],
+                    'CLIENTE' => $clienteRuta['NOMBRECLIENTE'],
+                    'ESTADO' => $estado,
+                );
+                array_push($revisionRuta, $itemRevision);
+                unset($itemRevision);
+//                $contadorVisita++;
+            }
+//            die();
+        } catch (Exception $e) {
+            echo $e->getTraceAsString();
+        }
+//        var_dump($revisionRuta);        die();
+        return $revisionRuta;
     }
 
 }

@@ -6,11 +6,14 @@ $(document).ready(function () {
         LimpiarGrids();
     });
     
+    $("#btnExcelNoVisitados").click(function () {
+        GenerarDocumentoReporte('GenerateExcelNoVisitados');
+    });
     $("#btnExcel").click(function () {
         GenerarDocumentoReporte('GenerateExcel');
     });
-    $("#btnExcelNoVisitados").click(function () {
-        GenerarDocumentoReporte('GenerateExcelNoVisitados');
+    $("#btnExcelEstadoRuta").click(function () {
+        GenerarDocumentoReporte('GenerateExcelEstadoRuta');
     });
     $("#btnExcelResumen").click(function () {
         GenerarDocumentoReporte('GenerateExcelResumen');
@@ -362,7 +365,7 @@ function ConfigurarGrids() {
 
 function GenerarDocumentoReporte(accion) {
     if (true) {
-        window.open('/sisven/RptResumenDiarioHistorial/' + accion);
+        window.open('/sisven_dev/RptResumenDiarioHistorial/' + accion);
     } else {
         mostrarVentanaMensaje("Ingrese los parámetros necesarios para generar el reporte", 'Alerta');
     }

@@ -66,19 +66,25 @@ class CierrePeriodoController extends Controller {
                     $libreria = new Libreria();
                     $fHistorial = new FHistorialModel();
                     $datosSemanalesEjecutivos = array();
-
+//var_dump($model['ejecutivo']);die();
                     if ($model->validate()) {
-                        $datosRevisiones = array();
-
-                        //Cambio estado periodo
-                        $estadoActualizacionPeriodo = $this->ActualizarEstadoPeriodo(Yii::app()->session['idPeriodoAbierto'], 2);
 
                         //Obtener listado de ejecutivos activos para revision de historial
-                        $ejecutivos = EjecutivoModel::model()->findAllByAttributes(
-                                array(
-                            'e_estado' => 1,
-                            'e_tipo' => 'V'), array(
-                            'order' => 'e_usr_mobilvendor'));
+                        if ($model->ejecutivo == 'A')
+                            $ejecutivos = EjecutivoModel::model()->findAllByAttributes(
+                                    array(
+                                'e_estado' => 1,
+                                'e_tipo' => 'V'), array(
+                                'order' => 'e_usr_mobilvendor'));
+                        else
+                            $ejecutivos = EjecutivoModel::model()->findAllByAttributes(
+                                    array(
+                                'e_estado' => 1,
+                                'e_tipo' => 'V',
+                                'e_usr_mobilvendor' => $model['ejecutivo']
+                                    ), array(
+                                'order' => 'e_usr_mobilvendor'));
+
 
                         //inicio de guardado de detalles y resumenes de revisiones del historial por ejecutivo y por fecha
                         foreach ($ejecutivos as $ejecutivo) {
@@ -90,7 +96,6 @@ class CierrePeriodoController extends Controller {
                                     , $model->accionHistorial);
 
                             foreach ($fechas as $fecha) {
-
                                 $revisionHistorial = $libreria->VerificarHistorialDiarioUsuario(
                                         $ejecutivo['e_usr_mobilvendor']
                                         , $fecha["fecha"]
@@ -119,7 +124,11 @@ class CierrePeriodoController extends Controller {
                                 , Yii::app()->session['fechaInicioPeriodo']
                                 , Yii::app()->session['fechaFinPeriodo']
                         );
-
+                        if ($model->ejecutivo == 'A') {
+                            //Cambio estado periodo
+                            $estadoActualizacionPeriodo = $this->ActualizarEstadoPeriodo(Yii::app()->session['idPeriodoAbierto'], 2);
+                        }
+                        
                         Yii::app()->session['reporteConPrecision'] = $datosSemanalesEjecutivos;
 
                         if (count($datosSemanalesEjecutivos) > 0) {
