@@ -56,5 +56,55 @@ class FPeriodoGestionModel extends DAOModel {
         $this->Close();
         return $data;
     }
+    
+    public function getFechaInicioPrimerPeriodo() {
+        $sql = "
+            select 
+                top 1 
+                    pg_fecha_inicio as FECHA_INICIO
+            from tb_periodo_gestion 
+            order by pg_id;";
+//   var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public static function getPeriodoActivoNotificacion() {
+        unset(Yii::app()->session['idPeriodoAbierto']);
+        unset(Yii::app()->session['fechaInicioPeriodo']);
+        unset(Yii::app()->session['fechaFinPeriodo']);
+
+        unset(Yii::app()->session['itemsFueraPeriodo']);
+
+        $command1 = Yii::app()->db->createCommand("
+          SELECT 
+                pg_id as idperiodo,
+                pg_fecha_inicio as fechainicio,
+                pg_fecha_fin as fechafin,
+                pg_descripcion as descripcion
+            FROM tb_periodo_gestion
+            WHERE 
+            pg_estado=1
+            and pg_tipo='SEMANAL';
+            ");
+
+        $resultado1 = $command1->queryRow();
+//                var_dump($resultado1);die();
+        $periodoAbierto = '';
+
+        if ($resultado1) {
+
+            $periodoAbierto = '(' . $resultado1['idperiodo'] . ') ' . $resultado1['descripcion'];
+
+            Yii::app()->session['idPeriodoAbierto'] = $resultado1['idperiodo'];
+            Yii::app()->session['fechaInicioPeriodo'] = $resultado1['fechainicio'];
+            Yii::app()->session['fechaFinPeriodo'] = $resultado1['fechafin'];
+        }
+
+        return $periodoAbierto;
+    }
 
 }

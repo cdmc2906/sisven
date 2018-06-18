@@ -14,37 +14,24 @@ $this->pageTitle = $pagina_nombre;
 
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/reporte/RptResumenDiarioHistorial.js"; ?>"></script>
 
-<div class="callout callout-info">
-    <center>
-        <p>Periodo semanal abierto : <b><?php
-                unset(Yii::app()->session['idPeriodoAbierto']);
-                unset(Yii::app()->session['fechaInicioPeriodo']);
-                unset(Yii::app()->session['fechaFinPeriodo']);
-                unset(Yii::app()->session['itemsFueraPeriodo']);
+<?php
+$periodoAbierto = FPeriodoGestionModel::getPeriodoActivoNotificacion();
+if ($periodoAbierto != '') :
+    ?>
+    <div class="callout callout-info">
+        <center>
+            <p>Periodo semanal abierto : <b><?php echo $periodoAbierto; ?>
+                </b></p>
+        </center>
+    </div>
+<?php else: ?>
+    <div class="callout callout-danger">
+        <center>
+            <p><b>** NO EXISTE PERIODO SEMANAL ABIERTO **</b></p>
+        </center>
+    </div>
+<?php endif; ?>
 
-                $command1 = Yii::app()->db->createCommand('
-            SELECT 
-                pg_id as idperiodo,
-                pg_fecha_inicio as fechainicio,
-                pg_fecha_fin as fechafin,
-                pg_descripcion as descripcion
-            FROM tcc_control_ruta.tb_periodo_gestion
-            WHERE 
-            pg_estado=1
-            and pg_tipo=\'SEMANAL\';');
-                $resultado1 = $command1->queryRow();
-//        var_dump($resultado1);die();
-                $periodoAbierto = '('. $resultado1['idperiodo'].') '.$resultado1['descripcion'];
-
-                Yii::app()->session['idPeriodoAbierto'] = $resultado1['idperiodo'];
-                Yii::app()->session['fechaInicioPeriodo'] = $resultado1['fechainicio'];
-                Yii::app()->session['fechaFinPeriodo'] = $resultado1['fechafin'];
-
-
-                echo $periodoAbierto;
-                ?></b></p>
-    </center>
-</div>
 <div class="row">
     <div class="col-md-3">
         <?php
@@ -63,7 +50,10 @@ $this->pageTitle = $pagina_nombre;
                 <?php
                 echo CHtml::ajaxSubmitButton(
                         'Revisar historial', CHtml
-                        ::normalizeUrl(array('rptResumenDiarioHistorial/revisarhistorial', 'render' => true)), array(
+                        ::normalizeUrl(array(
+                            'rptResumenDiarioHistorial/revisarhistorial'
+                            , 'render' => true))
+                        , array(
                     'dataType' => 'json',
                     'type' => 'post',
                     'beforeSend' => 'function() {blockUIOpen();}',
@@ -163,7 +153,14 @@ $this->pageTitle = $pagina_nombre;
                                 'QU22' => 'JOSE CHAMBA',
                                 'QU21' => 'JUAN CLAVIJO',
                                 'QU17' => 'JHONNY PLUAS',
-                                'QU19' => 'LUIS OJEDA')
+                                'QU19' => 'LUIS OJEDA',
+                                'QU58' => 'LOPEZ CESAR',
+                                'QU59' => 'MEDINA JORGUE',
+                                'QU60' => 'BARRE JESSICA',
+                                'QU61' => 'QUISHPE CRISTINA',
+                                'QU62' => 'SOSA ISAIAS',
+                                'QU63' => 'PAZMINO ABIGAIL',
+                                    )
                             );
                             echo $form->error($model, 'ejecutivo');
                             ?>
@@ -240,6 +237,7 @@ $this->pageTitle = $pagina_nombre;
                                 '23:00' => '23:00',
                                 '23:30' => '23:30',
                                     )
+                                    , array('options' => array('19:00' => array('selected' => true)))
                             );
 
                             echo $form->error($model, 'horaFinGestion');
@@ -422,7 +420,7 @@ $this->pageTitle = $pagina_nombre;
                         <div style="margin-top: 10px;margin-left: 5px; background-color: transparent; " id="grilla" class="_grilla panel panel-shadow">VISITA</div>
                     </div>
                     <div id="map"></div>
-                    <?php // endif;            ?>
+                    <?php // endif;             ?>
                 </div>
             </div>
         </div>

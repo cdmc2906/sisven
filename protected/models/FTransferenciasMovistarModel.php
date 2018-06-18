@@ -36,7 +36,7 @@ class FTransferenciasMovistarModel extends DAOModel {
             select 
                 tm_numero_lote 
                 from tb_transferencia_movistar 
-                where tm_icc='" . $iccBuscar . "';';
+                where tm_icc='" . $iccBuscar . "';
                 
             ";
 //        var_dump($sql);die();   

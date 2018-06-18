@@ -32,16 +32,6 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'rg_dia_visita'); ?>
-		<?php echo $form->textField($model,'rg_dia_visita'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'rg_ejecutivo_visita'); ?>
-		<?php echo $form->textField($model,'rg_ejecutivo_visita',array('size'=>60,'maxlength'=>150)); ?>
-	</div>
-
-	<div class="row">
 		<?php echo $form->label($model,'rg_estado_ruta'); ?>
 		<?php echo $form->textField($model,'rg_estado_ruta'); ?>
 	</div>

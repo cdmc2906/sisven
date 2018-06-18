@@ -148,7 +148,7 @@ return array(
 //            'password' => 'admin123',
 //            'charset' => 'utf8',
 //            'tablePrefix' => '',
-            'connectionString' => 'sqlsrv:server=10.130.1.67;database=tcc_control_ruta',
+            'connectionString' => 'sqlsrv:server=localhost;database=tcc_control_ruta',
             'username' => 'sa',
             'password' => 'Admin2016..',
             'charset' => 'utf8'
@@ -173,7 +173,7 @@ return array(
             'routes' => array(
                 array(
                     'class' => 'CFileLogRoute',
-                    'levels' => 'error, warning, rbac',
+                    'levels' => 'error, rbac',
                 ),
             // uncomment the following to show log messages on web pages
             /*

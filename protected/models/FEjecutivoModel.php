@@ -24,6 +24,10 @@ class FEjecutivoModel extends DAOModel {
      */
 
     public function getEjecutivosXGrupoXEstado($grupoEjecutivos, $estado = 1) {
+        $usuarios = '';
+        if ($grupoEjecutivos != 'T')
+            $usuarios = "and e_tipo ='" . $grupoEjecutivos . "'";
+
         $sql = "
             select 
                     e_nombre
@@ -32,7 +36,7 @@ class FEjecutivoModel extends DAOModel {
                 from tb_ejecutivo
                 where 1=1
                     and e_estado='" . $estado . "'
-                    and e_usr_mobilvendor in (" . $grupoEjecutivos . ")
+                    " . $usuarios . "
                 order by e_usr_mobilvendor asc;";
 
 //        var_dump($sql);        die();

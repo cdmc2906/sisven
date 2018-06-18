@@ -5,16 +5,23 @@
  *
  * The followings are the available columns in table 'tb_ejecutivo_ruta':
  * @property integer $er_cod
+ * @property integer $e_cod
+ * @property integer $rg_id
  * @property string $er_usuario
  * @property string $er_usuario_nombre
  * @property string $er_ruta
  * @property string $er_ruta_nombre
- * @property string $er_estatus
+ * @property integer $er_semana_visitar
+ * @property integer $er_dia_visitar
+ * @property string $er_estado
  * @property string $er_fecha_ingreso
- * @property string $er_fecha_asignacion
  * @property string $er_fecha_modificacion
  * @property integer $er_cod_usr_ing
  * @property integer $er_cod_usr_mod
+ *
+ * The followings are the available model relations:
+ * @property TbEjecutivo $eCod
+ * @property TbRutaGestion $rg
  */
 class EjecutivoRutaModel extends CActiveRecord
 {
@@ -34,12 +41,12 @@ class EjecutivoRutaModel extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('er_cod_usr_ing, er_cod_usr_mod', 'numerical', 'integerOnly'=>true),
-			array('er_usuario, er_usuario_nombre, er_ruta, er_ruta_nombre, er_estatus', 'length', 'max'=>50),
-			array('er_fecha_ingreso, er_fecha_asignacion, er_fecha_modificacion', 'safe'),
+			array('e_cod, rg_id, er_semana_visitar, er_dia_visitar, er_cod_usr_ing, er_cod_usr_mod', 'numerical', 'integerOnly'=>true),
+			array('er_usuario, er_usuario_nombre, er_ruta, er_ruta_nombre, er_estado', 'length', 'max'=>50),
+			array('er_fecha_ingreso, er_fecha_modificacion', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('er_cod, er_usuario, er_usuario_nombre, er_ruta, er_ruta_nombre, er_estatus, er_fecha_ingreso, er_fecha_asignacion, er_fecha_modificacion, er_cod_usr_ing, er_cod_usr_mod', 'safe', 'on'=>'search'),
+			array('er_cod, e_cod, rg_id, er_usuario, er_usuario_nombre, er_ruta, er_ruta_nombre, er_semana_visitar, er_dia_visitar, er_estado, er_fecha_ingreso, er_fecha_modificacion, er_cod_usr_ing, er_cod_usr_mod', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -51,6 +58,8 @@ class EjecutivoRutaModel extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'eCod' => array(self::BELONGS_TO, 'TbEjecutivo', 'e_cod'),
+			'rg' => array(self::BELONGS_TO, 'TbRutaGestion', 'rg_id'),
 		);
 	}
 
@@ -61,13 +70,16 @@ class EjecutivoRutaModel extends CActiveRecord
 	{
 		return array(
 			'er_cod' => 'Er Cod',
+			'e_cod' => 'E Cod',
+			'rg_id' => 'Rg',
 			'er_usuario' => 'Er Usuario',
 			'er_usuario_nombre' => 'Er Usuario Nombre',
 			'er_ruta' => 'Er Ruta',
 			'er_ruta_nombre' => 'Er Ruta Nombre',
-			'er_estatus' => 'Er Estatus',
+			'er_semana_visitar' => 'Er Semana Visitar',
+			'er_dia_visitar' => 'Er Dia Visitar',
+			'er_estado' => 'Er Estado',
 			'er_fecha_ingreso' => 'Er Fecha Ingreso',
-			'er_fecha_asignacion' => 'Er Fecha Asignacion',
 			'er_fecha_modificacion' => 'Er Fecha Modificacion',
 			'er_cod_usr_ing' => 'Er Cod Usr Ing',
 			'er_cod_usr_mod' => 'Er Cod Usr Mod',
@@ -93,13 +105,16 @@ class EjecutivoRutaModel extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('er_cod',$this->er_cod);
+		$criteria->compare('e_cod',$this->e_cod);
+		$criteria->compare('rg_id',$this->rg_id);
 		$criteria->compare('er_usuario',$this->er_usuario,true);
 		$criteria->compare('er_usuario_nombre',$this->er_usuario_nombre,true);
 		$criteria->compare('er_ruta',$this->er_ruta,true);
 		$criteria->compare('er_ruta_nombre',$this->er_ruta_nombre,true);
-		$criteria->compare('er_estatus',$this->er_estatus,true);
+		$criteria->compare('er_semana_visitar',$this->er_semana_visitar);
+		$criteria->compare('er_dia_visitar',$this->er_dia_visitar);
+		$criteria->compare('er_estado',$this->er_estado,true);
 		$criteria->compare('er_fecha_ingreso',$this->er_fecha_ingreso,true);
-		$criteria->compare('er_fecha_asignacion',$this->er_fecha_asignacion,true);
 		$criteria->compare('er_fecha_modificacion',$this->er_fecha_modificacion,true);
 		$criteria->compare('er_cod_usr_ing',$this->er_cod_usr_ing);
 		$criteria->compare('er_cod_usr_mod',$this->er_cod_usr_mod);

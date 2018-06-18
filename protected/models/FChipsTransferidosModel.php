@@ -21,7 +21,8 @@ class FChipsTransferidosModel extends DAOModel {
 //        var_dump(2);die();
         $sql = "
            select 
-                date(VM_FECHA) as VM_FECHA
+                -- date(VM_FECHA) as VM_FECHA
+                " . FuncionesBaseDatos::convertToDate('sqlsrv', 'VM_FECHA') . " as VM_FECHA
                 ,VM_NOMBREDISTRIBUIDOR
                 ,VM_IDDESTINO
                 ,VM_NOMBREDESTINO
@@ -38,4 +39,5 @@ class FChipsTransferidosModel extends DAOModel {
         $this->Close();
         return $data;
     }
+
 }

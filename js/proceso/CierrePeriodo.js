@@ -1,5 +1,20 @@
 $(document).ready(function () {
+    ConfigDatePickersReporte('.txtFechaGestion');
     ConfigurarGrid();
+
+    $('#CierrePeriodoForm_tipoFecha').on('change', function (e) {
+        var e = document.getElementById("CierrePeriodoForm_tipoFecha");
+        var strUser = e.selectedIndex;
+//        alert(strUser)
+        if (strUser == 1)//Seleccionar Fecha
+        {
+            document.getElementById("divFechaGestion").style.display = "block";
+            document.getElementById("CierrePeriodoForm_fechaGestion").value = "";
+
+        } else {//Automatico
+            document.getElementById("divFechaGestion").style.display = "none";
+        }
+    });
 
     $("#btnBuscarPeriodos").click(function () {
         mostrarPeriodos();
@@ -309,5 +324,5 @@ function ReversarCierre() {
 }
 
 function exportarResumen() {
-    window.open('/sisven/CierrePeriodo/ExportarResumen');
+    window.open('/sisven_dev/CierrePeriodo/ExportarResumen');
 }

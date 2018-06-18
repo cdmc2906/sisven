@@ -35,15 +35,18 @@ define('USUARIO_INVITADO', '2');
 define('TIPOCOMENTARIOENLACEMAPA', 'Enlace Mapa');
 define('TIPOCOMENTARIOJORNADA', 'Comentario Jornada');
 define('PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI', '1.1160');
+define('HORA_INICIO_DIA', ' 00:00');
+define('HORA_FIN_DIA', ' 23:59');
 
 define('GRUPO_USUARIOS_SUPERVISION', '1,2');
 define('GRUPO_USUARIOS_ADMIN', '\'QU17\',\'QU19\',\'QU21\',\'QU22\',\'QU26\',\'QU25\'');
 
 
-define('GRUPO_EJECUTIVOS_ZONA', '\'QU17\',\'QU19\',\'QU21\',\'QU22\',\'QU26\',\'QU25\'');
-define('GRUPO_SUPERVISORES', '\'QU20\',\'QU39\',\'QU47\',\'QU55\'');
-define('GRUPO_SERVICIO_CLIENTE', '\'QU23\',\'QU24\'');
-define('GRUPO_TODOS', '\'QU17\',\'QU19\',\'QU21\',\'QU22\',\'QU26\',\'QU25\',\'QU23\',\'QU24\',\'QU20\',\'QU39\',\'QU47\'');
+define('GRUPO_EJECUTIVOS_ZONA', 'EZ');
+define('GRUPO_SUPERVISORES', 'S');
+define('GRUPO_SERVICIO_CLIENTE', 'SC');
+define('GRUPO_DESARROLLADORES', 'D');
+
 define('RUTASNOREVISAR', '\'RZS 47\',\'RZS 39\',\'RZS 20\'');
 
 define('COPYRIGHT', 'TECECAB');
@@ -80,6 +83,7 @@ define('FORMATO_FECHA_2', 'd-m');
 define('FORMATO_FECHA_3', 'Y-m-d');
 
 define('FORMATO_HORA', 'H:i:s');
+define('FORMATO_HORA_3', '%Hh %im %ss');
 define('FORMATO_HORA_2', 'H:i');
 
 define('FORMATO_FECHA_BDD', '\'YYYY/MM/DD\'');

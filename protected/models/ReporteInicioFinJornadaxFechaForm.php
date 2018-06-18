@@ -20,7 +20,11 @@ class ReporteInicioFinJornadaxFechaForm extends CFormModel {
      */
     public function rules() {
         return array(
-            array('fechaInicioFinJornadaInicio,horaInicioGestion,horaFinGestion,tipoUsuario', 'required'),
+            array('
+                fechaInicioFinJornadaInicio
+                ,horaInicioGestion
+                ,horaFinGestion
+                ,tipoUsuario', 'required'),
 //            array('fechaOrdenesFin', 'required'),
 //            array('fechaConsumo, rutaArchivo', 'safe'),
         );

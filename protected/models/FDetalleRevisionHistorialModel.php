@@ -14,7 +14,7 @@
  * @property TbVendedor $iDVEND
  * @property TbProducto $iDPRO
  */
-class FDetalleDiarioHistorialModel extends DAOModel {
+class FDetalleRevisionHistorialModel extends DAOModel {
     /*
      * Obtiene el listado de mines vendidos por el vendedor segun la fecha.
      * 
@@ -23,17 +23,19 @@ class FDetalleDiarioHistorialModel extends DAOModel {
      *  Mayoristas(2) = Ventas en el mes anterior al calculo de las comisiones
      */
 
-    public function getCantidadDetallexVendedorxFecha($fechagestion, $ejecutivo) {
+    public function getDetalleHistorialxVendedorxFecha($fechagestion, $ejecutivo, $semana) {
 //        $anio = $datos['anio'];
         $sql = "
             select 
-                    count(*) as registrosDetalle
-                from tb_detalle_historial_diario
+                    *
+                from tb_detalle_revision_historial
                 where 1=1
-                    and rh_fecha_ruta='" . $fechagestion . "'
-                    and rh_codigo_vendedor='" . $ejecutivo . "';
+                    and " . FuncionesBaseDatos::convertToDate('sqlsrv', 'drh_fecha_ruta') . "='" . $fechagestion . "'
+                    and drh_codigo_ejecutivo='" . $ejecutivo . "'
+                    and drh_semana='" . $semana . "'
+                        ;
             ";
-//   var_dump($sql);        die();
+//        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
 //        var_dump($data);        die();

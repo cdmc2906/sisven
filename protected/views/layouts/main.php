@@ -69,25 +69,28 @@
                 Yii::app()->user->id == 7 ||
                 Yii::app()->user->id == 8 ||
                 Yii::app()->user->id == 9 ||
-                Yii::app()->user->id == 10
+                Yii::app()->user->id == 10 ||
+                Yii::app()->user->id == 16
         )
             $verMenuRevision = true;
 
         if (Yii::app()->user->id == 1 ||
                 Yii::app()->user->id == 3 ||
                 Yii::app()->user->id == 8 ||
-                Yii::app()->user->id == 9
+                Yii::app()->user->id == 9 ||
+                Yii::app()->user->id == 16
         )
             $verMenusAdmin = true;
 
         if (Yii::app()->user->id == 1 ||
                 Yii::app()->user->id == 3 ||
                 Yii::app()->user->id == 12 ||
-                Yii::app()->user->id == 13
+                Yii::app()->user->id == 13 ||
+                Yii::app()->user->id == 16
         )
             $verMenusCallCenter = true;
 
-        if (Yii::app()->user->id == 10||
+        if (Yii::app()->user->id == 10 ||
                 Yii::app()->user->id == 14 ||
                 Yii::app()->user->id == 15 ||
                 Yii::app()->user->id == 16
@@ -587,7 +590,7 @@
                                         ),
                                         array(
                                             'label' => 'Reporte Jornada'
-                                            , 'url' => array('/ReporteInicioFinJornadaxFecha/index')
+                                            , 'url' => array('/RptInicioFinJornadaxFecha/index')
 //                                            , 'visible' => $verMenusAdmin
 //                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
                                         ),
@@ -710,9 +713,9 @@
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl ?>/js/jqueryblockUI.js"></script>
 
 
-<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                       ?>/assets/template/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
-<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                       ?>/assets/template/bower_components/fastclick/lib/fastclick.js"></script>-->
+<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                        ?>/assets/template/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
+<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                        ?>/assets/template/bower_components/fastclick/lib/fastclick.js"></script>-->
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/template/dist/js/adminlte.min.js"></script>
-<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                       ?>/assets/template/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>-->
+<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                        ?>/assets/template/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>-->
 </body>
 </html>

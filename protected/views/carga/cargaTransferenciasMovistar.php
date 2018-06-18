@@ -35,10 +35,12 @@ $this->pageTitle = 'Carga Transferencias Movistar'
                     <?php
 //                    $ventas= VentaMovistarModel::model()->
                     $command = Yii::app()->db->createCommand('
-                        SELECT DATE(tm_fecha) as fecha 
+                        SELECT top 1
+                        -- DATE(tm_fecha) as fecha 
+                        '.FuncionesBaseDatos::convertToDate('sqlsrv', 'tm_fecha').'  as fecha
                             FROM tb_transferencia_movistar
                             order by tm_fecha desc
-                            limit 1');
+                            ');
                     $resultado = $command->queryRow();                    
                     $ultimaFecha = DateTime::createFromFormat('Y-m-d', $resultado['fecha'])->format(FORMATO_FECHA);
 

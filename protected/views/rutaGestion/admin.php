@@ -49,11 +49,9 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'zg_id',
 		'rg_cod_ruta_mb',
 		'rg_nombre_ruta',
-		'rg_dia_visita',
-		'rg_ejecutivo_visita',
-		/*
 		'rg_estado_ruta',
 		'rg_fecha_ingreso',
+		/*
 		'rg_fecha_modifica',
 		'rg_cod_usuario_ingresa_modifica',
 		*/

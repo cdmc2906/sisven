@@ -448,7 +448,7 @@ class File {
                                 'CODIGO' => utf8_encode(trim($arrColumnas[0])),
                                 'CLIENTENOMBRE' => utf8_encode(trim(trim($arrColumnas[1], '\"'))),
                                 'LATITUD' => (trim($arrColumnas[2]) == 'null') ? '0' : trim($arrColumnas[2]),
-                                'LONGITUD' =>(trim($arrColumnas[3]) == 'null') ? '0' : trim($arrColumnas[3]),
+                                'LONGITUD' => (trim($arrColumnas[3]) == 'null') ? '0' : trim($arrColumnas[3]),
                             );
 //                            var_dump($datos);die();
                             array_push($datosCarga, $datos);
@@ -753,12 +753,12 @@ class File {
                             $datos = array(
                                 'CODIGO' => utf8_encode(trim($arrColumnas[0])),
                                 'RUTA' => utf8_encode(trim($arrColumnas[1])),
-                                'CLIENTE' => utf8_encode(trim($arrColumnas[2])),
-                                'NOMBRE' => trim(trim(utf8_encode($arrColumnas[3]), '"'), ' 	'), //utf8_encode(trim($arrColumnas[2])),
-                                'TIPODENEGOCIO' => utf8_encode(trim($arrColumnas[4])),
-                                'DIRECCION' => utf8_encode(trim($arrColumnas[5])),
-                                'DIRECCIONDESCRIPCION' => trim(trim(utf8_encode($arrColumnas[6]), '"'), '	'), //utf8_encode(trim($arrColumnas[4])),
-                                'REFERENCIA' => trim(trim(utf8_encode($arrColumnas[7]), '"'), '	'), //utf8_encode(trim($arrColumnas[5])),
+                                'CLIENTE' => utf8_encode(trim(str_replace("'", '', $arrColumnas[2]))),
+                                'NOMBRE' => trim(trim(utf8_encode(str_replace("'", '', $arrColumnas[3])), '"'), ' 	'), //utf8_encode(trim($arrColumnas[2])),
+                                'TIPODENEGOCIO' => utf8_encode(trim(str_replace("'", '', $arrColumnas[4]))),
+                                'DIRECCION' => utf8_encode(trim(str_replace("'", '', $arrColumnas[5]))),
+                                'DIRECCIONDESCRIPCION' => trim(trim(utf8_encode(str_replace("'", '', $arrColumnas[6])), '"'), '	'), //utf8_encode(trim($arrColumnas[4])),
+                                'REFERENCIA' => trim(trim(utf8_encode(str_replace("'", '', $arrColumnas[7])), '"'), '	'), //utf8_encode(trim($arrColumnas[5])),
                                 'SEMANA' => trim($arrColumnas[8]),
                                 'DIA' => trim($arrColumnas[9]),
                                 'SECUENCIA' => trim($arrColumnas[10]),

@@ -21,20 +21,20 @@ function ConfigGridJSON() {
         colNames: [
             'FECHA',
             'EJECUTIVO',
-            'CUMPLIMIENTO',
+//            'CUMPLIMIENTO',
             'PRIMERA VISITA',
             'ULTIMA VISITA',
             'GESTION',
-            'COMENTARIO SUPERVISION',
-            'COMENTARIO OFICINA'
+            'COMENTARIO_SUPERVISION',
+            'COMENTARIO_OFICINA'
         ],
         colModel: [
             {name: 'FECHA', index: 'FECHA', sortable: false, frozen: true, width: 150, hidden: true,
                 editable: true, editoptions: {readonly: true, edithidden: true}, },
             {name: 'EJECUTIVO', index: 'EJECUTIVO', sortable: false, frozen: true, width: 150,
                 editable: true, editoptions: {readonly: true, size: 25}, },
-            {name: 'CUMPLIMIENTO', index: 'CUMPLIMIENTO', sortable: false, frozen: true, width: 100, align: "center",
-                editable: true, editoptions: {readonly: true, size: 10}, },
+//            {name: 'CUMPLIMIENTO', index: 'CUMPLIMIENTO', sortable: false, frozen: true, width: 100, align: "center",
+//                editable: true, editoptions: {readonly: true, size: 10}, },
             {name: 'INICIOPRIMERAVISITA', index: 'INICIOPRIMERAVISITA', sortable: false, frozen: true, width: 100, align: "center",
                 editable: true, editoptions: {readonly: true, size: 10}, },
             {name: 'FINALULTIMAVISITA', index: 'FINALULTIMAVISITA', sortable: false, frozen: true, width: 100, align: "center",
@@ -62,14 +62,14 @@ function ConfigGridJSON() {
 //        autowidth: true,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
-        onSelectRow: function (id) {
-            if (id && id !== filaSeleccionada) {
-                jQuery('#tblGrid').jqGrid('restoreRow', filaSeleccionada);
-                jQuery('#tblGrid').jqGrid('editRow', id, true);
-                filaSeleccionada = id;
-            }
-        },
-        editurl: "/sisven_2/ReporteInicioFinJornadaxFecha/GuardarRevision?datosFila=" + filaSeleccionada,
+//        onSelectRow: function (id) {
+//            if (id && id !== filaSeleccionada) {
+//                jQuery('#tblGrid').jqGrid('restoreRow', filaSeleccionada);
+//                jQuery('#tblGrid').jqGrid('editRow', id, true);
+//                filaSeleccionada = id;
+//            }
+//        },
+//        editurl: "/sisven_2/ReporteInicioFinJornadaxFecha/GuardarRevision?datosFila=" + filaSeleccionada,
         jsonReader: {
             root: "Result",
             repeatitems: false, //cuando el array de la data son object
@@ -174,7 +174,7 @@ function ConfigGridJSON() {
 
 function GenerarDocumentoReporte(accion) {
     if ($("#ReporteInicioFinJornadaxFechaForm_fechaInicioFinJornadaInicio").val() != "") {
-        window.open('/sisven/reporteiniciofinjornadaxfecha/' + accion
+        window.open('/sisven_dev/rptiniciofinjornadaxfecha/' + accion
                 + '?startDate=' + $("#ReporteInicioFinJornadaxFechaForm_fechaInicioFinJornadaInicio").val()
                 );
     } else {

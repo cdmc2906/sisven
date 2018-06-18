@@ -8,8 +8,6 @@
  * @property integer $zg_id
  * @property string $rg_cod_ruta_mb
  * @property string $rg_nombre_ruta
- * @property integer $rg_dia_visita
- * @property string $rg_ejecutivo_visita
  * @property integer $rg_estado_ruta
  * @property string $rg_fecha_ingreso
  * @property string $rg_fecha_modifica
@@ -18,6 +16,7 @@
  * The followings are the available model relations:
  * @property TbZonasGestion $zg
  * @property TbUsuarioRuta[] $tbUsuarioRutas
+ * @property TbEjecutivoRuta[] $tbEjecutivoRutas
  */
 class RutaGestionModel extends CActiveRecord
 {
@@ -37,13 +36,12 @@ class RutaGestionModel extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('zg_id, rg_dia_visita, rg_estado_ruta, rg_cod_usuario_ingresa_modifica', 'numerical', 'integerOnly'=>true),
+			array('zg_id, rg_estado_ruta, rg_cod_usuario_ingresa_modifica', 'numerical', 'integerOnly'=>true),
 			array('rg_cod_ruta_mb, rg_nombre_ruta', 'length', 'max'=>50),
-			array('rg_ejecutivo_visita', 'length', 'max'=>150),
 			array('rg_fecha_ingreso, rg_fecha_modifica', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('rg_id, zg_id, rg_cod_ruta_mb, rg_nombre_ruta, rg_dia_visita, rg_ejecutivo_visita, rg_estado_ruta, rg_fecha_ingreso, rg_fecha_modifica, rg_cod_usuario_ingresa_modifica', 'safe', 'on'=>'search'),
+			array('rg_id, zg_id, rg_cod_ruta_mb, rg_nombre_ruta, rg_estado_ruta, rg_fecha_ingreso, rg_fecha_modifica, rg_cod_usuario_ingresa_modifica', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -57,6 +55,7 @@ class RutaGestionModel extends CActiveRecord
 		return array(
 			'zg' => array(self::BELONGS_TO, 'TbZonasGestion', 'zg_id'),
 			'tbUsuarioRutas' => array(self::HAS_MANY, 'TbUsuarioRuta', 'rg_id'),
+			'tbEjecutivoRutas' => array(self::HAS_MANY, 'TbEjecutivoRuta', 'rg_id'),
 		);
 	}
 
@@ -70,8 +69,6 @@ class RutaGestionModel extends CActiveRecord
 			'zg_id' => 'Zg',
 			'rg_cod_ruta_mb' => 'Rg Cod Ruta Mb',
 			'rg_nombre_ruta' => 'Rg Nombre Ruta',
-			'rg_dia_visita' => 'Rg Dia Visita',
-			'rg_ejecutivo_visita' => 'Rg Ejecutivo Visita',
 			'rg_estado_ruta' => 'Rg Estado Ruta',
 			'rg_fecha_ingreso' => 'Rg Fecha Ingreso',
 			'rg_fecha_modifica' => 'Rg Fecha Modifica',
@@ -101,8 +98,6 @@ class RutaGestionModel extends CActiveRecord
 		$criteria->compare('zg_id',$this->zg_id);
 		$criteria->compare('rg_cod_ruta_mb',$this->rg_cod_ruta_mb,true);
 		$criteria->compare('rg_nombre_ruta',$this->rg_nombre_ruta,true);
-		$criteria->compare('rg_dia_visita',$this->rg_dia_visita);
-		$criteria->compare('rg_ejecutivo_visita',$this->rg_ejecutivo_visita,true);
 		$criteria->compare('rg_estado_ruta',$this->rg_estado_ruta);
 		$criteria->compare('rg_fecha_ingreso',$this->rg_fecha_ingreso,true);
 		$criteria->compare('rg_fecha_modifica',$this->rg_fecha_modifica,true);

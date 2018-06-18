@@ -85,37 +85,53 @@ class CierrePeriodoController extends Controller {
                                     ), array(
                                 'order' => 'e_usr_mobilvendor'));
 
-
                         //inicio de guardado de detalles y resumenes de revisiones del historial por ejecutivo y por fecha
                         foreach ($ejecutivos as $ejecutivo) {
-
-                            $fechas = $fHistorial->getFechasHistorialxPeriodo(
-                                    Yii::app()->session['fechaInicioPeriodo']
-                                    , Yii::app()->session['fechaFinPeriodo']
-                                    , $model->semanaRevision
-                                    , $model->accionHistorial);
-
+//                            var_dump($model->tipoFecha, $model->fechaGestion);die();
+                            if ($model->tipoFecha == 'A') {//Automatico, seleccion las fechas del periodo
+                                $fechas = $fHistorial->getFechasHistorialxPeriodo(
+                                        Yii::app()->session['fechaInicioPeriodo']
+                                        , Yii::app()->session['fechaFinPeriodo']
+                                        , $model->semanaRevision
+                                        , $model->accionHistorial);
+                            } else {
+                                $fechas = $fHistorial->getFechasHistorialxPeriodo(
+                                        $model->fechaGestion . " 00:00:00"
+                                        , $model->fechaGestion . " 23:59:59"
+                                        , $model->semanaRevision
+                                        , $model->accionHistorial);
+                            }
+//                            var_dump($fechas);die();
                             foreach ($fechas as $fecha) {
-                                $revisionHistorial = $libreria->VerificarHistorialDiarioUsuario(
-                                        $ejecutivo['e_usr_mobilvendor']
-                                        , $fecha["fecha"]
-                                        , $model->accionHistorial
-                                        , $model->horaInicioGestion
-                                        , $model->horaFinGestion
-                                        , $model->precisionVisitas
-                                        , $model->semanaRevision);
+                                $fResumenHistorial = new FResumenDiarioHistorialModel();
+                                $datosRevisiones = $fResumenHistorial->getDatosRevisionesEjecutivo(
+                                        $fecha["fecha"] . " 00:00:00"
+                                        , $fecha["fecha"] . " 23:59:59"
+                                        , $ejecutivo['e_usr_mobilvendor']
+                                );
+//                                var_dump(count($datosSemanalesEjecutivos) );die();
+                                if (count($datosRevisiones) == 0) {
+                                    $revisionHistorial = $libreria->VerificarHistorialDiarioUsuario(
+                                            $ejecutivo['e_usr_mobilvendor']
+                                            , $fecha["fecha"]
+                                            , $model->accionHistorial
+                                            , $model->horaInicioGestion
+                                            , $model->horaFinGestion
+                                            , $model->precisionVisitas
+                                            , $model->semanaRevision);
 
-                                if (count(Yii::app()->session['detalleRevisionGuardar']) > 0) {
-                                    $estadoGuardadoDetalle = $libreria->GuardarDetallesHistorialEjecutivo();
-                                    $estadoGuardadoResumen = $libreria->GuardarResumenHistorialEjecutivo();
-                                    if ($estadoGuardadoDetalle != 'La revision ha sido guardada exitosamente' ||
-                                            $estadoGuardadoResumen != 'La revision ha sido guardada exitosamente')
-                                        $mensaje = 'Falla en guardado de datos, Revisar';
-                                    else {
-                                        $ejecutivosGestionados++;
-                                        $mensaje = 'Guardado ok';
-                                    }
-                                }//fin comprobar si ejecutivo tuvo gestion en fecha
+                                    if (count(Yii::app()->session['detalleRevisionGuardar']) > 0) {
+                                        $estadoGuardadoDetalle = $libreria->GuardarDetallesHistorialEjecutivo();
+                                        $estadoGuardadoResumen = $libreria->GuardarResumenHistorialEjecutivo();
+                                        if ($estadoGuardadoDetalle != 'La revision ha sido guardada exitosamente' ||
+                                                $estadoGuardadoResumen != 'La revision ha sido guardada exitosamente')
+                                            $mensaje = 'Falla en guardado de datos, Revisar';
+                                        else {
+                                            $ejecutivosGestionados++;
+                                            $mensaje = 'Guardado ok';
+                                        }
+                                    }//fin comprobar si ejecutivo tuvo gestion en fecha
+                                }//fin control de si ya se genero el historial antes
                             }//fin iteracion fechas gestion
                         }//fin iteracion ejecutivos
 
@@ -128,7 +144,7 @@ class CierrePeriodoController extends Controller {
                             //Cambio estado periodo
                             $estadoActualizacionPeriodo = $this->ActualizarEstadoPeriodo(Yii::app()->session['idPeriodoAbierto'], 2);
                         }
-                        
+
                         Yii::app()->session['reporteConPrecision'] = $datosSemanalesEjecutivos;
 
                         if (count($datosSemanalesEjecutivos) > 0) {
@@ -231,6 +247,7 @@ class CierrePeriodoController extends Controller {
                 unset($datosPorEjecutivo);
             }
         }//FIN ITERACION DE EJECUTIVOS
+//        var_dump($datosSemanalesEjecutivos);die();
         return $datosSemanalesEjecutivos;
     }
 

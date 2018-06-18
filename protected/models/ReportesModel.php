@@ -95,23 +95,25 @@ class ReportesModel extends DAOModel {
         return $data;
     }
 
-    public function getInicioJornadaxFecha($usuario, $fecha, $inicioJornada) {
+    public function getInicioJornadaxFecha($usuario, $fecha, $inicioJornada, $finJornada) {
 //        var_dump($datos);die();
 //        $fechaInicioA = $datos['fechaOrdenesInicio'];
-
+        $fechaHoraInicio = $fecha . ' ' . $inicioJornada;
+        $fechaHoraFin = $fecha . ' ' . $finJornada;
         $sql = "
           SELECT
+          TOP 1
 		H_FECHA AS FECHA
-		,DATE_FORMAT(H_FECHA,'%H:%i:%s') AS HORA
+		," . FuncionesBaseDatos::convertToTime('sqlsrv', 'H_FECHA') . " AS HORA
                 ,H_USUARIO_NOMBRE AS EJECUTIVO
             FROM tb_historial_mb 
             WHERE 1=1
-                AND DATE(h_fecha) ='" . $fecha . "'
-                AND TIME_FORMAT(h_fecha, '%H:%i') >='" . $inicioJornada . "'
+                and h_fecha  between '" . $fechaHoraInicio . "'AND '" . $fechaHoraFin . "'
 		AND h_accion='Inicio visita'
 		AND h_usuario='" . $usuario . "'
             ORDER BY h_fecha
-            LIMIT 1;
+            -- LIMIT 1
+            ;
         ";
 
 //        var_dump($sql);        die();
@@ -121,23 +123,26 @@ class ReportesModel extends DAOModel {
         return $data;
     }
 
-    public function getFinJornadaxUsuarioxFecha($usuario, $fecha, $finJornada) {
+    public function getFinJornadaxUsuarioxFecha($usuario, $fecha, $inicioJornada, $finJornada) {
 //        var_dump($datos);die();
 //        $fechaInicioA = $datos['fechaOrdenesInicio'];
+        $fechaHoraInicio = $fecha . ' ' . $inicioJornada;
+        $fechaHoraFin = $fecha . ' ' . $finJornada;
 
         $sql = "
           SELECT
+          TOP 1
 		H_FECHA AS FECHA
-		,DATE_FORMAT(H_FECHA,'%H:%i:%s') AS HORA
+		-- ,DATE_FORMAT(H_FECHA,'%H:%i:%s') AS HORA
+		," . FuncionesBaseDatos::convertToTime('sqlsrv', 'H_FECHA') . " AS HORA
                 ,H_USUARIO_NOMBRE AS EJECUTIVO
             FROM tb_historial_mb 
             WHERE 1=1
-                AND DATE(h_fecha) ='" . $fecha . "'
-                AND TIME_FORMAT(h_fecha, '%H:%i') <='" . $finJornada . "'
-		AND h_accion='Fin de visita'
+                and h_fecha  between '" . $fechaHoraInicio . "'AND '" . $fechaHoraFin . "'
+		AND h_accion='Inicio visita'
 		AND h_usuario='" . $usuario . "'
             ORDER BY h_fecha desc
-            LIMIT 1;
+            ;
         ";
 
 //        var_dump($sql);        die();

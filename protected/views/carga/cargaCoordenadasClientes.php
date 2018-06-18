@@ -22,10 +22,11 @@ $this->pageTitle = $pagina_nombre;
     <div class="row">
         <?php
         $command = Yii::app()->db->createCommand('
-                        SELECT cli_fecha_modificacion as fecha 
+                        SELECT TOP 1
+                        cli_fecha_modificacion as fecha 
                             FROM tb_cliente 
                             order by cli_fecha_modificacion desc 
-                            limit 1;');
+                            ;');
         $resultado = $command->queryRow();
         $ultimaFecha = DateTime::createFromFormat('Y-m-d H:i:s', $resultado['fecha'])->format(FORMATO_FECHA_LONG_2);
         ?>

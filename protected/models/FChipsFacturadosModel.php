@@ -5,7 +5,8 @@ class FChipsFacturadosModel extends DAOModel {
     public function getChipsFacturadosNoTransferidos() {
         $sql = "
            select 
-                date(i_fecha) as i_fecha
+                -- date(i_fecha) as i_fecha
+                ".FuncionesBaseDatos::convertToDate('sqlsrv', 'i_fecha')." as i_fecha
                 ,i_bodega
                 ,I_CODIGO_GRUPO
                 ,I_NOMBRE_CLIENTE

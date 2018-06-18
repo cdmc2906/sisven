@@ -9,6 +9,14 @@
 	<?php echo CHtml::link(CHtml::encode($data->er_cod), array('view', 'id'=>$data->er_cod)); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('e_cod')); ?>:</b>
+	<?php echo CHtml::encode($data->e_cod); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('rg_id')); ?>:</b>
+	<?php echo CHtml::encode($data->rg_id); ?>
+	<br />
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('er_usuario')); ?>:</b>
 	<?php echo CHtml::encode($data->er_usuario); ?>
 	<br />
@@ -25,17 +33,21 @@
 	<?php echo CHtml::encode($data->er_ruta_nombre); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('er_estatus')); ?>:</b>
-	<?php echo CHtml::encode($data->er_estatus); ?>
+	<?php /*
+	<b><?php echo CHtml::encode($data->getAttributeLabel('er_semana_visitar')); ?>:</b>
+	<?php echo CHtml::encode($data->er_semana_visitar); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('er_dia_visitar')); ?>:</b>
+	<?php echo CHtml::encode($data->er_dia_visitar); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('er_estado')); ?>:</b>
+	<?php echo CHtml::encode($data->er_estado); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('er_fecha_ingreso')); ?>:</b>
 	<?php echo CHtml::encode($data->er_fecha_ingreso); ?>
-	<br />
-
-	<?php /*
-	<b><?php echo CHtml::encode($data->getAttributeLabel('er_fecha_asignacion')); ?>:</b>
-	<?php echo CHtml::encode($data->er_fecha_asignacion); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('er_fecha_modificacion')); ?>:</b>

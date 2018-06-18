@@ -236,7 +236,7 @@ function ConfigurarGrids() {
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
         footerrow: true,
-        caption: "Visitas validas / invalidas",
+        caption: "Validacion Geoposicion",
         hidegrid: false,
         gridComplete: function () {
             var $grid = $('#tblResumenVisitasValidasInvalidas');

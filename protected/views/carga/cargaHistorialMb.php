@@ -30,51 +30,22 @@ $this->pageTitle = $pagina_nombre;
     ?>
     <div class="row">
         <?php
-        unset(Yii::app()->session['idPeriodoAbierto']);
-        unset(Yii::app()->session['fechaInicioPeriodo']);
-        unset(Yii::app()->session['fechaFinPeriodo']);
-        unset(Yii::app()->session['itemsFueraPeriodo']);
-
-        $command1 = Yii::app()->db->createCommand('
-            SELECT 
-                pg_id as idperiodo,
-                pg_fecha_inicio as fechainicio,
-                pg_fecha_fin as fechafin,
-                pg_descripcion as descripcion
-            FROM tcc_control_ruta.tb_periodo_gestion
-            WHERE 
-            pg_estado=1
-            and pg_tipo=\'SEMANAL\';');
-        $resultado1 = $command1->queryRow();
-//        var_dump($resultado1);die();
-        $periodoAbierto = '('.$resultado1['idperiodo'].') '.$resultado1['descripcion'];
-
-        Yii::app()->session['idPeriodoAbierto'] = $resultado1['idperiodo'];
-        Yii::app()->session['fechaInicioPeriodo'] = $resultado1['fechainicio'];
-        Yii::app()->session['fechaFinPeriodo'] = $resultado1['fechafin'];
-
-        $command = Yii::app()->db->createCommand('
-                        select 
-                                 h_fch_ingreso as fecha 
-                            from tb_historial_mb 
-                            order by h_fch_ingreso desc 
-                            limit 1;');
-        $resultado = $command->queryRow();
-        $ultimaFecha = DateTime::createFromFormat('Y-m-d H:i:s', $resultado['fecha'])->format(FORMATO_FECHA_LONG_2);
-        ?>
-
-        <div class="callout callout-success">
-            <center>
-                <h4><?php echo $form->labelEx($model, 'periodoAbierto'); ?></h4>
-                <p> <b><?php echo $periodoAbierto; ?></b></p>
-            </center>
-        </div>
-        <div class="callout callout-info">
-            <center>
-                <h4><?php echo $form->labelEx($model, 'fechaUltimaCarga'); ?></h4>
-                <p>La ultima carga se realizo el <b><?php echo $ultimaFecha; ?></b></p>
-            </center>
-        </div>
+        $periodoAbierto = FPeriodoGestionModel::getPeriodoActivoNotificacion();
+        if ($periodoAbierto != '') :
+            ?>
+            <div class="callout callout-info">
+                <center>
+                    <p>Periodo semanal abierto : <b><?php echo $periodoAbierto; ?>
+                        </b></p>
+                </center>
+            </div>
+        <?php else: ?>
+            <div class="callout callout-danger">
+                <center>
+                    <p><b>** NO EXISTE PERIODO SEMANAL ABIERTO **</b></p>
+                </center>
+            </div>
+        <?php endif; ?>
         <div class="col-md-3">
             <div class="form-group">
                 <?php

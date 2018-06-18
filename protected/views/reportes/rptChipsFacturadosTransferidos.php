@@ -28,10 +28,11 @@ $this->pageTitle = $pagina_nombre;
                     <?php
                     //$ventas= VentaMovistarModel::model()->
                     $command = Yii::app()->db->createCommand('
-                        SELECT DATE(i_fecha) as fecha 
+                        SELECT TOP 1
+                        '.FuncionesBaseDatos::convertToDate('sqlsrv', 'i_fecha').' as fecha 
                             FROM tb_indicadores 
                             order by i_fecha desc 
-                            limit 1');
+                            ');
                     $resultado = $command->queryRow();
                     $ultimaFechaFactura = DateTime::createFromFormat('Y-m-d', $resultado['fecha'])->format(FORMATO_FECHA);
 
@@ -51,20 +52,25 @@ $this->pageTitle = $pagina_nombre;
 
                     <?php
                     $command = Yii::app()->db->createCommand('
-                        SELECT DATE(i_fecha) as fecha 
+                        SELECT 
+                        TOP 1
+                        '.FuncionesBaseDatos::convertToDate('sqlsrv', 'i_fecha').' as fecha 
                             FROM tb_indicadores 
                             order by i_fecha desc 
-                            limit 1');
+                            ');
                     $resultado = $command->queryRow();
                     $ultimaFechaFactura = DateTime::createFromFormat('Y-m-d', $resultado['fecha'])->format(FORMATO_FECHA);
 
-                    $consulta = "SELECT 
+                    $consulta = "
+                        SELECT 
                             sum(i_cantidad) as cantidad 
                             FROM tb_indicadores 
                             WHERE i_fecha between 
-                                (select CAST(DATE_FORMAT('" . $ultimaFechaFactura . "' ,'%Y-%m-01') as DATE)) 
-                                AND (select LAST_DAY('" . $ultimaFechaFactura . "')) 
+                            (SELECT DATEADD(mm, DATEDIFF(mm, 0,  convert(date,'" . $ultimaFechaFactura . "')), 0))
+                                and
+                            (SELECT DATEADD (dd, -1, DATEADD(mm, DATEDIFF(mm, 0, convert(date,'" . $ultimaFechaFactura . "')) + 1, 0))) 
                             ;";
+//                    var_dump($consulta);die();
                     $command = Yii::app()->db->createCommand($consulta);
                     $resultado = $command->queryRow();
                     $cantidadFacturado = number_format(intval($resultado['cantidad']), 0, '', '.');
@@ -86,10 +92,12 @@ $this->pageTitle = $pagina_nombre;
                 <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent; margin:auto;">
                     <?php
                     $command = Yii::app()->db->createCommand('
-                        SELECT DATE(tm_fecha) as fecha 
+                        SELECT top 1
+                        -- DATE(tm_fecha) as fecha 
+                       ' .FuncionesBaseDatos::convertToDate('sqlsrv', 'tm_fecha').' as fecha
                             FROM tb_transferencia_movistar
                             order by tm_fecha desc
-                            limit 1');
+                            ');
                     $resultado = $command->queryRow();
                     $ultimaFechaTransferencia = DateTime::createFromFormat('Y-m-d', $resultado['fecha'])->format(FORMATO_FECHA);
                     echo CHtml::label('Fecha ultima Transferencia', '_ultimaFechaTransferencia');
@@ -110,10 +118,12 @@ $this->pageTitle = $pagina_nombre;
 //                    $ventas= VentaMovistarModel::model()->
 //                    echo CHtml::label("hi",$model->);
                     $command = Yii::app()->db->createCommand('
-                        SELECT DATE(tm_fecha) as fecha 
+                        SELECT top 1
+                        ' .FuncionesBaseDatos::convertToDate('sqlsrv', 'tm_fecha').' as fecha
+                        -- DATE(tm_fecha) as fecha 
                             FROM tb_transferencia_movistar
                             order by tm_fecha desc
-                            limit 1');
+                            ');
                     $resultado = $command->queryRow();
                     $ultimaFechaTransferencia = DateTime::createFromFormat('Y-m-d', $resultado['fecha'])->format(FORMATO_FECHA);
 
@@ -121,9 +131,11 @@ $this->pageTitle = $pagina_nombre;
                             count(tm_icc) as cantidad 
                             FROM tb_transferencia_movistar 
                             WHERE tm_fecha between 
-                                (select CAST(DATE_FORMAT('" . $ultimaFechaTransferencia . "' ,'%Y-%m-01') as DATE)) 
-                                AND (select LAST_DAY('" . $ultimaFechaTransferencia . "')) 
+                            (SELECT DATEADD(mm, DATEDIFF(mm, 0,  convert(date,'" . $ultimaFechaTransferencia . "')), 0))
+                                and
+                            (SELECT DATEADD (dd, -1, DATEADD(mm, DATEDIFF(mm, 0, convert(date,'" . $ultimaFechaTransferencia . "')) + 1, 0)))  
                             ;";
+//                    var_dump($consulta);die();
                     $command = Yii::app()->db->createCommand($consulta);
                     $resultado = $command->queryRow();
 
@@ -148,10 +160,12 @@ $this->pageTitle = $pagina_nombre;
                     <?php
 //                    $ventas= VentaMovistarModel::model()->
                     $command = Yii::app()->db->createCommand('
-                        SELECT DATE(vm_fecha) as fecha 
+                        SELECT top 1
+                        -- DATE(vm_fecha) as fecha 
+                        ' .FuncionesBaseDatos::convertToDate('sqlsrv', 'vm_fecha').' as fecha
                             FROM tb_venta_movistar 
                             order by vm_fecha desc 
-                            limit 1');
+                           ');
                     $resultado = $command->queryRow();
                     $ultimaFechaVenta = DateTime::createFromFormat('Y-m-d', $resultado['fecha'])->format(FORMATO_FECHA);
 
@@ -170,10 +184,13 @@ $this->pageTitle = $pagina_nombre;
                 <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent; margin:auto;">
                     <?php
                     $command = Yii::app()->db->createCommand('
-                        SELECT DATE(vm_fecha) as fecha 
+                        SELECT top 1
+                        -- DATE(vm_fecha) as fecha 
+                        ' .FuncionesBaseDatos::convertToDate('sqlsrv', 'vm_fecha').' as fecha
+                        
                             FROM tb_venta_movistar 
                             order by vm_fecha desc 
-                            limit 1');
+                           ');
                     $resultado = $command->queryRow();
                     $ultimaFechaVenta = DateTime::createFromFormat('Y-m-d', $resultado['fecha'])->format(FORMATO_FECHA);
                     
@@ -183,8 +200,9 @@ $this->pageTitle = $pagina_nombre;
                             FROM tb_venta_movistar 
                             WHERE 1=1
                                 AND vm_fecha between 
-                                    (select CAST(DATE_FORMAT('" . $ultimaFechaVenta . "' ,'%Y-%m-01') as DATE)) 
-                                    AND (select LAST_DAY('" . $ultimaFechaVenta . "')) 
+                                (SELECT DATEADD(mm, DATEDIFF(mm, 0, convert(date,'" . $ultimaFechaVenta . "')), 0))
+                                and
+                            (SELECT DATEADD (dd, -1, DATEADD(mm, DATEDIFF(mm, 0,convert(date,'" . $ultimaFechaVenta . "')) + 1, 0))) 
                                 and vm_estado_icc ='ICC OK'                                
                             ;"
                             );
@@ -198,8 +216,9 @@ $this->pageTitle = $pagina_nombre;
                                 from tb_venta_movistar
                                 WHERE 1=1
                                     and vm_fecha between 
-                                        (select CAST(DATE_FORMAT('" . $ultimaFechaVenta . "' ,'%Y-%m-01') as DATE)) 
-                                        AND (select LAST_DAY('" . $ultimaFechaVenta . "'))
+                                    (SELECT DATEADD(mm, DATEDIFF(mm, 0, convert(date,'" . $ultimaFechaVenta . "')), 0))
+                                and
+                            (SELECT DATEADD (dd, -1, DATEADD(mm, DATEDIFF(mm, 0,convert(date,'" . $ultimaFechaVenta . "')) + 1, 0))) 
                                     and vm_estado_icc ='ICC PROMO'
                                     ;"
                             );

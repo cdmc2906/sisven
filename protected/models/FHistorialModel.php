@@ -60,11 +60,13 @@ class FHistorialModel extends DAOModel {
     public function getInicioFinVisitaClientexEjecutivoxFecha($accion, $fechagestion, $ejecutivo, $codCliente, $codigoHistorial) {
         $sql = "
             SELECT 
-                    TIME_FORMAT(H_FECHA, '%H:%i:%s') as HORAVISITA 
+                    " . FuncionesBaseDatos::convertToTime('sqlsrv', 'h_fecha') . "as HORAVISITA 
+                    -- TIME_FORMAT(H_FECHA, '%H:%i:%s') as HORAVISITA 
                     ,h_id as IDHISTORIAL
                 FROM tb_historial_mb
                 WHERE 1=1
-                    AND DATE(H_FECHA) ='" . $fechagestion . "'
+                    AND " . FuncionesBaseDatos::convertToDate('sqlsrv', 'h_fecha') . "='" . $fechagestion . "'
+                    -- AND DATE(H_FECHA) ='" . $fechagestion . "'
                     AND H_USUARIO='" . $ejecutivo . "'
                     AND H_ACCION='" . $accion . "'
                     AND H_COD_CLIENTE='" . $codCliente . "'
@@ -90,7 +92,6 @@ class FHistorialModel extends DAOModel {
 
         $sql = "
             SELECT 
-                    -- DATE(H_FECHA) as FECHAVISITA
                     DATE_FORMAT(H_FECHA, '%Y-%m-%d %H:%i') AS FECHAVISITA
                     ,H_COD_CLIENTE AS CODIGOCLIENTE
                     ,H_NOM_CLIENTE AS NOMBRECLIENTE
@@ -119,7 +120,8 @@ class FHistorialModel extends DAOModel {
 
         $sql = "
             SELECT 
-                    DATE_FORMAT(H_FECHA, '%Y-%m-%d %H:%i') AS FECHAVISITA
+                    " . FuncionesBaseDatos::convertToDateTimeYYYYMMDDHHMM('sqlsrv', 'H_FECHA') . " AS FECHAVISITA
+                    -- formato mysql DATE_FORMAT(H_FECHA, '%Y-%m-%d %H:%i') AS FECHAVISITA
                     ,H_COD_CLIENTE AS CODIGOCLIENTE
                     ,H_NOM_CLIENTE AS NOMBRECLIENTE
                     ,H_RUTA AS RUTAVISITA
@@ -157,7 +159,7 @@ class FHistorialModel extends DAOModel {
 
         $sql = "
             SELECT 
-                    DATE_FORMAT(H_FECHA, '%Y-%m-%d %H:%i') AS FECHAVISITA
+                    H_FECHA AS FECHAVISITA
                     ,H_COD_CLIENTE AS CODIGOCLIENTE
                     ,H_NOM_CLIENTE AS NOMBRECLIENTE
                     ,H_RUTA AS RUTAVISITA
@@ -188,8 +190,7 @@ class FHistorialModel extends DAOModel {
 
         $sql = "
             SELECT 
-                    -- DATE(H_FECHA) as FECHAVISITA
-                    DATE_FORMAT(H_FECHA, '%Y-%m-%d %H:%i') AS FECHAVISITA
+                    H_FECHA AS FECHAVISITA
                     ,H_COD_CLIENTE AS CODIGOCLIENTE
                     ,H_NOM_CLIENTE AS NOMBRECLIENTE
                     ,H_RUTA AS RUTAVISITA
@@ -245,14 +246,16 @@ class FHistorialModel extends DAOModel {
         $fechaFin = $fechagestion . ' ' . $horaFin;
         $sql = "
             SELECT 
-             DATE_FORMAT(H_FECHA, '%H:%i') AS RESULTADO
+            TOP 1
+             " . FuncionesBaseDatos::convertToTime('sqlsrv', 'H_FECHA') . "AS RESULTADO
+             -- DATE_FORMAT(H_FECHA, '%H:%i') AS RESULTADO
                 FROM tb_historial_mb
                 WHERE 1=1
                     AND H_FECHA BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
                     AND H_USUARIO='" . $ejecutivo . "'
                     AND H_ACCION='" . $accion . "'
                 ORDER BY H_FECHA
-                LIMIT 1;
+                ;
             ";
 //   var_dump($sql);        die();
 
@@ -268,14 +271,16 @@ class FHistorialModel extends DAOModel {
         $fechaFin = $fechagestion . ' ' . $horaFin;
         $sql = "
             SELECT 
-             DATE_FORMAT(H_FECHA, '%H:%i') AS RESULTADO
+            TOP 1
+             " . FuncionesBaseDatos::convertToTime('sqlsrv', 'H_FECHA') . "AS RESULTADO
+             -- DATE_FORMAT(H_FECHA, '%H:%i') AS RESULTADO
                 FROM tb_historial_mb
                 WHERE 1=1
                     AND H_FECHA BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
                     AND H_USUARIO='" . $ejecutivo . "'
                     AND H_ACCION='" . $accion . "'
                 ORDER BY H_FECHA DESC
-                LIMIT 1;
+                ;
             ";
 //   var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
@@ -373,11 +378,12 @@ class FHistorialModel extends DAOModel {
                    count(distinct h_cod_cliente) as visitas_en_ruta
                 FROM tb_historial_mb
                 WHERE 1=1
-                    AND DATE(H_FECHA)='" . $fecha . "'
+                    AND " . FuncionesBaseDatos::convertToDate('sqlsrv', 'h_fecha') . "='" . $fecha . "'
                     AND H_USUARIO='" . $codigoejecutivo . "'
                     AND H_ACCION='" . $accion . "'
                     AND H_RUTA='" . $ruta . "'
-                ORDER BY H_FECHA ;
+                
+                ;
             ";
 //   var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
@@ -449,10 +455,12 @@ class FHistorialModel extends DAOModel {
 
         $resultado = array();
         $sql1 = "
-            select sum(rhd_valor) AS '" . $txt1 . "'
+            -- select sum(rhd_valor) AS '" . $txt1 . "'
+            select ISNULL(sum(CONVERT(int, rhd_valor)),0) AS '" . $txt1 . "'
             from tb_resumen_historial_diario 
             where 1=1
-            and date(rhd_fecha_historial)='" . $fecha . "' 
+            -- and date(rhd_fecha_historial)='" . $fecha . "' 
+            and " . FuncionesBaseDatos::convertToDate('sqlsrv', 'rhd_fecha_historial') . "='" . $fecha . "' 
             and rhd_cod_ejecutivo='" . $codigoejecutivo . "'
             and rhd_parametro IN ('VISITAS-EFECTUADAS-EN-RUTA','VISITAS-FUERA-RUTA'); 
             ";
@@ -462,10 +470,12 @@ class FHistorialModel extends DAOModel {
         $resultado [$txt1] = (isset($datos1[0])) ? intval($datos1[0][$txt1]) : 0;
 
         $sql2 = "
-            select sum(rhd_valor) AS '" . $txt2 . "'
+            -- select sum(rhd_valor) AS '" . $txt2 . "'
+            select ISNULL(sum(CONVERT(int, rhd_valor)),0) AS '" . $txt2 . "'
             from tb_resumen_historial_diario 
             where 1=1
-            and date(rhd_fecha_historial)='" . $fecha . "' 
+            -- and date(rhd_fecha_historial)='" . $fecha . "' 
+                and " . FuncionesBaseDatos::convertToDate('sqlsrv', 'rhd_fecha_historial') . "='" . $fecha . "' 
             and rhd_cod_ejecutivo='" . $codigoejecutivo . "'
             and rhd_parametro IN ('VISITAS-REPETIDAS');
 
@@ -475,10 +485,12 @@ class FHistorialModel extends DAOModel {
         $resultado [$txt2] = (isset($datos2[0])) ? intval($datos2[0][$txt2]) : 0;
 
         $sql3 = "
-            select sum(rhd_valor) AS '" . $txt3 . "'
+            -- select sum(rhd_valor) AS '" . $txt3 . "'
+            select ISNULL(sum(CONVERT(int, rhd_valor)),0) AS '" . $txt3 . "'
             from tb_resumen_historial_diario 
             where 1=1
-           and date(rhd_fecha_historial)='" . $fecha . "' 
+           -- and date(rhd_fecha_historial)='" . $fecha . "' 
+               and " . FuncionesBaseDatos::convertToDate('sqlsrv', 'rhd_fecha_historial') . "='" . $fecha . "' 
             and rhd_cod_ejecutivo='" . $codigoejecutivo . "'
             and rhd_parametro IN ('VISITAS-EFECTUADAS-EN-RUTA','VISITAS-FUERA-RUTA','VISITAS-REPETIDAS');
             ";

@@ -35,11 +35,14 @@ $this->pageTitle = 'Carga Ventas Movistar';
                     <?php
 //                    $ventas= VentaMovistarModel::model()->
                     $command = Yii::app()->db->createCommand('
-                        SELECT DATE(vm_fecha) as fecha 
+                        SELECT 
+                        top 1
+                        -- DATE(vm_fecha) as fecha 
+                        ' . FuncionesBaseDatos::convertToDate('sqlsrv', 'vm_fecha') . '  as fecha 
                             FROM tb_venta_movistar 
                             order by vm_fecha desc 
-                            limit 1');
-                    $resultado = $command->queryRow();                    
+                            ');
+                    $resultado = $command->queryRow();
                     $ultimaFecha = DateTime::createFromFormat('Y-m-d', $resultado['fecha'])->format(FORMATO_FECHA);
 
                     echo $form->textField($model, 'fechaUltimaCarga'

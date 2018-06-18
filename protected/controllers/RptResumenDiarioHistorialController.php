@@ -79,11 +79,15 @@ class RptResumenDiarioHistorialController extends Controller {
             $this->actionResponse(null, null, $response);
         }
 //        $this->actionResponse(null, $model, $response);
+//        var_dump($response);die();
         return;
     }
 
     private function actionResponse($view = 'error', $model = null, $response = null) {
+//        var_dump(Yii::app()->request->isAjaxRequest);die();
         if (Yii::app()->request->isAjaxRequest) {
+//            var_dump( ($response));die();
+//            var_dump(json_encode($response), json_last_error());die();
             echo json_encode($response);
         } else {
             $this->render($view, $model);
@@ -258,7 +262,15 @@ class RptResumenDiarioHistorialController extends Controller {
                 $excel->SetHojaDefault(0);
                 $excel->SetNombreHojaActiva($NombreHoja);
 
-                $excel->Mapeo($noVisitados);
+                $columnasCentrar = array();
+                array_push($columnasCentrar, array('NUMCOLUMNA' => '4')); #SEMANA
+                array_push($columnasCentrar, array('NUMCOLUMNA' => '5')); #SECUENCIA_HISTORIAL
+                array_push($columnasCentrar, array('NUMCOLUMNA' => '6')); #SECUENCIA_RUTA
+                array_push($columnasCentrar, array('NUMCOLUMNA' => '7')); #CLIENTE
+                array_push($columnasCentrar, array('NUMCOLUMNA' => '8')); #VENTA
+                array_push($columnasCentrar, array('NUMCOLUMNA' => '9')); #ESTADO
+
+                $excel->Mapeo($noVisitados,'','',$columnasCentrar);
 
                 $excel->CrearArchivo('Excel2007', $NombreArchivo);
                 $excel->GuardarArchivo();

@@ -17,6 +17,16 @@
 	</div>
 
 	<div class="row">
+		<?php echo $form->label($model,'e_cod'); ?>
+		<?php echo $form->textField($model,'e_cod'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->label($model,'rg_id'); ?>
+		<?php echo $form->textField($model,'rg_id'); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->label($model,'er_usuario'); ?>
 		<?php echo $form->textField($model,'er_usuario',array('size'=>50,'maxlength'=>50)); ?>
 	</div>
@@ -37,18 +47,23 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->label($model,'er_estatus'); ?>
-		<?php echo $form->textField($model,'er_estatus',array('size'=>50,'maxlength'=>50)); ?>
+		<?php echo $form->label($model,'er_semana_visitar'); ?>
+		<?php echo $form->textField($model,'er_semana_visitar'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->label($model,'er_dia_visitar'); ?>
+		<?php echo $form->textField($model,'er_dia_visitar'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->label($model,'er_estado'); ?>
+		<?php echo $form->textField($model,'er_estado',array('size'=>50,'maxlength'=>50)); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->label($model,'er_fecha_ingreso'); ?>
 		<?php echo $form->textField($model,'er_fecha_ingreso'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->label($model,'er_fecha_asignacion'); ?>
-		<?php echo $form->textField($model,'er_fecha_asignacion'); ?>
 	</div>
 
 	<div class="row">
