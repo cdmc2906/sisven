@@ -1,29 +1,24 @@
 <?php
 
-/**
- * This is the model class for table "tb_asignacion".
- *
- * The followings are the available columns in table 'tb_asignacion':
- * @property integer $ID_ASIG
- * @property integer $ID_PRO
- * @property integer $ID_VEND
- * @property string $FECHAINGRESO_ASIG
- * @property integer $IDUSR_ASIF
- *
- * The followings are the available model relations:
- * @property TbVendedor $iDVEND
- * @property TbProducto $iDPRO
- */
 class FRutaModel extends DAOModel {
-    /*
-     * Obtiene el listado de mines vendidos por el vendedor segun la fecha.
-     * 
-     * El tipo de vendedor influye en los meses en los que se obtiene las ventas
-     *  Vendedores (1) =Ventas 4 meses atrás de la fecha de calculo
-     *  Mayoristas(2) = Ventas en el mes anterior al calculo de las comisiones
-     */
-
+   
     public $campoFechaOrdenes = 'o_fch_creacion';
+
+    public static function getFechaUltimaCarga() {
+        $command1 = Yii::app()->db->createCommand("
+           select MAX(r_fch_ingreso) as ultimacarga from tb_ruta_mb");
+
+        $resultado1 = $command1->queryRow();
+        $ultimacarga = $resultado1['ultimacarga'];
+
+        return $ultimacarga;
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
 
     public function getCargaAnterior() {
         $sql = "select max(r_numero_carga_informacion) as ultimacarga FROM tb_ruta_mb;";
@@ -165,17 +160,18 @@ class FRutaModel extends DAOModel {
 		on a.er_ruta=b.r_ruta
 	where 1=1
 		and a.er_usuario='" . $codEjecutivo . "' 
-		and a.er_semana_visitar=".$semana." 
+		and a.er_semana_visitar=" . $semana . " 
 		and a.er_dia_visitar=" . $dia . "
+                and b.r_semana=" . $semana . " 
 		and b.r_estatus=1
 		and b.pg_id=" . $periodoAbierto . "
 		AND b.r_cod_cliente NOT IN 
             (SELECT h_cod_cliente
                 FROM tb_historial_mb
                 WHERE 1=1
-                    AND convert(date,h_fecha)='2018-06-11'
+                    AND convert(date,h_fecha)='".$fechaGestion."'
                     AND h_usuario='" . $codEjecutivo . "' 
-                    AND h_semana=".$semana."
+                    AND h_semana=" . $semana . "
                         
             );
 

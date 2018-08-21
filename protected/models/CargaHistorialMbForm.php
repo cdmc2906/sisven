@@ -18,7 +18,7 @@ class CargaHistorialMbForm extends CFormModel {
         return array(
             array('delimitadorColumnas', 'required'),
             array('rutaArchivo,delimitadorColumnas,fechaUltimaCarga', 'safe'),
-            array('rutaArchivo', 'file', 'types' => 'csv')
+            array('rutaArchivo', 'file', 'types' => 'csv,xls,xlsx')
         );
     }
 

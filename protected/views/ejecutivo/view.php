@@ -25,5 +25,7 @@ $this->menu=array(
 		'e_nombre',
 		'e_usr_mobilvendor',
 		'e_iniciales',
+		'e_estado',
+		'e_tipo',
 	),
 )); ?>

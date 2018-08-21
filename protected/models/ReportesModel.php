@@ -104,7 +104,7 @@ class ReportesModel extends DAOModel {
           SELECT
           TOP 1
 		H_FECHA AS FECHA
-		," . FuncionesBaseDatos::convertToTime('sqlsrv', 'H_FECHA') . " AS HORA
+		," . FuncionesBaseDatos::convertToTimeHHMMSS('sqlsrv', 'H_FECHA') . " AS HORA
                 ,H_USUARIO_NOMBRE AS EJECUTIVO
             FROM tb_historial_mb 
             WHERE 1=1
@@ -134,12 +134,12 @@ class ReportesModel extends DAOModel {
           TOP 1
 		H_FECHA AS FECHA
 		-- ,DATE_FORMAT(H_FECHA,'%H:%i:%s') AS HORA
-		," . FuncionesBaseDatos::convertToTime('sqlsrv', 'H_FECHA') . " AS HORA
+		," . FuncionesBaseDatos::convertToTimeHHMMSS('sqlsrv', 'H_FECHA') . " AS HORA
                 ,H_USUARIO_NOMBRE AS EJECUTIVO
             FROM tb_historial_mb 
             WHERE 1=1
                 and h_fecha  between '" . $fechaHoraInicio . "'AND '" . $fechaHoraFin . "'
-		AND h_accion='Inicio visita'
+		AND h_accion='Fin de visita'
 		AND h_usuario='" . $usuario . "'
             ORDER BY h_fecha desc
             ;

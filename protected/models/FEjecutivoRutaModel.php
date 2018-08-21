@@ -37,6 +37,7 @@ class FEjecutivoRutaModel extends DAOModel {
                     and a.er_usuario='" . $ejecutivo . "'
                     and a.er_semana_visitar='" . $semana . "' 
                     and a.er_dia_visitar=" . $dia . "
+                    and b.r_semana='" . $semana . "' 
                     and b.r_estatus=1
      ;  
                         ";
@@ -60,6 +61,7 @@ class FEjecutivoRutaModel extends DAOModel {
                     and a.er_usuario='" . $ejecutivo . "'
                     and a.er_semana_visitar='" . $semana . "' 
                     and a.er_dia_visitar=" . $dia . "
+                    and b.r_semana='" . $semana . "' 
                     and b.r_estatus=1
                 and b.pg_id=" . $periodo . "
      ;  

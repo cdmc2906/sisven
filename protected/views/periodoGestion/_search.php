@@ -32,6 +32,16 @@
 	</div>
 
 	<div class="row">
+		<?php echo $form->label($model,'pg_anio'); ?>
+		<?php echo $form->textField($model,'pg_anio'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->label($model,'pg_mes'); ?>
+		<?php echo $form->textField($model,'pg_mes'); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->label($model,'pg_estado'); ?>
 		<?php echo $form->textField($model,'pg_estado'); ?>
 	</div>

@@ -9,6 +9,10 @@
  * @property string $e_usr_mobilvendor
  * @property string $e_iniciales
  * @property integer $e_estado
+ * @property string $e_tipo
+ *
+ * The followings are the available model relations:
+ * @property TbEjecutivoRuta[] $tbEjecutivoRutas
  */
 class EjecutivoModel extends CActiveRecord
 {
@@ -29,11 +33,11 @@ class EjecutivoModel extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('e_estado', 'numerical', 'integerOnly'=>true),
-			array('e_nombre', 'length', 'max'=>50),
+			array('e_nombre, e_tipo', 'length', 'max'=>50),
 			array('e_usr_mobilvendor, e_iniciales', 'length', 'max'=>5),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('e_cod, e_nombre, e_usr_mobilvendor, e_iniciales, e_estado', 'safe', 'on'=>'search'),
+			array('e_cod, e_nombre, e_usr_mobilvendor, e_iniciales, e_estado, e_tipo', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -45,6 +49,7 @@ class EjecutivoModel extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'tbEjecutivoRutas' => array(self::HAS_MANY, 'TbEjecutivoRuta', 'e_cod'),
 		);
 	}
 
@@ -59,6 +64,7 @@ class EjecutivoModel extends CActiveRecord
 			'e_usr_mobilvendor' => 'E Usr Mobilvendor',
 			'e_iniciales' => 'E Iniciales',
 			'e_estado' => 'E Estado',
+			'e_tipo' => 'E Tipo',
 		);
 	}
 
@@ -85,6 +91,7 @@ class EjecutivoModel extends CActiveRecord
 		$criteria->compare('e_usr_mobilvendor',$this->e_usr_mobilvendor,true);
 		$criteria->compare('e_iniciales',$this->e_iniciales,true);
 		$criteria->compare('e_estado',$this->e_estado);
+		$criteria->compare('e_tipo',$this->e_tipo,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

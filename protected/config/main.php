@@ -142,15 +142,17 @@ return array(
         'db_conn' => array(
             // uncomment the following lines to use a PostgreSQL database
             'class' => 'CDbConnection',
-//            'connectionString' => 'mysql:host=10.130.1.9;dbname=tcc_control_ruta',
-//            'emulatePrepare' => true,
-//            'username' => 'root',
-//            'password' => 'admin123',
-//            'charset' => 'utf8',
-//            'tablePrefix' => '',
-            'connectionString' => 'sqlsrv:server=10.130.1.67;database=tcc_control_ruta',
+
+            'connectionString' => 'sqlsrv:server=10.130.1.17;database=tcc_control_ruta',
             'username' => 'sa',
-            'password' => 'Admin2016..',
+            'password' => 'GrpMetro"==)',
+            'charset' => 'utf8'
+        ),
+        'db_grp' => array(
+            'class' => 'CDbConnection',
+            'connectionString' => 'sqlsrv:server=10.130.1.17;database=tececab',
+            'username' => 'sa',
+            'password' => 'GrpMetro"==)',
             'charset' => 'utf8'
         ),
         'errorHandler' => array(

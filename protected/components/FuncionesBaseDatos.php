@@ -35,13 +35,13 @@ class FuncionesBaseDatos {
      * @param type $fecha Fecha para convertir
      * @return type resultado de conversion a tipo tiempo hh:mm
      */
-    public static function convertToTime($dbms, $fecha) {
+    public static function convertToTimeHHMMSS($dbms, $fecha) {
         switch ($dbms) {
             case 'mysql':
                 return "TIME_FORMAT(' . $fecha . ', '%H:%i:%s'))";
                 break;
             case 'sqlsrv':
-                return 'CONVERT(VARCHAR(7), CAST(' . $fecha . ' AS TIME), 108)';
+                return 'CONVERT(VARCHAR(8), CAST(' . $fecha . ' AS TIME), 108)';
 //                return 'convert(date,' . $fecha . ')';
                 break;
         }
@@ -59,6 +59,21 @@ class FuncionesBaseDatos {
                 break;
             case 'sqlsrv':
                 return 'CONVERT(VARCHAR(16),' . $fecha . ')';
+                break;
+        }
+    }
+    /**
+     * @param type $dbms Gestor de base de datos a usar
+     * @param type $fecha Fecha para convertir
+     * @return type resultado de conversion a tipo date y tiempo YYYYmmdd HHMM
+     */
+    public static function convertToDateTimeYYYYMMDDHHMMSS($dbms, $fecha) {
+        switch ($dbms) {
+            case 'mysql':
+                return "DATE_FORMAT(" . $fecha . ", '%Y-%m-%d %H:%i') ";
+                break;
+            case 'sqlsrv':
+                return 'CONVERT(VARCHAR(19),' . $fecha . ')';
                 break;
         }
     }

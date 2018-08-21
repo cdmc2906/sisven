@@ -35,10 +35,13 @@ $this->pageTitle = 'Carga Indicadores';
                     <?php
 //                    $ventas= VentaMovistarModel::model()->
                     $command = Yii::app()->db->createCommand('
-                        SELECT DATE(i_fecha) as fecha 
+                        SELECT top 1
+                        -- DATE(i_fecha) as fecha 
+                        ' . FuncionesBaseDatos::convertToDate('sqlsrv', 'i_fecha') . ' as fecha
                             FROM tb_indicadores 
                             order by i_fecha desc 
-                            limit 1');
+                            --limit 1
+                            ');
                     $resultado = $command->queryRow();
                     $ultimaFecha = DateTime::createFromFormat('Y-m-d', $resultado['fecha'])->format(FORMATO_FECHA);
 

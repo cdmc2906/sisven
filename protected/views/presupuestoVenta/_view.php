@@ -9,6 +9,10 @@
 	<?php echo CHtml::link(CHtml::encode($data->p_id), array('view', 'id'=>$data->p_id)); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('pg_id')); ?>:</b>
+	<?php echo CHtml::encode($data->pg_id); ?>
+	<br />
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('p_codigo_vendedor')); ?>:</b>
 	<?php echo CHtml::encode($data->p_codigo_vendedor); ?>
 	<br />
@@ -29,17 +33,17 @@
 	<?php echo CHtml::encode($data->p_valor_presupuesto); ?>
 	<br />
 
+	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('p_tipo_presupuesto')); ?>:</b>
 	<?php echo CHtml::encode($data->p_tipo_presupuesto); ?>
 	<br />
 
-	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('p_cantidad_feriados')); ?>:</b>
 	<?php echo CHtml::encode($data->p_cantidad_feriados); ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('p_venta_diaria_esperada')); ?>:</b>
-	<?php echo CHtml::encode($data->p_venta_diaria_esperada); ?>
+	<b><?php echo CHtml::encode($data->getAttributeLabel('p_cumplimiento_diario_esperado')); ?>:</b>
+	<?php echo CHtml::encode($data->p_cumplimiento_diario_esperado); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('p_estado_presupuesto')); ?>:</b>

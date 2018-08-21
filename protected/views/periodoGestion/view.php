@@ -25,6 +25,8 @@ $this->menu=array(
 		'pg_descripcion',
 		'pg_fecha_inicio',
 		'pg_fecha_fin',
+		'pg_anio',
+		'pg_mes',
 		'pg_estado',
 		'pg_tipo',
 		'pg_fecha_ingreso',

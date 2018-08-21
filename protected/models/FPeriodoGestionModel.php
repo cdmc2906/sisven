@@ -1,19 +1,5 @@
 <?php
 
-/**
- * This is the model class for table "tb_asignacion".
- *
- * The followings are the available columns in table 'tb_asignacion':
- * @property integer $ID_ASIG
- * @property integer $ID_PRO
- * @property integer $ID_VEND
- * @property string $FECHAINGRESO_ASIG
- * @property integer $IDUSR_ASIF
- *
- * The followings are the available model relations:
- * @property TbVendedor $iDVEND
- * @property TbProducto $iDPRO
- */
 class FPeriodoGestionModel extends DAOModel {
 
     public function getPeriodos() {

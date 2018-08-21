@@ -22,6 +22,7 @@ $this->menu=array(
 	'data'=>$model,
 	'attributes'=>array(
 		'p_id',
+		'pg_id',
 		'p_codigo_vendedor',
 		'p_fecha_ini_validez',
 		'p_fecha_fin_validez',
@@ -29,7 +30,7 @@ $this->menu=array(
 		'p_valor_presupuesto',
 		'p_tipo_presupuesto',
 		'p_cantidad_feriados',
-		'p_venta_diaria_esperada',
+		'p_cumplimiento_diario_esperado',
 		'p_estado_presupuesto',
 		'p_fecha_ingreso',
 		'p_fecha_modifica',

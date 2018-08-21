@@ -184,6 +184,25 @@ $this->pageTitle = $pagina_nombre;
                             ?>
                         </a>
                     </li>
+                    <!--                    <li>
+                                            <a href="#">
+                                                <i class="fa fa-calendar"></i>
+                    <?php // echo $form->labelEx($model, 'semanaRevision'); ?>
+                    <?php
+//                            echo $form->dropDownList(
+//                                    $model, 'semanaRevision'
+//                                    , array(
+//                                '1' => 'Semana 1',
+//                                '2' => 'Semana 2',
+//                                '3' => 'Semana 3',
+//                                '4' => 'Semana 4'
+//                                    )
+////                                    , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+//                            );
+                    ?>
+                    <?php // echo $form->error($model, 'semanaRevision'); ?>
+                                            </a>
+                                        </li>-->
                 </ul>
             </div>
         </div>
@@ -211,3 +230,4 @@ $this->pageTitle = $pagina_nombre;
             </div>
         </div>
     </div>
+</div>

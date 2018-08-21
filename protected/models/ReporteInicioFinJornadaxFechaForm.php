@@ -7,10 +7,11 @@
  */
 class ReporteInicioFinJornadaxFechaForm extends CFormModel {
 
-    public $fechaInicioFinJornadaInicio;
+    public $fechaInicioFinJornada;
     public $horaFinGestion;
     public $horaInicioGestion;
     public $tipoUsuario;
+//    public $semanaRevision;
 
 //    public $fechaConsumoFin;
 //    public $rutaArchivo;
@@ -24,7 +25,9 @@ class ReporteInicioFinJornadaxFechaForm extends CFormModel {
                 fechaInicioFinJornadaInicio
                 ,horaInicioGestion
                 ,horaFinGestion
-                ,tipoUsuario', 'required'),
+                ,tipoUsuario
+                '
+                , 'required'),
 //            array('fechaOrdenesFin', 'required'),
 //            array('fechaConsumo, rutaArchivo', 'safe'),
         );
@@ -40,7 +43,8 @@ class ReporteInicioFinJornadaxFechaForm extends CFormModel {
             'fechaInicioFinJornadaInicio' => 'Fecha Revision',
             'horaInicioGestion' => 'Hora Inicio',
             'horaFinGestion' => 'Hora Fin',
-            'tipoUsuario' => 'Seleccione el tipo de usuario',
+            'tipoUsuario' => 'Tipo de usuario',
+//            'semanaRevision' => 'Semana de gestion',
         );
     }
 

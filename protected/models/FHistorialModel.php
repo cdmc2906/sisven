@@ -1,20 +1,17 @@
 <?php
 
-/**
- * This is the model class for table "tb_asignacion".
- *
- * The followings are the available columns in table 'tb_asignacion':
- * @property integer $ID_ASIG
- * @property integer $ID_PRO
- * @property integer $ID_VEND
- * @property string $FECHAINGRESO_ASIG
- * @property integer $IDUSR_ASIF
- *
- * The followings are the available model relations:
- * @property TbVendedor $iDVEND
- * @property TbProducto $iDPRO
- */
 class FHistorialModel extends DAOModel {
+
+    public static function getFechaUltimaCarga() {
+        $command1 = Yii::app()->db->createCommand("
+            select MAX(h_fch_ingreso) as ultimacarga from tb_historial_mb");
+
+        $resultado1 = $command1->queryRow();
+//                var_dump($resultado1);die();
+        $ultimacarga = $resultado1['ultimacarga'];
+
+        return $ultimacarga;
+    }
 
     public function getFechasHistorialxPeriodo($fechaInicioPeriodo, $fechaFinPeriodo, $semana, $accion = 'Inicio Visita') {
         $sql = "
@@ -58,27 +55,32 @@ class FHistorialModel extends DAOModel {
     }
 
     public function getInicioFinVisitaClientexEjecutivoxFecha($accion, $fechagestion, $ejecutivo, $codCliente, $codigoHistorial) {
+
+//        " . FuncionesBaseDatos::convertToTimeHHMMSS('sqlsrv', 'h_fecha') . "as HORAVISITA 
         $sql = "
-            SELECT 
-                    " . FuncionesBaseDatos::convertToTime('sqlsrv', 'h_fecha') . "as HORAVISITA 
-                    -- TIME_FORMAT(H_FECHA, '%H:%i:%s') as HORAVISITA 
+            SELECT                    
+                        " . FuncionesBaseDatos::convertToDateTimeYYYYMMDDHHMMSS('sqlsrv', 'h_fecha') . "as HORAVISITA 
                     ,h_id as IDHISTORIAL
+                    ,H_ACCION
+                    ,H_COD_CLIENTE
                 FROM tb_historial_mb
                 WHERE 1=1
                     AND " . FuncionesBaseDatos::convertToDate('sqlsrv', 'h_fecha') . "='" . $fechagestion . "'
                     -- AND DATE(H_FECHA) ='" . $fechagestion . "'
                     AND H_USUARIO='" . $ejecutivo . "'
-                    AND H_ACCION='" . $accion . "'
+                    AND H_ACCION in ('Inicio visita','Fin de visita')
                     AND H_COD_CLIENTE='" . $codCliente . "'
                     AND H_ID>='" . $codigoHistorial . "'
-                ORDER BY H_ID
+                ORDER BY H_FECHA
                     ;
             ";
 //        if ($codCliente == "TCQU180168"&&$codigoHistorial=="647061") {
 //            var_dump($sql);
 //            die();
 //        }
-//   var_dump($sql);        die();
+//        if ($codCliente == 'TCQU170109') {
+//            var_dump($sql);            die();
+//        }
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
 //        var_dump($data);        die();
@@ -86,24 +88,58 @@ class FHistorialModel extends DAOModel {
         return $data;
     }
 
-    public function getHistorialxVendedorxFechaxHoraInicioxHoraFin($accion = 'Inicio Visita', $fechagestion, $horaInicio, $horaFin, $ejecutivo) {
+    public function getHistorialxAccionxVendedorxFechaxHoraInicioxHoraFin($accion = 'Inicio Visita', $fechagestion, $horaInicio, $horaFin, $ejecutivo) {
         $fechaInicio = $fechagestion . ' ' . $horaInicio;
         $fechaFin = $fechagestion . ' ' . $horaFin;
 
         $sql = "
             SELECT 
-                    DATE_FORMAT(H_FECHA, '%Y-%m-%d %H:%i') AS FECHAVISITA
+                    " . FuncionesBaseDatos::convertToDateTimeYYYYMMDDHHMM('sqlsrv', 'H_FECHA') . " AS FECHAVISITA
+                    -- formato mysql DATE_FORMAT(H_FECHA, '%Y-%m-%d %H:%i') AS FECHAVISITA
                     ,H_COD_CLIENTE AS CODIGOCLIENTE
                     ,H_NOM_CLIENTE AS NOMBRECLIENTE
                     ,H_RUTA AS RUTAVISITA
                     ,h_latitud AS LATITUD
                     ,h_longitud AS LONGITUD
                     ,h_id AS IDHISTORIAL
+                    ,h_semana AS SEMANAHISTORIAL
                 FROM tb_historial_mb
                 WHERE 1=1
                     AND H_FECHA BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
                     AND H_USUARIO='" . $ejecutivo . "'
                     AND H_ACCION='" . $accion . "'
+                ORDER BY H_FECHA ;
+            ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+        //var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getHistorialxVendedorxFechaxHoraInicioxHoraFin($fechagestion, $horaInicio, $horaFin, $ejecutivo) {
+        $fechaInicio = $fechagestion . ' ' . $horaInicio;
+        $fechaFin = $fechagestion . ' ' . $horaFin;
+
+        $sql = "
+            SELECT 
+                    " . FuncionesBaseDatos::convertToDateTimeYYYYMMDDHHMM('sqlsrv', 'H_FECHA') . " AS FECHAVISITA
+                    -- formato mysql DATE_FORMAT(H_FECHA, '%Y-%m-%d %H:%i') AS FECHAVISITA
+                    ,H_COD_CLIENTE AS CODIGOCLIENTE
+                    ,H_NOM_CLIENTE AS NOMBRECLIENTE
+                    ,h_id AS IDHISTORIAL
+                    ,h_semana AS SEMANAHISTORIAL
+                    ,H_ACCION as accion
+                    ,h_cod_accion as codigoitem
+                    , CAST(COALESCE(SUM(O_SUBTOTAL/" . PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI . "),0) AS int)AS CHIPS                   
+                FROM tb_historial_mb 
+                    left outer join tb_ordenes_mb  
+                        on tb_historial_mb.h_cod_accion=tb_ordenes_mb.o_codigo_mb
+                WHERE 1=1
+                    AND H_FECHA BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
+                    AND H_USUARIO='" . $ejecutivo . "'
+                GROUP BY H_FECHA,H_COD_CLIENTE,H_NOM_CLIENTE,h_id,h_semana,H_ACCION,h_cod_accion
                 ORDER BY H_FECHA ;
             ";
 //        var_dump($sql);        die();
@@ -247,7 +283,7 @@ class FHistorialModel extends DAOModel {
         $sql = "
             SELECT 
             TOP 1
-             " . FuncionesBaseDatos::convertToTime('sqlsrv', 'H_FECHA') . "AS RESULTADO
+             " . FuncionesBaseDatos::convertToTimeHHMMSS('sqlsrv', 'H_FECHA') . "AS RESULTADO
              -- DATE_FORMAT(H_FECHA, '%H:%i') AS RESULTADO
                 FROM tb_historial_mb
                 WHERE 1=1
@@ -272,7 +308,7 @@ class FHistorialModel extends DAOModel {
         $sql = "
             SELECT 
             TOP 1
-             " . FuncionesBaseDatos::convertToTime('sqlsrv', 'H_FECHA') . "AS RESULTADO
+             " . FuncionesBaseDatos::convertToTimeHHMMSS('sqlsrv', 'H_FECHA') . "AS RESULTADO
              -- DATE_FORMAT(H_FECHA, '%H:%i') AS RESULTADO
                 FROM tb_historial_mb
                 WHERE 1=1

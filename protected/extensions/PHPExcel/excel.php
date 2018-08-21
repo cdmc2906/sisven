@@ -15,6 +15,7 @@ class excel {
 
     private $objPHPExcel; /* ObjPHPExcel */
     private $objWriter;
+    private $objReader;
     public $MapeoDefault = 'default';
 
     public function __construct() {
@@ -60,6 +61,17 @@ class excel {
                 $this->MapeoDefault($result, $encabezado, $footer, $columnasCentrar);
                 break;
         }
+    }
+
+    public function LeerArchivo($path) {
+        var_dump($path);
+        die();
+        $this->objReader = PHPExcel_IOFactory::createReaderForFile($path);
+        var_dump($this->objReader);
+        die();
+        $objPHPExcel = $this->objReader->load($path);
+        var_dump($objPHPExcel);
+        die();
     }
 
     public function MapeoCustomizadoHistorial($cantidadFilas, $reportesConPrecision, $encabezado, $footer) {
@@ -354,6 +366,175 @@ class excel {
             $this->objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddFooter('&L&B' . $this->objPHPExcel->getProperties()->getTitle() . '&C&B' . $footer . '&RPag. &P de &N');
             $this->objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
         }
+    }
+
+    public function MapeoDobleFuente($result1, $result2, $encabezado, $footer, $columnasCentrar) {
+        $row_cnt1 = count($result1);
+        $row_cnt2 = count($result2);
+
+        $primera_columna = 0;
+        $primera_fila = 0;
+
+        if ($row_cnt1 > 0) {
+            $col_names1 = array_keys($result1[0]);
+            $fields_cnt1 = count($result1[0]);
+            $row_offset = 1;
+
+            /* Encabezados */
+            for ($i = $primera_columna; $i < $fields_cnt1 + $primera_columna; ++$i) {
+                $col = $i - $primera_columna;
+                $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($i, $row_offset, utf8_encode($col_names1[$col]));
+                $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($i)->setAutoSize(true);
+
+                //Formato para titulo con negrita y centrado
+                $styleArrayCell = array(
+                    'font' => array(
+                        'bold' => true,
+                    ),
+                    'alignment' => array(
+                        'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                    ),
+                    'borders' => array(
+                        'outline' => array(
+                            'style' => PHPExcel_Style_Border::BORDER_THIN,
+                            'color' => array('argb' => '00000000'),
+                        ),
+                    ),
+                );
+
+                $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($i, $row_offset)->applyFromArray($styleArrayCell);
+            }
+//            var_dump($this->objPHPExcel);die();
+            $row_offset++;
+
+            /* Filas de datos */
+            for ($fila = $primera_fila; ($fila < 65536) && ($fila < $row_cnt1); ++$fila) {
+                for ($columna = $primera_columna; $columna < $fields_cnt1 + $primera_columna; ++$columna) {
+                    $col = $columna - $primera_columna;
+                    if (!isset($result1[$fila][$col_names1[$col]]) || is_null($result1[$fila][$col_names1[$col]])) {
+                        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($columna, ($fila + $row_offset), '');
+                    } elseif ($result1[$fila][$col_names1[$col]] != '') {
+                        $data = html_entity_decode($result1[$fila][$col_names1[$col]]);
+                        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($columna, ($fila + $row_offset), $data);
+                    } else {
+                        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($columna, ($fila + $row_offset), '');
+                    }
+                    $this->objPHPExcel->getActiveSheet()
+                            ->getStyleByColumnAndRow($columna, ($fila + $row_offset))
+                            ->getAlignment()
+                            ->setWrapText(true);
+                    #DEFINICION DE ESTILO PARA CADA CELDA
+                    $styleArray = array(
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => PHPExcel_Style_Border::BORDER_THIN,
+                                'color' => array('argb' => '00000000'),
+                            ),
+                        ),
+                    );
+
+                    #APLICACION DE ESTILO A LA CELDA
+                    $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($columna, ($fila + $row_offset))->applyFromArray($styleArray);
+
+                    #VALIDACION QUE SE ENVIO COMO PARAMETROS LOS ID DE LAS COLUMNAS PARA CENTRAR
+                    if (isset($columnasCentrar[0]["NUMCOLUMNA"])) {
+                        foreach ($columnasCentrar as $item) {
+                            if (in_array($columna, $item)) {
+                                $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($columna, $fila + $row_offset)
+                                        ->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                                $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($columna, $fila + $row_offset)
+                                        ->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                                break;
+                            }#FIN DE IF COMPRUEBA COLUMNA EN ID COLUMNAS CENTRAR
+                        }#FIN FOREACH
+                    }#FIN VALIDACION ENVIO DE COLUMNAS CENTRAR
+                }#FIN ITERACION SOBRE COLUMNAS
+            }#FIN ITERACION SOBRE FILAS
+        }
+        
+        $espacio_entre_datos = 2;
+        $primera_columna2 = $fields_cnt1 + $espacio_entre_datos;
+        $primera_fila2 = 0;
+        if ($row_cnt2 > 0) {
+            $col_names2 = array_keys($result2[0]);
+            $fields_cnt2 = count($result2[0]);
+            $row_offset = 1;
+
+            /* Encabezados */
+            for ($i = $primera_columna2; $i < $fields_cnt2 + $primera_columna2; ++$i) {
+                $col = $i - $primera_columna2;
+                $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($i, $row_offset, utf8_encode($col_names2[$col]));
+                $this->objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($i)->setAutoSize(true);
+
+                //Formato para titulo con negrita y centrado
+                $styleArrayCell = array(
+                    'font' => array(
+                        'bold' => true,
+                    ),
+                    'alignment' => array(
+                        'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                    ),
+                    'borders' => array(
+                        'outline' => array(
+                            'style' => PHPExcel_Style_Border::BORDER_THIN,
+                            'color' => array('argb' => '00000000'),
+                        ),
+                    ),
+                );
+
+                $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($i, $row_offset)->applyFromArray($styleArrayCell);
+            }
+            $row_offset++;
+
+            /* Filas de datos */
+            for ($fila = $primera_fila2; ($fila < 65536) && ($fila < $row_cnt1); ++$fila) {
+                for ($columna = $primera_columna2; $columna < $fields_cnt1 + $primera_columna2; ++$columna) {
+                    $col = $columna - $primera_columna2;
+                    if (!isset($result2[$fila][$col_names2[$col]]) || is_null($result2[$fila][$col_names2[$col]])) {
+                        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($columna, ($fila + $row_offset), '');
+                    } elseif ($result2[$fila][$col_names2[$col]] != '') {
+                        $data = html_entity_decode($result2[$fila][$col_names2[$col]]);
+                        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($columna, ($fila + $row_offset), $data);
+                    } else {
+                        $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($columna, ($fila + $row_offset), '');
+                    }
+                    $this->objPHPExcel->getActiveSheet()
+                            ->getStyleByColumnAndRow($columna, ($fila + $row_offset))
+                            ->getAlignment()
+                            ->setWrapText(true);
+                    #DEFINICION DE ESTILO PARA CADA CELDA
+                    $styleArray = array(
+                        'borders' => array(
+                            'outline' => array(
+                                'style' => PHPExcel_Style_Border::BORDER_THIN,
+                                'color' => array('argb' => '00000000'),
+                            ),
+                        ),
+                    );
+
+                    #APLICACION DE ESTILO A LA CELDA
+                    $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($columna, ($fila + $row_offset))->applyFromArray($styleArray);
+
+                    #VALIDACION QUE SE ENVIO COMO PARAMETROS LOS ID DE LAS COLUMNAS PARA CENTRAR
+                    if (isset($columnasCentrar[0]["NUMCOLUMNA"])) {
+                        foreach ($columnasCentrar as $item) {
+                            if (in_array($columna, $item)) {
+                                $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($columna, $fila + $row_offset)
+                                        ->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+                                $this->objPHPExcel->getActiveSheet()->getStyleByColumnAndRow($columna, $fila + $row_offset)
+                                        ->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+                                break;
+                            }#FIN DE IF COMPRUEBA COLUMNA EN ID COLUMNAS CENTRAR
+                        }#FIN FOREACH
+                    }#FIN VALIDACION ENVIO DE COLUMNAS CENTRAR
+                }#FIN ITERACION SOBRE COLUMNAS
+            }#FIN ITERACION SOBRE FILAS
+        }
+
+        #CONFIGURACION DE ENCABEZADOS Y PIE DE PAGINA DE IMPRESION
+        $this->objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddHeader('&C&H' . $encabezado);
+        $this->objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddFooter('&L&B' . $this->objPHPExcel->getProperties()->getTitle() . '&C&B' . $footer . '&RPag. &P de &N');
+        $this->objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
     }
 
     public function MapeoTablasImagen($data, $nombreImagen, $fechaReporte) {

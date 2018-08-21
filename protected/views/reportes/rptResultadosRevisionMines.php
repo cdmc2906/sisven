@@ -137,12 +137,12 @@ $this->pageTitle = $pagina_nombre;
                             <div class="row">
                                 <?php
                                 $sql = "
-                                SELECT 
-                                a.iduser AS CODIGOAGENTE
-                                ,b.usrl_nombre_usuario AS NOMBREAGENTE
-                                FROM cruge_user as a
-                                inner join  tb_usuario_rol as b
-                                on a.iduser  =b.iduser
+                                    SELECT 
+                                            a.iduser AS CODIGOAGENTE
+                                            ,b.usrl_nombre_usuario AS NOMBREAGENTE
+                                        FROM cruge_user as a
+                                        inner join  tb_usuario_rol as b
+                                            on a.iduser  =b.iduser
                                 where b.r_id=1
                                 ;";
 

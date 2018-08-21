@@ -1,15 +1,36 @@
 $(document).ready(function () {
     ConfigDatePickersReporte('.txtfechagestion');
+    ConfigDatePickersReporte('.txtfechaInicioFinJornadaInicio');
 
     ConfigurarGrids();
     $("#btnLimpiar").click(function () {
         LimpiarGrids();
     });
+
+    $("#btnLimpiarCapilaridadSellIn").click(function () {
+//        $("#ReporteInicioFinJornadaxFechaForm_fechaInicioFinJornadaInicio").val('');
+        $("#tblCapilaridadMovistar").jqGrid("clearGridData", true).trigger("reloadGrid");
+        $("#tblCapilaridadDelta").jqGrid("clearGridData", true).trigger("reloadGrid");
+        $("#tblSellInMovistar").jqGrid("clearGridData", true).trigger("reloadGrid");
+        $("#tblSellInVentas").jqGrid("clearGridData", true).trigger("reloadGrid");
+    });
     
+    $("#btnExcelResumenCapilaridad").click(function () {
+        GenerarDocumentoReporte('GenerateExcelResumenCapilaridad');
+    });
+    $("#btnExcelResumenSellIn").click(function () {
+        GenerarDocumentoReporte('GenerateExcelResumenSellIn');
+    });
+    
+    
+    $("#btnExcelJornada").click(function () {
+        GenerarDocumentoReporte('GenerateExcelJornada');
+    });
+
     $("#btnExcelNoVisitados").click(function () {
         GenerarDocumentoReporte('GenerateExcelNoVisitados');
     });
-    $("#btnExcel").click(function () {
+    $("#btnExcelDetalle").click(function () {
         GenerarDocumentoReporte('GenerateExcel');
     });
     $("#btnExcelEstadoRuta").click(function () {
@@ -70,6 +91,116 @@ function LimpiarGrids() {
 }
 
 function ConfigurarGrids() {
+    jQuery("#tblGridResumenJornada").jqGrid({
+        loadonce: true,
+        datatype: 'json',
+        mtype: 'POST',
+        url: 'VerDatosArchivo',
+        colNames: [
+            'FECHA',
+            'EJECUTIVO',
+            '1_VISITA',
+            'U_VISITA',
+            'GESTION',
+            'TRASLADO',
+            'TOTAL',
+            'Semanas',
+            'VISITAS',
+            'REPETIDAS',
+            'TOTAL',
+            'NUEVOS',
+            'EFECTIVOS',
+            'ENCUESTAS',
+            'VENTA'
+        ],
+        colModel: [
+            {name: 'FECHA', index: 'FECHA', sortable: false, width: 150, hidden: true, frozen: true},
+            {name: 'EJECUTIVO', index: 'EJECUTIVO', sortable: false, width: 110, frozen: true},
+            {name: 'INICIOPRIMERAVISITA', index: 'INICIOPRIMERAVISITA', sortable: false, width: 70, align: "center", },
+            {name: 'FINALULTIMAVISITA', index: 'FINALULTIMAVISITA', sortable: false, width: 70, align: "center", },
+            {name: 'TIEMPOGESTION', index: 'TIEMPOGESTION', sortable: false, width: 80, align: "center", },
+            {name: 'TIEMPOTRASLADO', index: 'TIEMPOTRASLADO', sortable: false, width: 80, align: "center", },
+            {name: 'TOTALTIEMPO', index: 'TOTALTIEMPO', sortable: false, width: 80, align: "center", },
+            {name: 'SEMANAS', index: 'SEMANAS', width: 60, align: "center"},
+            {name: 'VISITAS', index: 'VISITAS', width: 60, align: "center"},
+            {name: 'REPETIDAS', index: 'REPETIDAS', width: 80, align: "center"},
+            {name: 'TOTAL', index: 'TOTAL', width: 60, align: "center"},
+            {name: 'NUEVOS', index: 'NUEVOS', width: 80, align: "center"},
+            {name: 'EFECTIVOS', index: 'EFECTIVOS', width: 80, align: "center"},
+            {name: 'ENCUESTAS', index: 'ENCUESTAS', width: 85, align: "center"},
+            {name: 'VENTA', index: 'VENTA', width: 80, align: "center"},
+        ],
+        pager: '#pagGridResumenJornada',
+        rowNum: 200, //NroFilas,
+        rowList: ElementosPagina,
+        //sortname: 'bank_date',
+        caption: 'Gestion dia',
+        hidegrid: false,
+        sortorder: 'ASC',
+        viewrecords: true,
+//        height: 'auto',
+        height: 350,
+//        autoheight: true,
+//        width: 950,
+        autowidth: true,
+        gridview: true,
+        shrinkToFit: false, //permite mantener la dimensiï¿½n personalizada de las celdas,
+        footerrow: true,
+        gridComplete: function () {
+            var $grid = $('#tblGridResumenJornada');
+            var colSumaVisitas = $grid.jqGrid('getCol', 'VISITAS', false, 'sum');
+            var colSumaVisitasRepetidas = $grid.jqGrid('getCol', 'REPETIDAS', false, 'sum');
+            var colSumaTotalVisitas = $grid.jqGrid('getCol', 'TOTAL', false, 'sum');
+            var colSumaClientesNuevos = $grid.jqGrid('getCol', 'NUEVOS', false, 'sum');
+            var colSumaClientesEfectivos = $grid.jqGrid('getCol', 'EFECTIVOS', false, 'sum');
+            var colSumaEncuestas = $grid.jqGrid('getCol', 'ENCUESTAS', false, 'sum');
+            var colSumaVenta = $grid.jqGrid('getCol', 'VENTA', false, 'sum');
+
+            $grid.jqGrid('footerData', 'set', {'SEMANAS': 'Totales'});
+            $grid.jqGrid('footerData', 'set', {'VISITAS': colSumaVisitas});
+            $grid.jqGrid('footerData', 'set', {'REPETIDAS': colSumaVisitasRepetidas});
+            $grid.jqGrid('footerData', 'set', {'TOTAL': colSumaTotalVisitas});
+            $grid.jqGrid('footerData', 'set', {'NUEVOS': colSumaClientesNuevos});
+            $grid.jqGrid('footerData', 'set', {'EFECTIVOS': colSumaClientesEfectivos});
+            $grid.jqGrid('footerData', 'set', {'ENCUESTAS': colSumaEncuestas});
+            $grid.jqGrid('footerData', 'set', {'VENTA': colSumaVenta});
+
+        },
+//        onSelectRow: function (id) {
+//            if (id && id !== filaSeleccionada) {
+//                jQuery('#tblGrid').jqGrid('restoreRow', filaSeleccionada);
+//                jQuery('#tblGrid').jqGrid('editRow', id, true);
+//                filaSeleccionada = id;
+//            }
+//        },
+//        editurl: "/sisven_2/ReporteInicioFinJornadaxFecha/GuardarRevision?datosFila=" + filaSeleccionada,
+        jsonReader: {
+            root: "Result",
+            repeatitems: false, //cuando el array de la data son object
+            id: "id" //representa el ï¿½ndice del identificador ï¿½nico de la entidad
+        },
+
+        beforeRequest: function () {
+//            blockUIOpen();
+        },
+        loadError: function (xhr, st, err) {
+//            blockUIClose();
+            // RedirigirError(xhr.status);
+        },
+        loadComplete: function () {
+            $("tr.jqgrow:odd").css("background", "#b7d2ff");
+        }
+    });
+    jQuery("#tblGridResumenJornada").jqGrid('setFrozenColumns');
+
+    jQuery("#tblGridResumenJornada").jqGrid('navGrid', '#pagGridResumenJornada',
+            {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options 
+            {}, // edit options 
+            {}, // add options 
+            {}, // del options 
+            {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
+    );
+
 //    console.log(datosResult);
     jQuery("#tblGridDetalle").jqGrid({
         loadonce: true,
@@ -144,7 +275,10 @@ function ConfigurarGrids() {
         loadError: function (xhr, st, err) {
 //            blockUIClose();
             // RedirigirError(xhr.status);
-        }
+        },
+        loadComplete: function () {
+            $("tr.jqgrow:odd").css("background", "#b7d2ff");
+        },
     });
     jQuery("#tblGridDetalle").jqGrid('navGrid', '#pagGrid',
             {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options 
@@ -153,6 +287,7 @@ function ConfigurarGrids() {
             {}, // del options 
             {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
     );
+
     jQuery("#tblResumenGeneral").jqGrid({
         loadonce: true,
         datatype: 'json',
@@ -235,9 +370,9 @@ function ConfigurarGrids() {
         width: 205,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensiï¿½n personalizada de las celdas,
-        footerrow: true,
         caption: "Validacion Geoposicion",
         hidegrid: false,
+        footerrow: true,
         gridComplete: function () {
             var $grid = $('#tblResumenVisitasValidasInvalidas');
             var colSum = $grid.jqGrid('getCol', 'VALOR', false, 'sum');
@@ -361,12 +496,269 @@ function ConfigurarGrids() {
         loadError: function (xhr, st, err) { }
     }
     );
+
+    jQuery("#tblCapilaridadMovistar").jqGrid({
+        loadonce: true,
+        datatype: 'json',
+        mtype: 'POST',
+        url: 'ConfigurarGrid',
+        colNames: [
+            'BODEGA'
+                    , 'PRESP.'
+                    , 'CUMPL.'
+                    , '% CUMPL.'
+                    , 'FALT.'
+                    , '% FALT.'
+                    , 'CANT. VEND.'
+
+        ],
+        colModel: [
+            {name: 'BODEGA', index: 'BODEGA', width: 150, sortable: false, frozen: true},
+            {name: 'PRESUPUESTO', index: 'PRESUPUESTO', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'CUMPLIMIENTO', index: 'CUMPLIMIENTO', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'PCUMPLIMIENTO', index: 'PCUMPLIMIENTO', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'FALTANTE', index: 'FALTANTE', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'PFALTANTE', index: 'PFALTANTE', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'VENTA', index: 'VENTA', width: 70, sortable: false, frozen: true, align: 'center'},
+        ],
+//        pager: '#pagGrid',
+        rowNum: 60,
+        rowList: ElementosPagina,
+        sortorder: 'ASC',
+        viewrecords: true,
+        height: 200,
+        width: 500,
+        gridview: true,
+        shrinkToFit: false, //permite mantener la dimensiï¿½n personalizada de las celdas,
+        caption: "Capilaridad Movistar",
+        hidegrid: false,
+        pager: '#pagCapilaridadMovistar',
+        jsonReader: {
+            root: "Result",
+            repeatitems: false, //cuando el array de la data son object
+            id: "id" //representa el ï¿½ndice del identificador ï¿½nico de la entidad
+        }
+        ,footerrow: true,
+        gridComplete: function () {
+            var $grid = $('#tblCapilaridadMovistar');
+            var sumaPresupuestos = $grid.jqGrid('getCol', 'PRESUPUESTO', false, 'sum');
+            var sumaFaltantes = $grid.jqGrid('getCol', 'FALTANTE', false, 'sum');
+            var sumaVentas = $grid.jqGrid('getCol', 'VENTA', false, 'sum');
+            $grid.jqGrid('footerData', 'set', {'BODEGA': 'Totales'});
+            $grid.jqGrid('footerData', 'set', {'PRESUPUESTO': sumaPresupuestos});
+            $grid.jqGrid('footerData', 'set', {'FALTANTE': sumaFaltantes});
+            $grid.jqGrid('footerData', 'set', {'VENTA': sumaVentas});
+
+        }
+        ,beforeRequest: function () { }
+        ,loadError: function (xhr, st, err) { }
+        ,loadComplete: function () {$("tr.jqgrow:odd").css("background", "#b7d2ff");},
+    }
+    );
+    jQuery("#tblCapilaridadMovistar").jqGrid('navGrid', '#pagCapilaridadMovistar',
+            {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options 
+            {}, // edit options 
+            {}, // add options 
+            {}, // del options 
+            {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
+    );
+    
+    jQuery("#tblCapilaridadDelta").jqGrid({
+        loadonce: true,
+        datatype: 'json',
+        mtype: 'POST',
+        url: 'ConfigurarGrid',
+        colNames: [
+            'BODEGA'
+                    , 'PRESP.'
+                    , 'CUMPL.'
+                    , '% CUMPL.'
+                    , 'FALT.'
+                    , '% FALT.'
+                    , 'CANT. VEND.'
+
+        ],
+        colModel: [
+            {name: 'D_BODEGA', index: 'D_BODEGA', width: 150, sortable: false, frozen: true},
+            {name: 'D_PRESUPUESTO', index: 'D_PRESUPUESTO', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'D_CUMPLIMIENTO', index: 'D_CUMPLIMIENTO', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'D_PCUMPLIMIENTO', index: 'D_PCUMPLIMIENTO', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'D_FALTANTE', index: 'D_FALTANTE', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'D_PFALTANTE', index: 'D_PFALTANTE', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'D_VENTA', index: 'D_VENTA', width: 70, sortable: false, frozen: true, align: 'center'},
+        ],
+//        pager: '#pagGrid',
+        rowNum: 60,
+        rowList: ElementosPagina,
+        sortorder: 'ASC',
+        viewrecords: true,
+        height: 200,
+        width: 500,
+        gridview: true,
+        shrinkToFit: false, //permite mantener la dimensiï¿½n personalizada de las celdas,
+        caption: "Capilaridad Indicadores",
+        hidegrid: false,
+        pager: '#pagCapilaridadDelta',
+        jsonReader: {
+            root: "Result",
+            repeatitems: false, //cuando el array de la data son object
+            id: "id" //representa el ï¿½ndice del identificador ï¿½nico de la entidad
+        }
+        ,footerrow: true,
+        gridComplete: function () {
+            var $grid = $('#tblCapilaridadDelta');
+            var sumaPresupuestos = $grid.jqGrid('getCol', 'PRESUPUESTO', false, 'sum');
+            var sumaFaltantes = $grid.jqGrid('getCol', 'FALTANTE', false, 'sum');
+            var sumaVentas = $grid.jqGrid('getCol', 'VENTA', false, 'sum');
+            $grid.jqGrid('footerData', 'set', {'BODEGA': 'Totales'});
+            $grid.jqGrid('footerData', 'set', {'PRESUPUESTO': sumaPresupuestos});
+            $grid.jqGrid('footerData', 'set', {'FALTANTE': sumaFaltantes});
+            $grid.jqGrid('footerData', 'set', {'VENTA': sumaVentas});
+
+        }
+        ,beforeRequest: function () { }
+        ,loadError: function (xhr, st, err) { }
+        ,loadComplete: function () {$("tr.jqgrow:odd").css("background", "#b7d2ff");},
+    }
+    );
+    jQuery("#tblCapilaridadDelta").jqGrid('navGrid', '#pagCapilaridadDelta',
+            {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options 
+            {}, // edit options 
+            {}, // add options 
+            {}, // del options 
+            {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
+    );
+
+
+    jQuery("#tblSellInMovistar").jqGrid({
+        loadonce: true,
+        datatype: 'json',
+        mtype: 'POST',
+        url: 'ConfigurarGrid',
+        colNames: [
+            'BODEGA'
+                    , 'PRESP.'
+                    , 'CUMPL.'
+                    , '% CUMPL.'
+                    , 'FALT.'
+                    , '% FALT.'
+                    , 'CANT. VEND.'
+
+        ],
+        colModel: [
+            {name: 'BODEGA', index: 'BODEGA', width: 150, sortable: false, frozen: true},
+            {name: 'PRESUPUESTO', index: 'PRESUPUESTO', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'CUMPLIMIENTO', index: 'CUMPLIMIENTO', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'PCUMPLIMIENTO', index: 'PCUMPLIMIENTO', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'FALTANTE', index: 'FALTANTE', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'PFALTANTE', index: 'PFALTANTE', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'VENTA', index: 'VENTA', width: 70, sortable: false, frozen: true, align: 'center'},
+        ],
+//        pager: '#pagGrid',
+        rowNum: 60,
+        rowList: ElementosPagina,
+        sortorder: 'ASC',
+        viewrecords: true,
+        height: 200,
+        width: 500,
+        gridview: true,
+        shrinkToFit: false, //permite mantener la dimensiï¿½n personalizada de las celdas,
+        caption: "Sell-In Movistar",
+        hidegrid: false,
+        pager: '#pagSellInMovistar',
+        jsonReader: {
+            root: "Result",
+            repeatitems: false, //cuando el array de la data son object
+            id: "id" //representa el ï¿½ndice del identificador ï¿½nico de la entidad
+        }
+        ,beforeRequest: function () { }
+        ,loadError: function (xhr, st, err) { }
+        ,loadComplete: function () {$("tr.jqgrow:odd").css("background", "#edfff6");},
+    }
+    );
+    jQuery("#tblSellInMovistar").jqGrid('navGrid', '#pagSellInMovistar',
+            {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options 
+            {}, // edit options 
+            {}, // add options 
+            {}, // del options 
+            {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
+    );
+    
+    jQuery("#tblSellInVentas").jqGrid({
+        loadonce: true,
+        datatype: 'json',
+        mtype: 'POST',
+        url: 'ConfigurarGrid',
+        colNames: [
+            'BODEGA'
+                    , 'PRESP.'
+                    , 'CUMPL.'
+                    , '% CUMPL.'
+                    , 'FALT.'
+                    , '% FALT.'
+                    , 'CANT. VEND.'
+
+        ],
+        colModel: [
+            {name: 'BODEGA', index: 'BODEGA', width: 150, sortable: false, frozen: true},
+            {name: 'PRESUPUESTO', index: 'PRESUPUESTO', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'CUMPLIMIENTO', index: 'CUMPLIMIENTO', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'PCUMPLIMIENTO', index: 'PCUMPLIMIENTO', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'FALTANTE', index: 'FALTANTE', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'PFALTANTE', index: 'PFALTANTE', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'VENTA', index: 'VENTA', width: 70, sortable: false, frozen: true, align: 'center'},
+        ],
+//        pager: '#pagGrid',
+        rowNum: 60,
+        rowList: ElementosPagina,
+        sortorder: 'ASC',
+        viewrecords: true,
+        height: 200,
+        width: 500,
+        gridview: true,
+        shrinkToFit: false, //permite mantener la dimensiï¿½n personalizada de las celdas,
+        caption: "Sell-In Indicadores",
+        hidegrid: false,
+         pager: '#pagSellInVentas',
+        jsonReader: {
+            root: "Result",
+            repeatitems: false, //cuando el array de la data son object
+            id: "id" //representa el ï¿½ndice del identificador ï¿½nico de la entidad
+        }
+        ,beforeRequest: function () { }
+        ,loadError: function (xhr, st, err) { }
+        ,loadComplete: function () {$("tr.jqgrow:odd").css("background", "#edfff6");},
+    }
+    );
+     jQuery("#tblSellInVentas").jqGrid('navGrid', '#pagSellInVentas',
+            {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options 
+            {}, // edit options 
+            {}, // add options 
+            {}, // del options 
+            {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
+    );
 }
 
 function GenerarDocumentoReporte(accion) {
-    if (true) {
         window.open('/sisven_dev/RptResumenDiarioHistorial/' + accion);
-    } else {
-        mostrarVentanaMensaje("Ingrese los parámetros necesarios para generar el reporte", 'Alerta');
-    }
 }
+
+ function cargarPeriodosPorAnio(anio) {
+//     alert(anio)
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            cache: false,
+            traditional: true,
+            url: 'RptResumenDiarioHistorial/CargarPeriodosAnio',
+            data: {anio: anio},
+            success: function (jsonResponse) {
+                if (!$.isEmptyObject(jsonResponse))
+                {
+                    $("#divp").html(jsonResponse);
+                }
+            },
+            error: function (xhr, st, err) {
+            }
+        });
+    }

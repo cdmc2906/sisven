@@ -31,6 +31,16 @@
 		<?php echo $form->textField($model,'e_iniciales',array('size'=>5,'maxlength'=>5)); ?>
 	</div>
 
+	<div class="row">
+		<?php echo $form->label($model,'e_estado'); ?>
+		<?php echo $form->textField($model,'e_estado'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->label($model,'e_tipo'); ?>
+		<?php echo $form->textField($model,'e_tipo',array('size'=>50,'maxlength'=>50)); ?>
+	</div>
+
 	<div class="row buttons">
 		<?php echo CHtml::submitButton('Search'); ?>
 	</div>

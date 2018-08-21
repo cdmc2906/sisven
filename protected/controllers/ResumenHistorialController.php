@@ -37,7 +37,7 @@ class ResumenHistorialController extends Controller {
                     $fOrden = new FOrdenModel();
                     $frutamodel = new FRutaModel();
 
-                    $historial = $fHistorial->getHistorialxVendedorxFechaxHoraInicioxHoraFin($model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor']);
+                    $historial = $fHistorial->getHistorialxAccionxVendedorxFechaxHoraInicioxHoraFin($model->fechagestion, $ejecutivo[0]['e_usr_mobilvendor']);
 
                     $dia = date("w", strtotime($model->fechagestion));
 

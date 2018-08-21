@@ -25,6 +25,10 @@ class CargaHistorialMbController extends Controller {
         $response = new Response();
         try {
 
+
+
+
+
             $model = new CargaHistorialMbForm();
             $historialMbItems = array();
             if (isset($_POST['CargaHistorialMbForm'])) {
@@ -41,6 +45,11 @@ class CargaHistorialMbController extends Controller {
 
                     $operation = "r";
                     $delimiter = $model->delimitadorColumnas;
+
+//                    var_dump($model->rutaArchivo);die();
+//                    $excel = new excel();
+//                    $excel->LeerArchivo($model->rutaArchivo);
+//                    var_dump($excel->LeerArchivo($model->rutaArchivo));                    die();
                     $file = new File($filePath, $operation, $delimiter);
                     $totalRows = $file->getTotalFilas();
 
@@ -154,11 +163,11 @@ class CargaHistorialMbController extends Controller {
 
                         if (count($datosHistorialMb) > 0) {
                             $dbConnection = new CI_DB_active_record(null);
-                            
+
                             $sql = $dbConnection->insert_batch('tb_historial_mb', $datosHistorialMb);
 //                            var_dump($sql);die();
                             $sql = str_replace('"', '', $sql);
-                            
+
                             $connection = Yii::app()->db_conn;
                             $connection->active = true;
                             $transaction = $connection->beginTransaction();
@@ -253,8 +262,8 @@ class CargaHistorialMbController extends Controller {
                         'h_usuario_nombre' => ($row['USUARIONOMBRE'] == '') ? null : $row['USUARIONOMBRE'],
                         'h_ruta' => ($row['RUTA'] == '') ? null : $row['RUTA'],
                         'h_ruta_nombre' => ($row['RUTANOMBRE'] == '') ? null : $row['RUTANOMBRE'],
-                        'h_semana' => ($row['SEMANA'] == ''||$row['SEMANA'] == 'NULL'||$row['SEMANA'] == 'null') ? 0 : $row['SEMANA'],
-                        'h_dia' => ($row['DIA'] == ''||$row['DIA'] == 'NULL'||$row['DIA'] == 'null') ? 0 : $row['DIA'],
+                        'h_semana' => ($row['SEMANA'] == '' || $row['SEMANA'] == 'NULL' || $row['SEMANA'] == 'null') ? 0 : $row['SEMANA'],
+                        'h_dia' => ($row['DIA'] == '' || $row['DIA'] == 'NULL' || $row['DIA'] == 'null') ? 0 : $row['DIA'],
                         'h_cod_cliente' => ($row['CLIENTE'] == '') ? null : $row['CLIENTE'],
                         'h_nom_cliente' => ($row['CLIENTENOMBRE'] == '') ? null : $row['CLIENTENOMBRE'],
                         'h_direccion' => ($row['DIRECCION'] == '') ? null : $row['DIRECCION'],
@@ -284,7 +293,6 @@ class CargaHistorialMbController extends Controller {
         $datos['historialmb'] = $datosHistorial;
 //                var_dump($datos);die();
         return $datos;
-
     }
 
     public function actionVerDatosArchivo() {

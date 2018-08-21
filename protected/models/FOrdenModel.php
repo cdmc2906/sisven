@@ -1,26 +1,17 @@
 <?php
 
-/**
- * This is the model class for table "tb_asignacion".
- *
- * The followings are the available columns in table 'tb_asignacion':
- * @property integer $ID_ASIG
- * @property integer $ID_PRO
- * @property integer $ID_VEND
- * @property string $FECHAINGRESO_ASIG
- * @property integer $IDUSR_ASIF
- *
- * The followings are the available model relations:
- * @property TbVendedor $iDVEND
- * @property TbProducto $iDPRO
- */
 class FOrdenModel extends DAOModel {
 
-    /**
-     * 
-     * @param type $codigo_cliente
-     * @return type
-     */
+    public static function getFechaUltimaCarga() {
+        $command1 = Yii::app()->db->createCommand("
+           select MAX(o_fch_ingreso) as ultimacarga from tb_ordenes_mb");
+
+        $resultado1 = $command1->queryRow();
+        $ultimacarga = $resultado1['ultimacarga'];
+
+        return $ultimacarga;
+    }
+
     public function getFechaUltimaCompraxCliente($codigo_cliente) {
         $sql = "
             select date(a.o_fch_creacion) as fechaultimaventa
@@ -57,7 +48,6 @@ class FOrdenModel extends DAOModel {
                     AND O_COD_CLIENTE='" . $codigo_cliente . "'
                     AND " . FuncionesBaseDatos::convertToDate('sqlsrv', 'O_FCH_CREACION') . "='" . $fechaOrden . "';";
 //                    AND DATE(O_FCH_CREACION)='" . $fechaOrden . "';";
-
 //        var_dump($sql);die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();

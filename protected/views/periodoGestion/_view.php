@@ -33,7 +33,6 @@
 	<?php echo CHtml::encode($data->pg_fecha_ingreso); ?>
 	<br />
 
-	<?php /*
 	<b><?php echo CHtml::encode($data->getAttributeLabel('pg_fecha_modificacion')); ?>:</b>
 	<?php echo CHtml::encode($data->pg_fecha_modificacion); ?>
 	<br />

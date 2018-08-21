@@ -21,5 +21,13 @@
 	<?php echo CHtml::encode($data->e_iniciales); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('e_estado')); ?>:</b>
+	<?php echo CHtml::encode($data->e_estado); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('e_tipo')); ?>:</b>
+	<?php echo CHtml::encode($data->e_tipo); ?>
+	<br />
+
 
 </div>

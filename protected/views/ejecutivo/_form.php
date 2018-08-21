@@ -37,6 +37,18 @@
 		<?php echo $form->error($model,'e_iniciales'); ?>
 	</div>
 
+	<div class="row">
+		<?php echo $form->labelEx($model,'e_estado'); ?>
+		<?php echo $form->textField($model,'e_estado'); ?>
+		<?php echo $form->error($model,'e_estado'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'e_tipo'); ?>
+		<?php echo $form->textField($model,'e_tipo',array('size'=>50,'maxlength'=>50)); ?>
+		<?php echo $form->error($model,'e_tipo'); ?>
+	</div>
+
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>

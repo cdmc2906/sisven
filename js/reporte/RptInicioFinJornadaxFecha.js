@@ -5,9 +5,9 @@ $(document).ready(function () {
     $("#btnLimpiar").click(function () {
         $("#ReporteInicioFinJornadaxFechaForm_fechaInicioFinJornadaInicio").val('');
     });
-    $("#btnExcel").click(function () {
+    $("#btnExcelJornada").click(function () {
         GenerarDocumentoReporte('GenerateExcel');
-    });    
+    });
 });
 
 
@@ -24,29 +24,30 @@ function ConfigGridJSON() {
 //            'CUMPLIMIENTO',
             'PRIMERA VISITA',
             'ULTIMA VISITA',
+            'TOTAL GESTION',
             'GESTION',
-            'COMENTARIO_SUPERVISION',
-            'COMENTARIO_OFICINA'
+            'TRASLADO',
+            'SEMANAS',
+            'VISITAS',
+            'CLIENTES NUEVOS',
+            'EFECTIVOS',
+            'ENCUESTAS',
+            'VENTA'
         ],
         colModel: [
-            {name: 'FECHA', index: 'FECHA', sortable: false, frozen: true, width: 150, hidden: true,
-                editable: true, editoptions: {readonly: true, edithidden: true}, },
-            {name: 'EJECUTIVO', index: 'EJECUTIVO', sortable: false, frozen: true, width: 150,
-                editable: true, editoptions: {readonly: true, size: 25}, },
-//            {name: 'CUMPLIMIENTO', index: 'CUMPLIMIENTO', sortable: false, frozen: true, width: 100, align: "center",
-//                editable: true, editoptions: {readonly: true, size: 10}, },
-            {name: 'INICIOPRIMERAVISITA', index: 'INICIOPRIMERAVISITA', sortable: false, frozen: true, width: 100, align: "center",
-                editable: true, editoptions: {readonly: true, size: 10}, },
-            {name: 'FINALULTIMAVISITA', index: 'FINALULTIMAVISITA', sortable: false, frozen: true, width: 100, align: "center",
-                editable: true, editoptions: {readonly: true, size: 10}, },
-            {name: 'TIEMPOGESTION', index: 'TIEMPOGESTION', sortable: false, frozen: true, width: 100, align: "center",
-                editable: true, editoptions: {readonly: true, size: 10}, width: 80, },
-            {name: 'COMENTARIOS', index: 'COMENTARIOS', width: 160, align: "left",
-                editable: true, editoptions: {readonly: true, size: 10}},
-            {name: 'COMENTARIOO', index: 'COMENTARIOO', width: 160, align: "left",
-                editable: true, edittype: "select", editoptions: {
-                    value:
-                            "Seleccione una opcion:Seleccione una opcion;Sin telefono:Sin telefono;Vacaciones:Vacaciones"}},
+            {name: 'FECHA', index: 'FECHA', sortable: false, frozen: true, width: 150, hidden: true, },
+            {name: 'EJECUTIVO', index: 'EJECUTIVO', sortable: false, frozen: true, width: 150, },
+            {name: 'INICIOPRIMERAVISITA', index: 'INICIOPRIMERAVISITA', sortable: false, frozen: true, width: 100, align: "center", },
+            {name: 'FINALULTIMAVISITA', index: 'FINALULTIMAVISITA', sortable: false, frozen: true, width: 100, align: "center", },
+            {name: 'TOTALTIEMPO', index: 'TOTALTIEMPO', sortable: false, frozen: true, width: 100, align: "center", },
+            {name: 'TIEMPOGESTION', index: 'TIEMPOGESTION', sortable: false, frozen: true, width: 100, align: "center", },
+            {name: 'TIEMPOTRASLADO', index: 'TIEMPOTRASLADO', sortable: false, frozen: true, width: 100, align: "center", },
+            {name: 'SEMANAS', index: 'SEMANAS', width: 80, align: "left"},
+            {name: 'VISITAS', index: 'VISITAS', width: 80, align: "left"},
+            {name: 'NUEVOS', index: 'NUEVOS', width: 80, align: "left"},
+            {name: 'EFECTIVOS', index: 'EFECTIVOS', width: 80, align: "left"},
+            {name: 'ENCUESTAS', index: 'ENCUESTAS', width: 80, align: "left"},
+            {name: 'VENTA', index: 'VENTA', width: 80, align: "left"},
         ],
         pager: '#pagGrid',
         rowNum: 200, //NroFilas,

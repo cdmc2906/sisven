@@ -280,6 +280,12 @@
 //                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
                                                 ),
                                                 array(
+                                                    'label' => 'Ejecutivos'
+                                                    , 'url' => array('/Ejecutivo/admin')
+                                                    , 'visible' => $verMenusAdmin
+//                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
+                                                ),
+                                                array(
                                                     'label' => 'Periodo Gestion'
                                                     , 'url' => array('/PeriodoGestion/admin')
                                                     , 'visible' => $verMenusAdmin
@@ -568,9 +574,9 @@
                                     </li>
                                 </ul>
                             </li>
-                        <?php } if ($verMenusGerencia || $verMenusAdmin) { ?>
+                        <?php // } if ($verMenusGerencia || $verMenusAdmin) { ?>
                             <!--REPORTES-->
-                            <li class="treeview">
+<!--                            <li class="treeview">
                                 <a href="#">
                                     <i class="fa fa-area-chart"></i>
                                     <span>Reportes</span>
@@ -580,27 +586,27 @@
                                 </a>
 
                                 <?php
-                                $this->widget('zii.widgets.CMenu', array(
-                                    'items' => array(
-                                        array(
-                                            'label' => 'Reporte Ordenes'
-                                            , 'url' => array('/ReporteOrdenesxFecha/index')
-//                                            , 'visible' => $verMenusAdmin
-//                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
-                                        ),
-                                        array(
-                                            'label' => 'Reporte Jornada'
-                                            , 'url' => array('/RptInicioFinJornadaxFecha/index')
-//                                            , 'visible' => $verMenusAdmin
-//                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
-                                        ),
-                                    ),
-//                                'linkLabelWrapper' => 'i',
-//                                'linkLabelWrapperHtmlOptions' => array('class' => 'fa'),
-                                    'htmlOptions' => array('class' => 'treeview-menu'),
-                                ));
+//                                $this->widget('zii.widgets.CMenu', array(
+//                                    'items' => array(
+//                                        array(
+//                                            'label' => 'Reporte Ordenes'
+//                                            , 'url' => array('/ReporteOrdenesxFecha/index')
+////                                            , 'visible' => $verMenusAdmin
+////                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
+//                                        ),
+////                                        array(
+////                                            'label' => 'Reporte Jornada'
+////                                            , 'url' => array('/RptInicioFinJornadaxFecha/index')
+//////                                            , 'visible' => $verMenusAdmin
+//////                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
+////                                        ),
+//                                    ),
+////                                'linkLabelWrapper' => 'i',
+////                                'linkLabelWrapperHtmlOptions' => array('class' => 'fa'),
+//                                    'htmlOptions' => array('class' => 'treeview-menu'),
+//                                ));
                                 ?>
-                            </li> 
+                            </li> -->
 
                         <?php } if ($verMenusCallCenter || $verMenusAdmin) { ?>
                             <!--CALL CENTER-->
@@ -683,6 +689,7 @@
                 <section class="content"> 
                     <?php
                     $flashMessages = Yii::app()->user->getFlashes();
+//                    var_dump($flashMessages);die();
                     echo '<div id="ulMensajesUsuarios" class="displayNone">';
                     echo '<ul  class="flashes">';
                     foreach ($flashMessages as $key => $message) {

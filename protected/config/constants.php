@@ -11,6 +11,8 @@ define('LAYOUT_FILTRO_GRID', '//layouts/main');
 define('TIPO_NOVEDAD_NO_COMPRA_CHIP', 'No compra chip');
 define('TIPO_NOVEDAD_GENERAL', 'Incidente');
 
+define('NUMERO_DECIMALES_RESULTADO', '0');
+
 
 define('MINMETROSVISITAVALIDA', '10');
 define('MAXMETROSVISITAVALIDA', '15');

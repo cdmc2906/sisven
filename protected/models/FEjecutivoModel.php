@@ -30,16 +30,35 @@ class FEjecutivoModel extends DAOModel {
 
         $sql = "
             select 
-                    e_nombre
+                     e_nombre
                     ,e_usr_mobilvendor
                     ,e_iniciales
                 from tb_ejecutivo
                 where 1=1
                     and e_estado='" . $estado . "'
                     " . $usuarios . "
-                order by e_usr_mobilvendor asc;";
+                        -- AND e_usr_mobilvendor='QU17'
+                order by e_nombre asc;";
 
-//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+
+        $this->Close();
+        return $data;
+    }
+    
+    public function getEjecutivosXEstado($estado = 1) {
+        $usuarios = '';
+        $sql = "
+            select 
+                     e_nombre
+                    ,e_usr_mobilvendor
+                    ,e_iniciales
+                from tb_ejecutivo
+                where 1=1
+                    and e_estado='" . $estado . "'
+                order by e_nombre asc;";
+
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
 

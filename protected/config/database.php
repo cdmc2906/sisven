@@ -11,8 +11,8 @@ return array(
 //	'password' => 'admin123',
 //	'charset' => 'utf8',
 
-    'connectionString' => 'sqlsrv:server=10.130.1.67;database=tcc_control_ruta',
+    'connectionString' => 'sqlsrv:server=10.130.1.17;database=tcc_control_ruta',
     'username' => 'sa',
-    'password' => 'Admin2016..',
+    'password' => 'GrpMetro"==)',
     'charset' => 'utf8'
 );

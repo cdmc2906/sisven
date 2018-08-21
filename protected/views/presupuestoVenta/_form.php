@@ -15,8 +15,15 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	<p class="note">Los campos marcados con <span class="required">*</span> son obligatorios.</p>
+	<p class="note">Fields with <span class="required">*</span> are required.</p>
+
 	<?php echo $form->errorSummary($model); ?>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'pg_id'); ?>
+		<?php echo $form->textField($model,'pg_id'); ?>
+		<?php echo $form->error($model,'pg_id'); ?>
+	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'p_codigo_vendedor'); ?>
@@ -26,13 +33,13 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'p_fecha_ini_validez'); ?>
-		<?php echo $form->textField($model,'p_fecha_ini_validez', array('class' => 'txtfechaInicio')); ?>
+		<?php echo $form->textField($model,'p_fecha_ini_validez'); ?>
 		<?php echo $form->error($model,'p_fecha_ini_validez'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'p_fecha_fin_validez'); ?>
-		<?php echo $form->textField($model,'p_fecha_fin_validez', array('class' => 'txtfechaFin')); ?>
+		<?php echo $form->textField($model,'p_fecha_fin_validez'); ?>
 		<?php echo $form->error($model,'p_fecha_fin_validez'); ?>
 	</div>
 
@@ -61,9 +68,9 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'p_venta_diaria_esperada'); ?>
-		<?php echo $form->textField($model,'p_venta_diaria_esperada',array('size'=>10,'maxlength'=>10)); ?>
-		<?php echo $form->error($model,'p_venta_diaria_esperada'); ?>
+		<?php echo $form->labelEx($model,'p_cumplimiento_diario_esperado'); ?>
+		<?php echo $form->textField($model,'p_cumplimiento_diario_esperado',array('size'=>10,'maxlength'=>10)); ?>
+		<?php echo $form->error($model,'p_cumplimiento_diario_esperado'); ?>
 	</div>
 
 	<div class="row">
@@ -72,26 +79,26 @@
 		<?php echo $form->error($model,'p_estado_presupuesto'); ?>
 	</div>
 
-<!--	<div class="row">
+	<div class="row">
 		<?php echo $form->labelEx($model,'p_fecha_ingreso'); ?>
 		<?php echo $form->textField($model,'p_fecha_ingreso'); ?>
 		<?php echo $form->error($model,'p_fecha_ingreso'); ?>
-	</div>-->
+	</div>
 
-<!--	<div class="row">
+	<div class="row">
 		<?php echo $form->labelEx($model,'p_fecha_modifica'); ?>
 		<?php echo $form->textField($model,'p_fecha_modifica'); ?>
 		<?php echo $form->error($model,'p_fecha_modifica'); ?>
-	</div>-->
+	</div>
 
-<!--	<div class="row">
+	<div class="row">
 		<?php echo $form->labelEx($model,'p_cod_usuario_ing_mod'); ?>
 		<?php echo $form->textField($model,'p_cod_usuario_ing_mod'); ?>
 		<?php echo $form->error($model,'p_cod_usuario_ing_mod'); ?>
-	</div>-->
+	</div>
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Nuevo' : 'Guardar'); ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

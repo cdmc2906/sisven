@@ -18,14 +18,50 @@ class RptResumenDiarioHistorialForm extends CFormModel {
     public $enlaceMapa;
     public $accionHistorial;
     public $semanaRevision;
+    
+    public $fechaInicioFinJornada;
+    public $horaFinGestionJornada;
+    public $horaInicioGestionJornada;
+    public $tipoUsuarioJornada;
+    
+    public $anioFiltro;
+    public $periodoFiltro;
+    
+    
 
     /**
      * Declares the validation rules.
      */
     public function rules() {
         return array(
-            array('fechagestion,ejecutivo,precisionVisitas,horaFinGestion,accionHistorial,semanaRevision', 'required'),
-            array('fechagestion,ejecutivo,precisionVisitas,horaInicioGestion,horaFinGestion,comentarioSupervision,enlaceMapa,accionHistorial,semanaRevision', 'safe'),
+            array('
+                fechagestion
+                ,ejecutivo
+                ,precisionVisitas
+                ,horaFinGestion
+                ,accionHistorial
+                ,semanaRevision
+                ', 'required'),
+            array('
+                fechagestion
+                ,ejecutivo
+                ,precisionVisitas
+                ,horaInicioGestion
+                ,horaFinGestion
+                ,comentarioSupervision
+                ,enlaceMapa
+                ,accionHistorial
+                ,semanaRevision
+                
+                ,fechaInicioFinJornada
+                ,horaFinGestionJornada
+                ,horaInicioGestionJornada
+                ,tipoUsuarioJornada
+                
+                ,anioFiltro
+                ,periodoFiltro
+                
+                ', 'safe'),
         );
     }
 
@@ -44,7 +80,16 @@ class RptResumenDiarioHistorialForm extends CFormModel {
             'comentarioSupervision' => 'Ingresar el comentario de supervision',
             'enlaceMapa' => 'Ingresar el enlace del mapa',
             'accionHistorial' => 'Accion historial',
-            'semanaRevision' => 'Semana revision'
+            'semanaRevision' => 'Semana revision',
+            
+            'fechaInicioFinJornada' => 'Fecha Inicio Jornada',
+            'horaFinGestionJornada' => 'Hora Fin Jornada',
+            'horaInicioGestionJornada' => 'Hora Inicio Jornada',
+            'tipoUsuarioJornada' => 'Tipo usuario',
+            
+            'anioFiltro' => 'Anio',
+            'periodoFiltro' => 'Periodo',
+            
         );
     }
 
