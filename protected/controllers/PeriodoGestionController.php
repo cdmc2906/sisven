@@ -71,12 +71,27 @@ class PeriodoGestionController extends Controller {
 //			if($model->save())
 //				$this->redirect(array('view','id'=>$model->pg_id));
             //buscar periodo que este activo 
-            $periodoAnteriorActivo = PeriodoGestionModel::model()->findByAttributes(array('pg_estado' => 1, 'pg_tipo' => $model->pg_tipo));
-            if (isset($periodoAnteriorActivo)) {
-                $periodoAnteriorActivo ["pg_estado"] = 2;
-                $periodoAnteriorActivo ["pg_fecha_modificacion"] = date(FORMATO_FECHA_LONG);
-                $periodoAnteriorActivo ["pg_cod_usuario_ing_mod"] = Yii::app()->user->id;
-                if ($periodoAnteriorActivo->save()) {
+//            $periodoAnteriorActivo = PeriodoGestionModel::model()->findByAttributes(array('pg_estado' => 1, 'pg_tipo' => $model->pg_tipo));
+            if ($model->pg_tipo == 'SEMANAL') {
+                $periodoAnteriorActivo = PeriodoGestionModel::model()->findByAttributes(array('pg_estado' => 1, 'pg_tipo' => $model->pg_tipo));
+                if (isset($periodoAnteriorActivo)) {
+                    $periodoAnteriorActivo ["pg_estado"] = 2;
+                    $periodoAnteriorActivo ["pg_fecha_modificacion"] = date(FORMATO_FECHA_LONG);
+                    $periodoAnteriorActivo ["pg_cod_usuario_ing_mod"] = Yii::app()->user->id;
+                    if ($periodoAnteriorActivo->save()) {
+                        $model->pg_descripcion = "DEL " . $model->pg_fecha_inicio . " AL " . $model->pg_fecha_fin;
+                        $anio = DateTime::createFromFormat(FORMATO_FECHA_3, $model->pg_fecha_inicio)->format("Y");
+                        $model->pg_anio = $anio;
+                        $mes = DateTime::createFromFormat(FORMATO_FECHA_3, $model->pg_fecha_inicio)->format("m");
+                        $model->pg_mes = $mes;
+                        $model->pg_estado = 1;
+                        $model->pg_fecha_ingreso = date(FORMATO_FECHA_LONG);
+                        $model->pg_fecha_modificacion = date(FORMATO_FECHA_LONG);
+                        $model->pg_cod_usuario_ing_mod = Yii::app()->user->id;
+                        if ($model->save())
+                            $this->redirect(array('view', 'id' => $model->pg_id));
+                    }
+                }else {
                     $model->pg_descripcion = "DEL " . $model->pg_fecha_inicio . " AL " . $model->pg_fecha_fin;
                     $anio = DateTime::createFromFormat(FORMATO_FECHA_3, $model->pg_fecha_inicio)->format("Y");
                     $model->pg_anio = $anio;
@@ -86,6 +101,7 @@ class PeriodoGestionController extends Controller {
                     $model->pg_fecha_ingreso = date(FORMATO_FECHA_LONG);
                     $model->pg_fecha_modificacion = date(FORMATO_FECHA_LONG);
                     $model->pg_cod_usuario_ing_mod = Yii::app()->user->id;
+
                     if ($model->save())
                         $this->redirect(array('view', 'id' => $model->pg_id));
                 }

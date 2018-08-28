@@ -13,7 +13,8 @@ $this->pageTitle = $pagina_nombre;
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.es.js"></script>
 
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/reporte/RptResumenDiarioHistorial.js"; ?>"></script>
-<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl . "/js/reporte/RptInicioFinJornadaxFecha.js";               ?>"></script>
+<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl . "/js/reporte/RptInicioFinJornadaxFecha.js";                 ?>"></script>
+<script type="text/javascript" language="javascript" src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
 
 <div class="row">
     <div class="col-md-3">
@@ -142,13 +143,6 @@ $this->pageTitle = $pagina_nombre;
                                         'Limpiar', array('id' => 'btnLimpiar'
                                     , 'class' => 'btn btn-block btn-primary btn-sm'));
                                 ?>
-
-                                <?php
-                                echo CHtml::Button(
-                                        'Exportar a Excel', array('id' => 'btnExcelJornada'
-                                    , 'class' => 'btn btn-block btn-warning btn-sm'));
-                                ?>
-
                             </div>
                         </div>
                         <div class="box box-solid">
@@ -656,7 +650,7 @@ $this->pageTitle = $pagina_nombre;
         <div class="tab-pane" id="tab_3">
             <div class="box-body">
                 <div class="row">
-                    <div class="col-md-2">
+                    <div class="col-sm-2">
                         <?php
                         $form = $this->beginWidget('CActiveForm', array(
                             'id' => 'frmLoad',
@@ -691,7 +685,9 @@ $this->pageTitle = $pagina_nombre;
                             $("#tblCapilaridadDelta").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'capilaridadDelta\']}).trigger(\'reloadGrid\');
                             $("#tblSellInMovistar").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'sellInMovistar\']}).trigger(\'reloadGrid\');
                             $("#tblSellInVentas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'sellInDelta\']}).trigger(\'reloadGrid\');
-                            
+                            jQuery("#tblCapilaridadMovistar").jqGrid(\'setCaption\', "Capilaridad Movistar - * Clientes gestionados por " + datosResult[\'duplicado\']+" ejecutivos").trigger(\'reloadGrid\');                            
+                            jQuery("#tblCapilaridadDelta").jqGrid(\'setCaption\', "Capilaridad Indicadores - * Clientes gestionados por " + datosResult[\'duplicadoDelta\']+" ejecutivos").trigger(\'reloadGrid\');                            
+                                
                             jQuery("#tblVentaPeriodo").jqGrid(\'jqPivot\', datosResult[\'ventasmensual\'], 
                             // pivot options 
                             { 
@@ -719,20 +715,40 @@ $this->pageTitle = $pagina_nombre;
                                     ], 
                                 groupSummaryPos : \'footer\',
                                 rowTotals: true, 
-                                colTotals: true
+                                colTotals: true,
+                                frozenStaticCols : true,
                             }, 
                             // grid options 
                             { 
-                                width: 900,
-                                scroll: true,
+                                width: 1000,
+                                shrinkToFit: true,
                                 height: 300,
                                 rowNum : 20, 
-                                pager: "#pagVentaPeriodo", 
-                                caption: "Ventas mensuales",
+                                pager: "#pagtblVentaPeriodo", 
+                                hidegrid: false,
+                                caption: "Ventas diarias Movistar",
                             }
                             
                             );
-                            
+                            $("#tblVentaPeriodo").jqGrid(\'navGrid\',\'#pagtblVentaPeriodo\',{add:false, edit:false, del:false, search:true});
+                            jQuery("#tblVentaPeriodo").jqGrid(\'navButtonAdd\', \'#pagtblVentaPeriodo\',
+                            {
+                                caption: "Exportar",
+                                title: "Exportar Reporte",
+                                onClickButton: function () {
+                                   var options = {
+                                        includeLabels: true,
+                                        includeGroupHeader: true,
+                                        includeFooter: true,
+                                        fileName: "VentasDiariasMovistar.xlsx",
+                                        mimetype: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                        maxlength: 40,
+                                        onBeforeExport: null,
+                                        replaceStr: null
+                                    }
+                                    $("#tblVentaPeriodo").jqGrid(\'exportToExcel\', options);
+                                }});
+
                             
                         } else{
                             $.each(data, function(key, val) {
@@ -746,7 +762,7 @@ $this->pageTitle = $pagina_nombre;
                             alert(err);
                         }'
                                         ), array(
-                                    'id' => 'btnGenerar'
+                                    'id' => 'btnGenerarCapilaridad'
                                     , 'class' => 'btn btn-block btn-success btn-sm'
                                 ));
                                 ?>
@@ -755,13 +771,6 @@ $this->pageTitle = $pagina_nombre;
                                         'Limpiar', array('id' => 'btnLimpiarCapilaridadSellIn'
                                     , 'class' => 'btn btn-block btn-primary btn-sm'));
                                 ?>
-
-                                <?php
-//                                echo CHtml::Button(
-//                                        'Exportar a Excel', array('id' => 'btnExcelJornada'
-//                                    , 'class' => 'btn btn-block btn-warning btn-sm'));
-                                ?>
-
                             </div>
                         </div>
                         <div class="box box-solid">
@@ -817,35 +826,7 @@ $this->pageTitle = $pagina_nombre;
                         <?php $this->endWidget(); ?>
 
                     </div>
-                    <div class="margin">
-                        <div class="btn-group">
-                            <?php
-                            echo CHtml::Button(
-                                    'Exportar Capilaridad'
-                                    , array('id' => 'btnExcelResumenCapilaridad'
-                                , 'class' => 'btn btn-primary btn-sm'));
-                            ?> 
-                        </div>
-                        <div class="btn-group">
-                            <?php
-                            echo CHtml::Button(
-                                    'Exportar SellIN'
-                                    , array('id' => 'btnExcelResumenSellIn'
-                                , 'class' => 'btn btn-primary btn-sm'));
-                            ?> 
-                        </div>
-                        <div class="btn-group">
-                            <?php
-                            echo CHtml::Button(
-                                    'Exportar Ventas Mes'
-                                    , array('id' => 'btnExcelVentasMes'
-                                , 'class' => 'btn btn-primary btn-sm'
-                                , 'disabled' => 'true'
-                                        ));
-                            ?> 
-                        </div>
-                    </div>
-                    <div class="col-md-10">
+                    <div class="col-sm-10">
                         <div class="box box-primary">
                             <div class="box-body no-padding">
                                 <div  style="display: flex; justify-content: flex-start;">

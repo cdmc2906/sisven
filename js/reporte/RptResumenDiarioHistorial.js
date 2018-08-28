@@ -13,18 +13,36 @@ $(document).ready(function () {
         $("#tblCapilaridadDelta").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tblSellInMovistar").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tblSellInVentas").jqGrid("clearGridData", true).trigger("reloadGrid");
+        $("#tblVentaPeriodo").jqGrid("clearGridData", true).trigger("reloadGrid");
     });
-    
-    $("#btnExcelResumenCapilaridad").click(function () {
-        GenerarDocumentoReporte('GenerateExcelResumenCapilaridad');
+
+
+    $("#btnExcelCapilaridadMovistar").click(function () {
+        var options = {
+            includeLabels: true,
+            includeGroupHeader: true,
+            includeFooter: true,
+            fileName: "detalle_capilaridad_movistar.xlsx",
+            mimetype: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            maxlength: 40,
+            onBeforeExport: null,
+            replaceStr: null
+        }
+        $("#tblCapilaridadMovistar").jqGrid('exportToExcel', options);
     });
-    $("#btnExcelResumenSellIn").click(function () {
-        GenerarDocumentoReporte('GenerateExcelResumenSellIn');
-    });
-    
-    
-    $("#btnExcelJornada").click(function () {
-        GenerarDocumentoReporte('GenerateExcelJornada');
+
+    $("#btnExcelCapilaridadDelta").click(function () {
+        var options = {
+            includeLabels: true,
+            includeGroupHeader: true,
+            includeFooter: true,
+            fileName: "detalle_capilaridad_delta.xlsx",
+            mimetype: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            maxlength: 40,
+            onBeforeExport: null,
+            replaceStr: null
+        }
+        $("#tblCapilaridadDelta").jqGrid('exportToExcel', options);
     });
 
     $("#btnExcelNoVisitados").click(function () {
@@ -66,19 +84,8 @@ $(document).ready(function () {
 
 });
 function LimpiarGrids() {
-//    $("#RptResumenDiarioHistorialForm_fechagestion").val('');
-//    $("#RptResumenDiarioHistorialForm_ejecutivo").val('');
-
-//    $("#RptResumenDiarioHistorialForm_horaInicioGestion").val('');
-//    $("#RptResumenDiarioHistorialForm_horaFinGestion").val('');
-//    $("#RptResumenDiarioHistorialForm_precisionVisitas").val('');
-
-//    $("#RptResumenDiarioHistorialForm_comentarioSupervision").val('');
-//    $("#RptResumenDiarioHistorialForm_enlaceMapa").val('');
-
     $("#d_comentariosSupervision").val('');
     $("#d_comentarioSupervision").val('');
-//    $("#d_enlaceMapa").val('');
 
     $("#tblGridDetalle").jqGrid("clearGridData", true).trigger("reloadGrid");
     $("#tblResumenGeneral").jqGrid("clearGridData", true).trigger("reloadGrid");
@@ -133,18 +140,14 @@ function ConfigurarGrids() {
         pager: '#pagGridResumenJornada',
         rowNum: 200, //NroFilas,
         rowList: ElementosPagina,
-        //sortname: 'bank_date',
         caption: 'Gestion dia',
         hidegrid: false,
         sortorder: 'ASC',
         viewrecords: true,
-//        height: 'auto',
         height: 350,
-//        autoheight: true,
-//        width: 950,
         autowidth: true,
         gridview: true,
-        shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
+        shrinkToFit: false,
         footerrow: true,
         gridComplete: function () {
             var $grid = $('#tblGridResumenJornada');
@@ -166,30 +169,14 @@ function ConfigurarGrids() {
             $grid.jqGrid('footerData', 'set', {'VENTA': colSumaVenta});
 
         },
-//        onSelectRow: function (id) {
-//            if (id && id !== filaSeleccionada) {
-//                jQuery('#tblGrid').jqGrid('restoreRow', filaSeleccionada);
-//                jQuery('#tblGrid').jqGrid('editRow', id, true);
-//                filaSeleccionada = id;
-//            }
-//        },
-//        editurl: "/sisven_2/ReporteInicioFinJornadaxFecha/GuardarRevision?datosFila=" + filaSeleccionada,
         jsonReader: {
             root: "Result",
             repeatitems: false, //cuando el array de la data son object
             id: "id" //representa el �ndice del identificador �nico de la entidad
         },
 
-        beforeRequest: function () {
-//            blockUIOpen();
-        },
-        loadError: function (xhr, st, err) {
-//            blockUIClose();
-            // RedirigirError(xhr.status);
-        },
-        loadComplete: function () {
-            $("tr.jqgrow:odd").css("background", "#b7d2ff");
-        }
+        beforeRequest: function () {},
+        loadError: function (xhr, st, err) {}
     });
     jQuery("#tblGridResumenJornada").jqGrid('setFrozenColumns');
 
@@ -201,7 +188,24 @@ function ConfigurarGrids() {
             {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
     );
 
-//    console.log(datosResult);
+    jQuery("#tblGridResumenJornada").jqGrid('navButtonAdd', '#pagGridResumenJornada', {
+        caption: "Exportar",
+        title: "Exportar reporte con detalle de la Jornada",
+        onClickButton: function () {
+            var options = {
+                includeLabels: true,
+                includeGroupHeader: true,
+                includeFooter: true,
+                fileName: "detalle_jornada.xlsx",
+                mimetype: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                maxlength: 40,
+                onBeforeExport: null,
+                replaceStr: null
+            }
+            $("#tblGridResumenJornada").jqGrid('exportToExcel', options);
+        }
+    });
+
     jQuery("#tblGridDetalle").jqGrid({
         loadonce: true,
         datatype: 'json',
@@ -506,20 +510,24 @@ function ConfigurarGrids() {
             'BODEGA'
                     , 'PRESP.'
                     , 'CUMPL.'
+                    , 'X'
                     , '% CUMPL.'
                     , 'FALT.'
                     , '% FALT.'
+                    , 'ULTIMA VENTA'
                     , 'CANT. VEND.'
 
         ],
         colModel: [
-            {name: 'BODEGA', index: 'BODEGA', width: 150, sortable: false, frozen: true},
+            {name: 'BODEGA', index: 'BODEGA', width: 100, sortable: false, frozen: true},
             {name: 'PRESUPUESTO', index: 'PRESUPUESTO', width: 50, sortable: false, frozen: true, align: 'center'},
             {name: 'CUMPLIMIENTO', index: 'CUMPLIMIENTO', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'DESCARTAR', index: 'DESCARTAR', width: 30, sortable: false, frozen: true, align: 'center'},
             {name: 'PCUMPLIMIENTO', index: 'PCUMPLIMIENTO', width: 50, sortable: false, frozen: true, align: 'center'},
             {name: 'FALTANTE', index: 'FALTANTE', width: 50, sortable: false, frozen: true, align: 'center'},
             {name: 'PFALTANTE', index: 'PFALTANTE', width: 50, sortable: false, frozen: true, align: 'center'},
-            {name: 'VENTA', index: 'VENTA', width: 70, sortable: false, frozen: true, align: 'center'},
+            {name: 'UVENTA', index: 'UVENTA', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'VENTA', index: 'VENTA', width: 50, sortable: false, frozen: true, align: 'center'},
         ],
 //        pager: '#pagGrid',
         rowNum: 60,
@@ -538,21 +546,26 @@ function ConfigurarGrids() {
             repeatitems: false, //cuando el array de la data son object
             id: "id" //representa el �ndice del identificador �nico de la entidad
         }
-        ,footerrow: true,
+        , footerrow: true,
         gridComplete: function () {
             var $grid = $('#tblCapilaridadMovistar');
             var sumaPresupuestos = $grid.jqGrid('getCol', 'PRESUPUESTO', false, 'sum');
-            var sumaFaltantes = $grid.jqGrid('getCol', 'FALTANTE', false, 'sum');
+            var sumaCumplimiento = $grid.jqGrid('getCol', 'CUMPLIMIENTO', false, 'sum');
+            var sumaDescartados = $grid.jqGrid('getCol', 'DESCARTAR', false, 'sum');
+            var PCumplimiento = (sumaCumplimiento / sumaPresupuestos) * 100;
             var sumaVentas = $grid.jqGrid('getCol', 'VENTA', false, 'sum');
             $grid.jqGrid('footerData', 'set', {'BODEGA': 'Totales'});
             $grid.jqGrid('footerData', 'set', {'PRESUPUESTO': sumaPresupuestos});
-            $grid.jqGrid('footerData', 'set', {'FALTANTE': sumaFaltantes});
+            $grid.jqGrid('footerData', 'set', {'CUMPLIMIENTO': sumaCumplimiento});
+            $grid.jqGrid('footerData', 'set', {'DESCARTAR': sumaDescartados});
+            $grid.jqGrid('footerData', 'set', {'PCUMPLIMIENTO': PCumplimiento.toFixed(0).concat('%')});
             $grid.jqGrid('footerData', 'set', {'VENTA': sumaVentas});
-
         }
-        ,beforeRequest: function () { }
-        ,loadError: function (xhr, st, err) { }
-        ,loadComplete: function () {$("tr.jqgrow:odd").css("background", "#b7d2ff");},
+        , beforeRequest: function () { }
+        , loadError: function (xhr, st, err) { }
+        , loadComplete: function () {
+            $("tr.jqgrow:odd").css("background", "#b7d2ff");
+        },
     }
     );
     jQuery("#tblCapilaridadMovistar").jqGrid('navGrid', '#pagCapilaridadMovistar',
@@ -562,7 +575,34 @@ function ConfigurarGrids() {
             {}, // del options 
             {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
     );
-    
+    jQuery("#tblCapilaridadMovistar").jqGrid('navButtonAdd', '#pagCapilaridadMovistar',
+            {
+                caption: "Reporte 1",
+                title: "Exportar Reporte Detalle Capilaridad Movistar",
+                onClickButton: function () {
+                    var options = {
+                        includeLabels: true,
+                        includeGroupHeader: true,
+                        includeFooter: true,
+                        fileName: "detalle_capilaridad_movistar.xlsx",
+                        mimetype: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        maxlength: 40,
+                        onBeforeExport: null,
+                        replaceStr: null
+                    }
+                    $("#tblCapilaridadMovistar").jqGrid('exportToExcel', options);
+                }});
+
+    jQuery("#tblCapilaridadMovistar").jqGrid('navButtonAdd', '#pagCapilaridadMovistar',
+            {
+                caption: "Reporte 2",
+                title: "Exportar Reporte Capilaridad Delta y Movistar",
+                onClickButton: function () {
+                    GenerarDocumentoReporte('GenerateExcelResumenCapilaridad');
+                }
+            }
+    );
+
     jQuery("#tblCapilaridadDelta").jqGrid({
         loadonce: true,
         datatype: 'json',
@@ -572,20 +612,24 @@ function ConfigurarGrids() {
             'BODEGA'
                     , 'PRESP.'
                     , 'CUMPL.'
+                    , 'X'
                     , '% CUMPL.'
                     , 'FALT.'
                     , '% FALT.'
+                    , 'ULTIMA VENTA'
                     , 'CANT. VEND.'
 
         ],
         colModel: [
-            {name: 'D_BODEGA', index: 'D_BODEGA', width: 150, sortable: false, frozen: true},
+            {name: 'D_BODEGA', index: 'D_BODEGA', width: 100, sortable: false, frozen: true},
             {name: 'D_PRESUPUESTO', index: 'D_PRESUPUESTO', width: 50, sortable: false, frozen: true, align: 'center'},
             {name: 'D_CUMPLIMIENTO', index: 'D_CUMPLIMIENTO', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'D_DESCARTAR', index: 'D_DESCARTAR', width: 30, sortable: false, frozen: true, align: 'center'},
             {name: 'D_PCUMPLIMIENTO', index: 'D_PCUMPLIMIENTO', width: 50, sortable: false, frozen: true, align: 'center'},
             {name: 'D_FALTANTE', index: 'D_FALTANTE', width: 50, sortable: false, frozen: true, align: 'center'},
             {name: 'D_PFALTANTE', index: 'D_PFALTANTE', width: 50, sortable: false, frozen: true, align: 'center'},
-            {name: 'D_VENTA', index: 'D_VENTA', width: 70, sortable: false, frozen: true, align: 'center'},
+            {name: 'UVENTA', index: 'UVENTA', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'D_VENTA', index: 'D_VENTA', width: 50, sortable: false, frozen: true, align: 'center'},
         ],
 //        pager: '#pagGrid',
         rowNum: 60,
@@ -604,21 +648,27 @@ function ConfigurarGrids() {
             repeatitems: false, //cuando el array de la data son object
             id: "id" //representa el �ndice del identificador �nico de la entidad
         }
-        ,footerrow: true,
+        , footerrow: true,
         gridComplete: function () {
             var $grid = $('#tblCapilaridadDelta');
-            var sumaPresupuestos = $grid.jqGrid('getCol', 'PRESUPUESTO', false, 'sum');
-            var sumaFaltantes = $grid.jqGrid('getCol', 'FALTANTE', false, 'sum');
-            var sumaVentas = $grid.jqGrid('getCol', 'VENTA', false, 'sum');
-            $grid.jqGrid('footerData', 'set', {'BODEGA': 'Totales'});
-            $grid.jqGrid('footerData', 'set', {'PRESUPUESTO': sumaPresupuestos});
-            $grid.jqGrid('footerData', 'set', {'FALTANTE': sumaFaltantes});
-            $grid.jqGrid('footerData', 'set', {'VENTA': sumaVentas});
+            var sumaPresupuestosD = $grid.jqGrid('getCol', 'D_PRESUPUESTO', false, 'sum');
+            var sumaCumplimientoD = $grid.jqGrid('getCol', 'D_CUMPLIMIENTO', false, 'sum');
+            var sumaVentasD = $grid.jqGrid('getCol', 'D_VENTA', false, 'sum');
+            var PCumplimiento = (sumaCumplimientoD / sumaPresupuestosD) * 100;
+            var sumaDescartados = $grid.jqGrid('getCol', 'D_DESCARTAR', false, 'sum');
 
+            $grid.jqGrid('footerData', 'set', {'D_DESCARTAR': sumaDescartados});
+            $grid.jqGrid('footerData', 'set', {'D_PCUMPLIMIENTO': PCumplimiento.toFixed(0).concat('%')});
+            $grid.jqGrid('footerData', 'set', {'D_BODEGA': 'Totales'});
+            $grid.jqGrid('footerData', 'set', {'D_PRESUPUESTO': sumaPresupuestosD});
+            $grid.jqGrid('footerData', 'set', {'D_CUMPLIMIENTO': sumaCumplimientoD});
+            $grid.jqGrid('footerData', 'set', {'D_VENTA': sumaVentasD});
         }
-        ,beforeRequest: function () { }
-        ,loadError: function (xhr, st, err) { }
-        ,loadComplete: function () {$("tr.jqgrow:odd").css("background", "#b7d2ff");},
+        , beforeRequest: function () { }
+        , loadError: function (xhr, st, err) { }
+        , loadComplete: function () {
+            $("tr.jqgrow:odd").css("background", "#b7d2ff");
+        },
     }
     );
     jQuery("#tblCapilaridadDelta").jqGrid('navGrid', '#pagCapilaridadDelta',
@@ -628,7 +678,25 @@ function ConfigurarGrids() {
             {}, // del options 
             {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
     );
-
+    jQuery("#tblCapilaridadDelta").jqGrid('navButtonAdd', '#pagCapilaridadDelta',
+            {
+                caption: "Reporte 1",
+                title: "Exportar Reporte Detalle Capilaridad Delta",
+                onClickButton: function () {
+                    var options = {
+                        includeLabels: true,
+                        includeGroupHeader: true,
+                        includeFooter: true,
+                        fileName: "detalle_capilaridad_delta.xlsx",
+                        mimetype: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        maxlength: 40,
+                        onBeforeExport: null,
+                        replaceStr: null
+                    }
+                    $("#tblCapilaridadDelta").jqGrid('exportToExcel', options);
+                }
+            }
+    );
 
     jQuery("#tblSellInMovistar").jqGrid({
         loadonce: true,
@@ -671,9 +739,25 @@ function ConfigurarGrids() {
             repeatitems: false, //cuando el array de la data son object
             id: "id" //representa el �ndice del identificador �nico de la entidad
         }
-        ,beforeRequest: function () { }
-        ,loadError: function (xhr, st, err) { }
-        ,loadComplete: function () {$("tr.jqgrow:odd").css("background", "#edfff6");},
+        , beforeRequest: function () { }
+        , loadError: function (xhr, st, err) { }
+        , loadComplete: function () {
+            $("tr.jqgrow:odd").css("background", "#edfff6");
+        }
+        , footerrow: true,
+        gridComplete: function () {
+            var $grid = $('#tblSellInMovistar');
+            var sumaPresupuestos = $grid.jqGrid('getCol', 'PRESUPUESTO', false, 'sum');
+            var sumaCumplimiento = $grid.jqGrid('getCol', 'CUMPLIMIENTO', false, 'sum');
+            var sumaVentas = $grid.jqGrid('getCol', 'VENTA', false, 'sum');
+            var PCumplimiento = (sumaCumplimiento / sumaPresupuestos) * 100;
+
+            $grid.jqGrid('footerData', 'set', {'PCUMPLIMIENTO': PCumplimiento.toFixed(0).concat('%')});
+            $grid.jqGrid('footerData', 'set', {'BODEGA': 'Totales'});
+            $grid.jqGrid('footerData', 'set', {'PRESUPUESTO': sumaPresupuestos});
+            $grid.jqGrid('footerData', 'set', {'CUMPLIMIENTO': sumaCumplimiento});
+            $grid.jqGrid('footerData', 'set', {'VENTA': sumaVentas});
+        }
     }
     );
     jQuery("#tblSellInMovistar").jqGrid('navGrid', '#pagSellInMovistar',
@@ -683,7 +767,35 @@ function ConfigurarGrids() {
             {}, // del options 
             {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
     );
-    
+    jQuery("#tblSellInMovistar").jqGrid('navButtonAdd', '#pagSellInMovistar',
+            {
+                caption: "Reporte 1",
+                title: "Exportar Reporte Sell-In Movistar",
+                onClickButton: function () {
+                    var options = {
+                        includeLabels: true,
+                        includeGroupHeader: true,
+                        includeFooter: true,
+                        fileName: "detalle_capilaridad_delta.xlsx",
+                        mimetype: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        maxlength: 40,
+                        onBeforeExport: null,
+                        replaceStr: null
+                    }
+                    $("#tblSellInMovistar").jqGrid('exportToExcel', options);
+                }
+            }
+    );
+    jQuery("#tblSellInMovistar").jqGrid('navButtonAdd', '#pagSellInMovistar',
+            {
+                caption: "Reporte 2",
+                title: "Exportar Reporte Sell-In Movistar y Delta",
+                onClickButton: function () {
+                    GenerarDocumentoReporte('GenerateExcelResumenSellIn');
+                }
+            }
+    );
+
     jQuery("#tblSellInVentas").jqGrid({
         loadonce: true,
         datatype: 'json',
@@ -719,46 +831,78 @@ function ConfigurarGrids() {
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
         caption: "Sell-In Indicadores",
         hidegrid: false,
-         pager: '#pagSellInVentas',
+        pager: '#pagSellInVentas',
         jsonReader: {
             root: "Result",
             repeatitems: false, //cuando el array de la data son object
             id: "id" //representa el �ndice del identificador �nico de la entidad
         }
-        ,beforeRequest: function () { }
-        ,loadError: function (xhr, st, err) { }
-        ,loadComplete: function () {$("tr.jqgrow:odd").css("background", "#edfff6");},
+        , beforeRequest: function () { }
+        , loadError: function (xhr, st, err) { }
+        , loadComplete: function () {
+            $("tr.jqgrow:odd").css("background", "#edfff6");
+        }
+        , footerrow: true,
+        gridComplete: function () {
+            var $grid = $('#tblSellInVentas');
+            var sumaPresupuestos = $grid.jqGrid('getCol', 'PRESUPUESTO', false, 'sum');
+            var sumaCumplimiento = $grid.jqGrid('getCol', 'CUMPLIMIENTO', false, 'sum');
+            var sumaVentas = $grid.jqGrid('getCol', 'VENTA', false, 'sum');
+            var PCumplimiento = (sumaCumplimiento / sumaPresupuestos) * 100;
+            $grid.jqGrid('footerData', 'set', {'PCUMPLIMIENTO': PCumplimiento.toFixed(0).concat('%')});
+            $grid.jqGrid('footerData', 'set', {'BODEGA': 'Totales'});
+            $grid.jqGrid('footerData', 'set', {'PRESUPUESTO': sumaPresupuestos});
+            $grid.jqGrid('footerData', 'set', {'CUMPLIMIENTO': sumaCumplimiento});
+            $grid.jqGrid('footerData', 'set', {'VENTA': sumaVentas});
+        }
     }
     );
-     jQuery("#tblSellInVentas").jqGrid('navGrid', '#pagSellInVentas',
+    jQuery("#tblSellInVentas").jqGrid('navGrid', '#pagSellInVentas',
             {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options 
             {}, // edit options 
             {}, // add options 
             {}, // del options 
             {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
     );
+    jQuery("#tblSellInVentas").jqGrid('navButtonAdd', '#pagSellInVentas', {
+        caption: "Reporte 1",
+        title: "Exportar Reporte Sell-In Delta",
+        onClickButton: function () {
+            var options = {
+                includeLabels: true,
+                includeGroupHeader: true,
+                includeFooter: true,
+                fileName: "detalle_sell-in_delta.xlsx",
+                mimetype: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                maxlength: 40,
+                onBeforeExport: null,
+                replaceStr: null
+            }
+            $("#tblSellInVentas").jqGrid('exportToExcel', options);
+        }
+    }
+    );
 }
 
 function GenerarDocumentoReporte(accion) {
-        window.open('/sisven_dev/RptResumenDiarioHistorial/' + accion);
+    window.open('/sisven_dev/RptResumenDiarioHistorial/' + accion);
 }
 
- function cargarPeriodosPorAnio(anio) {
-//     alert(anio)
-        $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            cache: false,
-            traditional: true,
-            url: 'RptResumenDiarioHistorial/CargarPeriodosAnio',
-            data: {anio: anio},
-            success: function (jsonResponse) {
-                if (!$.isEmptyObject(jsonResponse))
-                {
-                    $("#divp").html(jsonResponse);
-                }
-            },
-            error: function (xhr, st, err) {
+function cargarPeriodosPorAnio(anio) {
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        cache: false,
+        traditional: true,
+        url: 'RptResumenDiarioHistorial/CargarPeriodosAnio',
+        data: {anio: anio},
+        success: function (jsonResponse) {
+            if (!$.isEmptyObject(jsonResponse))
+            {
+                $("#divp").html(jsonResponse);
             }
-        });
-    }
+        },
+        error: function (xhr, st, err) {
+        }
+    });
+}

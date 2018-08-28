@@ -20,7 +20,6 @@
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/template/dist/css/AdminLTE.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/template/dist/css/skins/_all-skins.min.css">
 
-
         <style>
             /*INICIO ESTILOS PARA LOS ELEMENTOS DEL MAPA*/
             #map {
@@ -574,18 +573,18 @@
                                     </li>
                                 </ul>
                             </li>
-                        <?php // } if ($verMenusGerencia || $verMenusAdmin) { ?>
+                            <?php // } if ($verMenusGerencia || $verMenusAdmin) { ?>
                             <!--REPORTES-->
-<!--                            <li class="treeview">
-                                <a href="#">
-                                    <i class="fa fa-area-chart"></i>
-                                    <span>Reportes</span>
-                                    <span class="pull-right-container">
-                                        <i class="fa fa-angle-left pull-right"></i>
-                                    </span>
-                                </a>
-
-                                <?php
+                            <!--                            <li class="treeview">
+                                                            <a href="#">
+                                                                <i class="fa fa-area-chart"></i>
+                                                                <span>Reportes</span>
+                                                                <span class="pull-right-container">
+                                                                    <i class="fa fa-angle-left pull-right"></i>
+                                                                </span>
+                                                            </a>
+                            
+                            <?php
 //                                $this->widget('zii.widgets.CMenu', array(
 //                                    'items' => array(
 //                                        array(
@@ -605,8 +604,8 @@
 ////                                'linkLabelWrapperHtmlOptions' => array('class' => 'fa'),
 //                                    'htmlOptions' => array('class' => 'treeview-menu'),
 //                                ));
-                                ?>
-                            </li> -->
+                            ?>
+                                                        </li> -->
 
                         <?php } if ($verMenusCallCenter || $verMenusAdmin) { ?>
                             <!--CALL CENTER-->
@@ -720,9 +719,9 @@
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl ?>/js/jqueryblockUI.js"></script>
 
 
-<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                        ?>/assets/template/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
-<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                        ?>/assets/template/bower_components/fastclick/lib/fastclick.js"></script>-->
+<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                         ?>/assets/template/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
+<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                         ?>/assets/template/bower_components/fastclick/lib/fastclick.js"></script>-->
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/template/dist/js/adminlte.min.js"></script>
-<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                        ?>/assets/template/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>-->
+<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                         ?>/assets/template/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>-->
 </body>
 </html>

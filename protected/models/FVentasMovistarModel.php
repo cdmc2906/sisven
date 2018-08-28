@@ -6,16 +6,14 @@ class FVentasMovistarModel extends DAOModel {
         $sql = "
             SET LANGUAGE Spanish;  
             SELECT 
-                    UPPER(B.I_BODEGA) AS BODEGA
+                    UPPER(A.vm_nombredistribuidor) AS BODEGA
                     ,COUNT(A.VM_ICC) AS CANTIDAD_MINES
-                    ,ISNULL(UPPER(left(DATENAME(DAY,A.VM_FECHA),3))+'-'+UPPER(left(DATENAME(MONTH,A.VM_FECHA),3)),'SIN_DATA') AS FECHA_VENTA_MOVISTAR
+                    ,ISNULL(UPPER(left(DATENAME(DAY,A.VM_FECHA),3))+'-'+UPPER(left(DATENAME(MONTH,A.VM_FECHA),4)),'SIN_DATA') AS FECHA_VENTA_MOVISTAR
                 FROM TB_VENTA_MOVISTAR AS A
-                    INNER JOIN TB_INDICADORES AS B
-                        ON A.VM_ICC=B.I_IMEI
                 WHERE 1=1
                     AND A.VM_FECHA>='".$fechaInicio."' 
                     AND A.VM_FECHA<='".$fechaFin."'
-                GROUP BY B.I_BODEGA,A.VM_FECHA
+                GROUP BY A.vm_nombredistribuidor,A.VM_FECHA
             ";
 
 //        var_dump($sql);        die();
@@ -30,9 +28,11 @@ class FVentasMovistarModel extends DAOModel {
         $sql = "
             SELECT 
                      VM_NOMBREDISTRIBUIDOR AS VENDEDOR
+                    ,VM_DISTRIBUIDOR AS CDGVENDEDOR
                     ,COUNT(DISTINCT VM_IDDESTINO)AS CAPILARIDAD
                     ,COUNT(DISTINCT VM_ICC)AS VENTA
                     ,CONVERT(INT,D.P_VALOR_PRESUPUESTO) AS PRESUPUESTO
+                    ,ISNULL(UPPER(left(DATENAME(DAY,MAX(A.vm_fecha)),3))+'-'+UPPER(left(DATENAME(MONTH,MAX(A.vm_fecha)),3)),'SIN_DATA')  as UVENTA
                 FROM 
                     TB_VENTA_MOVISTAR AS A
                     INNER JOIN TB_EJECUTIVO AS C
@@ -74,9 +74,63 @@ class FVentasMovistarModel extends DAOModel {
                     AND VM_FECHA<='".$fechaFin."'
                     AND D.P_TIPO_PRESUPUESTO='SELLIN (VENTA)'
                     AND D.P_ESTADO_PRESUPUESTO=4
-                GROUP BY VM_NOMBREDISTRIBUIDOR,VM_DISTRIBUIDOR,P_VALOR_PRESUPUESTO
+                GROUP BY VM_NOMBREDISTRIBUIDOR,P_VALOR_PRESUPUESTO
                 ORDER BY 1
 
+            ";
+
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+
+        $this->Close();
+        return $data;
+    }
+      
+    public function getCapilaridadDescartar($codigoMovistarEjecutivo,$fechaInicio,$fechaFin) {
+        $sql = "
+             SELECT 
+                    ISNULL(COUNT(DISTINCT VM_IDDESTINO),0) AS DESCARTAR
+                FROM 
+                    TB_VENTA_MOVISTAR AS A
+                WHERE 1=1
+                    AND VM_FECHA>='".$fechaInicio."' 
+                    AND VM_FECHA<='".$fechaFin."' 
+                    AND vm_distribuidor='".$codigoMovistarEjecutivo."' 
+                    AND vm_iddestino IN(
+                                    select 
+                                            vm_iddestino as tcqu
+                                        from tb_venta_movistar
+                                        where 1=1
+                                                AND vm_fecha>='".$fechaInicio."' 
+                                                AND vm_fecha<='".$fechaFin."' 
+                                        group by vm_iddestino
+                                        having COUNT(distinct vm_distribuidor) >1
+                                    )
+                GROUP BY VM_NOMBREDISTRIBUIDOR,VM_DISTRIBUIDOR
+
+
+            ";
+
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+
+        $this->Close();
+        return $data;
+    }
+    
+    public function getDuplicado($fechaInicio,$fechaFin) {
+        $sql = "
+        select 
+                distinct COUNT(distinct vm_distribuidor) as duplicado
+            from tb_venta_movistar
+            WHERE 1=1 
+                AND vm_fecha>='".$fechaInicio."' 
+                AND vm_fecha<='".$fechaFin."' 
+                 
+            group by vm_iddestino
+            having COUNT(distinct vm_distribuidor)>1            
             ";
 
 //        var_dump($sql);        die();

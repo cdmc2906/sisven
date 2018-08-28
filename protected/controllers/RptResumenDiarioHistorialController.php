@@ -59,18 +59,39 @@ class RptResumenDiarioHistorialController extends Controller {
                     $fVentasMovistar = new FVentasMovistarModel();
                     $capilaridades = $fVentasMovistar->getCapilaridad($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
 
+                    $duplicado = $fVentasMovistar->getDuplicado($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
+                    $concatenadoDupli = '';
+                    $autocalcularDescartado = 0;
+
+                    if (count($duplicado) == 1)
+                        $autocalcularDescartado = 1;
+
+                    $datos['autocalcularDescartado'] = $autocalcularDescartado;
+
+                    foreach ($duplicado as $key => $itemdupli) {
+                        if ($key < count($duplicado) - 1)
+                            $concatenadoDupli .= $itemdupli['duplicado'] . '-';
+                        else
+                            $concatenadoDupli .= $itemdupli['duplicado'];
+                    }
+                    $datos['duplicado'] = $concatenadoDupli;
+
                     foreach ($capilaridades as $capilaridad) {
-                        $pcumplimiento = (intval($capilaridad["CAPILARIDAD"]) / intval($capilaridad["PRESUPUESTO"])) * 100;
+                        $pcumplimiento = intval($capilaridad["PRESUPUESTO"]) > 0 ? (intval($capilaridad["CAPILARIDAD"]) / intval($capilaridad["PRESUPUESTO"])) * 100 : 0;
                         $faltante = intval($capilaridad["PRESUPUESTO"]) - intval($capilaridad["CAPILARIDAD"]);
-                        $pfaltante = ((intval($capilaridad["PRESUPUESTO"]) - intval($capilaridad["CAPILARIDAD"])) / intval($capilaridad["PRESUPUESTO"])) * 100;
+                        $pfaltante = intval($capilaridad["PRESUPUESTO"]) > 0 ? ((intval($capilaridad["PRESUPUESTO"]) - intval($capilaridad["CAPILARIDAD"])) / intval($capilaridad["PRESUPUESTO"])) * 100 : 0;
+
+                        $descartar = $fVentasMovistar->getCapilaridadDescartar($capilaridad['CDGVENDEDOR'], $periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
 
                         $capilaridadEjecutivo = array(
                             'BODEGA' => $capilaridad["VENDEDOR"],
                             'PRESUPUESTO' => $capilaridad["PRESUPUESTO"],
                             'CUMPLIMIENTO' => $capilaridad["CAPILARIDAD"],
+                            'DESCARTAR' => isset($descartar[0]) ? intval($descartar[0]['DESCARTAR']) : 0,
                             'PCUMPLIMIENTO' => number_format($pcumplimiento, NUMERO_DECIMALES_RESULTADO, '.', '') . '%',
                             'FALTANTE' => $faltante,
                             'PFALTANTE' => number_format($pfaltante, NUMERO_DECIMALES_RESULTADO, '.', '') . '%',
+                            'UVENTA' => $capilaridad["UVENTA"],
                             'VENTA' => $capilaridad["VENTA"],
                         );
                         array_push($datosCapilaridadMovistar, $capilaridadEjecutivo);
@@ -81,9 +102,9 @@ class RptResumenDiarioHistorialController extends Controller {
 
                     $sellIn = $fVentasMovistar->getSellIn($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
                     foreach ($sellIn as $itemsellIn) {
-                        $pcumplimiento = (intval($itemsellIn["VENTA"]) / intval($itemsellIn["PRESUPUESTO"])) * 100;
+                        $pcumplimiento = intval($itemsellIn["PRESUPUESTO"]) > 0 ? (intval($itemsellIn["VENTA"]) / intval($itemsellIn["PRESUPUESTO"])) * 100 : 0;
                         $faltante = intval($itemsellIn["PRESUPUESTO"]) - intval($itemsellIn["VENTA"]);
-                        $pfaltante = ((intval($itemsellIn["PRESUPUESTO"]) - intval($itemsellIn["VENTA"])) / intval($itemsellIn["PRESUPUESTO"])) * 100;
+                        $pfaltante = intval($itemsellIn["PRESUPUESTO"]) > 0 ? ((intval($itemsellIn["PRESUPUESTO"]) - intval($itemsellIn["VENTA"])) / intval($itemsellIn["PRESUPUESTO"])) * 100 : 0;
 
                         $sellInEjecutivo = array(
                             'BODEGA' => $itemsellIn["VENDEDOR"],
@@ -92,7 +113,7 @@ class RptResumenDiarioHistorialController extends Controller {
                             'PCUMPLIMIENTO' => number_format($pcumplimiento, NUMERO_DECIMALES_RESULTADO, '.', '') . '%',
                             'FALTANTE' => $faltante,
                             'PFALTANTE' => number_format($pfaltante, NUMERO_DECIMALES_RESULTADO, '.', '') . '%',
-                            'VENTA' => $capilaridad["VENTA"],
+                            'VENTA' => $itemsellIn["VENTA"],
                         );
                         array_push($datosSellInMovistar, $sellInEjecutivo);
                         unset($sellInEjecutivo);
@@ -100,20 +121,43 @@ class RptResumenDiarioHistorialController extends Controller {
                     $datos['sellInMovistar'] = $datosSellInMovistar;
                     Yii::app()->session['SellInMovistar'] = $datosSellInMovistar;
 
+
                     $fVentasIndicadores = new FIndicadoresModel();
+
                     $capilaridades = $fVentasIndicadores->getCapilaridad($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
+                    $duplicado = $fVentasIndicadores->getDuplicado($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
+                    $concatenadoDupliDelta = '';
+                    $autocalcularDescartadoDelta = 0;
+
+                    if (count($duplicado) == 1)
+                        $autocalcularDescartadoDelta = 1;
+
+                    $datos['autocalcularDescartadoDelta'] = $autocalcularDescartadoDelta;
+
+                    foreach ($duplicado as $key => $itemdupli) {
+                        if ($key < count($duplicado) - 1)
+                            $concatenadoDupliDelta .= $itemdupli['duplicado'] . '-';
+                        else
+                            $concatenadoDupliDelta .= $itemdupli['duplicado'];
+                    }
+                    $datos['duplicadoDelta'] = $concatenadoDupliDelta;
+
                     foreach ($capilaridades as $capilaridad) {
-                        $pcumplimiento = (intval($capilaridad["CAPILARIDAD"]) / intval($capilaridad["PRESUPUESTO"])) * 100;
+                        $pcumplimiento = intval($capilaridad["PRESUPUESTO"]) > 0 ? (intval($capilaridad["CAPILARIDAD"]) / intval($capilaridad["PRESUPUESTO"])) * 100 : 0;
                         $faltante = intval($capilaridad["PRESUPUESTO"]) - intval($capilaridad["CAPILARIDAD"]);
-                        $pfaltante = ((intval($capilaridad["PRESUPUESTO"]) - intval($capilaridad["CAPILARIDAD"])) / intval($capilaridad["PRESUPUESTO"])) * 100;
+                        $pfaltante = intval($capilaridad["PRESUPUESTO"]) > 0 ? ((intval($capilaridad["PRESUPUESTO"]) - intval($capilaridad["CAPILARIDAD"])) / intval($capilaridad["PRESUPUESTO"])) * 100 : 0;
+//                        var_dump($capilaridad);die();
+                        $descartar = $fVentasIndicadores->getCapilaridadDescartar($capilaridad['CDGBODEGA'], $periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
 
                         $capilaridadEjecutivo = array(
                             'D_BODEGA' => $capilaridad["VENDEDOR"],
                             'D_PRESUPUESTO' => $capilaridad["PRESUPUESTO"],
                             'D_CUMPLIMIENTO' => $capilaridad["CAPILARIDAD"],
+                            'D_DESCARTAR' => isset($descartar[0]) ? intval($descartar[0]['DESCARTAR']) : 0,
                             'D_PCUMPLIMIENTO' => number_format($pcumplimiento, NUMERO_DECIMALES_RESULTADO, '.', '') . '%',
                             'D_FALTANTE' => $faltante,
                             'D_PFALTANTE' => number_format($pfaltante, NUMERO_DECIMALES_RESULTADO, '.', '') . '%',
+                            'UVENTA' => $capilaridad["UVENTA"],
                             'D_VENTA' => $capilaridad["VENTA"],
                         );
                         array_push($datosCapilaridadDelta, $capilaridadEjecutivo);
@@ -124,9 +168,9 @@ class RptResumenDiarioHistorialController extends Controller {
 
                     $sellInIndicadores = $fVentasIndicadores->getSellIn($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
                     foreach ($sellInIndicadores as $itemSellInIndicadores) {
-                        $pcumplimiento = (intval($itemSellInIndicadores["VENTA"]) / intval($itemSellInIndicadores["PRESUPUESTO"])) * 100;
+                        $pcumplimiento = intval($itemSellInIndicadores["PRESUPUESTO"]) > 0 ? (intval($itemSellInIndicadores["VENTA"]) / intval($itemSellInIndicadores["PRESUPUESTO"])) * 100 : 0;
                         $faltante = intval($itemSellInIndicadores["PRESUPUESTO"]) - intval($itemSellInIndicadores["VENTA"]);
-                        $pfaltante = ((intval($itemSellInIndicadores["PRESUPUESTO"]) - intval($itemSellInIndicadores["VENTA"])) / intval($itemSellInIndicadores["PRESUPUESTO"])) * 100;
+                        $pfaltante = intval($itemSellInIndicadores["PRESUPUESTO"]) > 0 ? ((intval($itemSellInIndicadores["PRESUPUESTO"]) - intval($itemSellInIndicadores["VENTA"])) / intval($itemSellInIndicadores["PRESUPUESTO"])) * 100 : 0;
 
                         $sellInEjecutivo = array(
                             'BODEGA' => $itemSellInIndicadores["VENDEDOR"],
@@ -134,7 +178,7 @@ class RptResumenDiarioHistorialController extends Controller {
                             'CUMPLIMIENTO' => $itemSellInIndicadores["VENTA"],
                             'PCUMPLIMIENTO' => number_format($pcumplimiento, NUMERO_DECIMALES_RESULTADO, '.', '') . '%',
                             'FALTANTE' => $faltante,
-                            'PFALTANTE' => number_format($pfaltante, 2, '.', '') . '%',
+                            'PFALTANTE' => number_format($pfaltante, NUMERO_DECIMALES_RESULTADO, '.', '') . '%',
                             'VENTA' => $itemSellInIndicadores["VENTA"],
                         );
                         array_push($datosSellInDelta, $sellInEjecutivo);
@@ -598,7 +642,6 @@ class RptResumenDiarioHistorialController extends Controller {
     , $horaFinGestion
     , $codigoEjecutivo
     ) {
-//        var_dump($accionHistorial, $fechagestion, $horaInicioGestion, $horaFinGestion, $codigoEjecutivo);        die();
         $fHistorial = new FHistorialModel();
         $historial = $fHistorial->getHistorialxVendedorxFechaxHoraInicioxHoraFin(
                 $fechagestion
@@ -606,10 +649,8 @@ class RptResumenDiarioHistorialController extends Controller {
                 , $horaFinGestion
                 , $codigoEjecutivo
         );
-//        var_dump($historial);die();
         unset(Yii::app()->session['tiempoGestionEjecutivo']);
         unset(Yii::app()->session['tiempoTrasladoEjecutivo']);
-
         unset(Yii::app()->session['semanas']);
         unset(Yii::app()->session['cantidadVisitas']);
         unset(Yii::app()->session['cantidadRepetidas']);
@@ -660,18 +701,16 @@ class RptResumenDiarioHistorialController extends Controller {
                     $tiempoGestion = '00:00:00';
                     $tiempoTraslado = '00:00:00';
 
-//                    var_dump(array_search($itemHistorial['SEMANAHISTORIAL'], $semanasEjecutivo)===FALSE);die();
-
                     if (array_search($itemHistorial['SEMANAHISTORIAL'], $semanasEjecutivo) === FALSE) {
                         array_push($semanasEjecutivo, $itemHistorial['SEMANAHISTORIAL']);
-                        $s_semanasEjecutivo .= $itemHistorial['SEMANAHISTORIAL'] . ',';
+                        $s_semanasEjecutivo .= $itemHistorial['SEMANAHISTORIAL'] . '/';
                     }
-//                    var_dump($s_semanasEjecutivo);
+
                     if (!array_search($itemHistorial['CODIGOCLIENTE'], $clientesVisitados))
                         array_push($clientesVisitados, $itemHistorial['CODIGOCLIENTE']);
                     else
                         $contadorVisitasRepetidas += 1;
-//                    var_dump($itemHistorial['CODIGOCLIENTE']);
+
                     $inicioFinVisitaHistorial = $fHistorial->getInicioFinVisitaClientexEjecutivoxFecha(
                             'Inicio visita'
                             , $fechaGestion
@@ -685,15 +724,11 @@ class RptResumenDiarioHistorialController extends Controller {
                     $tiempoGestion = $inicioVisita->diff($finVisita)->format("%h:%I:%S");
                     $totalGestion = $libreria->SumaHoras($totalGestion, $tiempoGestion);
 
-
-
                     if ($contadorItemVisita > 0) { // solo si hay mas de una visita debe haber traslado entre clientes 
                         $tiempoTraslado = $inicioVisita->diff($finVisitaAnterior)->format("%h:%I:%S");
                         $totalTraslados = $libreria->SumaHoras($totalTraslados, $tiempoTraslado);
                     }
                     $finVisitaAnterior = $finVisita;
-
-//                    var_dump($inicioVisita, $finVisita, $tiempoGestion, $totalGestion, '\n', $inicioVisita, $finVisitaAnterior, $tiempoTraslado, $totalTraslados);
 
                     $_tiempoGestion = new DateTime($tiempoGestion);
                     $horasGestion = $_tiempoGestion->format("h");
@@ -726,11 +761,9 @@ class RptResumenDiarioHistorialController extends Controller {
                     break;
             }
         }#Fin iteracion items historial
-        die();
-//        var_dump($s_semanasEjecutivo);        die();
+
         Yii::app()->session['tiempoGestionEjecutivo'] = $totalGestion;
         Yii::app()->session['tiempoTrasladoEjecutivo'] = $totalTraslados;
-
         Yii::app()->session['semanas'] = $s_semanasEjecutivo;
         Yii::app()->session['cantidadVisitas'] = count($clientesVisitados);
         Yii::app()->session['cantidadRepetidas'] = $contadorVisitasRepetidas;
@@ -750,8 +783,10 @@ class RptResumenDiarioHistorialController extends Controller {
         $response = new Response();
         $solicitarLogin = true;
         $mensaje = '';
+
         try {
             $model = new RptResumenDiarioHistorialForm();
+
             if (isset($_POST['RptResumenDiarioHistorialForm'])) {
                 $model->attributes = $_POST['RptResumenDiarioHistorialForm'];
 
@@ -830,14 +865,14 @@ class RptResumenDiarioHistorialController extends Controller {
                         'TOTALTIEMPO' => $_sTiempoGestion,
                         'TIEMPOGESTION' => Yii::app()->session['tiempoGestionEjecutivo'],
                         'TIEMPOTRASLADO' => Yii::app()->session['tiempoTrasladoEjecutivo'],
-                        'SEMANAS' => Yii::app()->session['semanas'],
-                        'VISITAS' => Yii::app()->session['cantidadVisitas'],
-                        'REPETIDAS' => Yii::app()->session['cantidadRepetidas'],
-                        'TOTAL' => Yii::app()->session['totalVisitas'],
-                        'NUEVOS' => Yii::app()->session['contadorClientesNuevos'],
-                        'EFECTIVOS' => Yii::app()->session['contadorClientesEfectivos'],
-                        'ENCUESTAS' => Yii::app()->session['contadorEncuestas'],
-                        'VENTA' => Yii::app()->session['contadorChipsVendidos'],
+                        'SEMANAS' => (Yii::app()->session['semanas'] > 0) ? Yii::app()->session['semanas'] : '0',
+                        'VISITAS' => (Yii::app()->session['cantidadVisitas'] > 0) ? Yii::app()->session['cantidadVisitas'] : '0',
+                        'REPETIDAS' => (Yii::app()->session['cantidadRepetidas'] > 0) ? Yii::app()->session['cantidadRepetidas'] : '0',
+                        'TOTAL' => (Yii::app()->session['totalVisitas'] > 0) ? Yii::app()->session['totalVisitas'] : '0',
+                        'NUEVOS' => (Yii::app()->session['contadorClientesNuevos'] > 0) ? Yii::app()->session['contadorClientesNuevos'] : '0',
+                        'EFECTIVOS' => (Yii::app()->session['contadorClientesEfectivos'] > 0) ? Yii::app()->session['contadorClientesEfectivos'] : '0',
+                        'ENCUESTAS' => (Yii::app()->session['contadorEncuestas'] > 0) ? Yii::app()->session['contadorEncuestas'] : '0',
+                        'VENTA' => (Yii::app()->session['contadorChipsVendidos'] > 0) ? Yii::app()->session['contadorChipsVendidos'] : '0',
                     );
 
                     array_push($datosGridJornada, $infoJornada);
@@ -872,78 +907,12 @@ class RptResumenDiarioHistorialController extends Controller {
         return;
     }
 
-    public function actionGenerateExcelJornada() {
-        $datosGrid = array();
-        $response = new Response();
-        try {
-            if (isset(Yii::app()->session['revisionJornada']) && count(Yii::app()->session['revisionJornada']) > 0) {
-                $revisionJornadas = Yii::app()->session['revisionJornada'];
-//                foreach ($revisionJornadas as $item) {
-////                    foreach ($items as $item) {
-//                    $infoJornadas = array(
-//                        'EJECUTIVO' => (isset($item['EJECUTIVO'])) ? $item['EJECUTIVO'] : '',
-//                        'INICIO_PRIMERA_VISITA' => (isset($item['INICIOPRIMERAVISITA'])) ? $item['INICIOPRIMERAVISITA'] : '',
-//                        'FINAL_ULTIMA_VISITA' => (isset($item['FINALULTIMAVISITA'])) ? $item['FINALULTIMAVISITA'] : '',
-//                        'TOTAL_TIEMPO' => (isset($item['TOTALTIEMPO'])) ? $item['TOTALTIEMPO'] : '',
-//                        'TIEMPO_GESTION' => (isset($item['TIEMPOGESTION'])) ? $item['TIEMPOGESTION'] : '',
-//                        'TIEMPO_TRALADO' => (isset($item['TIEMPOTRASLADO'])) ? $item['TIEMPOTRASLADO'] : '',
-//                        'COMENTARIO_SUPERVISOR' => (isset($item['COMENTARIOS'])) ? $item['COMENTARIOS'] : '',
-//                        'COMENTARIO_OFICINA' => (isset($item['COMENTARIOO'])) ? $item['COMENTARIOO'] : '',
-//                    );
-//                    array_push($datosGrid, $infoJornadas);
-//                    unset($infoJornadas);
-////                    }
-//                }
-                $NombreArchivo = "reporte_inicio_fin_x_fecha";
-                $NombreHoja = "reporte_inicio_fin_x_fecha";
-
-                $autor = "Tececab"; //$_SESSION['CUENTA'];
-                $titulo = "reporte_inicio_fin_x_fecha";
-                $tema = "reporte_inicio_fin_x_fecha";
-                $keywords = "office 2007";
-
-                $excel = new excel();
-
-                $excel->getObjPHPExcel()->getProperties()
-                        ->setCreator($autor)
-                        ->setLastModifiedBy($autor)
-                        ->setTitle($titulo)
-                        ->setSubject($tema)
-                        ->setDescription($tema)
-                        ->setKeywords($keywords)
-                        ->setCategory($tema);
-
-                $excel->SetHojaDefault(0);
-                $excel->SetNombreHojaActiva($NombreHoja);
-
-//                $excel->Mapeo($datosGrid);
-                $excel->Mapeo($revisionJornadas);
-
-                $excel->CrearArchivo('Excel2007', $NombreArchivo);
-                $excel->GuardarArchivo();
-            } else {
-                
-            }
-        } catch (Exception $e) {
-            $mensaje = array(
-                'code' => $e->getCode(),
-                'error' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine()
-            );
-
-            $response->Message = Yii::app()->params['mensajeExcepcion'];
-            $response->Status = ERROR;
-        }
-        return;
-    }
-
     public function actionCargarPeriodosAnio() {
         $anio = $_POST['anio'];
         $periodos = PeriodoGestionModel::model()->findAllByAttributes(array('pg_anio' => array($anio), 'pg_tipo' => array('MENSUAL')));
         if (count($periodos) > 0) {
             $cmb = "<select name='periodos' id='periodos' >";
-            $cmb .= "<option value='-1' >Seleccione un periodo</option>";
+            $cmb .= "<option value='-1' >Seleccione</option>";
             $opcion = '';
             foreach ($periodos as $value) {
                 $mes = Libreria::mes($value['pg_mes']);
@@ -952,7 +921,7 @@ class RptResumenDiarioHistorialController extends Controller {
             $cmb .= $opcion;
         } else {
             $cmb = "<select name='periodos' id='periodos' disabled='disabled'>";
-            $cmb .= "<option value='-1'>Seleccione un periodo</option>";
+            $cmb .= "<option value='-1'>No existe informacion</option>";
         }
         $cmb .= "</select>";
         echo json_encode($cmb);
@@ -971,7 +940,7 @@ class RptResumenDiarioHistorialController extends Controller {
 
                 $datosCapilaridadMovistar = Yii::app()->session['capilaridadMovistar'];
                 $datosCapilaridadDelta = Yii::app()->session['capilaridadDelta'];
-                
+
                 $data = array(
                     'PESTANA' => 'MOVISTAR',
                     'DATA' => $datosCapilaridadMovistar,
@@ -1020,7 +989,7 @@ class RptResumenDiarioHistorialController extends Controller {
                 array_push($columnasCentrar, array('NUMCOLUMNA' => '14')); #
                 array_push($columnasCentrar, array('NUMCOLUMNA' => '15s')); #
 
-                $excel->MapeoDobleFuente($datosCapilaridadMovistar,$datosCapilaridadDelta, '', '', $columnasCentrar);
+                $excel->MapeoDobleFuente($datosCapilaridadMovistar, $datosCapilaridadDelta, '', '', $columnasCentrar);
 
                 $excel->CrearArchivo('Excel2007', $NombreArchivo);
                 $excel->GuardarArchivo();
@@ -1040,6 +1009,7 @@ class RptResumenDiarioHistorialController extends Controller {
         }
         return;
     }
+
     public function actionGenerateExcelResumenSellIn() {
         $datosGrid = array();
         $response = new Response();
@@ -1052,7 +1022,7 @@ class RptResumenDiarioHistorialController extends Controller {
 
                 $datosCapilaridadMovistar = Yii::app()->session['SellInMovistar'];
                 $datosCapilaridadDelta = Yii::app()->session['SellInDelta'];
-                
+
                 $data = array(
                     'PESTANA' => 'MOVISTAR',
                     'DATA' => $datosCapilaridadMovistar,
@@ -1101,7 +1071,7 @@ class RptResumenDiarioHistorialController extends Controller {
                 array_push($columnasCentrar, array('NUMCOLUMNA' => '14')); #
                 array_push($columnasCentrar, array('NUMCOLUMNA' => '15s')); #
 
-                $excel->MapeoDobleFuente($datosCapilaridadMovistar,$datosCapilaridadDelta, '', '', $columnasCentrar);
+                $excel->MapeoDobleFuente($datosCapilaridadMovistar, $datosCapilaridadDelta, '', '', $columnasCentrar);
 
                 $excel->CrearArchivo('Excel2007', $NombreArchivo);
                 $excel->GuardarArchivo();

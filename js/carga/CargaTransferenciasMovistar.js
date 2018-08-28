@@ -2,12 +2,9 @@ $(document).ready(function () {
     $("#btnLimpiar").click(function () {
         $("#CargaTransferenciasMovistarForm_rutaArchivo").val('');
         $("#tblGrid").jqGrid("clearGridData", true).trigger("reloadGrid");
-
     });
     ConfigurarGrid();
-    ConfigurarGridResumen();
 });
-
 
 function ConfigurarGrid() {
     jQuery("#tblGrid").jqGrid({
@@ -93,57 +90,3 @@ function ConfigurarGrid() {
             {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
     );
 }
-
-function ConfigurarGridResumen() {
-    jQuery("#tblGridChipsDuplicadosVentaMovistar").jqGrid({
-        loadonce: true,
-        datatype: 'json',
-        mtype: 'POST',
-//        url: 'VerDatosArchivo',
-        colNames: [
-            'ICC',
-            'MIN',
-        ],
-        colModel: [
-            {name: 'ICC', index: 'ICC', width: 150, resizable: false, sortable: false, frozen: false},
-            {name: 'MIN', index: 'MIN', width: 80, resizable: false, sortable: false, frozen: false},
-        ],
-        pager: '#pagGridChipsDuplicadosVentaMovistar',
-        rowNum: NroFilas,
-        rowList: ElementosPagina,
-        //sortname: 'bank_date',
-        sortorder: 'ASC',
-//        caption: 'Detalle ventas Movistar ',
-
-        viewrecords: true,
-//        height: 'auto',
-        height: 180,
-        width: 300,
-//        autowidth: true,
-        gridview: true,
-        shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
-        rownumbers: true,
-
-        jsonReader: {
-            root: "Result",
-            repeatitems: false, //cuando el array de la data son object
-            id: "id" //representa el �ndice del identificador �nico de la entidad
-        },
-        beforeRequest: function () {
-//            blockUIOpen();
-        },
-        loadError: function (xhr, st, err) {
-//            blockUIClose();
-            // RedirigirError(xhr.status);
-        }
-    });
-
-    jQuery("#tblGridChipsDuplicadosVentaMovistar").jqGrid('navGrid', '#pagGridChipsDuplicadosVentaMovistar',
-            {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options 
-            {}, // edit options 
-            {}, // add options 
-            {}, // del options 
-            {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
-    );
-}
-

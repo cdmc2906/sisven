@@ -488,7 +488,7 @@ class excel {
 
             /* Filas de datos */
             for ($fila = $primera_fila2; ($fila < 65536) && ($fila < $row_cnt1); ++$fila) {
-                for ($columna = $primera_columna2; $columna < $fields_cnt1 + $primera_columna2; ++$columna) {
+                for ($columna = $primera_columna2; $columna < $fields_cnt2 + $primera_columna2; ++$columna) {
                     $col = $columna - $primera_columna2;
                     if (!isset($result2[$fila][$col_names2[$col]]) || is_null($result2[$fila][$col_names2[$col]])) {
                         $this->objPHPExcel->getActiveSheet()->setCellValueByColumnAndRow($columna, ($fila + $row_offset), '');
