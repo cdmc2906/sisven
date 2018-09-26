@@ -2,7 +2,7 @@
 
 class FIndicadoresModel extends DAOModel {
 
-    public function getCapilaridad($fechaInicio, $fechaFin) {
+    public function getCapilaridad($fechaInicio, $fechaFin, $idPeriodo) {
         $sql = "
             SELECT 
                     UPPER(I_BODEGA) AS VENDEDOR
@@ -22,6 +22,7 @@ class FIndicadoresModel extends DAOModel {
                     AND I_FECHA<='" . $fechaFin . "'
                     AND D.P_TIPO_PRESUPUESTO='CAPILARIDAD'
                     AND D.P_ESTADO_PRESUPUESTO=4
+                    AND D.pg_id=" . $idPeriodo . "
                 GROUP BY I_BODEGA,i_numero_bodega,P_VALOR_PRESUPUESTO
                 ORDER BY 1
 ";
@@ -34,7 +35,7 @@ class FIndicadoresModel extends DAOModel {
         return $data;
     }
 
-    public function getSellIn($fechaInicio, $fechaFin) {
+    public function getSellIn($fechaInicio, $fechaFin, $idPeriodo) {
         $sql = "
             SELECT 
                     UPPER(I_BODEGA) AS VENDEDOR
@@ -52,6 +53,7 @@ class FIndicadoresModel extends DAOModel {
                     AND I_FECHA<='" . $fechaFin . "'
                     AND D.P_TIPO_PRESUPUESTO='SELLIN (VENTA)'
                     AND D.P_ESTADO_PRESUPUESTO=4
+                    AND D.pg_id=" . $idPeriodo . "
                 GROUP BY I_BODEGA,P_VALOR_PRESUPUESTO
                 ORDER BY 1
 ";

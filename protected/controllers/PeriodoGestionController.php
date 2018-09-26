@@ -68,6 +68,9 @@ class PeriodoGestionController extends Controller {
 
         if (isset($_POST['PeriodoGestionModel'])) {
             $model->attributes = $_POST['PeriodoGestionModel'];
+            $fechaIngresadaFin = $model->pg_fecha_fin;
+            $fechaFinNueva = date('Y-m-d', strtotime($model->pg_fecha_fin . ' + 1 day'));
+            $model->pg_fecha_fin = $fechaFinNueva;
 //			if($model->save())
 //				$this->redirect(array('view','id'=>$model->pg_id));
             //buscar periodo que este activo 
@@ -79,7 +82,7 @@ class PeriodoGestionController extends Controller {
                     $periodoAnteriorActivo ["pg_fecha_modificacion"] = date(FORMATO_FECHA_LONG);
                     $periodoAnteriorActivo ["pg_cod_usuario_ing_mod"] = Yii::app()->user->id;
                     if ($periodoAnteriorActivo->save()) {
-                        $model->pg_descripcion = "DEL " . $model->pg_fecha_inicio . " AL " . $model->pg_fecha_fin;
+                        $model->pg_descripcion = "DEL " . $model->pg_fecha_inicio . " AL " . $fechaIngresadaFin;
                         $anio = DateTime::createFromFormat(FORMATO_FECHA_3, $model->pg_fecha_inicio)->format("Y");
                         $model->pg_anio = $anio;
                         $mes = DateTime::createFromFormat(FORMATO_FECHA_3, $model->pg_fecha_inicio)->format("m");

@@ -142,7 +142,6 @@ return array(
         'db_conn' => array(
             // uncomment the following lines to use a PostgreSQL database
             'class' => 'CDbConnection',
-
             'connectionString' => 'sqlsrv:server=10.130.1.17;database=tcc_control_ruta',
             'username' => 'sa',
             'password' => 'GrpMetro"==)',
@@ -177,6 +176,11 @@ return array(
                     'class' => 'CFileLogRoute',
                     'levels' => 'error, warning, rbac',
                 ),
+//                array(
+//                    'class'=>'CEmailLogRoute',
+//                    'levels'=>'error, warning',
+//                    'emails'=>'christian.araujo@tececab.com.ec',
+//                ),
             // uncomment the following to show log messages on web pages
             /*
               array(

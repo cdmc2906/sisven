@@ -4,7 +4,7 @@ class FZonasGestionModel extends DAOModel {
 
     public function getZonasCantidadRutas() {
         $sql = "
-           SELECT 
+            SELECT 
                     b.ZG_ID as CODIGOZONA,
                     b.ZG_NOMBRE_ZONA as NOMBREZONA,
                     b.ZG_NOMB_EJECUTIVO_ASIGNADO AS EJECUTIVO,
@@ -15,8 +15,7 @@ class FZonasGestionModel extends DAOModel {
                 on a.zg_id=b.zg_id
                 inner join tb_ruta_mb as c
 		on a.rg_cod_ruta_mb=c.r_ruta
-                GROUP by b.zg_id
-                ORDER BY a.RG_ID
+                GROUP by b.zg_id,b.ZG_NOMBRE_ZONA,b.ZG_NOMB_EJECUTIVO_ASIGNADO 
                 ;
             ";
 //        var_dump($sql);        die();

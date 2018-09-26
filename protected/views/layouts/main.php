@@ -77,6 +77,7 @@
                 Yii::app()->user->id == 3 ||
                 Yii::app()->user->id == 8 ||
                 Yii::app()->user->id == 9 ||
+                Yii::app()->user->id == 14 ||
                 Yii::app()->user->id == 16
         )
             $verMenusAdmin = true;

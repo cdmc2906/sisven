@@ -11,8 +11,8 @@ class FVentasMovistarModel extends DAOModel {
                     ,ISNULL(UPPER(left(DATENAME(DAY,A.VM_FECHA),3))+'-'+UPPER(left(DATENAME(MONTH,A.VM_FECHA),4)),'SIN_DATA') AS FECHA_VENTA_MOVISTAR
                 FROM TB_VENTA_MOVISTAR AS A
                 WHERE 1=1
-                    AND A.VM_FECHA>='".$fechaInicio."' 
-                    AND A.VM_FECHA<='".$fechaFin."'
+                    AND A.VM_FECHA>='" . $fechaInicio . "' 
+                    AND A.VM_FECHA<='" . $fechaFin . "'
                 GROUP BY A.vm_nombredistribuidor,A.VM_FECHA
             ";
 
@@ -24,7 +24,7 @@ class FVentasMovistarModel extends DAOModel {
         return $data;
     }
 
-    public function getCapilaridad($fechaInicio, $fechaFin) {
+    public function getCapilaridad($fechaInicio, $fechaFin, $idPeriodo) {
         $sql = "
             SELECT 
                      VM_NOMBREDISTRIBUIDOR AS VENDEDOR
@@ -40,10 +40,11 @@ class FVentasMovistarModel extends DAOModel {
                     INNER JOIN TB_PRESUPUESTO_VENTA AS D
                         ON D.P_CODIGO_VENDEDOR=C.E_USR_MOBILVENDOR
                 WHERE 1=1
-                    AND VM_FECHA>='".$fechaInicio."' 
-                    AND VM_FECHA<='".$fechaFin."'
+                    AND VM_FECHA>='" . $fechaInicio . "' 
+                    AND VM_FECHA<='" . $fechaFin . "'
                     AND D.P_TIPO_PRESUPUESTO='CAPILARIDAD'
                     AND D.P_ESTADO_PRESUPUESTO=4
+                    AND D.pg_id=" . $idPeriodo . "
                 GROUP BY VM_NOMBREDISTRIBUIDOR,VM_DISTRIBUIDOR,P_VALOR_PRESUPUESTO
                 ORDER BY 1
 
@@ -57,7 +58,7 @@ class FVentasMovistarModel extends DAOModel {
         return $data;
     }
 
-    public function getSellIn($fechaInicio, $fechaFin) {
+    public function getSellIn($fechaInicio, $fechaFin,$idPeriodo) {
         $sql = "
             SELECT 
                      VM_NOMBREDISTRIBUIDOR AS VENDEDOR
@@ -70,10 +71,11 @@ class FVentasMovistarModel extends DAOModel {
                     INNER JOIN TB_PRESUPUESTO_VENTA AS D
                         ON D.P_CODIGO_VENDEDOR=C.E_USR_MOBILVENDOR
                 WHERE 1=1
-                    AND VM_FECHA>='".$fechaInicio."' 
-                    AND VM_FECHA<='".$fechaFin."'
+                    AND VM_FECHA>='" . $fechaInicio . "' 
+                    AND VM_FECHA<='" . $fechaFin . "'
                     AND D.P_TIPO_PRESUPUESTO='SELLIN (VENTA)'
                     AND D.P_ESTADO_PRESUPUESTO=4
+                    AND D.pg_id=" . $idPeriodo . "
                 GROUP BY VM_NOMBREDISTRIBUIDOR,P_VALOR_PRESUPUESTO
                 ORDER BY 1
 
@@ -86,24 +88,24 @@ class FVentasMovistarModel extends DAOModel {
         $this->Close();
         return $data;
     }
-      
-    public function getCapilaridadDescartar($codigoMovistarEjecutivo,$fechaInicio,$fechaFin) {
+
+    public function getCapilaridadDescartar($codigoMovistarEjecutivo, $fechaInicio, $fechaFin) {
         $sql = "
              SELECT 
                     ISNULL(COUNT(DISTINCT VM_IDDESTINO),0) AS DESCARTAR
                 FROM 
                     TB_VENTA_MOVISTAR AS A
                 WHERE 1=1
-                    AND VM_FECHA>='".$fechaInicio."' 
-                    AND VM_FECHA<='".$fechaFin."' 
-                    AND vm_distribuidor='".$codigoMovistarEjecutivo."' 
+                    AND VM_FECHA>='" . $fechaInicio . "' 
+                    AND VM_FECHA<='" . $fechaFin . "' 
+                    AND vm_distribuidor='" . $codigoMovistarEjecutivo . "' 
                     AND vm_iddestino IN(
                                     select 
                                             vm_iddestino as tcqu
                                         from tb_venta_movistar
                                         where 1=1
-                                                AND vm_fecha>='".$fechaInicio."' 
-                                                AND vm_fecha<='".$fechaFin."' 
+                                                AND vm_fecha>='" . $fechaInicio . "' 
+                                                AND vm_fecha<='" . $fechaFin . "' 
                                         group by vm_iddestino
                                         having COUNT(distinct vm_distribuidor) >1
                                     )
@@ -119,15 +121,15 @@ class FVentasMovistarModel extends DAOModel {
         $this->Close();
         return $data;
     }
-    
-    public function getDuplicado($fechaInicio,$fechaFin) {
+
+    public function getDuplicado($fechaInicio, $fechaFin) {
         $sql = "
         select 
                 distinct COUNT(distinct vm_distribuidor) as duplicado
             from tb_venta_movistar
             WHERE 1=1 
-                AND vm_fecha>='".$fechaInicio."' 
-                AND vm_fecha<='".$fechaFin."' 
+                AND vm_fecha>='" . $fechaInicio . "' 
+                AND vm_fecha<='" . $fechaFin . "' 
                  
             group by vm_iddestino
             having COUNT(distinct vm_distribuidor)>1            

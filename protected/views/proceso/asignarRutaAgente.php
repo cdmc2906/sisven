@@ -49,6 +49,7 @@ $this->pageTitle = $pagina_nombre;
                             $model, 'tipoUsuario', array(
                         '0' => TEXT_OPCION_SELECCIONE,
                         '1' => 'Agente Call Center',
+                        '2' => 'Ejecutivo Ventas',
                             )
                     );
                     echo $form->error($model, 'tipoUsuario');

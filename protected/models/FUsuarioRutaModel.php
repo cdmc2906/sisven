@@ -19,9 +19,12 @@ class FUsuarioRutaModel extends DAOModel {
                 inner join tb_ruta_mb as c
                     on b.rg_cod_ruta_mb=c.r_ruta
             where a.iduser =" . $codigoUsuario . "
-            group by 
-                a.ur_zona_gestion
-                ,a.rg_id
+            group by a.ur_id 
+                ,d.zg_nombre_zona 
+                ,a.rg_id 
+                ,b.rg_cod_ruta_mb 
+                ,b.rg_nombre_ruta         
+ 
             ;
             ";
 //        var_dump($sql);        die();

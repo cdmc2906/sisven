@@ -1,135 +1,29 @@
 $(document).ready(function () {
-    ConfigDatePickersReporte('.txtfechagestion');
-    ConfigDatePickersReporte('.txtfechaInicioFinJornadaInicio');
     ConfigurarGrids();
 
-    $("#btnEnviarMail").click(function () {
-        EnviarMail();
-    });
-
-    $("#btnEstadoEnviarMail").click(function () {
-        EstadoEnviarMail();
-    });
-
-    $("#btnLimpiar").click(function () {
-        LimpiarGrids();
-    });
-    $("#btnBuscarPeriodos").click(function () {
-        mostrarPeriodos();
-        $("#tblAltasFZPorTipoBodega").jqGrid("clearGridData", true).trigger("reloadGrid");
-        $("#tblAltasFZPorBodega").jqGrid("clearGridData", true).trigger("reloadGrid");
-    });
-    $("#btnLimpiarCapilaridadSellIn").click(function () {
-        $("#tblCapilaridadMovistar").jqGrid("clearGridData", true).trigger("reloadGrid");
-        $("#tblCapilaridadDelta").jqGrid("clearGridData", true).trigger("reloadGrid");
-        $("#tblSellInMovistar").jqGrid("clearGridData", true).trigger("reloadGrid");
-        $("#tblSellInVentas").jqGrid("clearGridData", true).trigger("reloadGrid");
-        $("#gridPivotVentasPeriodo").html("<table id=\"tblVentaPeriodo\" class=\"table table-condensed\"></table><div id=\"pagtblVentaPeriodo\"> </div>");
-    });
-    $("#btnLimpiarAltas").click(function () {
-
-        document.getElementById("RptResumenDiarioHistorialForm_anioFiltro").value = "";
-        document.getElementById("periodos").value = "";
-
-        $("#tblAltasSinVenta").jqGrid("clearGridData", true).trigger("reloadGrid");
-        $("#tblAltasDiaProyeccion").jqGrid("clearGridData", true).trigger("reloadGrid");
-
-        $("#gridPivotAltasCiudad").html("<table id=\"tblAltasCiudad\" class=\"table table-condensed\"></table><div id=\"pagtblAltasCiudad\"> </div>");
-        $("#gridPivotAltasCiudadEjecutivo").html("<table id=\"tblAltasCiudadEjecutivo\" class=\"table table-condensed\"></table><div id=\"pagtblAltasCiudadEjecutivo\"></div>");
-    });
-
-    $("#btnExcelNoVisitados").click(function () {
-        GenerarDocumentoReporte('GenerateExcelNoVisitados');
-    });
-    $("#btnExcelDetalle").click(function () {
-        GenerarDocumentoReporte('GenerateExcel');
-    });
-    $("#btnExcelEstadoRuta").click(function () {
-        GenerarDocumentoReporte('GenerateExcelEstadoRuta');
-    });
-    $("#btnExcelResumen").click(function () {
-        GenerarDocumentoReporte('GenerateExcelResumen');
-    });
-    $("#btnExcelTiemposGestion").click(function () {
-        GenerarDocumentoReporte('GenerateExcelTiemposGestion');
-    });
-    $('#RptResumenDiarioHistorialForm_ejecutivo').on('change', function (e) {
-        LimpiarGrids();
-    });
-    $('#RptResumenDiarioHistorialForm_semanaRevision').on('change', function (e) {
-        LimpiarGrids();
-    });
-    $('#RptResumenDiarioHistorialForm_horaInicioGestion').on('change', function (e) {
-        LimpiarGrids();
-    });
-    $('#RptResumenDiarioHistorialForm_horaFinGestion').on('change', function (e) {
-        LimpiarGrids();
-    });
-    $('#RptResumenDiarioHistorialForm_precisionVisitas').on('change', function (e) {
-        LimpiarGrids();
-    });
-    $('#RptResumenDiarioHistorialForm_accionHistorial').on('change', function (e) {
-        LimpiarGrids();
-    });
 });
-function LimpiarGrids() {
-    $("#d_comentariosSupervision").val('');
-    $("#d_comentarioSupervision").val('');
-    $("#tblGridDetalle").jqGrid("clearGridData", true).trigger("reloadGrid");
-    $("#tblResumenGeneral").jqGrid("clearGridData", true).trigger("reloadGrid");
-    $("#tblResumenVisitas").jqGrid("clearGridData", true).trigger("reloadGrid");
-    $("#tblResumenVisitasValidasInvalidas").jqGrid("clearGridData", true).trigger("reloadGrid");
-    $("#tblPrimeraUltimaVisita").jqGrid("clearGridData", true).trigger("reloadGrid");
-    $("#tblResumenVentas").jqGrid("clearGridData", true).trigger("reloadGrid");
-    $("#tblResumenTiempos").jqGrid("clearGridData", true).trigger("reloadGrid");
-    initMap2();
-}
 
 function ConfigurarGrids() {
-    jQuery("#tblGridResumenJornada").jqGrid({
+    jQuery("#tblResumen").jqGrid({
         loadonce: true,
         datatype: 'json',
         mtype: 'POST',
         url: 'VerDatosArchivo',
         colNames: [
-            'FECHA',
             'EJECUTIVO',
-            '1_VISITA',
-            'U_VISITA',
-            'GESTION',
-            'TRASLADO',
-            'TOTAL',
-            'Semanas',
-            'VISITAS',
-            'REPETIDAS',
-            'TOTAL',
-            'NUEVOS',
-            'EFECTIVOS',
-            'ENCUESTAS',
-            'VENTA'
+            'PERIODO',
+            'CIUDADES',
+            'ALTAS',
         ],
         colModel: [
-//            , exportcol: true, hidden: true //opciones para que sea exportable y escondido
-            {name: 'FECHA', index: 'FECHA', sortable: false, width: 150, frozen: true},
-            {name: 'EJECUTIVO', index: 'EJECUTIVO', sortable: false, width: 110, frozen: true},
-            {name: 'INICIOPRIMERAVISITA', index: 'INICIOPRIMERAVISITA', sortable: false, width: 70, align: "center", },
-            {name: 'FINALULTIMAVISITA', index: 'FINALULTIMAVISITA', sortable: false, width: 70, align: "center", },
-            {name: 'TIEMPOGESTION', index: 'TIEMPOGESTION', sortable: false, width: 80, align: "center", },
-            {name: 'TIEMPOTRASLADO', index: 'TIEMPOTRASLADO', sortable: false, width: 80, align: "center", },
-            {name: 'TOTALTIEMPO', index: 'TOTALTIEMPO', sortable: false, width: 80, align: "center", },
-            {name: 'SEMANAS', index: 'SEMANAS', width: 60, align: "center"},
-            {name: 'VISITAS', index: 'VISITAS', width: 60, align: "center"},
-            {name: 'REPETIDAS', index: 'REPETIDAS', width: 80, align: "center"},
-            {name: 'TOTAL', index: 'TOTAL', width: 60, align: "center"},
-            {name: 'NUEVOS', index: 'NUEVOS', width: 80, align: "center"},
-            {name: 'EFECTIVOS', index: 'EFECTIVOS', width: 80, align: "center"},
-            {name: 'ENCUESTAS', index: 'ENCUESTAS', width: 85, align: "center"},
-            {name: 'VENTA', index: 'VENTA', width: 80, align: "center"},
+            {name: 'EJECUTIVO', index: 'EJECUTIVO', sortable: false, width: 150, hidden: true, frozen: true},
+            {name: 'PERIODO', index: 'PERIODO', sortable: false, width: 150, hidden: true, frozen: true},
+            {name: 'CIUDADES', index: 'CIUDADES', width: 85, align: "center"},
+            {name: 'ALTAS', index: 'ALTAS', width: 80, align: "center"},
         ],
-        pager: '#pagGridResumenJornada',
         rowNum: 200, //NroFilas,
         rowList: ElementosPagina,
-        caption: 'Gestion dia',
+        caption: 'Altas Fuera de Zona',
         hidegrid: false,
         sortorder: 'ASC',
         viewrecords: true,
@@ -140,21 +34,9 @@ function ConfigurarGrids() {
         footerrow: true,
         gridComplete: function () {
             var $grid = $('#tblGridResumenJornada');
-            var colSumaVisitas = $grid.jqGrid('getCol', 'VISITAS', false, 'sum');
-            var colSumaVisitasRepetidas = $grid.jqGrid('getCol', 'REPETIDAS', false, 'sum');
-            var colSumaTotalVisitas = $grid.jqGrid('getCol', 'TOTAL', false, 'sum');
-            var colSumaClientesNuevos = $grid.jqGrid('getCol', 'NUEVOS', false, 'sum');
-            var colSumaClientesEfectivos = $grid.jqGrid('getCol', 'EFECTIVOS', false, 'sum');
-            var colSumaEncuestas = $grid.jqGrid('getCol', 'ENCUESTAS', false, 'sum');
             var colSumaVenta = $grid.jqGrid('getCol', 'VENTA', false, 'sum');
-            $grid.jqGrid('footerData', 'set', {'SEMANAS': 'Totales'});
-            $grid.jqGrid('footerData', 'set', {'VISITAS': colSumaVisitas});
-            $grid.jqGrid('footerData', 'set', {'REPETIDAS': colSumaVisitasRepetidas});
-            $grid.jqGrid('footerData', 'set', {'TOTAL': colSumaTotalVisitas});
-            $grid.jqGrid('footerData', 'set', {'NUEVOS': colSumaClientesNuevos});
-            $grid.jqGrid('footerData', 'set', {'EFECTIVOS': colSumaClientesEfectivos});
-            $grid.jqGrid('footerData', 'set', {'ENCUESTAS': colSumaEncuestas});
-            $grid.jqGrid('footerData', 'set', {'VENTA': colSumaVenta});
+            $grid.jqGrid('footerData', 'set', {'CIUDADES': 'TOTAL'});
+            $grid.jqGrid('footerData', 'set', {'ALTAS': colSumaVenta});
         },
         jsonReader: {
             root: "Result",
@@ -871,21 +753,21 @@ function ConfigurarGrids() {
             'FECHA TX',
         ],
         colModel: [
-            {name: 'MIN', index: 'MIN', width: 100, sortable: false, frozen: true, align: 'center'},
+            {name: 'MIN', index: 'MIN', width: 50, sortable: false, frozen: true, align: 'center'},
             {name: 'PLAN', index: 'PLAN', width: 50, sortable: false, frozen: true, align: 'center'},
-            {name: 'FECHA_ALTA', index: 'FECHA_ALTA', width: 80, sortable: false, frozen: true, align: 'center'},
-            {name: 'CODIGO_VENDEDOR', index: 'CODIGO_VENDEDOR', width: 80, sortable: false, frozen: true, align: 'left'},
-            {name: 'CIUDAD', index: 'CIUDAD', width: 50, sortable: false, frozen: true, align: 'left'},
-            {name: 'ICC', index: 'ICC', width: 150, sortable: false, frozen: true, align: 'left'},
-            {name: 'MES_ALTA', index: 'MES_ALTA', width: 70, sortable: false, frozen: true, align: 'center'},
-            {name: 'MES_VENTA', index: 'MES_VENTA', width: 70, sortable: false, frozen: true, align: 'center'},
-            {name: 'BODEGA', index: 'BODEGA', width: 150, sortable: false, frozen: true, align: 'left'},
-            {name: 'VENDEDOR', index: 'VENDEDOR', width: 200, sortable: false, frozen: true, align: 'left'},
-            {name: 'CODIGO_CLIENTE', index: 'CODIGO_CLIENTE', width: 120, sortable: false, frozen: true, align: 'left'},
-            {name: 'CLIENTE', index: 'CLIENTE', width: 220, sortable: false, frozen: true, align: 'left'},
-            {name: 'TIPO_CLIENTE', index: 'TIPO_CLIENTE', width: 120, sortable: false, frozen: true, align: 'left'},
-            {name: 'TRANSFERIDO_A', index: 'TRANSFERIDO_A', width: 200, sortable: false, frozen: true, align: 'left'},
-            {name: 'FECHA_TRANSFERENCIA', index: 'FECHA_TRANSFERENCIA', width: 120, sortable: false, frozen: true, align: 'center'},
+            {name: 'FECHA_ALTA', index: 'FECHA_ALTA', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'CODIGO_VENDEDOR', index: 'CODIGO_VENDEDOR', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'CIUDAD', index: 'CIUDAD', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'ICC', index: 'ICC', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'MES_ALTA', index: 'MES_ALTA', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'MES_VENTA', index: 'MES_VENTA', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'BODEGA', index: 'BODEGA', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'VENDEDOR', index: 'VENDEDOR', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'CODIGO_CLIENTE', index: 'CODIGO_CLIENTE', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'CLIENTE', index: 'CLIENTE', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'TIPO_CLIENTE', index: 'TIPO_CLIENTE', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'TRANSFERIDO_A', index: 'TRANSFERIDO_A', width: 50, sortable: false, frozen: true, align: 'center'},
+            {name: 'FECHA_TRANSFERENCIA', index: 'FECHA_TRANSFERENCIA', width: 50, sortable: false, frozen: true, align: 'center'},
         ],
 //        pager: '#pagGrid',
         rowNum: 10000,
@@ -893,40 +775,17 @@ function ConfigurarGrids() {
         sortorder: 'ASC',
         viewrecords: true,
         height: 200,
-        width: 1000,
+        width: 300,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
         caption: "Detalle Altas Ventas Transferencias",
         hidegrid: false,
-        pager: '#pagtblAltasCiudadDetalle',
         jsonReader: {root: "Result", repeatitems: false, id: "id"}
         , beforeRequest: function () { }
         , loadError: function (xhr, st, err) { }
     }
     );
-    jQuery("#tblAltasCiudadDetalle").jqGrid('navGrid', '#pagtblAltasCiudadDetalle',
-            {add: false, edit: false, del: false, search: true, refresh: true, view: false},
-            {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}
-    );
-    jQuery("#tblAltasCiudadDetalle").jqGrid('navButtonAdd', '#pagtblAltasCiudadDetalle',
-            {
-                caption: "Exportar",
-                title: "Exportar Reporte Detalle vs Tx Movistar",
-                onClickButton: function () {
-                    var options = {
-                        includeLabels: true,
-                        includeGroupHeader: true,
-                        includeFooter: true,
-                        fileName: "detalle_altas_ventas_transferencia.xlsx",
-                        mimetype: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                        maxlength: 40,
-                        onBeforeExport: null,
-                        replaceStr: null
-                    }
-                    $("#tblAltasCiudadDetalle").jqGrid('exportToExcel', options);
-                }
-            }
-    );
+
 
     jQuery("#tblAltasSinVenta").jqGrid({
         loadonce: true,
@@ -938,8 +797,8 @@ function ConfigurarGrids() {
                     , 'A_MIN'
                     , 'A_ICC'
                     , 'TX_MIN'
-                    , 'TX_ORIGEN'
                     , 'TX_DESTINO'
+                    , 'TX_ORIGEN'
                     , 'TX_FECHA'
                     , 'VM_MIN'
                     , 'VM_ORIGEN'
@@ -1111,7 +970,7 @@ function ConfigurarGrids() {
             jQuery("#tblAltasFZPorTipoBodega").jqGrid('setCaption', "Tipos Bodega periodo " + fila.ANIO + " - " + fila.MES).trigger('reloadGrid');
             $("#tblAltasFZPorTipoBodega").jqGrid("clearGridData", true).trigger("reloadGrid");
             $("#tblAltasFZPorBodega").jqGrid("clearGridData", true).trigger("reloadGrid");
-            mostrarDetallesXPeriodo(fila.INICIO, fila.FIN, fila.ANIO, fila.MES);
+            mostrarDetallesXPeriodo(fila.INICIO, fila.FIN);
         }
     }
     );
@@ -1196,13 +1055,11 @@ function ConfigurarGrids() {
         mtype: 'POST',
         url: 'ConfigurarGrid',
         colNames: [
-            'NUMBODEGA',
             'BODEGA',
             'CIUDADES',
             'ALTAS'
         ],
         colModel: [
-            {name: 'NUMBODEGA', index: 'NUMBODEGA', width: 220, sortable: true, frozen: true, hidden: true},
             {name: 'BODEGA', index: 'BODEGA', width: 220, sortable: true, frozen: true},
             {name: 'CIUDADES', index: 'CIUDADES', width: 70, sortable: true, frozen: true, align: 'center'},
             {name: 'ALTAS', index: 'ALTAS', width: 60, sortable: true, frozen: true, align: 'center'},
@@ -1228,7 +1085,7 @@ function ConfigurarGrids() {
         , loadError: function (xhr, st, err) { }
         , onSelectRow: function (idFilaSeleccionada) {
             var fila = jQuery("#tblAltasFZPorBodega").jqGrid('getRowData', idFilaSeleccionada);
-            mostrarDetallesXBodega(fila.BODEGA, fila.NUMBODEGA);
+            mostrarDetallesXBodega(fila.BODEGA);
         }
         , footerrow: true,
         gridComplete: function () {
@@ -1270,53 +1127,6 @@ function ConfigurarGrids() {
 
 function GenerarDocumentoReporte(accion) {
     window.open('/sisven_dev/RptResumenDiarioHistorial/' + accion);
-}
-
-function EstadoEnviarMail() {
-//    window.open('/sisven_dev/RptResumenDiarioHistorial/' + accion);
-    $.ajax({
-        method: 'POST',
-        url: 'RptResumenDiarioHistorial/EstadoEnviarMailAltasFueraZona',
-        data: {},
-        dataType: 'json',
-        type: 'post',
-        beforeSend: function () {
-            blockUIOpen();
-        },
-        success: function (data) {
-            blockUIClose();
-            var datosResult = data.Result;
-            alert(datosResult)
-        },
-        error: function (xhr, st, err) {
-            blockUIClose();
-            alert(err);
-        }
-    });
-}
-function EnviarMail() {
-//    window.open('/sisven_dev/RptResumenDiarioHistorial/' + accion);
-    $.ajax({
-        method: 'POST',
-        url: 'RptResumenDiarioHistorial/EnviarMailAltasFueraZona',
-        data: {},
-        dataType: 'json',
-        type: 'post',
-        beforeSend: function ()
-        {
-            blockUIOpen();
-        },
-        success: function (data) {
-
-            blockUIClose();
-            var datosResult = data.Result;
-            alert(datosResult)
-        },
-        error: function (xhr, st, err) {
-            blockUIClose();
-            alert(err);
-        }
-    });
 }
 
 function cargarPeriodosPorAnio(anio, destino) {
@@ -1369,10 +1179,10 @@ function GeneralPivotCiudad(datosResult)
                                 },
 
                                 align: 'right',
-                                summaryType: 'count'
+                                summaryType: 'sum'
                             }
                         ],
-                groupSummaryPos: 'footer',
+//                groupSummaryPos: 'footer',
                 rowTotals: true,
                 colTotals: true,
                 frozenStaticCols: true,
@@ -1394,14 +1204,10 @@ function GeneralPivotCiudad(datosResult)
             }
 
     );
-    $("#tblAltasCiudad").jqGrid('navGrid', '#pagtblAltasCiudad',
-            {add: false, edit: false, del: false, search: true},
-            {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}
-
-    );
+    $("#tblAltasCiudad").jqGrid('navGrid', '#pagtblAltasCiudad', {add: false, edit: false, del: false, search: true});
     jQuery("#tblAltasCiudad").jqGrid('navButtonAdd', '#pagtblAltasCiudad',
             {
-                caption: "Exportar",
+                caption: "R1",
                 title: "Exportar Reporte",
                 onClickButton: function () {
                     var options = {
@@ -1418,7 +1224,25 @@ function GeneralPivotCiudad(datosResult)
                 }
             }
     );
-
+    jQuery("#tblAltasCiudad").jqGrid('navButtonAdd', '#pagtblAltasCiudad',
+            {
+                caption: "R2",
+                title: "Exportar Reporte Detalle vs Tx Movistar",
+                onClickButton: function () {
+                    var options = {
+                        includeLabels: true,
+                        includeGroupHeader: true,
+                        includeFooter: true,
+                        fileName: "altas_ventas_transferencia.xlsx",
+                        mimetype: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        maxlength: 40,
+                        onBeforeExport: null,
+                        replaceStr: null
+                    }
+                    $("#tblAltasCiudadDetalle").jqGrid('exportToExcel', options);
+                }
+            }
+    );
 }
 
 function GeneralPivotCiudadEjecutivo(datosResult)
@@ -1620,7 +1444,7 @@ function mostrarPeriodos() {
     );
 }
 
-function mostrarDetallesXPeriodo(inicio, fin, anio, mes) {
+function mostrarDetallesXPeriodo(inicio, fin) {
     $.ajax(
             {
                 method: "POST",
@@ -1628,8 +1452,6 @@ function mostrarDetallesXPeriodo(inicio, fin, anio, mes) {
                 data: {
                     inicioPeriodoFZ: inicio,
                     finPeriodoFZ: fin,
-                    anioPeriodoFZ: anio,
-                    mesPeriodoFZ: mes,
                 },
                 dataType: 'json',
                 type: 'post',
@@ -1642,9 +1464,19 @@ function mostrarDetallesXPeriodo(inicio, fin, anio, mes) {
                     blockUIClose();
                     if (data.Status == 1) {
                         var datosResult = data.Result;
+//                        var gestiones = datosResult['resumenesPeriodo'].length;
+//                      
+//                        if (gestiones > 0)
+//                        {
+//                            document.getElementById("btnReversarCierre").disabled = false;
+//                            document.getElementById("btnExportarResumen").disabled = false;
+//                        } else {
+////                            alert("El periodo seleccionado se encuentra abierto");
+//                            document.getElementById("btnReversarCierre").disabled = true;
+//                            document.getElementById("btnExportarResumen").disabled = true;
+//                        }
                         $("#tblAltasFZPorTipoBodega").setGridParam({datatype: 'jsonstring', datastr: datosResult['detallePeriodo']}).trigger('reloadGrid');
                         $("#gridPivotDetalleAltasFZPorBodega").html("<table id=\"tblDetalleAltasFZPorBodega\" class=\"table table-condensed\"></table><div id=\"pagtblDetalleAltasFZPorBodega\"> </div>");
-//                        document.getElementById("btnEstadoEnviarMail").disabled = true;
 
                     } else {
                         //to do
@@ -1680,7 +1512,6 @@ function mostrarDetallesTipoBodega(tipoBodega) {
                         var datosResult = data.Result;
                         $("#tblAltasFZPorBodega").setGridParam({datatype: 'jsonstring', datastr: datosResult['detallePeriodoTipoBodega']}).trigger('reloadGrid');
                         $("#gridPivotDetalleAltasFZPorBodega").html("<table id=\"tblDetalleAltasFZPorBodega\" class=\"table table-condensed\"></table><div id=\"pagtblDetalleAltasFZPorBodega\"> </div>");
-//                        document.getElementById("btnEstadoEnviarMail").disabled = true;
 
 
                     } else {
@@ -1696,14 +1527,13 @@ function mostrarDetallesTipoBodega(tipoBodega) {
     );
 }
 
-function mostrarDetallesXBodega(bodega, numbodega) {
+function mostrarDetallesXBodega(bodega) {
     $.ajax(
             {
                 method: "POST",
                 url: "RptResumenDiarioHistorial/MostrarDetalleXBodega",
                 data: {
                     bodegaSeleccionada: bodega,
-                    numBodegaSeleccionada: numbodega,
                 },
                 dataType: 'json',
                 type: 'post',
@@ -1717,8 +1547,6 @@ function mostrarDetallesXBodega(bodega, numbodega) {
                     if (data.Status == 1) {
                         var datosResult = data.Result;
                         $("#gridPivotDetalleAltasFZPorBodega").html("<table id=\"tblDetalleAltasFZPorBodega\" class=\"table table-condensed\"></table><div id=\"pagtblDetalleAltasFZPorBodega\"> </div>");
-                        if (datosResult['activarEnviarMail'])
-                            document.getElementById("btnEstadoEnviarMail").disabled = false;
 
                         jQuery("#tblDetalleAltasFZPorBodega").jqGrid('jqPivot', datosResult['detallePorBodega'],
                                 {
@@ -1793,14 +1621,6 @@ function mostrarDetallesXBodega(bodega, numbodega) {
                                         }
                                         $("#tblDetalleAltasFZPorBodega").jqGrid('exportToExcel', options);
                                     }
-                                }
-                        );
-
-                        jQuery("#tblDetalleAltasFZPorBodega").jqGrid('navButtonAdd', '#pagtblDetalleAltasFZPorBodega',
-                                {
-                                    caption: "Enviar Mail",
-                                    title: "Envia un detalle al ejecutivo para la gestion",
-                                    onClickButton: EnviarMail
                                 }
                         );
 

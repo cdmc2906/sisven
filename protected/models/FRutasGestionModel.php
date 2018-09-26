@@ -16,7 +16,7 @@ class FRutasGestionModel extends DAOModel {
                     and a.zg_id=" . $codigoZona . "
                     and a.rg_id not in (select rg_id from tb_usuario_ruta where iduser =" . $codigoUsuario . ") 
                     group by 
-                        a.rg_id
+                        a.rg_id,a.rg_cod_ruta_mb,a.rg_nombre_ruta 
                 ;
             ";
 //        var_dump($sql);        die();

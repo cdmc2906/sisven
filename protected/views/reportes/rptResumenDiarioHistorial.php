@@ -13,7 +13,6 @@ $this->pageTitle = $pagina_nombre;
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.es.js"></script>
 
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/reporte/RptResumenDiarioHistorial.js"; ?>"></script>
-<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl . "/js/reporte/RptInicioFinJornadaxFecha.js";                 ?>"></script>
 <script type="text/javascript" language="javascript" src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
 
 <div class="row">
@@ -78,12 +77,13 @@ $this->pageTitle = $pagina_nombre;
     </div>
 </div>
 
-<!-- Custom Tabs -->
 <div class="nav-tabs-custom">
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab_1" data-toggle="tab">Revision jornada</a></li>
         <li><a href="#tab_2" data-toggle="tab">Revision individual</a></li>
         <li><a href="#tab_3" data-toggle="tab">Control Capilaridad y Sell-In</a></li>
+        <li><a href="#tab_4" data-toggle="tab">Control Altas</a></li>
+        <li><a href="#tab_5" data-toggle="tab">Notificacion Altas FZ</a></li>
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="tab_1">
@@ -175,6 +175,7 @@ $this->pageTitle = $pagina_nombre;
                                                 GRUPO_SUPERVISORES => 'Supervisores',
                                                 GRUPO_SERVICIO_CLIENTE => 'Servicio Cliente',
                                                 GRUPO_DESARROLLADORES => 'Desarrolladores',
+                                                GRUPO_TECNICOS => 'Tecnico ',
                                                     )
 //                                        , array(
 //                                    'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
@@ -191,6 +192,11 @@ $this->pageTitle = $pagina_nombre;
                                             echo $form->labelEx($model, 'horaInicioGestionJornada');
                                             echo $form->dropDownList(
                                                     $model, 'horaInicioGestionJornada', array(
+                                                '01:00' => '01:00',
+                                                '02:00' => '02:00',
+                                                '03:00' => '03:00',
+                                                '04:00' => '04:00',
+                                                '05:00' => '05:00',
                                                 '06:00' => '06:00',
                                                 '07:00' => '07:00',
                                                 '08:00' => '08:00',
@@ -258,7 +264,7 @@ $this->pageTitle = $pagina_nombre;
 
             </div>
         </div>
-        <!-- /.tab-pane -->
+
         <div class="tab-pane" id="tab_2">
             <div class="box-body">
                 <div class="row">
@@ -367,7 +373,7 @@ $this->pageTitle = $pagina_nombre;
                                             echo $form->labelEx($model, 'ejecutivo');
                                             $criteria = new CDbCriteria;
                                             $criteria->addCondition("e_estado = 1");
-                                            $criteria->addCondition("e_tipo in ('EZ','D')");
+                                            $criteria->addCondition("e_tipo in ('EZ','D','ST','SC')");
 
                                             $ejecutivosZona = EjecutivoModel::model()->findAll($criteria);
                                             $listaEjecutivosZona = CHtml::listData($ejecutivosZona, 'e_usr_mobilvendor', 'e_nombre');
@@ -644,9 +650,7 @@ $this->pageTitle = $pagina_nombre;
                 </div>
             </div>
         </div>
-        <!-- /.tab-pane -->
 
-        <!-- /.tab-pane -->
         <div class="tab-pane" id="tab_3">
             <div class="box-body">
                 <div class="row">
@@ -799,7 +803,7 @@ $this->pageTitle = $pagina_nombre;
                                                     )
                                                     , array(
                                                 'options' => array('0' => array('selected' => true)),
-                                                'onchange' => 'js:cargarPeriodosPorAnio(this.value)'
+                                                'onchange' => 'js:cargarPeriodosPorAnio(this.value,\'divp\')'
                                                     )
                                             );
 
@@ -851,8 +855,10 @@ $this->pageTitle = $pagina_nombre;
                                 </div>
                                 <div  style="display: flex; justify-content: flex-start;">
                                     <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                                        <table id="tblVentaPeriodo" class="table table-condensed"></table>
-                                        <div id="pagtblVentaPeriodo"> </div>
+                                        <div id="gridPivotVentasPeriodo">
+                                            <table id="tblVentaPeriodo" class="table table-condensed"></table>
+                                            <div id="pagtblVentaPeriodo"> </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -862,10 +868,218 @@ $this->pageTitle = $pagina_nombre;
             </div>
         </div>
 
+        <div class="tab-pane" id="tab_4">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <?php
+                        $form = $this->beginWidget('CActiveForm', array(
+                            'id' => 'frmLoad',
+                            'enableClientValidation' => true,
+                            'clientOptions' => array(
+                                'validateOnSubmit' => true,
+                            ),
+                            'htmlOptions' => array("enctype" => "multipart/form-data"),
+                        ));
+                        ?>
+
+                        <div class="mailbox-controls">
+                            <div class="btn-group">
+                                <?php
+                                echo CHtml::ajaxSubmitButton(
+                                        'Evaluar Altas Periodo'
+                                        , CHtml::normalizeUrl(array(
+                                            'RptResumenDiarioHistorial/EvaluarAltasPeriodo'
+                                            , 'render' => true))
+                                        , array(
+                                    'dataType' => 'json',
+                                    'type' => 'post',
+                                    'beforeSend' => 'function() {blockUIOpen();}',
+                                    'success' => 'function(data) {
+
+                        blockUIClose();
+                        //setMensaje(data.ClassMessage, data.Message);
+                        if(data.Status==1){
+                            var datosResult = data.Result;
+                            $("#tblAltasCiudadDetalle").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'detalleAltasVentasTransferencias\']}).trigger(\'reloadGrid\');
+                            $("#tblAltasSinVenta").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'altasSinVenta\']}).trigger(\'reloadGrid\');
+                            $("#tblAltasDiaProyeccion").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'altasDiarias\']}).trigger(\'reloadGrid\');
+                            GeneralPivotCiudad(datosResult);                            
+//                            GeneralPivotCiudadEjecutivo(datosResult);                            
+                            
+                        } else{
+                            $.each(data, function(key, val) {
+                            $("#frmReporte #"+key+"_em_").text(val);
+                            $("#frmReporte #"+key+"_em_").show();
+                            });
+                            }
+                        } ',
+                                    'error' => 'function(xhr,st,err) {
+                            blockUIClose();
+                            alert(err);
+                        }'
+                                        ), array(
+                                    'id' => 'btnEvaluarAltasPeriodo'
+                                    , 'class' => 'btn btn-block btn-success btn-sm'
+                                ));
+                                ?>
+                                <?php
+                                echo CHtml::Button(
+                                        'Limpiar', array('id' => 'btnLimpiarAltas'
+                                    , 'class' => 'btn btn-block btn-primary btn-sm'));
+                                ?>
+                            </div>
+                        </div>
+                        <div class="box box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Fecha</h3>
+                                <div class="box-tools">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="box-body no-padding">
+                                <ul class="nav nav-pills nav-stacked">
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-calendar"></i>
+                                            <?php
+                                            echo $form->labelEx($model, 'anioFiltro');
+                                            ?><br>
+                                            <?php
+                                            echo $form->dropDownList(
+                                                    $model, 'anioFiltro', array(
+                                                '0' => 'Seleccione',
+                                                '2016' => '2016',
+                                                '2017' => '2017',
+                                                '2018' => '2018'
+                                                    )
+                                                    , array(
+                                                'options' => array('0' => array('selected' => true)),
+                                                'onchange' => 'js:cargarPeriodosPorAnio(this.value,\'diva\')'
+                                                    )
+                                            );
+
+                                            echo $form->error($model, 'anioFiltro');
+                                            ?>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-calendar"></i>
+                                            <?php
+                                            echo $form->labelEx($model, 'periodoFiltro');
+                                            ?><br>
+                                            <div id="diva"></div>
+                                            <?php
+                                            echo $form->error($model, 'periodoFiltro');
+                                            ?>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <?php $this->endWidget(); ?>
+
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="box box-primary">
+                            <div  style="display: flex; justify-content: flex-start;">
+                                <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                                    <div id="gridPivotAltasCiudad">
+                                        <table id="tblAltasCiudad" class="table table-condensed"></table>
+                                        <div id="pagtblAltasCiudad"> </div>
+                                    </div>
+                                </div>
+                                <div style="margin-left: 10px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                                    <table id="tblAltasDiaProyeccion" class="table table-condensed"></table>
+                                    <div id="pagtblAltasDiaProyeccion"> </div>
+                                </div>
+
+                            </div>
+                            <br/>
+                            <div  style="display: flex; justify-content: flex-start;">
+                                <table id="tblAltasCiudadDetalle" class="table table-condensed"></table>
+                                <div id="pagtblAltasCiudadDetalle"> </div>
+                            </div>
+                            <br/>
+                            <div class="box-body no-padding">
+                                <table id="tblAltasSinVenta" class="table table-condensed"></table>
+                                <div id="pagtblAltasSinVenta"> </div>
+                            </div>
+                            <br/>
+                            <!--                            <div  style="display: flex; justify-content: flex-start;">
+                                                            <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                                                                <div id="gridPivotAltasCiudadEjecutivo">
+                                                                    <table id="tblAltasCiudadEjecutivo" class="table table-condensed"></table>
+                                                                    <div id="pagtblAltasCiudadEjecutivo"> </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="tab_5">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <?php
+                        echo CHtml::submitButton(
+                                'Buscar Periodos', array(
+                            'id' => 'btnBuscarPeriodos'
+                            , 'class' => 'btn btn-block btn-primary btn-sm'
+                        ));
+                        ?>      
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="box box-primary">
+                            <div  style="display: flex; justify-content: flex-start;">
+                                <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                                    <table id="tblPeriodos" class="table table-condensed"></table>
+                                </div>
+                                <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent; margin-left: 10px">
+                                    <table id="tblAltasFZPorTipoBodega" class="table table-condensed"></table>
+                                    <div id="pagtblAltasFZPorTipoBodega"> </div>
+                                </div>
+                                <div style="margin-left: 10px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                                    <table id="tblAltasFZPorBodega" class="table table-condensed"></table>
+                                    <div id="pagtblAltasFZPorBodega"> </div>
+                                </div>
+                            </div>
+                            <br/>
+                            <div class="box-body no-padding">
+                                <div id="gridPivotDetalleAltasFZPorBodega">
+                                    <table id="tblDetalleAltasFZPorBodega" class="table table-condensed"></table>
+                                    <div id="pagtblDetalleAltasFZPorBodega"> </div>
+                                </div>
+                            </div>
+                            <div class="box-body no-padding">
+                                <?php
+//                                    echo CHtml::Button(
+//                                            'Enviar Mail', array('id' => 'btnEnviarMail'
+//                                        , 'class' => 'btn btn-block btn-success btn-sm'
+//                                        , 'disabled' => 'disabled'));
+                                if (PRUEBA_MAIL) {
+                                    echo CHtml::Button(
+                                            ' Comprobar Enviar Mail', array('id' => 'btnEstadoEnviarMail'
+                                        , 'class' => 'btn btn-block btn-info btn-sm'
+                                        , 'disabled' => 'disabled'));
+                                }
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- /.tab-content -->
 </div>
-<!-- nav-tabs-custom -->
 
 
 <script>

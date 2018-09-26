@@ -10,9 +10,12 @@ class RptResumenDiarioHistorialController extends Controller {
     public $layout = LAYOUT_FILTRO_GRID;
 
     public function actionIndex() {
+
         Yii::app()->user->setFlash('resultadoGuardar', null);
         Yii::app()->user->setFlash('resultadoGuardarRevisionAviso', null);
         Yii::app()->user->setFlash('resultadoGuardarRevisionAviso', null);
+        unset(Yii::app()->session['resultadoEnvioMail']);
+        unset(Yii::app()->session['detalleResultadoEnvioMail']);
 
         if (Yii::app()->request->isAjaxRequest) {
             return;
@@ -48,7 +51,7 @@ class RptResumenDiarioHistorialController extends Controller {
                 Yii::app()->session['ModelForm'] = $model;
 
                 if (isset($_POST['periodos']) && intval($_POST['periodos']) > 0) {
-                    $datos = array();
+                    $datosEnviarVista = array();
                     $datosVentasMes = array();
                     $datosCapilaridadMovistar = array();
                     $datosCapilaridadDelta = array();
@@ -57,16 +60,16 @@ class RptResumenDiarioHistorialController extends Controller {
 
                     $periodo = PeriodoGestionModel::model()->findAllByAttributes(array('pg_id' => array($_POST['periodos'])));
                     $fVentasMovistar = new FVentasMovistarModel();
-                    $capilaridades = $fVentasMovistar->getCapilaridad($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
-
+//                    var_dump(1);
                     $duplicado = $fVentasMovistar->getDuplicado($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
+//                    var_dump(2);
                     $concatenadoDupli = '';
                     $autocalcularDescartado = 0;
 
                     if (count($duplicado) == 1)
                         $autocalcularDescartado = 1;
 
-                    $datos['autocalcularDescartado'] = $autocalcularDescartado;
+                    $datosEnviarVista['autocalcularDescartado'] = $autocalcularDescartado;
 
                     foreach ($duplicado as $key => $itemdupli) {
                         if ($key < count($duplicado) - 1)
@@ -74,15 +77,18 @@ class RptResumenDiarioHistorialController extends Controller {
                         else
                             $concatenadoDupli .= $itemdupli['duplicado'];
                     }
-                    $datos['duplicado'] = $concatenadoDupli;
+                    $datosEnviarVista['duplicado'] = $concatenadoDupli;
 
+                    $capilaridades = $fVentasMovistar->getCapilaridad($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin'], $periodo[0]['pg_id']);
+//                    var_dump($capilaridades);DIE();
+//                    var_dump(3);
                     foreach ($capilaridades as $capilaridad) {
                         $pcumplimiento = intval($capilaridad["PRESUPUESTO"]) > 0 ? (intval($capilaridad["CAPILARIDAD"]) / intval($capilaridad["PRESUPUESTO"])) * 100 : 0;
                         $faltante = intval($capilaridad["PRESUPUESTO"]) - intval($capilaridad["CAPILARIDAD"]);
                         $pfaltante = intval($capilaridad["PRESUPUESTO"]) > 0 ? ((intval($capilaridad["PRESUPUESTO"]) - intval($capilaridad["CAPILARIDAD"])) / intval($capilaridad["PRESUPUESTO"])) * 100 : 0;
 
                         $descartar = $fVentasMovistar->getCapilaridadDescartar($capilaridad['CDGVENDEDOR'], $periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
-
+//                        var_dump(4);
                         $capilaridadEjecutivo = array(
                             'BODEGA' => $capilaridad["VENDEDOR"],
                             'PRESUPUESTO' => $capilaridad["PRESUPUESTO"],
@@ -97,10 +103,11 @@ class RptResumenDiarioHistorialController extends Controller {
                         array_push($datosCapilaridadMovistar, $capilaridadEjecutivo);
                         unset($capilaridadEjecutivo);
                     }
-                    $datos['capilaridadMovistar'] = $datosCapilaridadMovistar;
+                    $datosEnviarVista['capilaridadMovistar'] = $datosCapilaridadMovistar;
                     Yii::app()->session['capilaridadMovistar'] = $datosCapilaridadMovistar;
 
-                    $sellIn = $fVentasMovistar->getSellIn($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
+                    $sellIn = $fVentasMovistar->getSellIn($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin'], $periodo[0]['pg_id']);
+//                    var_dump(5);
                     foreach ($sellIn as $itemsellIn) {
                         $pcumplimiento = intval($itemsellIn["PRESUPUESTO"]) > 0 ? (intval($itemsellIn["VENTA"]) / intval($itemsellIn["PRESUPUESTO"])) * 100 : 0;
                         $faltante = intval($itemsellIn["PRESUPUESTO"]) - intval($itemsellIn["VENTA"]);
@@ -118,21 +125,23 @@ class RptResumenDiarioHistorialController extends Controller {
                         array_push($datosSellInMovistar, $sellInEjecutivo);
                         unset($sellInEjecutivo);
                     }
-                    $datos['sellInMovistar'] = $datosSellInMovistar;
+                    $datosEnviarVista['sellInMovistar'] = $datosSellInMovistar;
                     Yii::app()->session['SellInMovistar'] = $datosSellInMovistar;
 
 
                     $fVentasIndicadores = new FIndicadoresModel();
 
-                    $capilaridades = $fVentasIndicadores->getCapilaridad($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
+                    $capilaridades = $fVentasIndicadores->getCapilaridad($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin'], $periodo[0]['pg_id']);
+//                    var_dump(6);
                     $duplicado = $fVentasIndicadores->getDuplicado($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
+//                    var_dump(7);
                     $concatenadoDupliDelta = '';
                     $autocalcularDescartadoDelta = 0;
 
                     if (count($duplicado) == 1)
                         $autocalcularDescartadoDelta = 1;
 
-                    $datos['autocalcularDescartadoDelta'] = $autocalcularDescartadoDelta;
+                    $datosEnviarVista['autocalcularDescartadoDelta'] = $autocalcularDescartadoDelta;
 
                     foreach ($duplicado as $key => $itemdupli) {
                         if ($key < count($duplicado) - 1)
@@ -140,7 +149,7 @@ class RptResumenDiarioHistorialController extends Controller {
                         else
                             $concatenadoDupliDelta .= $itemdupli['duplicado'];
                     }
-                    $datos['duplicadoDelta'] = $concatenadoDupliDelta;
+                    $datosEnviarVista['duplicadoDelta'] = $concatenadoDupliDelta;
 
                     foreach ($capilaridades as $capilaridad) {
                         $pcumplimiento = intval($capilaridad["PRESUPUESTO"]) > 0 ? (intval($capilaridad["CAPILARIDAD"]) / intval($capilaridad["PRESUPUESTO"])) * 100 : 0;
@@ -148,7 +157,7 @@ class RptResumenDiarioHistorialController extends Controller {
                         $pfaltante = intval($capilaridad["PRESUPUESTO"]) > 0 ? ((intval($capilaridad["PRESUPUESTO"]) - intval($capilaridad["CAPILARIDAD"])) / intval($capilaridad["PRESUPUESTO"])) * 100 : 0;
 //                        var_dump($capilaridad);die();
                         $descartar = $fVentasIndicadores->getCapilaridadDescartar($capilaridad['CDGBODEGA'], $periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
-
+//                        var_dump(8);
                         $capilaridadEjecutivo = array(
                             'D_BODEGA' => $capilaridad["VENDEDOR"],
                             'D_PRESUPUESTO' => $capilaridad["PRESUPUESTO"],
@@ -163,10 +172,11 @@ class RptResumenDiarioHistorialController extends Controller {
                         array_push($datosCapilaridadDelta, $capilaridadEjecutivo);
                         unset($resumenRuta);
                     }
-                    $datos['capilaridadDelta'] = $datosCapilaridadDelta;
+                    $datosEnviarVista['capilaridadDelta'] = $datosCapilaridadDelta;
                     Yii::app()->session['capilaridadDelta'] = $datosCapilaridadDelta;
 
-                    $sellInIndicadores = $fVentasIndicadores->getSellIn($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
+                    $sellInIndicadores = $fVentasIndicadores->getSellIn($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin'], $periodo[0]['pg_id']);
+//                    var_dump(9);
                     foreach ($sellInIndicadores as $itemSellInIndicadores) {
                         $pcumplimiento = intval($itemSellInIndicadores["PRESUPUESTO"]) > 0 ? (intval($itemSellInIndicadores["VENTA"]) / intval($itemSellInIndicadores["PRESUPUESTO"])) * 100 : 0;
                         $faltante = intval($itemSellInIndicadores["PRESUPUESTO"]) - intval($itemSellInIndicadores["VENTA"]);
@@ -184,12 +194,13 @@ class RptResumenDiarioHistorialController extends Controller {
                         array_push($datosSellInDelta, $sellInEjecutivo);
                         unset($sellInEjecutivo);
                     }
-                    $datos['sellInDelta'] = $datosSellInDelta;
+                    $datosEnviarVista['sellInDelta'] = $datosSellInDelta;
                     Yii::app()->session['SellInDelta'] = $datosSellInDelta;
 
                     $fLibreria = new Libreria();
                     $fVentas = new FVentasMovistarModel();
                     $ventas = $fVentas->getVentasMes($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
+//                    var_dump(10);
                     foreach ($ventas as $venta) {
                         $dat = array(
                             'BODEGA' => $venta["BODEGA"],
@@ -199,8 +210,157 @@ class RptResumenDiarioHistorialController extends Controller {
                         array_push($datosVentasMes, $dat);
                         unset($resumenRuta);
                     }
-                    $datos['ventasmensual'] = $datosVentasMes;
+                    $datosEnviarVista['ventasmensual'] = $datosVentasMes;
 
+//                    die();
+//                    var_dump($datos);die();
+                    $response->Message = "Periodo revisado exitosamente";
+                    $response->Status = SUCCESS;
+                    $response->Result = $datosEnviarVista;
+                } else {
+                    $response->Message = "Debe seleccionar todos los filtros";
+                    $response->Status = NOTICE;
+                    $response->ClassMessage = CLASS_MENSAJE_NOTICE;
+                }
+            }
+        } catch (Exception $e) {
+            $response->Message = Yii::app()->params['mensajeExcepcion'];
+            $response->Status = ERROR;
+            $response->ClassMessage = CLASS_MENSAJE_ERROR;
+        }
+        if ($solicitarLogin) {
+            Yii::app()->user->setFlash('resultadoGuardar', "Por favor inicie sesion para continuar");
+            $returnUri = '/' . SISTEMA . '/cruge/ui/login';
+            Yii::app()->clientScript->registerMetaTag("" . INTERVALO_REFRESCO_INMEDIATO . ";url={$returnUri}", null, 'refresh');
+//            $this->render('/historialmb/rptResumenDiarioHistorial', array('model' => $model));
+        } else {
+            $this->actionResponse(null, null, $response);
+        }
+//        $this->actionResponse(null, $model, $response);
+//        var_dump($response);die();
+        return;
+    }
+
+    public function actionEvaluarAltasPeriodo() {
+        $response = new Response();
+        unset(Yii::app()->session['capilaridadMovistar']);
+        unset(Yii::app()->session['capilaridadDelta']);
+        unset(Yii::app()->session['SellInMovistar']);
+        unset(Yii::app()->session['SellInDelta']);
+
+        try {
+            $solicitarLogin = true;
+            if (Yii::app()->user->id <> intval(USUARIO_INVITADO)) {
+                $solicitarLogin = false;
+                $model = new RptResumenDiarioHistorialForm();
+                $model->attributes = $_POST['RptResumenDiarioHistorialForm'];
+                Yii::app()->session['ModelForm'] = $model;
+
+                if (isset($_POST['periodos']) && intval($_POST['periodos']) > 0) {
+                    $datos = array();
+                    $datosAltasPeriodo = array();
+
+                    $periodo = PeriodoGestionModel::model()->findAllByAttributes(array('pg_id' => array($_POST['periodos'])));
+                    $fAltasGrp = new FAltasGrpModel();
+                    $altasPeriodo = $fAltasGrp->getAltasPorPeriodo($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
+
+                    foreach ($altasPeriodo['detalleAltas'] as $alta) {
+                        $dat = array(
+                            'TIPO_CLIENTE' => $alta["TIPO_CLIENTE"],
+                            'FECHA_VARCHAR' => $alta["FECHA_VARCHAR"],
+                            'CIUDAD' => $alta["CIUDAD"],
+                            'MIN' => $alta["MIN"],
+                        );
+                        array_push($datosAltasPeriodo, $dat);
+                        unset($dat);
+                    }
+                    $datos['altasPorPeriodo'] = $datosAltasPeriodo;
+
+                    $detalleAltasVentasTransferencias = array();
+                    foreach ($altasPeriodo['detalleExportarAltas'] as $alta) {
+                        $dat = array(
+                            'MIN' => $alta['MIN'],
+                            'PLAN' => $alta['PLAN'],
+                            'FECHA_ALTA' => $alta['FECHA_ALTA'],
+                            'CODIGO_VENDEDOR' => $alta['CODIGO_VENDEDOR'],
+                            'CIUDAD' => $alta['CIUDAD'],
+                            'ICC' => $alta['ICC'],
+                            'MES_ALTA' => $alta['MES_ALTA'],
+                            'MES_VENTA' => $alta['MES_VENTA'],
+                            'BODEGA' => $alta['BODEGA'],
+                            'VENDEDOR' => $alta['VENDEDOR'],
+                            'CODIGO_CLIENTE' => $alta['CODIGO_CLIENTE'],
+                            'CLIENTE' => $alta['CLIENTE'],
+                            'TIPO_CLIENTE' => $alta['TIPO_CLIENTE'],
+                            'TRANSFERIDO_A' => $alta['TRANSFERIDO_A'],
+                            'FECHA_TRANSFERENCIA' => $alta['FECHA_TRANSFERENCIA'],
+                        );
+                        array_push($detalleAltasVentasTransferencias, $dat);
+                        unset($dat);
+                    }
+                    $datos['detalleAltasVentasTransferencias'] = $detalleAltasVentasTransferencias;
+
+
+//                    var_dump($periodo[0]['pg_fecha_fin']);die();
+                    $diasMes = substr($periodo[0]['pg_fecha_fin'], 8, 2);
+//                    var_dump($diasMes);die();
+                    $datosAltasDia = array();
+                    $diasInicio = new DateTime($altasPeriodo['inicioFin'][0]['INICIO']);
+                    $diasFin = new DateTime($altasPeriodo['inicioFin'][0]['FIN']);
+                    $dias = $diasFin->diff($diasInicio)->format('%a');
+                    foreach ($altasPeriodo['altasDiarias'] as $alta) {
+                        $dat = array(
+                            'TIPO' => $alta["TIPO_CLIENTE"],
+                            'DIAS' => intval($dias + 1),
+                            'ALTADIA' => number_format(intval($alta["DIARIA"]) / intval($dias + 1), 0, '.', ''),
+                            'PROYECCION' => number_format((intval($alta["DIARIA"]) / intval($dias + 1)) * intval($diasMes), 0, '.', ''),
+                        );
+                        array_push($datosAltasDia, $dat);
+                        unset($dat);
+                    }
+//                    var_dump($datosAltasDia);die();
+                    $datos['altasDiarias'] = $datosAltasDia;
+
+                    //ALTAS FUERA DE ZONA
+                    $altasFueraZona = array();
+                    $altasFueraZona = $fAltasGrp->getAltasFueraZona($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
+                    foreach ($altasFueraZona as $alta) {
+                        $dat = array(
+                            'CIUDAD' => $alta["CIUDAD"],
+                            'TIPO_CLIENTE' => $alta["TIPO_CLIENTE"],
+                            'VENDEDOR' => $alta["VENDEDOR"],
+                            'CODIGO_CLIENTE' => $alta["CODIGO_CLIENTE"],
+                            'MES_VENTA' => $alta["MES_VENTA"],
+                            'MIN' => $alta["MIN"],
+                        );
+                        array_push($altasFueraZona, $dat);
+                        unset($dat);
+                    }
+//                    var_dump($altasFueraZona);die();
+                    $datos['altasFueraZona'] = $altasFueraZona;
+
+
+                    $datosAltasSinVenta = array();
+                    $altasSinVenta = $fAltasGrp->getAltasSinVentaPorPeriodo($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
+//                    var_dump($altasSinVenta);die();
+                    foreach ($altasSinVenta as $alta) {
+                        $dat = array(
+                            'A_CIUDAD' => $alta["A_CIUDAD"],
+                            'A_MIN' => $alta["A_MIN"],
+                            'A_ICC' => $alta["A_ICC"],
+                            'TX_MIN' => $alta["TX_MIN"],
+                            'TX_ORIGEN' => $alta["TX_ORIGEN"],
+                            'TX_DESTINO' => $alta["TX_DESTINO"],
+                            'TX_FECHA' => $alta["TX_FECHA"],
+                            'VM_MIN' => $alta["VM_MIN"],
+                            'VM_ORIGEN' => $alta["VM_ORIGEN"],
+                            'VM_DESTINO' => $alta["VM_DESTINO"],
+                            'VM_FECHA' => $alta["VM_FECHA"],
+                        );
+                        array_push($datosAltasSinVenta, $dat);
+                        unset($dat);
+                    }
+                    $datos['altasSinVenta'] = $datosAltasSinVenta;
 
                     $response->Message = "Periodo revisado exitosamente";
                     $response->Status = SUCCESS;
@@ -1089,6 +1249,166 @@ class RptResumenDiarioHistorialController extends Controller {
             $response->Message = Yii::app()->params['mensajeExcepcion'];
             $response->Status = ERROR;
         }
+        return;
+    }
+
+    public function actionBuscaPeriodos() {
+        $response = new Response();
+        $fPeriodos = new FPeriodoGestionModel();
+        $periodos = $fPeriodos->getPeriodosMensuales();
+        $response->Result = $periodos;
+        unset(Yii::app()->session['inicioPeriodoSeleccionadoFZ']);
+        unset(Yii::app()->session['inicioPeriodoSeleccionadoFZ']);
+        unset(Yii::app()->session['resultadoEnvioMail']);
+        unset(Yii::app()->session['detalleResultadoEnvioMail']);
+
+        $this->actionResponse(null, null, $response);
+        return;
+    }
+
+    public function actionMostrarDetalleTipoBodegaXPeriodo() {
+        $response = new Response();
+        $fResumenRevision = new FResumenPeriodoModel();
+
+        unset(Yii::app()->session['resultadoEnvioMail']);
+        unset(Yii::app()->session['detalleResultadoEnvioMail']);
+
+        Yii::app()->session['inicioPeriodoSeleccionadoFZ'] = $_POST["inicioPeriodoFZ"];
+        Yii::app()->session['finPeriodoSeleccionadoFZ'] = $_POST["finPeriodoFZ"];
+        Yii::app()->session['anioPeriodoSeleccionadoFZ'] = $_POST["anioPeriodoFZ"];
+        Yii::app()->session['mesPeriodoSeleccionadoFZ'] = $_POST["mesPeriodoFZ"];
+
+        $resumenes['detallePeriodo'] = $fResumenRevision->getResumenAltasxPeriodoMensual($_POST["inicioPeriodoFZ"], $_POST["finPeriodoFZ"]);
+
+        $response->Result = $resumenes;
+        $response->Status = SUCCESS;
+        $this->actionResponse(null, null, $response);
+        return;
+    }
+
+    public function actionMostrarDetalleTipoBodega() {
+        $response = new Response();
+        $fResumenRevision = new FResumenPeriodoModel();
+
+        unset(Yii::app()->session['resultadoEnvioMail']);
+        unset(Yii::app()->session['detalleResultadoEnvioMail']);
+
+        $resumenes['detallePeriodoTipoBodega'] = $fResumenRevision->getResumenAltasxPeriodoMensualxTipoBodega(
+                Yii::app()->session['inicioPeriodoSeleccionadoFZ'], Yii::app()->session['finPeriodoSeleccionadoFZ'], $_POST["tipoBodega"]
+        );
+
+        $response->Result = $resumenes;
+        $response->Status = SUCCESS;
+        $this->actionResponse(null, null, $response);
+        return;
+    }
+
+    public function actionMostrarDetalleXBodega() {
+        $response = new Response();
+        $fResumenRevision = new FResumenPeriodoModel();
+        Yii::app()->session['bodegaSeleccionada'] = $_POST["bodegaSeleccionada"];
+        Yii::app()->session['numBodegaSeleccionada'] = $_POST["numBodegaSeleccionada"];
+
+        $resumenes['detallePorBodega'] = $fResumenRevision->getResumenAltasxPeriodoMensualxBodega(
+                Yii::app()->session['inicioPeriodoSeleccionadoFZ'], Yii::app()->session['finPeriodoSeleccionadoFZ'], $_POST["bodegaSeleccionada"]
+        );
+        $resumenes['activarEnviarMail'] = count($resumenes['detallePorBodega']) > 0 ? true : false;
+        unset(Yii::app()->session['resultadoEnvioMail']);
+        unset(Yii::app()->session['detalleResultadoEnvioMail']);
+        $response->Result = $resumenes;
+        $response->Status = SUCCESS;
+        $this->actionResponse(null, null, $response);
+        return;
+    }
+
+    public function actionEstadoEnviarMailAltasFueraZona() {
+        $response = new Response();
+        $response->Result = Yii::app()->session['resultadoEnvioMail'] . '***DETALLE***' . Yii::app()->session['detalleResultadoEnvioMail'];
+        $response->Status = SUCCESS;
+        $this->actionResponse(null, null, $response);
+        return $response;
+    }
+
+    public function actionEnviarMailAltasFueraZona() {
+        $estadoEnvioMensaje = '';
+        try {
+            $response = new Response();
+            $ejecutivo = EjecutivoModel::model()->findAllByAttributes(array('e_id_bodega_delta' => array(Yii::app()->session['numBodegaSeleccionada'])));
+//            var_dump($ejecutivo);die();
+            if (isset($ejecutivo[0])) {
+                if ($ejecutivo[0]['e_estado'] == 1) {//enviar mail solo a ejecutivos activos (activo=1, inactivo=0)
+//                if (true) {
+//                    var_dump($this->GenerarExcelAdjunto($ejecutivo));die();
+                    $fResumenPeriodo = new FResumenPeriodoModel();
+                    $datos = $fResumenPeriodo->getResumenAltasxPeriodoMensualxBodegaMail(
+                            Yii::app()->session['inicioPeriodoSeleccionadoFZ']
+                            , Yii::app()->session['finPeriodoSeleccionadoFZ']
+                            , Yii::app()->session['bodegaSeleccionada']
+                    );
+
+                    $model = new MailReporteAltaFueraZonaModel();
+                    $model->fechaGeneracion = date("Y-m-d");
+                    $model->ejecutivo = $ejecutivo[0]['e_nombre'];
+                    $model->emailTo = PRUEBA_MAIL ? MAIL : $ejecutivo[0]['e_mail_notificar'];
+                    $model->periodo = Yii::app()->session['anioPeriodoSeleccionadoFZ'] . '-' . Yii::app()->session['mesPeriodoSeleccionadoFZ'];
+                    $model->cantidadAltas = count($datos['excelAdjunto']);
+                    $model->cantidadCiudades = $datos['ciudades'][0]['CIUDADES'];
+//                    var_dump($model);die();
+                    $NombreArchivo = "reporte_altas_fuera_zona";
+                    $NombreHoja = "reporte_altas_fuera_zona";
+
+                    $autor = "Tececab"; //$_SESSION['CUENTA'];
+                    $titulo = "reporte_altas_fuera_zona";
+                    $tema = "reporte_altas_fuera_zona";
+                    $keywords = "office 2007";
+
+                    $excel = new excel();
+
+
+                    $excel->getObjPHPExcel()->getProperties()
+                            ->setCreator($autor)
+                            ->setLastModifiedBy($autor)
+                            ->setTitle($titulo)
+                            ->setSubject($tema)
+                            ->setDescription($tema)
+                            ->setKeywords($keywords)
+                            ->setCategory($tema);
+
+                    $excel->SetHojaDefault(0);
+                    $excel->SetNombreHojaActiva($NombreHoja);
+
+                    $excel->MapeoDefault($datos['excelAdjunto'], '', '', '');
+
+                    $excel->CrearArchivo('Excel2007', $NombreArchivo);
+                    $archivo = PATH_FOLDER_ADJUNTOS . $NombreArchivo . mktime() . '.xlsx';
+                    $excel->GuardarArchivoFolderServer($archivo);
+
+                    Yii::app()->crugemailer->enviarReporteAltasFueraZona($model->emailTo, $model, $archivo);
+//                    var_dump($res);die();
+                    if (Yii::app()->session['resultadoEnvioMail'] == 1)
+                        $estadoEnvioMensaje = 'Correo enviado correctamente a ' . $model->emailTo;
+                    else
+                        $estadoEnvioMensaje = 'Correo no enviado';
+//                    $estadoEnvioMensaje = Yii::app()->session['resultadoEnvioMail'];
+                } else {
+                    //ejecutivo con bodega seleccionada esta inactivo
+                    $estadoEnvioMensaje = 'Ejecutivo de bodega seleccionada esta inactivo. No se enviara ningun correo';
+                }
+            } else {
+                //ejecutivo con bodega seleccionada no existe en sisven tb_ejecutivo
+                $estadoEnvioMensaje = 'Ejecutivo con bodega seleccionada no existe en sisven tb_ejecutivo';
+            }
+        } catch (Exception $e) {
+            $response->Message = Yii::app()->params['mensajeExcepcion'];
+            $response->Status = ERROR;
+            $response->ClassMessage = CLASS_MENSAJE_ERROR;
+        }
+
+        $response->Result = $estadoEnvioMensaje;
+        $response->Status = SUCCESS;
+
+//        var_dump($response);        die();
+        $this->actionResponse(null, null, $response);
         return;
     }
 

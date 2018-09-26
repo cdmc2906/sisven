@@ -23,8 +23,8 @@ class FPeriodoGestionModel extends DAOModel {
                     AS MES
                 ,pg_id as ID
                 ,pg_descripcion as PERIODO
-                ,date(pg_fecha_inicio) AS INICIO 
-                ,date (pg_fecha_fin) AS FIN
+                ,".FuncionesBaseDatos::convertToDate('sqlsrv', 'pg_fecha_inicio')." AS INICIO 
+                ,".FuncionesBaseDatos::convertToDate('sqlsrv', 'pg_fecha_fin')." AS FIN
                 ,b.est_nombre AS ESTADO
 
                 FROM tb_periodo_gestion as a
@@ -32,6 +32,44 @@ class FPeriodoGestionModel extends DAOModel {
                     on a.pg_estado =b.est_id
                 WHERE 1=1 
                    and pg_tipo='SEMANAL' 
+;
+
+            ";
+//   var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+    public function getPeriodosMensuales() {
+        $sql = "
+           SELECT 
+                year(pg_fecha_inicio) AS ANIO
+                ,CASE MONTH(pg_fecha_inicio) 
+                    WHEN 1 THEN 'ENERO'
+                    WHEN 2 THEN 'FEBRERO'
+                    WHEN 3 THEN 'MARZO'
+                    WHEN 4 THEN 'ABRIL'
+                    WHEN 5 THEN 'MAYO'
+                    WHEN 6 THEN 'JUNIO'
+                    WHEN 7 THEN 'JULIO'
+                    WHEN 8 THEN 'AGOSTO'
+                    WHEN 9 THEN 'SEPTIEMBRE'
+                    WHEN 10 THEN 'OCTUBRE'
+                    WHEN 11 THEN 'NOVIEMBRE'
+                    ELSE 'DICIEMBRE'
+                    END
+                    AS MES
+                ,pg_descripcion as PERIODO
+                ,".FuncionesBaseDatos::convertToDate('sqlsrv', 'pg_fecha_inicio')." AS INICIO 
+                ,".FuncionesBaseDatos::convertToDate('sqlsrv', 'pg_fecha_fin')." AS FIN
+
+                FROM tb_periodo_gestion as a
+                    inner join tb_estado as b
+                    on a.pg_estado =b.est_id
+                WHERE 1=1 
+                   and pg_tipo='MENSUAL' 
 ;
 
             ";

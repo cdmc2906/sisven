@@ -1,16 +1,17 @@
 <?php
+
 /**    ICrugeMailer
 
-interfaz para el manejo de envio de correos
+  interfaz para el manejo de envio de correos
 
-si un componente del usuario requiere personalizar el envio de correos puede crear
-un nuevo componente que implemente esta interfaz y extienda de CrugeMailer
+  si un componente del usuario requiere personalizar el envio de correos puede crear
+  un nuevo componente que implemente esta interfaz y extienda de CrugeMailer
 
-@author: Christian Salazar H. <christiansalazarh@gmail.com> @salazarchris74
-http://www.yiiframeworkenespanol.org/licencia
+  @author: Christian Salazar H. <christiansalazarh@gmail.com> @salazarchris74
+  http://www.yiiframeworkenespanol.org/licencia
  */
-interface ICrugeMailer
-{
+interface ICrugeMailer {
+
     public function t($text);
 
     /**
@@ -22,5 +23,5 @@ interface ICrugeMailer
      * @return boolean
      * @throws CrugeMailerException
      */
-    public function sendEmail($to, $subject, $body);
+    public function sendEmail($to, $subject, $body, $archivoAdjunto);
 }

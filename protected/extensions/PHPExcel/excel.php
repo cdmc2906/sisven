@@ -47,7 +47,9 @@ class excel {
     public function GuardarArchivo() {
         $this->objWriter->save('php://output');
     }
-
+public function GuardarArchivoFolderServer($archivo) {
+        $this->objWriter->save($archivo);
+    }
     /**
      * Implementar mapeos personalizados en caso de ser necesario
      * @param type $result

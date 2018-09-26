@@ -3,6 +3,10 @@
 /**
  * Constantes ETIQUETAS
  */
+define('PRUEBA_MAIL', false);
+define('MAIL', 'christian.araujo@tececab.com.ec');
+
+define('PATH_FOLDER_ADJUNTOS', 'C:\archivos_adjuntos_mail\\');
 define('LAYOUT_ADMIN_CATALOG', '//layouts/layout_admin_catalog');
 define('LAYOUT_IMPORTAR', '//layouts/layout_importar');
 define('LAYOUT_INDEX', '//layouts/main');
@@ -48,6 +52,7 @@ define('GRUPO_EJECUTIVOS_ZONA', 'EZ');
 define('GRUPO_SUPERVISORES', 'S');
 define('GRUPO_SERVICIO_CLIENTE', 'SC');
 define('GRUPO_DESARROLLADORES', 'D');
+define('GRUPO_TECNICOS', 'ST');
 
 define('RUTASNOREVISAR', '\'RZS 47\',\'RZS 39\',\'RZS 20\'');
 
