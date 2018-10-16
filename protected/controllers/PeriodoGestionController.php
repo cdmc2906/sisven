@@ -109,6 +109,7 @@ class PeriodoGestionController extends Controller {
                         $this->redirect(array('view', 'id' => $model->pg_id));
                 }
             }else {
+                $model->pg_fecha_fin = $fechaIngresadaFin;
                 $model->pg_descripcion = "DEL " . $model->pg_fecha_inicio . " AL " . $model->pg_fecha_fin;
                 $anio = DateTime::createFromFormat(FORMATO_FECHA_3, $model->pg_fecha_inicio)->format("Y");
                 $model->pg_anio = $anio;

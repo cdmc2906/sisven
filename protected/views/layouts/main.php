@@ -17,6 +17,7 @@
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/template/bower_components/font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/template/bower_components/Ionicons/css/ionicons.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/template/bower_components/jvectormap/jquery-jvectormap.css">
+        <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/template/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/template/dist/css/AdminLTE.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/assets/template/dist/css/skins/_all-skins.min.css">
 
@@ -682,9 +683,9 @@
 
             <div class="content-wrapper">
 
-                <?php if (isset($this->breadcrumbs)): ?>
-                    <?php $this->widget('zii.widgets.CBreadcrumbs', array('links' => $this->breadcrumbs,)); ?> 
-                <?php endif ?>
+                <?php // if (isset($this->breadcrumbs)): ?>
+                    <?php // $this->widget('zii.widgets.CBreadcrumbs', array('links' => $this->breadcrumbs,)); ?> 
+                <?php // endif ?>
 
                 <section class="content"> 
                     <?php
@@ -718,11 +719,11 @@
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/jqGrid/js/jquery.jqGrid.min.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/js/jqGrid/js/i18n/grid.locale-es.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl ?>/js/jqueryblockUI.js"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl ?>/js/jqueryblockUI.js"></script>
 
-
-<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                         ?>/assets/template/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
-<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                         ?>/assets/template/bower_components/fastclick/lib/fastclick.js"></script>-->
+<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                          ?>/assets/template/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
+<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                          ?>/assets/template/bower_components/fastclick/lib/fastclick.js"></script>-->
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/template/dist/js/adminlte.min.js"></script>
-<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                         ?>/assets/template/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>-->
+<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                          ?>/assets/template/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>-->
 </body>
 </html>

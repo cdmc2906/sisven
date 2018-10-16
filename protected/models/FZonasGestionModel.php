@@ -2,7 +2,7 @@
 
 class FZonasGestionModel extends DAOModel {
 
-    public function getZonasCantidadRutas() {
+    public function getInformacionZonasXPeriodo($idPeriodo) {
         $sql = "
             SELECT 
                     b.ZG_ID as CODIGOZONA,
@@ -11,11 +11,18 @@ class FZonasGestionModel extends DAOModel {
                     COUNT(distinct a.RG_ID) as CANTIDADRUTAS,
                     count(c.r_cod_cliente)  as CANTIDADCLIENTES
                 FROM tb_ruta_gestion as a
-                inner join tb_zonas_gestion as b
-                on a.zg_id=b.zg_id
-                inner join tb_ruta_mb as c
-		on a.rg_cod_ruta_mb=c.r_ruta
-                GROUP by b.zg_id,b.ZG_NOMBRE_ZONA,b.ZG_NOMB_EJECUTIVO_ASIGNADO 
+                    inner join tb_zonas_gestion as b
+                        on a.zg_id=b.zg_id
+                    inner join tb_ruta_mb as c
+                        on a.rg_cod_ruta_mb=c.r_ruta
+                WHERE 1=1
+                    and c.pg_id=" . $idPeriodo . "
+                    --and c.pg_id=28
+                GROUP by 
+                    b.zg_id,
+                    b.ZG_NOMBRE_ZONA,
+                    b.ZG_NOMB_EJECUTIVO_ASIGNADO
+                ORDER BY 2
                 ;
             ";
 //        var_dump($sql);        die();

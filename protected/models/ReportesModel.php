@@ -370,16 +370,34 @@ class ReportesModel extends DAOModel {
     }
 
     public function getUsersPorRol($rol) {
-
-        $sql = "
+        if ($rol == 2)
+            $sql = "  
+                select 
+                        e_cod AS CODIGOAGENTE
+                        ,e_nombre AS NOMBREAGENTE
+                        ,CASE e_tipo
+                            WHEN 'EZ' THEN 'EJECUTIVO_ZONA'
+                            WHEN 'S' THEN 'SUPERVISOR'
+                            WHEN 'D' THEN 'DESARROLLADOR'
+                            WHEN 'SC' THEN 'SERVICIO_CLIENTE'
+                            WHEN 'ST' THEN 'SERVICIO_TECNICO'
+                            END AS TIPO
+                    from tb_ejecutivo 
+                    where 1=1
+                        and e_estado=1 
+                        and e_tipo in ('EZ','S','D','SC','ST')
+            ";
+        else
+            $sql = "
             SELECT 
                     a.iduser AS CODIGOAGENTE
                     ,b.usrl_nombre_usuario AS NOMBREAGENTE
+                    ,'AGENTE_CC' AS TIPO
                 FROM cruge_user as a
                 inner join  tb_usuario_rol as b
                     on a.iduser  =b.iduser
                 where b.r_id=" . $rol . "
-                order by 1;";
+                ;";
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();

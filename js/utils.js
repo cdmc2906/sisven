@@ -95,6 +95,42 @@ function mostrarVentanaMensaje(mensaje, tituloDialogo, clase) {
     }).dialog('option', 'title', tituloDialogo).dialog('open');
 }
 
+function ConfigDatePickersRango2(inicio) {
+    $(inicio).daterangepicker();
+}
+
+function ConfigDatePickersReporteMismoMes(inicio, fin) {
+    $(inicio)
+            .datepicker({
+                format: "yyyy-mm-dd",
+                startView: 1,
+                language: "es",
+                autoclose: true
+            })
+            .on('changeDate', function (e) {
+                var selectedDate = $(inicio).val();
+                $(fin).datepicker('setStartDate', selectedDate);
+                var fechaInicio = new Date(e.date);
+                var fechaMaxima = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth() + 1, 0);
+                $(fin).datepicker('setEndDate', fechaMaxima);
+            }
+            );
+
+    $(fin)
+            .datepicker({
+                format: "yyyy-mm-dd",
+                startView: 1,
+                language: "es",
+                autoclose: true
+            }
+            )
+            .on('changeDate', function (e) {
+                var maxDate = new Date();
+                $(inicio).datepicker('setEndDate', maxDate);
+            }
+            );
+}
+
 function ConfigDatePickersReporte(inicio, fin) {
     $(inicio)
             .datepicker({

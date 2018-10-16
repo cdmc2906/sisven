@@ -165,25 +165,11 @@ class Libreria {
         unset(Yii::app()->session['coordenadasClientes']);
         unset(Yii::app()->session['coordenadasVisitas']);
 
-        $fComentarioSupervision = new FComentariosSupervisionModel ();
-//        $comentarioSupervisor = $fComentarioSupervision->getComentariosSupervisionxEjecutivoxFecha($ejecutivoSeleccionado, $fechagestion);
-//        $comentarios = '';
-//        if (count($comentarioSupervisor) > 0) {
-//            foreach ($comentarioSupervisor as $key => $comentario) {
-//                $comentarios .= intval($key + 1) . '.- '
-//                        . substr($comentario['username'], 0, 2)
-//                        . "-" . $comentario['fecha']
-//                        . "-(" . $comentario['cs_comentario']
-//                        . ') ' . "\n";
-//            }
-//            $datos['comentarioSupervisor'] = $comentarios;
         $datos['comentarioSupervisor'] = '';
-//        }
+
         $fDetalleHistorialUsuario = new FDetalleRevisionHistorialModel();
         $detalleRevisionGuardado = $fDetalleHistorialUsuario->getDetalleHistorialxVendedorxFecha($fechagestion, $ejecutivoSeleccionado, $semanaRevision);
 
-//        var_dump($detalleRevisionGuardado[0]["drh_id"]);die();
-//        var_dump($detalleRevisionGuardado, $fechagestion, $ejecutivoSeleccionado, $semanaRevision);die();
         $ejecutivo = EjecutivoModel::model()->findAllByAttributes(array('e_usr_mobilvendor' => $ejecutivoSeleccionado));
         $fHistorial = new FHistorialModel();
         if (count($detalleRevisionGuardado) == 0) {
@@ -203,7 +189,7 @@ class Libreria {
                         , $semanaRevision
                 );
             }
-
+//            var_dump($historial);die();
             if (isset($historial)) {
                 if (count($historial) > 0) {
                     $diaGestion = date("w", strtotime($fechagestion));

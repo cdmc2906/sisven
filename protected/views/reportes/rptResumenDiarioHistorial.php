@@ -15,32 +15,32 @@ $this->pageTitle = $pagina_nombre;
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/reporte/RptResumenDiarioHistorial.js"; ?>"></script>
 <script type="text/javascript" language="javascript" src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
 
-<div class="row">
+<!--<div class="row">
     <div class="col-md-3">
-        <?php
-        $periodoAbierto = FPeriodoGestionModel::getPeriodoActivoNotificacion();
-        if ($periodoAbierto != '') :
-            ?>
-            <div class="callout callout-info">
-                <center>
-                    <p>Periodo semanal abierto : <br/><b><?php echo $periodoAbierto; ?>
-                        </b></p>
-                </center>
-            </div>
-        <?php else: ?>
-            <div class="callout callout-danger">
-                <center>
-                    <p><b>** NO EXISTE PERIODO SEMANAL ABIERTO **</b></p>
-                </center>
-            </div>
-        <?php endif; ?>
+<?php
+$periodoAbierto = FPeriodoGestionModel::getPeriodoActivoNotificacion();
+if ($periodoAbierto != '') :
+    ?>
+                                            <div class="callout callout-info">
+                                                <center>
+                                                    <p>Periodo semanal abierto : <br/><b><?php echo $periodoAbierto; ?>
+                                                        </b></p>
+                                                </center>
+                                            </div>
+<?php else: ?>
+                                            <div class="callout callout-danger">
+                                                <center>
+                                                    <p><b>** NO EXISTE PERIODO SEMANAL ABIERTO **</b></p>
+                                                </center>
+                                            </div>
+<?php endif; ?>
 
     </div>
-    <!--historial-->
+    historial
     <div class="col-md-3">
-        <?php
-        $ultimaCargaHistorial = FHistorialModel::getFechaUltimaCarga();
-        ?>
+<?php
+$ultimaCargaHistorial = FHistorialModel::getFechaUltimaCarga();
+?>
         <div class="callout small-box bg-blue">
             <center>
                 <p>Ultima carga historial : <br/><b><?php echo $ultimaCargaHistorial; ?>
@@ -49,11 +49,11 @@ $this->pageTitle = $pagina_nombre;
         </div>
 
     </div>
-    <!--rutas-->
+    rutas
     <div class="col-md-3">
-        <?php
-        $ultimaCargaRuta = FRutaModel::getFechaUltimaCarga();
-        ?>
+<?php
+$ultimaCargaRuta = FRutaModel::getFechaUltimaCarga();
+?>
         <div class="callout small-box bg-yellow">
             <center>
                 <p>Ultima carga ruta : <br/><b><?php echo $ultimaCargaRuta; ?>
@@ -64,9 +64,9 @@ $this->pageTitle = $pagina_nombre;
     </div>
 
     <div class="col-md-3">
-        <?php
-        $ultimaCargaOrdenes = FOrdenModel::getFechaUltimaCarga();
-        ?>
+<?php
+$ultimaCargaOrdenes = FOrdenModel::getFechaUltimaCarga();
+?>
         <div class="callout small-box bg-green">
             <center>
                 <p>Ultima carga ordenes: <br/><b><?php echo $ultimaCargaOrdenes; ?>
@@ -75,9 +75,94 @@ $this->pageTitle = $pagina_nombre;
         </div>
 
     </div>
-</div>
+</div>-->
 
 <div class="nav-tabs-custom">
+    <div class="btn-group">
+        <button type="button" title="Revisar carga" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
+            <i class="fa fa-align-left"></i>
+        </button>
+    </div>
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Informacion Carga</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            $periodoAbierto = FPeriodoGestionModel::getPeriodoActivoNotificacion();
+                            if ($periodoAbierto != '') :
+                                ?>
+                                <div class="callout callout-info">
+                                    <center>
+                                        <p>Periodo semanal abierto : <br/><b><?php echo $periodoAbierto; ?>
+                                            </b></p>
+                                    </center>
+                                </div>
+                            <?php else: ?>
+                                <div class="callout callout-danger">
+                                    <center>
+                                        <p><b>** NO EXISTE PERIODO SEMANAL ABIERTO **</b></p>
+                                    </center>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            $ultimaCargaHistorial = FHistorialModel::getFechaUltimaCarga();
+                            ?>
+                            <div class="callout small-box bg-blue">
+                                <center>
+                                    <p>Ultima carga historial : <br/><b><?php echo $ultimaCargaHistorial; ?>
+                                        </b></p>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            $ultimaCargaRuta = FRutaModel::getFechaUltimaCarga();
+                            ?>
+                            <div class="callout small-box bg-yellow">
+                                <center>
+                                    <p>Ultima carga ruta : <br/><b><?php echo $ultimaCargaRuta; ?>
+                                        </b></p>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <?php
+                            $ultimaCargaOrdenes = FOrdenModel::getFechaUltimaCarga();
+                            ?>
+                            <div class="callout small-box bg-green">
+                                <center>
+                                    <p>Ultima carga ordenes: <br/><b><?php echo $ultimaCargaOrdenes; ?>
+                                        </b></p>
+                                </center>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+    </div>
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab_1" data-toggle="tab">Revision jornada</a></li>
         <li><a href="#tab_2" data-toggle="tab">Revision individual</a></li>
@@ -87,34 +172,40 @@ $this->pageTitle = $pagina_nombre;
     </ul>
     <div class="tab-content">
         <div class="tab-pane active" id="tab_1">
-            <div class="box-body">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1_1" data-toggle="tab">Jornada individual</a></li>
+                    <li><a href="#tab_1_2" data-toggle="tab">Jornada mensual</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tab_1_1">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <?php
+                                    $form = $this->beginWidget('CActiveForm', array(
+                                        'id' => 'frmLoad',
+                                        'enableClientValidation' => true,
+                                        'clientOptions' => array(
+                                            'validateOnSubmit' => true,
+                                        ),
+                                        'htmlOptions' => array("enctype" => "multipart/form-data"),
+                                    ));
+                                    ?>
 
-                <div class="row">
-                    <div class="col-md-2">
-                        <?php
-                        $form = $this->beginWidget('CActiveForm', array(
-                            'id' => 'frmLoad',
-                            'enableClientValidation' => true,
-                            'clientOptions' => array(
-                                'validateOnSubmit' => true,
-                            ),
-                            'htmlOptions' => array("enctype" => "multipart/form-data"),
-                        ));
-                        ?>
-
-                        <div class="mailbox-controls">
-                            <div class="btn-group">
-                                <?php
-                                echo CHtml::ajaxSubmitButton(
-                                        'Consultar'
-                                        , CHtml::normalizeUrl(array(
-                                            'RptResumenDiarioHistorial/ObtenerTiemposGestionTraslado'
-                                            , 'render' => true))
-                                        , array(
-                                    'dataType' => 'json',
-                                    'type' => 'post',
-                                    'beforeSend' => 'function() {blockUIOpen();}',
-                                    'success' => 'function(data) {
+                                    <div class="mailbox-controls">
+                                        <div class="btn-group">
+                                            <?php
+                                            echo CHtml::ajaxSubmitButton(
+                                                    'Consultar'
+                                                    , CHtml::normalizeUrl(array(
+                                                        'RptResumenDiarioHistorial/ObtenerTiemposGestionTraslado'
+                                                        , 'render' => true))
+                                                    , array(
+                                                'dataType' => 'json',
+                                                'type' => 'post',
+                                                'beforeSend' => 'function() {blockUIOpen();}',
+                                                'success' => 'function(data) {
 
                         blockUIClose();
                         //setMensaje(data.ClassMessage, data.Message);
@@ -129,140 +220,319 @@ $this->pageTitle = $pagina_nombre;
                             });
                             }
                         } ',
-                                    'error' => 'function(xhr,st,err) {
+                                                'error' => 'function(xhr,st,err) {
                             blockUIClose();
                             alert(err);
                         }'
-                                        ), array(
-                                    'id' => 'btnGenerar'
-                                    , 'class' => 'btn btn-block btn-success btn-sm'
-                                ));
-                                ?>
-                                <?php
-                                echo CHtml::Button(
-                                        'Limpiar', array('id' => 'btnLimpiar'
-                                    , 'class' => 'btn btn-block btn-primary btn-sm'));
-                                ?>
-                            </div>
-                        </div>
-                        <div class="box box-solid">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">Fecha / Ejecutivo</h3>
-                                <div class="box-tools">
-                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="box-body no-padding">
-                                <ul class="nav nav-pills nav-stacked">
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-calendar"></i>
-                                            <?php echo $form->labelEx($model, 'fechaInicioFinJornada'); ?>
-                                            <?php echo $form->textField($model, 'fechaInicioFinJornada', array('class' => 'txtfechaInicioFinJornadaInicio')); ?>
-                                            <?php echo $form->error($model, 'fechaInicioFinJornada'); ?>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-calendar"></i>
+                                                    ), array(
+                                                'id' => 'btnGenerar'
+                                                , 'class' => 'btn btn-block btn-success btn-sm'
+                                            ));
+                                            ?>
                                             <?php
-                                            echo $form->labelEx($model, 'tipoUsuarioJornada');
-                                            echo $form->dropDownList(
-                                                    $model, 'tipoUsuarioJornada', array(
-                                                'T' => 'Todos',
-                                                GRUPO_EJECUTIVOS_ZONA => 'Ejecutivos Zona',
-                                                GRUPO_SUPERVISORES => 'Supervisores',
-                                                GRUPO_SERVICIO_CLIENTE => 'Servicio Cliente',
-                                                GRUPO_DESARROLLADORES => 'Desarrolladores',
-                                                GRUPO_TECNICOS => 'Tecnico ',
-                                                    )
+                                            echo CHtml::Button(
+                                                    'Limpiar', array('id' => 'btnLimpiar'
+                                                , 'class' => 'btn btn-block btn-primary btn-sm'));
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="box box-solid">
+                                        <div class="box-header with-border">
+                                            <h3 class="box-title">Fecha / Ejecutivo</h3>
+                                            <div class="box-tools">
+                                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="box-body no-padding">
+                                            <ul class="nav nav-pills nav-stacked">
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-calendar"></i>
+                                                        <?php echo $form->labelEx($model, 'fechaInicioFinJornada'); ?>
+                                                        <?php echo $form->textField($model, 'fechaInicioFinJornada', array('class' => 'txtfechaInicioFinJornadaInicio')); ?>
+                                                        <?php echo $form->error($model, 'fechaInicioFinJornada'); ?>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-calendar"></i>
+                                                        <?php
+                                                        echo $form->labelEx($model, 'tipoUsuarioJornada');
+                                                        echo $form->dropDownList(
+                                                                $model, 'tipoUsuarioJornada', array(
+                                                            'T' => 'Todos',
+                                                            GRUPO_EJECUTIVOS_ZONA => 'Ejecutivos Zona',
+                                                            GRUPO_SUPERVISORES => 'Supervisores',
+                                                            GRUPO_SERVICIO_CLIENTE => 'Servicio Cliente',
+                                                            GRUPO_DESARROLLADORES => 'Desarrolladores',
+                                                            GRUPO_TECNICOS => 'Tecnico ',
+                                                                )
 //                                        , array(
 //                                    'empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
-                                            );
-                                            echo $form->error($model, 'tipoUsuarioJornada');
-                                            ?>
-                                        </a>
-                                    </li>
+                                                        );
+                                                        echo $form->error($model, 'tipoUsuarioJornada');
+                                                        ?>
+                                                    </a>
+                                                </li>
 
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-calendar"></i>
-                                            <?php
-                                            echo $form->labelEx($model, 'horaInicioGestionJornada');
-                                            echo $form->dropDownList(
-                                                    $model, 'horaInicioGestionJornada', array(
-                                                '01:00' => '01:00',
-                                                '02:00' => '02:00',
-                                                '03:00' => '03:00',
-                                                '04:00' => '04:00',
-                                                '05:00' => '05:00',
-                                                '06:00' => '06:00',
-                                                '07:00' => '07:00',
-                                                '08:00' => '08:00',
-                                                '09:00' => '09:00',
-                                                '10:00' => '10:00',
-                                                '11:00' => '11:00',
-                                                '12:00' => '12:00'
-                                                    )
-                                                    , array('options' => array('08:00' => array('selected' => true)))
-                                                    //, array("disabled" => "disabled",)
-                                            );
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-calendar"></i>
+                                                        <?php
+                                                        echo $form->labelEx($model, 'horaInicioGestionJornada');
+                                                        echo $form->dropDownList(
+                                                                $model, 'horaInicioGestionJornada', array(
+                                                            '01:00' => '01:00',
+                                                            '02:00' => '02:00',
+                                                            '03:00' => '03:00',
+                                                            '04:00' => '04:00',
+                                                            '05:00' => '05:00',
+                                                            '06:00' => '06:00',
+                                                            '07:00' => '07:00',
+                                                            '08:00' => '08:00',
+                                                            '09:00' => '09:00',
+                                                            '10:00' => '10:00',
+                                                            '11:00' => '11:00',
+                                                            '12:00' => '12:00'
+                                                                )
+                                                                , array('options' => array('08:00' => array('selected' => true)))
+                                                                //, array("disabled" => "disabled",)
+                                                        );
 
-                                            echo $form->error($model, 'horaInicioGestionJornada');
-                                            ?>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-calendar"></i>
-                                            <?php
-                                            echo $form->labelEx($model, 'horaFinGestionJornada');
-                                            echo $form->dropDownList(
-                                                    $model, 'horaFinGestionJornada', array(
-                                                '23:59' => 'Sin limite',
-                                                '17:00' => '17:00',
-                                                '17:00' => '17:30',
-                                                '18:00' => '18:00',
-                                                '18:30' => '18:30',
-                                                '19:00' => '19:00',
-                                                '19:30' => '19:30',
-                                                '20:00' => '20:00',
-                                                '20:30' => '20:30',
-                                                '21:00' => '21:00',
-                                                '21:30' => '21:30',
-                                                '22:00' => '22:00',
-                                                '22:30' => '22:30',
-                                                '23:00' => '23:00',
-                                                '23:30' => '23:30',
-                                                    )
-                                                    , array('options' => array('23:59' => array('selected' => true)))
-                                            );
+                                                        echo $form->error($model, 'horaInicioGestionJornada');
+                                                        ?>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <i class="fa fa-calendar"></i>
+                                                        <?php
+                                                        echo $form->labelEx($model, 'horaFinGestionJornada');
+                                                        echo $form->dropDownList(
+                                                                $model, 'horaFinGestionJornada', array(
+                                                            '23:59' => 'Sin limite',
+                                                            '17:00' => '17:00',
+                                                            '17:00' => '17:30',
+                                                            '18:00' => '18:00',
+                                                            '18:30' => '18:30',
+                                                            '19:00' => '19:00',
+                                                            '19:30' => '19:30',
+                                                            '20:00' => '20:00',
+                                                            '20:30' => '20:30',
+                                                            '21:00' => '21:00',
+                                                            '21:30' => '21:30',
+                                                            '22:00' => '22:00',
+                                                            '22:30' => '22:30',
+                                                            '23:00' => '23:00',
+                                                            '23:30' => '23:30',
+                                                                )
+                                                                , array('options' => array('23:59' => array('selected' => true)))
+                                                        );
 
-                                            echo $form->error($model, 'horaFinGestionJornada');
-                                            ?>
-                                        </a>
-                                    </li>
-                                </ul>
+                                                        echo $form->error($model, 'horaFinGestionJornada');
+                                                        ?>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <?php $this->endWidget(); ?>
+
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="box box-primary">
+                                        <div class="box-body no-padding">
+                                            <div id="grilla" class="_grilla">
+                                                <table id="tblGridResumenJornada" class="table table-condensed"></table>
+                                                <div id="pagGridResumenJornada"> </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <?php $this->endWidget(); ?>
-
                     </div>
-                    <div class="col-md-10">
-                        <div class="box box-primary">
-                            <div class="box-body no-padding">
-                                <div id="grilla" class="_grilla">
-                                    <table id="tblGridResumenJornada" class="table table-condensed"></table>
-                                    <div id="pagGridResumenJornada"> </div>
+                    <div class="tab-pane" id="tab_1_2">
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="box-body no-padding">
+                                        <div class="box box-info">
+                                            <div class="box-header with-border">
+                                                <h3 class="box-title">Filtros</h3>
+                                            </div>
+                                            <div class="box-body">
+                                                <div class="form-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-calendar"></i>
+                                                        <label><?php echo $form->labelEx($model, 'tipoFechaJornadaPeriodo'); ?></label>
+                                                    </span>
+                                                    <?php
+                                                    echo $form->dropDownList(
+                                                            $model, 'tipoFechaJornadaPeriodo'
+                                                            , array(
+                                                        'P' => 'Periodo',
+                                                        'RF' => 'Rango fecha mes',)
+                                                            , array('class' => 'form-control select2')
+//                                        , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+                                                    );
+                                                    ?>
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-user"></i>
+                                                        <label> <?php echo $form->labelEx($model, 'tipoUsuarioPeriodo'); ?></label>
+                                                    </span>
+                                                    <?php
+                                                    echo $form->dropDownList(
+                                                            $model, 'tipoUsuarioPeriodo', array(
+                                                        'T' => 'Todos',
+                                                        'SE' => 'Seleccionar ejecutivo',
+                                                        GRUPO_EJECUTIVOS_ZONA => 'Ejecutivos Zona',
+                                                        GRUPO_SUPERVISORES => 'Supervisores',
+                                                        GRUPO_SERVICIO_CLIENTE => 'Servicio Cliente',
+                                                        GRUPO_DESARROLLADORES => 'Desarrolladores',
+                                                        GRUPO_TECNICOS => 'Tecnico',
+                                                            ), array('class' => 'form-control select2')
+                                                    );
+                                                    ?>
+
+                                                </div>
+                                                <div class="form-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-clock-o"></i>
+                                                        <label><?php echo $form->labelEx($model, 'horaInicioJornadaPeriodo'); ?></label>
+                                                    </span>
+                                                    <?php
+                                                    echo $form->dropDownList(
+                                                            $model, 'horaInicioJornadaPeriodo', array(
+                                                        '01:00' => '01:00',
+                                                        '02:00' => '02:00',
+                                                        '03:00' => '03:00',
+                                                        '04:00' => '04:00',
+                                                        '05:00' => '05:00',
+                                                        '06:00' => '06:00',
+                                                        '07:00' => '07:00',
+                                                        '08:00' => '08:00',
+                                                        '09:00' => '09:00',
+                                                        '10:00' => '10:00',
+                                                        '11:00' => '11:00',
+                                                        '12:00' => '12:00',)
+                                                            , array('class' => 'form-control select2')
+//                                        , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+                                                    );
+                                                    ?>
+
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <span class="input-group-addon">
+                                                        <i class="fa fa-clock-o"></i>
+                                                        <label><?php echo $form->labelEx($model, 'horaFinJornadaPeriodo'); ?></label>
+                                                    </span>
+                                                    <?php
+                                                    echo $form->dropDownList(
+                                                            $model, 'horaFinJornadaPeriodo', array(
+                                                        '23:59' => 'Sin limite',
+                                                        '17:00' => '17:00',
+                                                        '17:00' => '17:30',
+                                                        '18:00' => '18:00',
+                                                        '18:30' => '18:30',
+                                                        '19:00' => '19:00',
+                                                        '19:30' => '19:30',
+                                                        '20:00' => '20:00',
+                                                        '20:30' => '20:30',
+                                                        '21:00' => '21:00',
+                                                        '21:30' => '21:30',
+                                                        '22:00' => '22:00',
+                                                        '22:30' => '22:30',
+                                                        '23:00' => '23:00',
+                                                        '23:30' => '23:30',)
+                                                            , array('class' => 'form-control select2')
+//                                        , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
+                                                    );
+                                                    ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="box-body no-padding">
+                                            <ul class="nav nav-pills nav-stacked">
+
+
+                                            </ul>
+                                        </div>
+                                    </div>    
+                                </div>
+                                <!--                                <div class="col-md-3">
+                                                                     
+                                                                </div>-->
+                                <div class="col-md-9">
+                                    <div class="box-body no-padding">                                
+                                        <div  style="display: flex; justify-content: flex-start;">
+                                            <div class="table-responsive mailbox-messages">
+                                                <div  style="display: flex; justify-content: flex-start;">
+                                                    <div id="grilla_periodos_mensuales" 
+                                                         class="_grilla panel panel-shadow" 
+                                                         style="background-color: transparent">
+                                                        <table id="tblGridPeriodosMensuales" class="table table-condensed"></table>
+                                                    </div>
+                                                    <div id="grilla_fecha_inicio_fin" 
+                                                         class="_grilla panel panel-shadow" 
+                                                         style="background-color: transparent; display:none">
+                                                        <div class="box box-info">
+                                                            <div class="box-header with-border">
+                                                                <h3 class="box-title">Seleccione las Fechas de Inicio y Fin</h3>
+                                                            </div>
+                                                            <div class="box-body">
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                                    <?php echo $form->textField($model, 'fechaInicioJornadaPeriodo', array('class' => 'txtfechaInicioJornadaPeriodo form-control', 'placeholder' => 'Fecha Inicio')); ?>
+                                                                </div>
+                                                                <br>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                                                    <?php echo $form->textField($model, 'fechaFinJornadaPeriodo', array('class' => 'txtfechaFinJornadaPeriodo form-control', 'placeholder' => 'Fecha Fin')); ?>
+                                                                </div>
+                                                                <br>
+                                                                <div class="input-group">
+                                                                    <?php
+                                                                    echo CHtml::submitButton(
+                                                                            'Revisar Gestion Periodo', array(
+                                                                        'id' => 'btnBuscarRevisarGestionRangoFecha'
+                                                                        , 'class' => 'btn btn-block btn-primary btn-sm'
+                                                                    ));
+                                                                    ?>                                                                        
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div style="margin-left: 10px;
+                                                         background-color: transparent ;
+                                                         display:none" 
+                                                         id="grilla_sel_ejecutivos" 
+                                                         class="_grilla panel panel-shadow" >
+                                                        <table id="tblEjecutivosPeriodo" class="table table-condensed"></table>
+                                                        <div id="pagtEjecutivosPeriodo"> </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div id="gridPivotGestionMes">
+                                            <table id="tblGestionMes" class="table table-condensed"></table>
+                                            <div id="pagtblGestionMes"> </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
+
         </div>
 
         <div class="tab-pane" id="tab_2">
@@ -642,7 +912,7 @@ $this->pageTitle = $pagina_nombre;
                                         <div style="margin-top: 10px;margin-left: 5px; background-color: transparent; " id="grilla" class="_grilla panel panel-shadow">VISITA</div>
                                     </div>
                                     <div id="map"></div>
-                                    <?php // endif;              ?>
+                                    <?php // endif;                 ?>
                                 </div>
                             </div>
                         </div>
@@ -1025,17 +1295,17 @@ $this->pageTitle = $pagina_nombre;
 
         <div class="tab-pane" id="tab_5">
             <div class="box-body">
-                <div class="row">
-                    <div class="col-md-3">
-                        <?php
-                        echo CHtml::submitButton(
-                                'Buscar Periodos', array(
-                            'id' => 'btnBuscarPeriodos'
-                            , 'class' => 'btn btn-block btn-primary btn-sm'
-                        ));
-                        ?>      
-                    </div>
-                </div>
+                <!--                <div class="row">
+                                    <div class="col-md-3">
+                <?php
+                //                        echo CHtml::submitButton(
+                //                                'Buscar Periodos', array(
+                //                            'id' => 'btnBuscarPeriodos'
+                //                            , 'class' => 'btn btn-block btn-primary btn-sm'
+                //                        ));
+                ?>      
+                                    </div>
+                                </div>-->
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="box box-primary">
@@ -1179,8 +1449,8 @@ $this->pageTitle = $pagina_nombre;
     }
 
     function mostrarVisitasEnMapa2(coordsClientes, coordsVisitas) {
-//        alert(coordsClientes);
-//        alert(coordsVisitas);
+        //        alert(coordsClientes);
+        //        alert(coordsVisitas);
         var opcionesMapa = {
             zoom: 14,
             styles: estiloMapa,
@@ -1190,7 +1460,7 @@ $this->pageTitle = $pagina_nombre;
         var mapa = new google.maps.Map(document.getElementById('map'), opcionesMapa);
 
         for (var iterador in coordsClientes) {
-//                        alert(coordsClientes[iterador].LATITUD);
+            //                        alert(coordsClientes[iterador].LATITUD);
             var marcadorCliente = new google.maps.Marker({
                 position: {lat: parseFloat(coordsClientes[iterador].LATITUD), lng: parseFloat(coordsClientes[iterador].LONGITUD)},
                 map: mapa,
@@ -1198,7 +1468,7 @@ $this->pageTitle = $pagina_nombre;
                 label: coordsClientes[iterador].LABEL,
                 icon: pinSymbol('#dd4b4b')
             });
-//            alert(coordsVisitas[iterador].LATITUD);
+            //            alert(coordsVisitas[iterador].LATITUD);
             var marcadorVisitas = new google.maps.Marker({
 
                 position: {lat: parseFloat(coordsVisitas[iterador].LATITUD), lng: parseFloat(coordsVisitas[iterador].LONGITUD)},

@@ -1,14 +1,62 @@
 $(document).ready(function () {
     ConfigDatePickersReporte('.txtfechagestion');
     ConfigDatePickersReporte('.txtfechaInicioFinJornadaInicio');
-    ConfigurarGrids();
 
+//    ConfigDatePickersRango2('.txtfechaInicioJornadaPeriodo');
+    ConfigDatePickersReporteMismoMes('.txtfechaInicioJornadaPeriodo', '.txtfechaFinJornadaPeriodo');
+//    ConfigDatePickersReporte('.txtfechaFinJornadaPeriodo');
+    ConfigurarGrids();
+    mostrarPeriodosJornada();
+    mostrarPeriodos();
+
+    $("#tblAltasFZPorTipoBodega").jqGrid("clearGridData", true).trigger("reloadGrid");
+    $("#tblAltasFZPorBodega").jqGrid("clearGridData", true).trigger("reloadGrid");
     $("#btnEnviarMail").click(function () {
         EnviarMail();
     });
 
+    $("#btnBuscarRevisarGestionRangoFecha").click(function () {
+
+        var c = document.getElementById("RptResumenDiarioHistorialForm_tipoFechaJornadaPeriodo");
+        var strTipoFecha = c.value;
+
+        var a = document.getElementById("RptResumenDiarioHistorialForm_fechaInicioJornadaPeriodo");
+        var strFechaInicio = a.value;
+
+        var b = document.getElementById("RptResumenDiarioHistorialForm_fechaFinJornadaPeriodo");
+        var strFechaFin = b.value;
+
+        var e = document.getElementById("RptResumenDiarioHistorialForm_horaInicioJornadaPeriodo");
+        var strHoraInicio = e.value;
+
+        var d = document.getElementById("RptResumenDiarioHistorialForm_horaFinJornadaPeriodo");
+        var strHoraFin = d.value;
+
+        var f = document.getElementById("RptResumenDiarioHistorialForm_tipoUsuarioPeriodo");
+        var strTipoUsuario = f.value;
+
+        var fechaInicio = new Date(strFechaInicio);
+        var anio = fechaInicio.getFullYear();
+        var mes = fechaInicio.getMonth() + 1;
+
+        const nombresMeses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        ];
+
+        if (strTipoUsuario != 1)//opcion 1 es cuando selecciona un ejecutivo del cuadro de ejecutivos
+            mostrarTiemposGestionXPeriodo(strFechaInicio, strFechaFin, anio, nombresMeses[mes - 1].toUpperCase(), strHoraInicio, strHoraFin, strTipoUsuario, strTipoFecha);
+        else
+        {
+            var filaEjecutivo = jQuery("#tblEjecutivosPeriodo").jqGrid('getRowData', idFilaSeleccionada);
+            mostrarTiemposGestionXPeriodoXEjecutivo(strFechaInicio, strFechaFin, anio, nombresMeses[mes - 1].toUpperCase(), strHoraInicio, strHoraFin, strTipoUsuario, filaEjecutivo.CODIGO, strTipoFecha);
+        }
+    });
+
     $("#btnEstadoEnviarMail").click(function () {
-        EstadoEnviarMail();
+        var e = document.getElementById("RptResumenDiarioHistorialForm_tipoUsuarioPeriodo");
+        var strUser = e.value;
+        alert(strUser)
+//        mostrarTiemposGestionXPeriodo(fila.INICIO, fila.FIN, fila.ANIO, fila.MES, strHoraInicio, strHoraFin, strTipoUsuario);
     });
 
     $("#btnLimpiar").click(function () {
@@ -19,6 +67,43 @@ $(document).ready(function () {
         $("#tblAltasFZPorTipoBodega").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tblAltasFZPorBodega").jqGrid("clearGridData", true).trigger("reloadGrid");
     });
+
+    $("#btnBuscarPeriodosJornada").click(function () {
+        mostrarPeriodosJornada();
+    });
+
+    $('#RptResumenDiarioHistorialForm_tipoUsuarioPeriodo').on('change', function (e) {
+        $("#gridPivotGestionMes").html("<table id=\"tblGestionMes\" class=\"table table-condensed\"></table><div id=\"pagtblGestionMes\"> </div>");
+        var e = document.getElementById("RptResumenDiarioHistorialForm_tipoUsuarioPeriodo");
+        var strUser = e.selectedIndex;
+//        alert(strUser)
+        if (strUser == 1)//selecciona opcion seleccion ejecutivo
+        {
+            document.getElementById("grilla_sel_ejecutivos").style.display = "block";
+            cargarEjecutivos();
+        } else {
+            document.getElementById("grilla_sel_ejecutivos").style.display = "none";
+        }
+    });
+    $('#RptResumenDiarioHistorialForm_tipoFechaJornadaPeriodo').on('change', function (e) {
+        $("#gridPivotGestionMes").html("<table id=\"tblGestionMes\" class=\"table table-condensed\"></table><div id=\"pagtblGestionMes\"> </div>");
+        document.getElementById("RptResumenDiarioHistorialForm_fechaInicioJornadaPeriodo").value = '';
+        document.getElementById("RptResumenDiarioHistorialForm_fechaFinJornadaPeriodo").value = '';
+
+
+        var e = document.getElementById("RptResumenDiarioHistorialForm_tipoFechaJornadaPeriodo");
+        var strUser = e.selectedIndex;
+//        alert(strUser)
+        if (strUser == 0)//Periodo
+        {
+            document.getElementById("grilla_periodos_mensuales").style.display = "block";
+            document.getElementById("grilla_fecha_inicio_fin").style.display = "none";
+        } else if (strUser == 1) {//rangoFechas
+            document.getElementById("grilla_periodos_mensuales").style.display = "none";
+            document.getElementById("grilla_fecha_inicio_fin").style.display = "block";
+        }
+    });
+
     $("#btnLimpiarCapilaridadSellIn").click(function () {
         $("#tblCapilaridadMovistar").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tblCapilaridadDelta").jqGrid("clearGridData", true).trigger("reloadGrid");
@@ -99,6 +184,7 @@ function ConfigurarGrids() {
             'GESTION',
             'TRASLADO',
             'TOTAL',
+            'TOTALB',
             'Semanas',
             'VISITAS',
             'REPETIDAS',
@@ -117,6 +203,7 @@ function ConfigurarGrids() {
             {name: 'TIEMPOGESTION', index: 'TIEMPOGESTION', sortable: false, width: 80, align: "center", },
             {name: 'TIEMPOTRASLADO', index: 'TIEMPOTRASLADO', sortable: false, width: 80, align: "center", },
             {name: 'TOTALTIEMPO', index: 'TOTALTIEMPO', sortable: false, width: 80, align: "center", },
+            {name: 'TOTALTIEMPO2', index: 'TOTALTIEMPO2', sortable: false, width: 80, align: "center", },
             {name: 'SEMANAS', index: 'SEMANAS', width: 60, align: "center"},
             {name: 'VISITAS', index: 'VISITAS', width: 60, align: "center"},
             {name: 'REPETIDAS', index: 'REPETIDAS', width: 80, align: "center"},
@@ -235,8 +322,8 @@ function ConfigurarGrids() {
         viewrecords: true,
 //        height: 'auto',
         height: 360,
-//        width: 700,
-        autowidth: true,
+        width: 800,
+//        autowidth: true,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
 //        rownumbers: true,
@@ -1265,7 +1352,165 @@ function ConfigurarGrids() {
     }
     );
 
+    jQuery("#tblGridPeriodosMensuales").jqGrid({
+        loadonce: true,
+        datatype: 'json',
+        mtype: 'POST',
+        url: 'ConfigurarGrid',
+        colNames: [
+            'ANIO'
+                    , 'MES'
+                    , 'INICIO'
+                    , 'FIN'
+        ],
+        colModel: [
+            {name: 'ANIO', index: 'ANIO', width: 50, sortable: false, frozen: true},
+            {name: 'MES', index: 'MES', width: 120, sortable: false, frozen: true, align: 'center'},
+            {name: 'INICIO', index: 'INICIO', width: 80, sortable: false, frozen: true, align: 'center'},
+            {name: 'FIN', index: 'FIN', width: 80, sortable: false, frozen: true, align: 'center'},
+        ],
+        rowNum: 60,
+        rowList: ElementosPagina,
+        sortorder: 'ASC',
+        viewrecords: true,
+        height: 150,
+        width: 350,
+        gridview: true,
+        shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
+        caption: "Periodos",
+        hidegrid: false,
+        jsonReader: {
+            root: "Result",
+            repeatitems: false, //cuando el array de la data son object
+            id: "id" //representa el �ndice del identificador �nico de la entidad
+        }
+        , beforeRequest: function () { }
+        , loadError: function (xhr, st, err) { }
+        , onSelectRow: function (idFilaSeleccionada) {
+            var fila = jQuery("#tblGridPeriodosMensuales").jqGrid('getRowData', idFilaSeleccionada);
+            $("#gridPivotGestionMes").html("<table id=\"tblGestionMes\" class=\"table table-condensed\"></table><div id=\"pagtblGestionMes\"> </div>");
 
+            var c = document.getElementById("RptResumenDiarioHistorialForm_tipoFechaJornadaPeriodo");
+            var strTipoFecha = c.value;
+
+            var e = document.getElementById("RptResumenDiarioHistorialForm_horaInicioJornadaPeriodo");
+            var strHoraInicio = e.value;
+
+            var d = document.getElementById("RptResumenDiarioHistorialForm_horaFinJornadaPeriodo");
+            var strHoraFin = d.value;
+
+            var f = document.getElementById("RptResumenDiarioHistorialForm_tipoUsuarioPeriodo");
+            var strTipoUsuario = f.value;
+
+            if (strTipoUsuario != 1)//opcion 1 es cuando selecciona un ejecutivo del cuadro de ejecutivos
+                mostrarTiemposGestionXPeriodo(fila.INICIO, fila.FIN, fila.ANIO, fila.MES, strHoraInicio, strHoraFin, strTipoUsuario, strTipoFecha);
+        }
+    }
+    );
+
+    jQuery("#tblEjecutivosPeriodo").jqGrid({
+        loadonce: true,
+        datatype: 'json',
+        mtype: 'POST',
+        url: 'VerDatosArchivo',
+        colNames: [
+            'ID',
+            'TIPO',
+            'CODIGO',
+            'NOMBRE',
+        ],
+        colModel: [
+//            , exportcol: true, hidden: true //opciones para que sea exportable y escondido
+            {name: 'IDEJECUTIVO', index: 'IDEJECUTIVO', sortable: false, width: 80, align: "center", hidden: true},
+            {name: 'TIPO', index: 'TIPO', sortable: false, width: 140, },
+            {name: 'CODIGO', index: 'CODIGO', sortable: false, width: 80, align: "center", },
+            {name: 'NOMBRE', index: 'NOMBRE', sortable: false, width: 150, },
+        ],
+        pager: '#pagtEjecutivosPeriodo',
+        rowNum: 200, //NroFilas,
+        rowList: ElementosPagina,
+        caption: 'Seleccione el ejecutivo',
+        hidegrid: false,
+        sortorder: 'ASC',
+        viewrecords: true,
+        height: 130,
+        width: 430,
+        gridview: true,
+        shrinkToFit: false,
+//        grouping:true, groupingView : { groupField : ['TIPO'] },
+        jsonReader: {
+            root: "Result",
+            repeatitems: false, //cuando el array de la data son object
+            id: "id" //representa el �ndice del identificador �nico de la entidad
+        },
+        beforeRequest: function () {},
+        loadError: function (xhr, st, err) {}
+        , onSelectRow: function (idFilaSeleccionada) {
+            var filaEjecutivo = jQuery("#tblEjecutivosPeriodo").jqGrid('getRowData', idFilaSeleccionada);
+            var c = document.getElementById("RptResumenDiarioHistorialForm_tipoFechaJornadaPeriodo");
+            var strTipoFecha = c.value;
+
+            if (strTipoFecha == 'P') {
+                var grid = $('#tblGridPeriodosMensuales');
+                var idFilaSeleccionadaPeriodo = grid.jqGrid('getGridParam', 'selrow');
+                if (idFilaSeleccionadaPeriodo == null)
+                    alert('Seleccione el periodo e intente de nuevo')
+                else {
+                    var fila = jQuery("#tblGridPeriodosMensuales").jqGrid('getRowData', idFilaSeleccionadaPeriodo);
+                    var e = document.getElementById("RptResumenDiarioHistorialForm_horaInicioJornadaPeriodo");
+                    var strHoraInicio = e.value;
+                    var d = document.getElementById("RptResumenDiarioHistorialForm_horaFinJornadaPeriodo");
+                    var strHoraFin = d.value;
+                    var f = document.getElementById("RptResumenDiarioHistorialForm_tipoUsuarioPeriodo");
+                    var strTipoUsuario = f.value;
+                    var g = document.getElementById("RptResumenDiarioHistorialForm_tipoUsuarioPeriodo");
+                    var strUser = g.selectedIndex;
+                    mostrarTiemposGestionXPeriodoXEjecutivo(fila.INICIO, fila.FIN, fila.ANIO, fila.MES, strHoraInicio, strHoraFin, strTipoUsuario, filaEjecutivo.CODIGO, strTipoFecha);
+                }
+            } else if (strTipoFecha == 'RF')
+            {
+                var a = document.getElementById("RptResumenDiarioHistorialForm_fechaInicioJornadaPeriodo");
+                var strFechaInicio = a.value;
+
+                var b = document.getElementById("RptResumenDiarioHistorialForm_fechaFinJornadaPeriodo");
+                var strFechaFin = b.value;
+
+                if (strFechaInicio == null || strFechaFin == null)
+                {
+                    alert('Seleccione las fechas de inicio y/o fin')
+                } else {
+                    var c = document.getElementById("RptResumenDiarioHistorialForm_tipoFechaJornadaPeriodo");
+                    var strTipoFecha = c.value;
+
+                    var e = document.getElementById("RptResumenDiarioHistorialForm_horaInicioJornadaPeriodo");
+                    var strHoraInicio = e.value;
+
+                    var d = document.getElementById("RptResumenDiarioHistorialForm_horaFinJornadaPeriodo");
+                    var strHoraFin = d.value;
+
+                    var f = document.getElementById("RptResumenDiarioHistorialForm_tipoUsuarioPeriodo");
+                    var strTipoUsuario = f.value;
+
+                    var fechaInicio = new Date(strFechaInicio);
+                    var anio = fechaInicio.getFullYear();
+                    var mes = fechaInicio.getMonth() + 1;
+
+                    const nombresMeses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+                    ];
+
+                    var filaEjecutivo = jQuery("#tblEjecutivosPeriodo").jqGrid('getRowData', idFilaSeleccionada);
+                    mostrarTiemposGestionXPeriodoXEjecutivo(strFechaInicio, strFechaFin, anio, nombresMeses[mes - 1].toUpperCase(), strHoraInicio, strHoraFin, strTipoUsuario, filaEjecutivo.CODIGO, strTipoFecha);
+                }
+            }
+        }
+    });
+    jQuery("#tblEjecutivosPeriodo").jqGrid('navGrid', '#pagtEjecutivosPeriodo',
+            {add: false, edit: false, del: false, search: true, refresh: false, view: false}, //options 
+            {}, // edit options 
+            {}, // add options 
+            {}, // del options 
+            {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
+    );
 }
 
 function GenerarDocumentoReporte(accion) {
@@ -1620,6 +1865,39 @@ function mostrarPeriodos() {
     );
 }
 
+function mostrarPeriodosJornada() {
+    $.ajax(
+            {
+                method: "POST",
+                url: "RptResumenDiarioHistorial/BuscaPeriodosJornada",
+                data: {},
+                dataType: 'json',
+                type: 'post',
+                beforeSend: function ()
+                {
+                    blockUIOpen();
+                },
+                success: function (data)
+                {
+                    blockUIClose();
+                    if (data.Status == 1) {
+                        var datosResult = data.Result;
+                        $("#tblGridPeriodosMensuales").setGridParam({datatype: 'jsonstring', datastr: datosResult}).trigger('reloadGrid');
+                        $("#gridPivotGestionMes").html("<table id=\"tblGestionMes\" class=\"table table-condensed\"></table><div id=\"pagtblGestionMes\"> </div>");
+
+                    } else {
+                        //to do
+                    }
+                },
+                error: function (xhr, st, err)
+                {
+                    blockUIClose();
+                    alert(err);
+                }
+            }
+    );
+}
+
 function mostrarDetallesXPeriodo(inicio, fin, anio, mes) {
     $.ajax(
             {
@@ -1718,63 +1996,63 @@ function mostrarDetallesXBodega(bodega, numbodega) {
                         var datosResult = data.Result;
                         $("#gridPivotDetalleAltasFZPorBodega").html("<table id=\"tblDetalleAltasFZPorBodega\" class=\"table table-condensed\"></table><div id=\"pagtblDetalleAltasFZPorBodega\"> </div>");
                         if (datosResult['activarEnviarMail'])
-                            document.getElementById("btnEstadoEnviarMail").disabled = false;
+//                            document.getElementById("btnEstadoEnviarMail").disabled = false;
 
-                        jQuery("#tblDetalleAltasFZPorBodega").jqGrid('jqPivot', datosResult['detallePorBodega'],
-                                {
-                                    xDimension:
-                                            [
-                                                {
-                                                    dataName: 'CIUDAD',
-                                                    width: 100
-                                                },
-                                                {
-                                                    dataName: 'CLIENTE',
-                                                    width: 250
-                                                },
-                                            ],
-                                    yDimension:
-                                            [
-                                                {dataName: 'MES_VENTA'},
-                                            ],
-                                    aggregates:
-                                            [
-                                                {
-                                                    member: 'MIN',
-                                                    aggregator: 'count',
-                                                    width: 180,
-                                                    label: 'Conteo',
-                                                    formatter: 'integer',
-                                                    formatoptions: {
-                                                        thousandsSeparator: "",
+                            jQuery("#tblDetalleAltasFZPorBodega").jqGrid('jqPivot', datosResult['detallePorBodega'],
+                                    {
+                                        xDimension:
+                                                [
+                                                    {
+                                                        dataName: 'CIUDAD',
+                                                        width: 100
                                                     },
+                                                    {
+                                                        dataName: 'CLIENTE',
+                                                        width: 250
+                                                    },
+                                                ],
+                                        yDimension:
+                                                [
+                                                    {dataName: 'MES_VENTA'},
+                                                ],
+                                        aggregates:
+                                                [
+                                                    {
+                                                        member: 'MIN',
+                                                        aggregator: 'count',
+                                                        width: 180,
+                                                        label: 'Conteo',
+                                                        formatter: 'integer',
+                                                        formatoptions: {
+                                                            thousandsSeparator: "",
+                                                        },
 
-                                                    align: 'right',
-                                                    summaryType: 'count'
-                                                }
-                                            ],
-                                    groupSummaryPos: 'footer',
-                                    rowTotals: true,
-                                    colTotals: true,
-                                    frozenStaticCols: true,
-                                },
-                                {
-                                    rowNum: 10000,
-                                    rowList: ["100000:Todo", "10:10 Filas", "20:20 Filas", "30:30 Filas"],
-                                    autowidth: true,
-                                    shrinkToFit: false,
-                                    height: 200,
-                                    groupingView: {
-                                        groupSummary: [false],
-                                        groupCollapse: false,
-//                    groupOrder :['asc']
+                                                        align: 'right',
+                                                        summaryType: 'count'
+                                                    }
+                                                ],
+                                        groupSummaryPos: 'footer',
+                                        rowTotals: true,
+                                        colTotals: true,
+                                        frozenStaticCols: true,
                                     },
-                                    pager: "#pagtblDetalleAltasFZPorBodega",
-                                    hidegrid: false,
-                                    caption: "Altas fuera zona (CIUDAD-CLIENTE-MES_VENTA) bodega " + bodega,
-                                }
+                                    {
+                                        rowNum: 10000,
+                                        rowList: ["100000:Todo", "10:10 Filas", "20:20 Filas", "30:30 Filas"],
+                                        autowidth: true,
+                                        shrinkToFit: false,
+                                        height: 200,
+                                        groupingView: {
+                                            groupSummary: [false],
+                                            groupCollapse: false,
+//                    groupOrder :['asc']
+                                        },
+                                        pager: "#pagtblDetalleAltasFZPorBodega",
+                                        hidegrid: false,
+                                        caption: "Altas fuera zona (CIUDAD-CLIENTE-MES_VENTA) bodega " + bodega,
+                                    }
 
-                        );
+                            );
                         $("#tblDetalleAltasFZPorBodega").jqGrid('navGrid', '#pagtblDetalleAltasFZPorBodega', {add: false, edit: false, del: false, search: true});
                         jQuery("#tblDetalleAltasFZPorBodega").jqGrid('navButtonAdd', '#pagtblDetalleAltasFZPorBodega',
                                 {
@@ -1804,6 +2082,296 @@ function mostrarDetallesXBodega(bodega, numbodega) {
                                 }
                         );
 
+
+                    } else {
+                        //to do
+                    }
+                },
+                error: function (xhr, st, err)
+                {
+                    blockUIClose();
+                    alert(err);
+                }
+            }
+    );
+}
+
+function mostrarTiemposGestionXPeriodo(inicioPeriodo, finPeriodo, anioPeriodo, mesPeriodo, horaInicioPeriodo, horaFinPeriodo, tipoUsuarioPeriodo, tipoFecha) {
+    $.ajax(
+            {
+                method: "POST",
+                url: "RptResumenDiarioHistorial/MostrarTiemposGestionXPeriodo",
+                data: {
+                    inicioPeriodo: inicioPeriodo,
+                    finPeriodo: finPeriodo,
+                    anioPeriodo: anioPeriodo,
+                    mesPeriodo: mesPeriodo,
+                    horaInicioPeriodo: horaInicioPeriodo,
+                    horaFinPeriodo: horaFinPeriodo,
+                    tipoUsuarioPeriodo: tipoUsuarioPeriodo,
+                    tipoFecha: tipoFecha,
+                },
+                dataType: 'json',
+                type: 'post',
+                beforeSend: function ()
+                {
+                    blockUIOpen();
+                },
+                success: function (data)
+                {
+                    blockUIClose();
+                    if (data.Status == 1) {
+                        var datosResult = data.Result;
+                        $("#gridPivotGestionMes").html("<table id=\"tblGestionMes\" class=\"table table-condensed\"></table><div id=\"pagtblGestionMes\"> </div>");
+                        if (datosResult['activarEnviarMail'])
+//                            document.getElementById("btnEstadoEnviarMail").disabled = false;
+                            alert(datosResult.toSource())
+                        jQuery("#tblGestionMes").jqGrid('jqPivot', datosResult,
+                                {
+                                    xDimension:
+                                            [
+                                                {
+                                                    dataName: 'EJECUTIVO',
+                                                    width: 100
+                                                },
+                                                {
+                                                    dataName: 'ACCION',
+                                                    width: 250
+                                                },
+                                            ],
+                                    yDimension:
+                                            [
+                                                {dataName: 'FECHA'},
+                                            ],
+                                    aggregates:
+                                            [
+                                                {
+                                                    member: 'VALOR_ACCION',
+                                                    aggregator: 'sum',
+                                                    width: 180,
+                                                    label: 'Suma',
+                                                    formatter: 'integer',
+//                                                        formatoptions: {
+//                                                            thousandsSeparator: "",
+//                                                        },
+
+                                                    align: 'right',
+                                                    summaryType: 'sum'
+                                                }
+                                            ],
+                                    groupSummaryPos: 'footer',
+                                    rowTotals: true,
+                                    colTotals: false,
+                                    frozenStaticCols: true,
+                                },
+                                {
+                                    rowNum: 10000,
+                                    rowList: ["100000:Todo", "10:10 Filas", "20:20 Filas", "30:30 Filas"],
+                                    autowidth: true,
+                                    shrinkToFit: false,
+                                    height: 200,
+                                    groupingView: {
+                                        groupSummary: [false],
+                                        groupCollapse: false,
+//                    groupOrder :['asc']
+                                    },
+                                    pager: "#pagtblGestionMes",
+                                    hidegrid: false,
+                                    caption: "Gestion Periodo",
+                                }
+
+                        );
+                        $("#tblGestionMes").jqGrid('navGrid', '#pagtblGestionMes', {add: false, edit: false, del: false, search: true});
+                        jQuery("#tblGestionMes").jqGrid('navButtonAdd', '#pagtblGestionMes',
+                                {
+                                    caption: "Exportar",
+                                    title: "Exportar Reporte",
+                                    onClickButton: function () {
+                                        var options = {
+                                            includeLabels: true,
+                                            includeGroupHeader: true,
+                                            includeFooter: true,
+                                            fileName: "resumen_gestion_usuarios_periodo.xlsx",
+                                            mimetype: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+//                                            maxlength: 40,
+                                            onBeforeExport: null,
+                                            replaceStr: null
+                                        }
+                                        $("#tblGestionMes").jqGrid('exportToExcel', options);
+                                    }
+                                }
+                        );
+
+//                        jQuery("#tblDetalleAltasFZPorBodega").jqGrid('navButtonAdd', '#pagtblDetalleAltasFZPorBodega',
+//                                {
+//                                    caption: "Enviar Mail",
+//                                    title: "Envia un detalle al ejecutivo para la gestion",
+//                                    onClickButton: EnviarMail
+//                                }
+//                        );
+
+
+                    } else {
+                        //to do
+                    }
+                },
+                error: function (xhr, st, err)
+                {
+                    blockUIClose();
+                    alert(err);
+                }
+            }
+    );
+}
+
+function mostrarTiemposGestionXPeriodoXEjecutivo(inicioPeriodo, finPeriodo, anioPeriodo, mesPeriodo, horaInicioPeriodo, horaFinPeriodo, tipoUsuarioPeriodo, ejecutivo, tipoFecha) {
+    $("#gridPivotGestionMes").html("<table id=\"tblGestionMes\" class=\"table table-condensed\"></table><div id=\"pagtblGestionMes\"> </div>");
+    $.ajax(
+            {
+                method: "POST",
+                url: "RptResumenDiarioHistorial/MostrarTiemposGestionXPeriodoXEjecutivo",
+                data: {
+                    inicioPeriodo: inicioPeriodo,
+                    finPeriodo: finPeriodo,
+                    anioPeriodo: anioPeriodo,
+                    mesPeriodo: mesPeriodo,
+                    horaInicioPeriodo: horaInicioPeriodo,
+                    horaFinPeriodo: horaFinPeriodo,
+                    tipoUsuarioPeriodo: tipoUsuarioPeriodo,
+                    ejecutivoSeleccionadoPeriodo: ejecutivo,
+                    tipoFecha: tipoFecha,
+                },
+                dataType: 'json',
+                type: 'post',
+                beforeSend: function ()
+                {
+                    blockUIOpen();
+                },
+                success: function (data)
+                {
+                    blockUIClose();
+                    if (data.Status == 1) {
+                        var datosResult = data.Result;
+                        $("#gridPivotGestionMes").html("<table id=\"tblGestionMes\" class=\"table table-condensed\"></table><div id=\"pagtblGestionMes\"> </div>");
+                        if (datosResult['activarEnviarMail'])
+//                            document.getElementById("btnEstadoEnviarMail").disabled = false;
+                            alert(datosResult.toSource())
+                        jQuery("#tblGestionMes").jqGrid('jqPivot', datosResult,
+                                {
+                                    xDimension:
+                                            [
+                                                {
+                                                    dataName: 'EJECUTIVO',
+                                                    width: 100
+                                                },
+                                                {
+                                                    dataName: 'ACCION',
+                                                    width: 250
+                                                },
+                                            ],
+                                    yDimension:
+                                            [
+                                                {dataName: 'FECHA'},
+                                            ],
+                                    aggregates:
+                                            [
+                                                {
+                                                    member: 'VALOR_ACCION',
+                                                    aggregator: 'sum',
+                                                    width: 180,
+                                                    label: 'Suma',
+                                                    formatter: 'integer',
+//                                                        formatoptions: {
+//                                                            thousandsSeparator: "",
+//                                                        },
+
+                                                    align: 'right',
+                                                    summaryType: 'sum'
+                                                }
+                                            ],
+                                    groupSummaryPos: 'footer',
+                                    rowTotals: true,
+                                    colTotals: false,
+                                    frozenStaticCols: true,
+                                },
+                                {
+                                    rowNum: 10000,
+                                    rowList: ["100000:Todo", "10:10 Filas", "20:20 Filas", "30:30 Filas"],
+                                    autowidth: true,
+                                    shrinkToFit: false,
+                                    height: 200,
+                                    groupingView: {
+                                        groupSummary: [false],
+                                        groupCollapse: false,
+//                    groupOrder :['asc']
+                                    },
+                                    pager: "#pagtblGestionMes",
+                                    hidegrid: false,
+                                    caption: "Gestion Periodo",
+                                }
+
+                        );
+                        $("#tblGestionMes").jqGrid('navGrid', '#pagtblGestionMes', {add: false, edit: false, del: false, search: true});
+                        jQuery("#tblGestionMes").jqGrid('navButtonAdd', '#pagtblGestionMes',
+                                {
+                                    caption: "Exportar",
+                                    title: "Exportar Reporte",
+                                    onClickButton: function () {
+                                        var options = {
+                                            includeLabels: true,
+                                            includeGroupHeader: true,
+                                            includeFooter: true,
+                                            fileName: "resumen_gestion_usuarios_periodo.xlsx",
+                                            mimetype: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+//                                            maxlength: 40,
+                                            onBeforeExport: null,
+                                            replaceStr: null
+                                        }
+                                        $("#tblGestionMes").jqGrid('exportToExcel', options);
+                                    }
+                                }
+                        );
+
+//                        jQuery("#tblDetalleAltasFZPorBodega").jqGrid('navButtonAdd', '#pagtblDetalleAltasFZPorBodega',
+//                                {
+//                                    caption: "Enviar Mail",
+//                                    title: "Envia un detalle al ejecutivo para la gestion",
+//                                    onClickButton: EnviarMail
+//                                }
+//                        );
+
+
+                    } else {
+                        //to do
+                    }
+                },
+                error: function (xhr, st, err)
+                {
+                    blockUIClose();
+                    alert(err);
+                }
+            }
+    );
+}
+function cargarEjecutivos() {
+    $.ajax(
+            {
+                method: "POST",
+                url: "RptResumenDiarioHistorial/CargarEjecutivos",
+                data: {
+                },
+                dataType: 'json',
+                type: 'post',
+                beforeSend: function ()
+                {
+                    blockUIOpen();
+                },
+                success: function (data)
+                {
+                    blockUIClose();
+                    if (data.Status == 1) {
+                        var datosResult = data.Result;
+                        $("#tblEjecutivosPeriodo").setGridParam({datatype: 'jsonstring', datastr: datosResult}).trigger('reloadGrid');
 
                     } else {
                         //to do

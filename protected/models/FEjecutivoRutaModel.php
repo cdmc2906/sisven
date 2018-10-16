@@ -48,7 +48,7 @@ class FEjecutivoRutaModel extends DAOModel {
         $this->Close();
         return $data;
     }
-    
+
     public function getTotalClientesxRutaxEjecutivoxDiaxSemanaxPeriodo($ejecutivo, $dia, $semana, $periodo) {
         $sql = "
              select 
@@ -63,7 +63,7 @@ class FEjecutivoRutaModel extends DAOModel {
                     and a.er_dia_visitar=" . $dia . "
                     and b.r_semana='" . $semana . "' 
                     and b.r_estatus=1
-                and b.pg_id=" . $periodo . "
+                    and b.pg_id=" . $periodo . "
      ;  
 ";
 //        var_dump($sql);        die();
@@ -89,6 +89,52 @@ class FEjecutivoRutaModel extends DAOModel {
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getRutasAsignadasxEjecutivo($codigoEjecutivo, $periodo) {
+        $sql = "
+            select
+                a.er_cod  as CODIGOUSUARIORUTA,
+                c.zg_nombre_zona as ZONA,
+                b.rg_id AS IDRUTA,
+                a.er_ruta AS CODIGORUTA,
+                a.er_ruta_nombre AS NOMBRERUTA,
+                a.er_semana_visitar AS SEMANA,
+                a.er_dia_visitar AS DIA,
+                COUNT(DISTINCT d.r_cod_cliente) AS CLIENTESRUTA
+              from 
+                tb_ejecutivo_ruta as a
+                inner join tb_ruta_gestion as b
+                        on a.rg_id=b.rg_id
+                inner join tb_ruta_mb as d
+                        on a.er_ruta=d.r_ruta
+                        and a.er_semana_visitar=d.r_semana
+                        and a.er_dia_visitar=d.r_dia
+                inner join tb_zonas_gestion as c
+                        on b.zg_id=c.zg_id
+            where 
+                a.e_cod =" . $codigoEjecutivo . "
+                and pg_id=" . $periodo . "
+                --and pg_id=28
+            group by 
+                c.zg_nombre_zona,
+                a.er_usuario,
+                a.er_ruta,
+                a.er_ruta_nombre,
+                a.er_semana_visitar,
+                a.er_dia_visitar,
+                a.er_cod,
+                b.rg_id
+            --order by er_ruta,SEMANA,DIA
+            ;
+            ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump(1);        die();
 //        var_dump($data);        die();
         $this->Close();
         return $data;

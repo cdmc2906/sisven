@@ -2,24 +2,14 @@ $(document).ready(function () {
     ConfigurarGrids();
 
     $('#AsignaRutaAgenteForm_tipoUsuario').on('change', function (e) {
+        $("#tblAgentes").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tblZonasGestion").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tblRutasGestion").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tblRutasAgente").jqGrid("clearGridData", true).trigger("reloadGrid");
     });
 
-    $("#btnAsignarRuta").click(function () {
-//        $("#tblRutasAgente").jqGrid("clearGridData", true).trigger("reloadGrid");
-        guardarRutasSeleccionadas();
-        $("#tblRutasGestion").jqGrid("clearGridData", true).trigger("reloadGrid");
-
-    });
-    $("#btnQuitarRuta").click(function () {
-//        $("#tblRutasGestion").jqGrid("clearGridData", true).trigger("reloadGrid");
-//        $("#tblRutasAgente").jqGrid("clearGridData", true).trigger("reloadGrid");
-        eliminarRutasSeleccionadas();
-    });
-
     $("#btnCargarUsuarios").click(function () {
+        $("#tblAgentes").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tblZonasGestion").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tblRutasGestion").jqGrid("clearGridData", true).trigger("reloadGrid");
         $("#tblRutasAgente").jqGrid("clearGridData", true).trigger("reloadGrid");
@@ -33,12 +23,14 @@ function ConfigurarGrids() {
         mtype: 'POST',
         url: 'ConfigurarGrid',
         colNames: [
+            'TIPO',
             'CODIGO',
             'NOMBRE',
         ],
         colModel: [
-            {name: 'CODIGOAGENTE', index: 'CODIGOAGENTE', width: 80, frozen: false, sortable: false, resizable: false, align: "center", hidden: true},
-            {name: 'NOMBREAGENTE', index: 'NOMBREAGENTE', width: 180, frozen: true, sortable: false, resizable: false},
+            {name: 'TIPO', index: 'TIPO', width: 220, frozen: true, sortable: false, resizable: false, hidden: true},
+            {name: 'CODIGOAGENTE', index: 'CODIGOAGENTE', width: 80, hidden: true},
+            {name: 'NOMBREAGENTE', index: 'NOMBREAGENTE', width: 250, frozen: true, sortable: false, resizable: false},
         ],
         pager: '#pagGridAgentes',
         rowNum: 6000,
@@ -47,21 +39,22 @@ function ConfigurarGrids() {
         viewrecords: true,
 //        height: 'auto',
         height: 180,
-        width: 250,
+        width: 280,
 //        autowidth: true,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
         rownumbers: true,
-        caption: "Agentes servicio cliente",
+        caption: "Ejecutivos",
         hidegrid: false,
-//        footerrow: true,
-//        gridComplete: function () {
-//            var $grid = $('#tblAgentes');
-//            var colSum = $grid.jqGrid('getCol', 'CODIGOAGENTE', false, 'sum');
-//            $grid.jqGrid('footerData', 'set', {'CODIGOAGENTE': 'Total'});
-//            $grid.jqGrid('footerData', 'set', {'NOMBREAGENTE': colSum});
-//
-//        },
+        grouping: true,
+        groupingView: {
+            groupField: ['TIPO'],
+            groupColumnShow: [false],
+            groupCollapse: true,
+            groupText: ['<b>{0} - {1} Ejecutivo(s)</b>'],
+//            groupOrder: ['desc']
+        },
+
         onSelectRow: function (idFilaSeleccionada) {
             $("#tblRutasAgente").jqGrid("clearGridData", true).trigger("reloadGrid");
             var fila = jQuery("#tblAgentes").jqGrid('getRowData', idFilaSeleccionada);
@@ -169,12 +162,16 @@ function ConfigurarGrids() {
             'ID',
             'CODIGO',
             'NOMBRE',
+            'SEMANA',
+            'DIA',
             'CLIENTES',
         ],
         colModel: [
             {name: 'IDRUTA', index: 'IDRUTA', width: 80, frozen: false, sortable: false, resizable: false, align: "center", hidden: true},
             {name: 'CODIGORUTA', index: 'CODIGORUTA', width: 80, frozen: false, sortable: false, resizable: false, align: "center"},
-            {name: 'NOMBRERUTA', index: 'NOMBRERUTA', width: 200, sortable: false, frozen: true, },
+            {name: 'NOMBRERUTA', index: 'NOMBRERUTA', width: 290, sortable: false, frozen: true, },
+            {name: 'SEMANA', index: 'SEMANA', width: 60, sortable: false, frozen: true, align: "center"},
+            {name: 'DIA', index: 'DIA', width: 40, sortable: false, frozen: true, align: "center"},
             {name: 'CLIENTESRUTA', index: 'CLIENTESRUTA', width: 70, sortable: false, frozen: true, align: "center"},
         ],
         pager: '#pagGridRutasGestion',
@@ -184,7 +181,7 @@ function ConfigurarGrids() {
         viewrecords: true,
 //        height: 'auto',
         height: 170,
-        width: 380,
+        width: 560,
 //        autowidth: true,
         multiselect: true,
         gridview: true,
@@ -196,7 +193,7 @@ function ConfigurarGrids() {
         gridComplete: function () {
             var $grid = $('#tblRutasGestion');
             var colSum = $grid.jqGrid('getCol', 'CLIENTESRUTA', false, 'sum');
-            $grid.jqGrid('footerData', 'set', {'NOMBRERUTA': 'Total'});
+            $grid.jqGrid('footerData', 'set', {'DIA': 'Total'});
             $grid.jqGrid('footerData', 'set', {'CLIENTESRUTA': colSum});
 
         },
@@ -220,6 +217,13 @@ function ConfigurarGrids() {
             {}, // del options 
             {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
     );
+    jQuery("#tblRutasGestion").jqGrid('navButtonAdd', '#pagGridRutasGestion',
+            {
+                caption: "Asignar ruta",
+                title: "Asignar ruta a ejecutivo seleccionado",
+                onClickButton: guardarRutasSeleccionadas
+            }
+    );
 
     jQuery("#tblRutasAgente").jqGrid({
         loadonce: true,
@@ -232,15 +236,19 @@ function ConfigurarGrids() {
             'ID RUTA',
             'CODIGO RUTA',
             'RUTA',
+            'SEMANA',
+            'DIA',
             'CLIENTES',
         ],
         colModel: [
             {name: 'CODIGOUSUARIORUTA', index: 'CODIGOUSUARIORUTA', width: 30, frozen: false, sortable: false, resizable: false, hidden: true},
             {name: 'ZONA', index: 'ZONA', width: 80, frozen: false, sortable: false, resizable: false, align: "center"},
             {name: 'IDRUTA', index: 'IDRUTA', width: 80, frozen: false, sortable: false, resizable: false, align: "center", hidden: true, },
-            {name: 'CODIGORUTA', index: 'CODIGORUTA', width: 100, frozen: false, sortable: false, align: "right", resizable: false},
-            {name: 'NOMBRERUTA', index: 'NOMBRERUTA', width: 200, sortable: false, frozen: true},
-            {name: 'CLIENTESRUTA', index: 'CLIENTESRUTA', width: 80, sortable: false, frozen: true, align: "center"},
+            {name: 'CODIGORUTA', index: 'CODIGORUTA', width: 100, frozen: false, sortable: false, align: "center", resizable: false},
+            {name: 'NOMBRERUTA', index: 'NOMBRERUTA', width: 220, sortable: false, frozen: true},
+            {name: 'SEMANA', index: 'SEMANA', width: 50, sortable: false, align: "center", frozen: true},
+            {name: 'DIA', index: 'DIA', width: 50, sortable: false, align: "center", frozen: true},
+            {name: 'CLIENTESRUTA', index: 'CLIENTESRUTA', width: 80, sortable: false, align: "center", formatter: "integer", summaryType: 'sum'},
         ],
         pager: '#pagGridRutasAgente',
         rowNum: 6000,
@@ -262,9 +270,18 @@ function ConfigurarGrids() {
         groupingView: {
             groupField: ['ZONA']
             , groupColumnShow: [false]
-            , groupCollapse: true
+            , groupCollapse: false
             , groupText: ['<b>{0} - {1} Ruta(s)</b>']
         },
+//        footerrow: true
+//        , gridComplete: function () {
+//            var $grid = $('#tblRutasAgente');
+//            var colSum = $grid.jqGrid('getCol', 'CLIENTESRUTA', false, 'sum');
+//            //alert (colSum)
+//            $grid.jqGrid('footerData', 'set', {'SEMANA': 'Total'});
+//            $grid.jqGrid('footerData', 'set', {'CLIENTESRUTA': colSum});
+//        },
+
         jsonReader: {
             root: "Result",
             repeatitems: false, //cuando el array de la data son object
@@ -285,7 +302,15 @@ function ConfigurarGrids() {
             {}, // del options 
             {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
     );
+    jQuery("#tblRutasAgente").jqGrid('navButtonAdd', '#pagGridRutasAgente',
+            {
+                caption: "Quitar ruta",
+                title: "Quitar ruta a ejecutivo seleccionado",
+                onClickButton: eliminarRutasSeleccionadas
+            }
+    );
 }
+
 
 function cargarRutasAsignadas(codigoUsuario) {
     $.ajax(
@@ -364,7 +389,7 @@ function guardarRutasSeleccionadas() {
         var idRutasSeleccionadas = [];
         for (var i = 0; i < idFilasSeleccionadas.length; i += 1) {
             var fila = jQuery("#tblRutasGestion").jqGrid('getRowData', idFilasSeleccionadas[i]);
-            idRutasSeleccionadas.push(fila.IDRUTA);
+            idRutasSeleccionadas.push(fila.IDRUTA.concat("-", fila.SEMANA, "-", fila.DIA));
         }
 //        alert(idRutasSeleccionadas);
         $.ajax(
@@ -381,14 +406,21 @@ function guardarRutasSeleccionadas() {
                     },
                     success: function (data)
                     {
-                        blockUIClose();
                         if (data.Status == 1) {
                             var datosResult = data.Result;
+                            $("#tblRutasGestion").jqGrid("clearGridData", true).trigger("reloadGrid");
+                            $("#tblRutasAgente").jqGrid("clearGridData", true).trigger("reloadGrid");
+
+                            $("#tblRutasGestion").setGridParam({datatype: 'jsonstring', datastr: datosResult['rutasZona']}).trigger('reloadGrid');
                             $("#tblRutasAgente").setGridParam({datatype: 'jsonstring', datastr: datosResult['rutasAsignadas']}).trigger('reloadGrid');
 
+
+                            $("#tblRutasAgente").setGridParam({datatype: 'jsonstring', datastr: datosResult['rutasAsignadas']}).trigger('reloadGrid');
+                            setMensaje(data.ClasssMessage, data.Message);
                         } else {
                             //to do
                         }
+                        blockUIClose();
                     },
                     error: function (xhr, st, err)
                     {
@@ -426,16 +458,19 @@ function eliminarRutasSeleccionadas() {
                     },
                     success: function (data)
                     {
-                        blockUIClose();
-//                    alert(data.Status);
                         if (data.Status == 1) {
                             var datosResult = data.Result;
+                            $("#tblRutasGestion").jqGrid("clearGridData", true).trigger("reloadGrid");
+                            $("#tblRutasAgente").jqGrid("clearGridData", true).trigger("reloadGrid");
 
+                            $("#tblRutasGestion").setGridParam({datatype: 'jsonstring', datastr: datosResult['rutasZona']}).trigger('reloadGrid');
                             $("#tblRutasAgente").setGridParam({datatype: 'jsonstring', datastr: datosResult['rutasAsignadas']}).trigger('reloadGrid');
+                            setMensaje(data.ClassMessage, data.Message);
 
                         } else {
                             //to do
                         }
+                        blockUIClose();
                     },
                     error: function (xhr, st, err)
                     {

@@ -18,16 +18,18 @@ class RptResumenDiarioHistorialForm extends CFormModel {
     public $enlaceMapa;
     public $accionHistorial;
     public $semanaRevision;
-    
     public $fechaInicioFinJornada;
     public $horaFinGestionJornada;
     public $horaInicioGestionJornada;
+    public $tipoFechaJornadaPeriodo;
+    public $fechaInicioJornadaPeriodo;
+    public $fechaFinJornadaPeriodo;
     public $tipoUsuarioJornada;
-    
+    public $horaInicioJornadaPeriodo;
+    public $horaFinJornadaPeriodo;
+    public $tipoUsuarioPeriodo;
     public $anioFiltro;
     public $periodoFiltro;
-    
-    
 
     /**
      * Declares the validation rules.
@@ -81,15 +83,18 @@ class RptResumenDiarioHistorialForm extends CFormModel {
             'enlaceMapa' => 'Ingresar el enlace del mapa',
             'accionHistorial' => 'Accion historial',
             'semanaRevision' => 'Semana revision',
-            
             'fechaInicioFinJornada' => 'Fecha Inicio Jornada',
             'horaFinGestionJornada' => 'Hora Fin Jornada',
             'horaInicioGestionJornada' => 'Hora Inicio Jornada',
             'tipoUsuarioJornada' => 'Tipo usuario',
-            
+            'tipoFechaJornadaPeriodo' => 'Tipo Fecha',
+            'fechaInicioJornadaPeriodo' => 'Fecha Inicio',
+            'fechaFinJornadaPeriodo' => 'Fecha Fin',
+            'horaInicioJornadaPeriodo' => 'Inicio Jornada',
+            'horaFinJornadaPeriodo' => 'Fin Jornada',
+            'tipoUsuarioPeriodo' => 'Tipo usuario',
             'anioFiltro' => 'Anio',
             'periodoFiltro' => 'Periodo',
-            
         );
     }
 

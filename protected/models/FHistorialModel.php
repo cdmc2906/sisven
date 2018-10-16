@@ -59,14 +59,13 @@ class FHistorialModel extends DAOModel {
 //        " . FuncionesBaseDatos::convertToTimeHHMMSS('sqlsrv', 'h_fecha') . "as HORAVISITA 
         $sql = "
             SELECT                    
-                        " . FuncionesBaseDatos::convertToDateTimeYYYYMMDDHHMMSS('sqlsrv', 'h_fecha') . "as HORAVISITA 
+                    " . FuncionesBaseDatos::convertToDateTimeYYYYMMDDHHMMSS('sqlsrv', 'h_fecha') . "as HORAVISITA 
                     ,h_id as IDHISTORIAL
                     ,H_ACCION
                     ,H_COD_CLIENTE
                 FROM tb_historial_mb
                 WHERE 1=1
                     AND " . FuncionesBaseDatos::convertToDate('sqlsrv', 'h_fecha') . "='" . $fechagestion . "'
-                    -- AND DATE(H_FECHA) ='" . $fechagestion . "'
                     AND H_USUARIO='" . $ejecutivo . "'
                     AND H_ACCION in ('Inicio visita','Fin de visita')
                     AND H_COD_CLIENTE='" . $codCliente . "'
@@ -125,7 +124,6 @@ class FHistorialModel extends DAOModel {
         $sql = "
             SELECT 
                     " . FuncionesBaseDatos::convertToDateTimeYYYYMMDDHHMM('sqlsrv', 'H_FECHA') . " AS FECHAVISITA
-                    -- formato mysql DATE_FORMAT(H_FECHA, '%Y-%m-%d %H:%i') AS FECHAVISITA
                     ,H_COD_CLIENTE AS CODIGOCLIENTE
                     ,H_NOM_CLIENTE AS NOMBRECLIENTE
                     ,h_id AS IDHISTORIAL

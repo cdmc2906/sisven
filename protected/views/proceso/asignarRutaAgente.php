@@ -111,18 +111,19 @@ $this->pageTitle = $pagina_nombre;
                             <table id="tblRutasGestion" class="table table-condensed"></table>
                             <div id="pagGridRutasGestion"> </div>
                             <?php
-                            echo CHtml::submitButton('Asignar Seleccion', array(
-                                'id' => 'btnAsignarRuta',
-                                'class' => 'btn btn-success'));
+//                            echo CHtml::submitButton('Asignar Seleccion', array(
+//                                'id' => 'btnAsignarRuta',
+//                                'class' => 'btn btn-success'));
                             ?>
                         </div>
                     </div>
                     <div>
                         <table id="tblRutasAgente" class="table table-condensed"></table>
-                        <div id="pagGridRutasAgente"> </div> <?php
-                        echo CHtml::submitButton('Eliminar Seleccion', array(
-                            'id' => 'btnQuitarRuta',
-                            'class' => 'btn btn-warning'));
+                        <div id="pagGridRutasAgente"> </div> 
+                        <?php
+//                        echo CHtml::submitButton('Eliminar Seleccion', array(
+//                            'id' => 'btnQuitarRuta',
+//                            'class' => 'btn btn-warning'));
                         ?>
                     </div>
                 </div>
