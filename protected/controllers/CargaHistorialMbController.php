@@ -98,8 +98,15 @@ class CargaHistorialMbController extends Controller {
 
         foreach ($dataFile as $row) {
 //        var_dump($row['FECHA']);DIE();
-            $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHA']);
-            $dateString = $date->format(FORMATO_FECHA_LONG_4);
+            $dateString = '';
+            if (strlen($row['FECHA']) == 16) {
+                $date = DateTime::createFromFormat('d/m/Y H:i', $row['FECHA']);
+                $dateString = $date->format(FORMATO_FECHA_LONG_3);
+            } else if (strlen($row['FECHA']) == 19) {
+                $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHA']);
+                $dateString = $date->format(FORMATO_FECHA_LONG_4);
+            }
+            
             if ($dateString >= Yii::app()->session['fechaInicioPeriodo'] && $dateString <= Yii::app()->session['fechaFinPeriodo']) {
                 $data = array(
                     'ID' => ($row['ID'] == '') ? null : $row['ID'],

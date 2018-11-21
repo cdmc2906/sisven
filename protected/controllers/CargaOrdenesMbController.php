@@ -89,8 +89,14 @@ class CargaOrdenesMbController extends Controller {
         $dataFile = $file->getDatosOrdenesMb($start, $blockSize);
         foreach ($dataFile as $row) {
 //            var_dump($row['FECHACREACION']);die();
-            $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHACREACION']);
-            $dateString = $date->format(FORMATO_FECHA_LONG_4);
+            $dateString = '';
+            if (strlen($row['FECHACREACION']) == 16) {
+                $date = DateTime::createFromFormat('d/m/Y H:i', $row['FECHACREACION']);
+                $dateString = $date->format(FORMATO_FECHA_LONG_3);
+            } else if (strlen($row['FECHACREACION']) == 19) {
+                $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHACREACION']);
+                $dateString = $date->format(FORMATO_FECHA_LONG_4);
+            }
             if ($dateString >= Yii::app()->session['fechaInicioPeriodo'] && $dateString <= Yii::app()->session['fechaFinPeriodo']) {
                 $data = array(
                     'ID' => ($row['ID'] == '') ? null : $row['ID'],
@@ -209,7 +215,7 @@ class CargaOrdenesMbController extends Controller {
 //                            $mensaje .= '<br> Se han omitido ' . $_SESSION['cantidadOrdenesDuplicados'] . ' registros duplicados en el archivo.';
                             $mensaje .= '<br> Se han omitido ' . Yii::app()->session['cantidadOrdenesDuplicados'] . ' registros duplicados en el archivo.';
                         $mensaje .= $response->Message = $mensaje;
-                    
+
                         unset(Yii::app()->session['archivosHistorialMb']);
                         unset(Yii::app()->session['ModelForm']);
                         unset(Yii::app()->session['ordenesMbItems']);

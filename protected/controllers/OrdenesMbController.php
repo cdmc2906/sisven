@@ -8,8 +8,7 @@ class OrdenesMbController extends Controller
 	 */
 	 public $layout = LAYOUT_ADMIN_CATALOG;
 
-
-	/**
+    /**
 	 * @return array action filters
 	 */
 //	public function filters()

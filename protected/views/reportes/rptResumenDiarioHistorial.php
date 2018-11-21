@@ -262,8 +262,10 @@ $ultimaCargaOrdenes = FOrdenModel::getFechaUltimaCarga();
                                                         echo $form->dropDownList(
                                                                 $model, 'tipoUsuarioJornada', array(
                                                             'T' => 'Todos',
-                                                            GRUPO_EJECUTIVOS_ZONA => 'Ejecutivos Zona',
-                                                            GRUPO_SUPERVISORES => 'Supervisores',
+                                                            GRUPO_EJECUTIVOS_ZONA_MOVI => 'Ejecutivos Zona Movi',
+                                                            GRUPO_EJECUTIVOS_ZONA_TUENTI => 'Ejecutivos Zona Tuenti',
+                                                            GRUPO_SUPERVISORES_MOVI => 'Supervisores Movistar',
+                                                            GRUPO_SUPERVISORES_TUENTI => 'Supervisores Tuenti',
                                                             GRUPO_SERVICIO_CLIENTE => 'Servicio Cliente',
                                                             GRUPO_DESARROLLADORES => 'Desarrolladores',
                                                             GRUPO_TECNICOS => 'Tecnico ',
@@ -391,8 +393,8 @@ $ultimaCargaOrdenes = FOrdenModel::getFechaUltimaCarga();
                                                             $model, 'tipoUsuarioPeriodo', array(
                                                         'T' => 'Todos',
                                                         'SE' => 'Seleccionar ejecutivo',
-                                                        GRUPO_EJECUTIVOS_ZONA => 'Ejecutivos Zona',
-                                                        GRUPO_SUPERVISORES => 'Supervisores',
+                                                        GRUPO_EJECUTIVOS_ZONA_MOVI => 'Ejecutivos Zona',
+                                                        GRUPO_SUPERVISORES_MOVI => 'Supervisores',
                                                         GRUPO_SERVICIO_CLIENTE => 'Servicio Cliente',
                                                         GRUPO_DESARROLLADORES => 'Desarrolladores',
                                                         GRUPO_TECNICOS => 'Tecnico',

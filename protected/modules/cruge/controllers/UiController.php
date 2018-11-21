@@ -30,9 +30,7 @@ class UiController extends Controller {
     }
 
     public function registerScripts() {
-        $this->basePath = Yii::app()->getAssetManager()->publish(
-                        dirname(__FILE__) . "/../resources"
-                ) . "/";
+        $this->basePath = Yii::app()->getAssetManager()->publish(dirname(__FILE__) . "/../resources") . "/";
 
         $cs = Yii::app()->getClientScript();
 
@@ -47,8 +45,7 @@ class UiController extends Controller {
             'registration',
             'login',
             'logout',
-            'pwdrec'
-            ,
+            'pwdrec',
             'activationurl',
             'ajaxgeneratenewpassword',
             'welcome'
@@ -116,11 +113,12 @@ class UiController extends Controller {
 
     public function actionLogin() {
 
+
 //        $this->layout = CrugeUtil::config()->loginLayout;
         $this->layout = '//layouts/main_login';
 
         $model = Yii::app()->user->um->getNewCrugeLogon('login');
-
+//var_dump($model);die();
         // por ahora solo un metodo de autenticacion por vez es usado, aunque sea un array en config/main
         //
         $model->authMode = CrugeFactory::get()->getConfiguredAuthMethodName();
@@ -145,10 +143,7 @@ class UiController extends Controller {
                     Yii::app()->user->setFlash('loginflash', Yii::app()->user->getLastError());
                 }
             } else {
-                Yii::log(
-                        __CLASS__ . "\nCrugeUser->validate es false\n" . CHtml::errorSummary($model)
-                        , "error"
-                );
+                Yii::log(__CLASS__ . "\nCrugeUser->validate es false\n" . CHtml::errorSummary($model), "error");
             }
         }
         $this->render('login', array('model' => $model));
@@ -167,7 +162,7 @@ class UiController extends Controller {
             if ($model->validate()) {
                 $newPwd = CrugeUtil::passwordGenerator();
                 Yii::app()->user->um->changePassword($model->getModel(), $newPwd);
-                Yii::app()->crugemailer->sendPasswordTo($model->getModel(), $newPwd);
+                Yii::app()->crugemailer->sendPasswordTo($model->getModel(), $newPwd, '');
                 Yii::app()->user->um->save($model->getModel());
 
                 Yii::app()->user->setFlash(
@@ -384,16 +379,16 @@ class UiController extends Controller {
             // lo activa inmediatamente y le manda la clave al usuario
             $model->state = CRUGEUSERSTATE_ACTIVATED;
             Yii::app()->user->um->save($model);
-            Yii::app()->crugemailer->sendPasswordTo($model, $newPwd);
+            Yii::app()->crugemailer->sendPasswordTo($model, $newPwd, '');
         }
         if ($opt == CRUGE_ACTIVATION_OPTION_EMAIL) {
             // queda en estado no activado, pero envia un email para que
             // el usuario lo active
-            Yii::app()->crugemailer->sendRegistrationEmail($model, $newPwd);
+            Yii::app()->crugemailer->sendRegistrationEmail($model, $newPwd, '');
         }
         if ($opt == CRUGE_ACTIVATION_OPTION_MANUAL) {
             // lo activa manualmente, envia un email de espera por activacion manual
-            Yii::app()->crugemailer->sendWaitForActivation($model, $newPwd);
+            Yii::app()->crugemailer->sendWaitForActivation($model, $newPwd, '');
         }
     }
 

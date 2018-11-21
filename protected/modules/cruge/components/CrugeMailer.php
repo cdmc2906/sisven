@@ -66,13 +66,13 @@ class CrugeMailer extends CrugeMailerBase implements ICrugeMailer {
         return CrugeTranslator::t($text);
     }
 
-    public function sendPasswordTo(ICrugeStoredUser $userInst, $notEncryptedPassword) {
+    public function sendPasswordTo(ICrugeStoredUser $userInst, $notEncryptedPassword, $pathArchivoAdjunto) {
         $this->sendEmail(
                 $userInst->email, self::t("su clave clave de acceso")
                 , $this->render(
                         'sendpasswordto'
                         , array('model' => $userInst, 'password' => $notEncryptedPassword)
-                )
+                ), $pathArchivoAdjunto
         );
     }
 
@@ -87,23 +87,23 @@ class CrugeMailer extends CrugeMailerBase implements ICrugeMailer {
         );
     }
 
-    public function sendRegistrationEmail(ICrugeStoredUser $userInst, $notEncryptedPassword) {
+    public function sendRegistrationEmail(ICrugeStoredUser $userInst, $notEncryptedPassword, $pathArchivoAdjunto) {
         $this->sendEmail(
                 $userInst->email, self::t("activacion de su cuenta")
                 , $this->render(
                         'sendregistrationemail'
                         , array('model' => $userInst, 'password' => $notEncryptedPassword)
-                )
+                ), $pathArchivoAdjunto
         );
     }
 
-    public function sendWaitForActivation(ICrugeStoredUser $userInst, $notEncryptedPassword) {
+    public function sendWaitForActivation(ICrugeStoredUser $userInst, $notEncryptedPassword, $pathArchivoAdjunto) {
         $this->sendEmail(
                 $userInst->email, self::t("ha solicitado registrarse, espere por activacion.")
                 , $this->render(
                         'sendwaitforactivation'
                         , array('model' => $userInst, 'password' => $notEncryptedPassword)
-                )
+                ), $pathArchivoAdjunto
         );
     }
 

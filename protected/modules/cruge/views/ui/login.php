@@ -27,7 +27,7 @@
         ));
         ?>
 
-            <!--<span class="glyphicon fa-user form-control-feedback"></span>-->
+                <!--<span class="glyphicon fa-user form-control-feedback"></span>-->
 
         <div class="form-group has-error">
             <?php echo $form->error($model, 'username', array('class' => 'help-block')); ?>

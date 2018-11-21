@@ -6,6 +6,7 @@
 <?php if (Yii::app()->user->hasFlash('pwdrecflash')): ?>
     <div class="flash-success">
         <?php echo Yii::app()->user->getFlash('pwdrecflash'); ?>
+        <?php echo CHtml::link('Link Text',array('site/action')); ?>
     </div>
 <?php else: ?>
     <?php
@@ -26,7 +27,7 @@
         ));
         ?>
 
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+        <span class="fa fa-user form-control-feedback"></span>
         <div class="form-group has-error">
             <?php echo $form->error($model, 'username', array('class' => 'help-block')); ?>
         </div>
