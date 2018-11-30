@@ -6,7 +6,7 @@
 <?php if (Yii::app()->user->hasFlash('pwdrecflash')): ?>
     <div class="flash-success">
         <?php echo Yii::app()->user->getFlash('pwdrecflash'); ?>
-//        <?php echo CHtml::link('Link Text',array('site/action')); ?>
+        <?php echo CHtml::link('Link Text',array('site/action')); ?>
     </div>
 <?php else: ?>
     <?php

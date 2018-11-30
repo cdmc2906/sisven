@@ -87,6 +87,7 @@ class CargaOrdenesMbController extends Controller {
     private function getDatosMostrar($file, $start, $blockSize) {
         $dataInsert = array();
         $dataFile = $file->getDatosOrdenesMb($start, $blockSize);
+//        var_dump($dataFile);die();
         foreach ($dataFile as $row) {
 //            var_dump($row['FECHACREACION']);die();
             $dateString = '';
@@ -97,7 +98,9 @@ class CargaOrdenesMbController extends Controller {
                 $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHACREACION']);
                 $dateString = $date->format(FORMATO_FECHA_LONG_4);
             }
+
             if ($dateString != '') {
+//            var_dump($dateString ,Yii::app()->session['fechaInicioPeriodo'] ,Yii::app()->session['fechaFinPeriodo']);die();
                 if ($dateString >= Yii::app()->session['fechaInicioPeriodo'] && $dateString <= Yii::app()->session['fechaFinPeriodo']) {
                     $data = array(
                         'ID' => ($row['ID'] == '') ? null : $row['ID'],
@@ -144,10 +147,12 @@ class CargaOrdenesMbController extends Controller {
 
                     unset($data);
                 } else {
+//                    var_dump($dateString, $row['CODIGO']);
                     Yii::app()->session['itemsFueraPeriodo'] += 1;
                 }
             }
-        }
+        }//fin iterador filas archivo
+//        die();
         return $dataInsert;
     }
 
@@ -259,91 +264,91 @@ class CargaOrdenesMbController extends Controller {
                 $dateString = $date->format(FORMATO_FECHA_LONG_4);
             }
 
-
 //            $date = DateTime::createFromFormat('d/m/Y H:i:s', $filaArchivo['FECHACREACION']);
 //            $dateString = $date->format(FORMATO_FECHA_LONG_4);
+            if ($dateString != '') {
+                if ($dateString >= Yii::app()->session['fechaInicioPeriodo'] && $dateString <= Yii::app()->session['fechaFinPeriodo']) {
 
-            if ($dateString >= Yii::app()->session['fechaInicioPeriodo'] && $dateString <= Yii::app()->session['fechaFinPeriodo']) {
-
-                $existeBdd = OrdenesMbModel::model()->findByAttributes(array('o_id' => $filaArchivo['ID']));
-                if ($existeBdd) {
-                    $existeBdd->delete();
+                    $existeBdd = OrdenesMbModel::model()->findByAttributes(array('o_id' => $filaArchivo['ID']));
+                    if ($existeBdd) {
+                        $existeBdd->delete();
 //                $_SESSION['cantidadOrdenesActualizadas'] += 1;
-                    Yii::app()->session['cantidadOrdenesActualizadas'] += 1;
-                }
+                        Yii::app()->session['cantidadOrdenesActualizadas'] += 1;
+                    }
 
-                $exisArray = false;
-                //verifica si el item esta ya en el array, si esta el valor de exisarray 
-                //cambia a true y luego si exisarray es true se detiene el proceso porque no es necesario seguir buscando
-                foreach ($datosOrdenes as $item) {
-                    $exisArray = in_array($filaArchivo['ID'], $item);
-                    if ($exisArray)
-                        break;
-                }
+                    $exisArray = false;
+                    //verifica si el item esta ya en el array, si esta el valor de exisarray 
+                    //cambia a true y luego si exisarray es true se detiene el proceso porque no es necesario seguir buscando
+                    foreach ($datosOrdenes as $item) {
+                        $exisArray = in_array($filaArchivo['ID'], $item);
+                        if ($exisArray)
+                            break;
+                    }
 
-                if (!$exisArray) {
+                    if (!$exisArray) {
 //                var_dump($filaArchivo['FECHACREACION']);die();
-                    $fechaCreacion = DateTime::createFromFormat('d/m/Y H:i:s', $filaArchivo['FECHACREACION']);
+                        $fechaCreacion = DateTime::createFromFormat('d/m/Y H:i:s', $filaArchivo['FECHACREACION']);
 
-                    $sfechaCreacion = $fechaCreacion->format(FORMATO_FECHA_LONG);
+                        $sfechaCreacion = $fechaCreacion->format(FORMATO_FECHA_LONG);
 
-                    $fechaDespacho = DateTime::createFromFormat('d/m/Y H:i:s', $filaArchivo['FECHADESPACHO']);
-                    $sfechaDespacho = $fechaDespacho->format(FORMATO_FECHA_LONG);
+                        $fechaDespacho = DateTime::createFromFormat('d/m/Y H:i:s', $filaArchivo['FECHADESPACHO']);
+                        $sfechaDespacho = $fechaDespacho->format(FORMATO_FECHA_LONG);
 
-                    $data = array(
-                        //''o_cod' => ($row[''] == '') ? null : $row[''],
-                        'o_id' => ($filaArchivo['ID'] == '') ? null : $filaArchivo['ID'],
-                        'pg_id' => Yii::app()->session['idPeriodoAbierto'],
-                        'o_concepto' => ($filaArchivo['CONCEPTO'] == '') ? null : $filaArchivo['CONCEPTO'],
-                        'o_codigo_mb' => ($filaArchivo['CODIGO'] == '') ? null : $filaArchivo['CODIGO'],
-                        'o_comentario' => ($filaArchivo['COMENTARIO'] == '') ? null : $filaArchivo['COMENTARIO'],
+                        $data = array(
+                            //''o_cod' => ($row[''] == '') ? null : $row[''],
+                            'o_id' => ($filaArchivo['ID'] == '') ? null : $filaArchivo['ID'],
+                            'pg_id' => Yii::app()->session['idPeriodoAbierto'],
+                            'o_concepto' => ($filaArchivo['CONCEPTO'] == '') ? null : $filaArchivo['CONCEPTO'],
+                            'o_codigo_mb' => ($filaArchivo['CODIGO'] == '') ? null : $filaArchivo['CODIGO'],
+                            'o_comentario' => ($filaArchivo['COMENTARIO'] == '') ? null : $filaArchivo['COMENTARIO'],
 //                    'o_fch_venta' => ($filaArchivo['FECHAVENTA'] == '') ? null : $filaArchivo['FECHAVENTA'],
-                        'o_fch_creacion' => ($filaArchivo['FECHACREACION'] == '') ? null : $sfechaCreacion,
-                        'o_fch_despacho' => ($filaArchivo['FECHADESPACHO'] == '') ? null : $sfechaDespacho,
-                        'o_tipo' => ($filaArchivo['TIPO'] == '') ? null : $filaArchivo['TIPO'],
-                        'o_estatus' => ($filaArchivo['ESTATUS'] == '') ? null : $filaArchivo['ESTATUS'],
-                        'o_cod_cliente' => ($filaArchivo['CLIENTE'] == '') ? null : $filaArchivo['CLIENTE'],
-                        'o_nom_cliente' => ($filaArchivo['CLIENTENOMBRE'] == '') ? null : $filaArchivo['CLIENTENOMBRE'],
-                        'o_id_cliente' => ($filaArchivo['CLIENTEIDENTIFICACION'] == '') ? null : $filaArchivo['CLIENTEIDENTIFICACION'],
-                        'o_direccion' => ($filaArchivo['DIRECCION'] == '') ? null : $filaArchivo['DIRECCION'],
-                        'o_lista_precio' => ($filaArchivo['LISTAPRECIOS'] == '') ? null : $filaArchivo['LISTAPRECIOS'],
-                        'o_nom_lista_precio' => ($filaArchivo['LISTAPRECIOSNOMBRE'] == '') ? null : $filaArchivo['LISTAPRECIOSNOMBRE'],
-                        'o_bodega_origen' => ($filaArchivo['BODEGAORIGEN'] == '') ? null : $filaArchivo['BODEGAORIGEN'],
-                        'o_nom_bodega_origen' => ($filaArchivo['BODEGAORIGENNOMBRE'] == '') ? null : $filaArchivo['BODEGAORIGENNOMBRE'],
-                        'o_termino_pago' => ($filaArchivo['TERMINOPAGO'] == '') ? null : $filaArchivo['TERMINOPAGO'],
-                        'o_nom_termino_pago' => ($filaArchivo['TERMINOPAGONOMBRE'] == '') ? null : $filaArchivo['TERMINOPAGONOMBRE'],
-                        'o_usuario' => ($filaArchivo['USUARIO'] == '') ? null : $filaArchivo['USUARIO'],
-                        'o_nom_usuario' => ($filaArchivo['USUARIONOMBRE'] == '') ? null : $filaArchivo['USUARIONOMBRE'],
-                        'o_oficina' => ($filaArchivo['OFICINA'] == '') ? null : $filaArchivo['OFICINA'],
-                        'o_nom_oficina' => ($filaArchivo['OFICINANOMBRE'] == '') ? null : $filaArchivo['OFICINANOMBRE'],
-                        'o_tipo_secuencia' => ($filaArchivo['TIPOSECUENCIA'] == '') ? null : $filaArchivo['TIPOSECUENCIA'],
-                        'o_iva_12_base' => ($filaArchivo['IVA12BASE'] == '') ? null : $filaArchivo['IVA12BASE'],
-                        'o_iva_12_valor' => ($filaArchivo['IVA12VALOR'] == '') ? null : $filaArchivo['IVA12VALOR'],
-                        'o_iva_0_base' => ($filaArchivo['IVA0BASE'] == '') ? null : $filaArchivo['IVA0BASE'],
-                        'o_iva_0_valor' => ($filaArchivo['IVA0VALOR'] == '') ? null : $filaArchivo['IVA0VALOR'],
-                        'o_iva_14_base' => ($filaArchivo['IVA14BASE'] == '') ? null : $filaArchivo['IVA14BASE'],
-                        'o_iva_14_valor' => ($filaArchivo['IVA14VALOR'] == '') ? null : $filaArchivo['IVA14VALOR'],
-                        'o_subtotal' => ($filaArchivo['SUBTOTAL'] == '') ? null : $filaArchivo['SUBTOTAL'],
-                        'o_porcentaje_descuento' => ($filaArchivo['DESCUENTOP'] == '') ? null : $filaArchivo['DESCUENTOP'],
-                        'o_descuento' => ($filaArchivo['DESCUENTO'] == '') ? null : $filaArchivo['DESCUENTO'],
-                        'o_impuestos' => ($filaArchivo['IMPUESTOS'] == '') ? null : $filaArchivo['IMPUESTOS'],
-                        'o_otros_cargos' => ($filaArchivo['OTROSCARGOS'] == '') ? null : $filaArchivo['OTROSCARGOS'],
-                        'o_total' => ($filaArchivo['TOTAL'] == '') ? null : $filaArchivo['TOTAL'],
-                        'o_datos' => ($filaArchivo['DATOS'] == '') ? null : $filaArchivo['DATOS'],
-                        'o_referencia' => ($filaArchivo['REFERENCIA'] == '') ? null : $filaArchivo['REFERENCIA'],
-                        'o_estado_proceso' => ($filaArchivo['ESTATUSPROCESO'] == '') ? null : $filaArchivo['ESTATUSPROCESO'],
-                        'o_fch_ingreso' => date(FORMATO_FECHA_LONG),
-                        'o_fch_modificacion' => date(FORMATO_FECHA_LONG),
-                        'o_fch_desde' => date(FORMATO_FECHA_LONG),
-                        'o_fch_hasta' => date(FORMATO_FECHA_LONG),
-                        'o_usr_ing_mod' => Yii::app()->user->id
-                    );
+                            'o_fch_creacion' => ($filaArchivo['FECHACREACION'] == '') ? null : $sfechaCreacion,
+                            'o_fch_despacho' => ($filaArchivo['FECHADESPACHO'] == '') ? null : $sfechaDespacho,
+                            'o_tipo' => ($filaArchivo['TIPO'] == '') ? null : $filaArchivo['TIPO'],
+                            'o_estatus' => ($filaArchivo['ESTATUS'] == '') ? null : $filaArchivo['ESTATUS'],
+                            'o_cod_cliente' => ($filaArchivo['CLIENTE'] == '') ? null : $filaArchivo['CLIENTE'],
+                            'o_nom_cliente' => ($filaArchivo['CLIENTENOMBRE'] == '') ? null : $filaArchivo['CLIENTENOMBRE'],
+                            'o_id_cliente' => ($filaArchivo['CLIENTEIDENTIFICACION'] == '') ? null : $filaArchivo['CLIENTEIDENTIFICACION'],
+                            'o_direccion' => ($filaArchivo['DIRECCION'] == '') ? null : $filaArchivo['DIRECCION'],
+                            'o_lista_precio' => ($filaArchivo['LISTAPRECIOS'] == '') ? null : $filaArchivo['LISTAPRECIOS'],
+                            'o_nom_lista_precio' => ($filaArchivo['LISTAPRECIOSNOMBRE'] == '') ? null : $filaArchivo['LISTAPRECIOSNOMBRE'],
+                            'o_bodega_origen' => ($filaArchivo['BODEGAORIGEN'] == '') ? null : $filaArchivo['BODEGAORIGEN'],
+                            'o_nom_bodega_origen' => ($filaArchivo['BODEGAORIGENNOMBRE'] == '') ? null : $filaArchivo['BODEGAORIGENNOMBRE'],
+                            'o_termino_pago' => ($filaArchivo['TERMINOPAGO'] == '') ? null : $filaArchivo['TERMINOPAGO'],
+                            'o_nom_termino_pago' => ($filaArchivo['TERMINOPAGONOMBRE'] == '') ? null : $filaArchivo['TERMINOPAGONOMBRE'],
+                            'o_usuario' => ($filaArchivo['USUARIO'] == '') ? null : $filaArchivo['USUARIO'],
+                            'o_nom_usuario' => ($filaArchivo['USUARIONOMBRE'] == '') ? null : $filaArchivo['USUARIONOMBRE'],
+                            'o_oficina' => ($filaArchivo['OFICINA'] == '') ? null : $filaArchivo['OFICINA'],
+                            'o_nom_oficina' => ($filaArchivo['OFICINANOMBRE'] == '') ? null : $filaArchivo['OFICINANOMBRE'],
+                            'o_tipo_secuencia' => ($filaArchivo['TIPOSECUENCIA'] == '') ? null : $filaArchivo['TIPOSECUENCIA'],
+                            'o_iva_12_base' => ($filaArchivo['IVA12BASE'] == '') ? null : $filaArchivo['IVA12BASE'],
+                            'o_iva_12_valor' => ($filaArchivo['IVA12VALOR'] == '') ? null : $filaArchivo['IVA12VALOR'],
+                            'o_iva_0_base' => ($filaArchivo['IVA0BASE'] == '') ? null : $filaArchivo['IVA0BASE'],
+                            'o_iva_0_valor' => ($filaArchivo['IVA0VALOR'] == '') ? null : $filaArchivo['IVA0VALOR'],
+                            'o_iva_14_base' => ($filaArchivo['IVA14BASE'] == '') ? null : $filaArchivo['IVA14BASE'],
+                            'o_iva_14_valor' => ($filaArchivo['IVA14VALOR'] == '') ? null : $filaArchivo['IVA14VALOR'],
+                            'o_subtotal' => ($filaArchivo['SUBTOTAL'] == '') ? null : $filaArchivo['SUBTOTAL'],
+                            'o_porcentaje_descuento' => ($filaArchivo['DESCUENTOP'] == '') ? null : $filaArchivo['DESCUENTOP'],
+                            'o_descuento' => ($filaArchivo['DESCUENTO'] == '') ? null : $filaArchivo['DESCUENTO'],
+                            'o_impuestos' => ($filaArchivo['IMPUESTOS'] == '') ? null : $filaArchivo['IMPUESTOS'],
+                            'o_otros_cargos' => ($filaArchivo['OTROSCARGOS'] == '') ? null : $filaArchivo['OTROSCARGOS'],
+                            'o_total' => ($filaArchivo['TOTAL'] == '') ? null : $filaArchivo['TOTAL'],
+                            'o_datos' => ($filaArchivo['DATOS'] == '') ? null : $filaArchivo['DATOS'],
+                            'o_referencia' => ($filaArchivo['REFERENCIA'] == '') ? null : $filaArchivo['REFERENCIA'],
+                            'o_estado_proceso' => ($filaArchivo['ESTATUSPROCESO'] == '') ? null : $filaArchivo['ESTATUSPROCESO'],
+                            'o_fch_ingreso' => date(FORMATO_FECHA_LONG),
+                            'o_fch_modificacion' => date(FORMATO_FECHA_LONG),
+                            'o_fch_desde' => date(FORMATO_FECHA_LONG),
+                            'o_fch_hasta' => date(FORMATO_FECHA_LONG),
+                            'o_usr_ing_mod' => Yii::app()->user->id
+                        );
 
-                    array_push($datosOrdenes, $data);
-                    unset($data);
-                } else {
+                        array_push($datosOrdenes, $data);
+                        unset($data);
+                    } else {
 //                $_SESSION['cantidadOrdenesDuplicados'] += 1;
-                    Yii::app()->session['cantidadOrdenesDuplicados'] += 1;
+                        Yii::app()->session['cantidadOrdenesDuplicados'] += 1;
+                    }
                 }
             }
         }
