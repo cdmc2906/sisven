@@ -209,15 +209,8 @@ return array(
         'archivosRutasMb' => 'C:\carga_mobilvendor\rutas' . date('YmdHs') . '.csv',
         'archivosVentasMovistar' => 'C:\carga_mobilvendor\ventasMovistar' . date('YmdHs') . '.csv',
         'archivosTransferenciasMovistar' => 'C:\carga_mobilvendor\transferenciasMovistar' . date('YmdHs') . '.csv',
-        'archivosCoordenadasClientes' => 'C:\carga_mobilvendor\coordenadasClientes' . date('YmdHs') . '.csv',
-//        'archivosConsumo' => '/var/tmp/archivos-sisven/consumo' . date('YmdHs') . '.csv',
-//        'archivosCompra' => '/var/tmp/archivos-sisven/compra' . date('YmdHs') . '.csv',
-//        'archivosIndicadores' => '/var/tmp/archivos-sisven/indicador' . date('YmdHs') . '.csv',
-//        'archivosHistorialMb' => '/var/tmp/archivos-sisven/historial' . date('YmdHs') . '.csv',
-//        'archivosOrdenesMb' => '/var/tmp/archivos-sisven/ordenes' . date('YmdHs') . '.csv',
-//        'archivosRutasMb' => '/var/tmp/archivos-sisven/rutas' . date('YmdHs') . '.csv',
-//        'archivosVentasMovistar' => '/var/tmp/archivos-sisven/ventasMovistar' . date('YmdHs') . '.csv',
-//        'archivosCoordenadasClientes' => '/var/tmp/archivos-sisven/coordenadasClientes' . date('YmdHs') . '.csv',
+        'archivosClientes' => 'C:\carga_mobilvendor\clientes' . date('YmdHs') . '.csv',
+        'archivosDireccionClientes' => 'C:\carga_mobilvendor\direccionClientes' . date('YmdHs') . '.csv',
 //        
     ),
 );

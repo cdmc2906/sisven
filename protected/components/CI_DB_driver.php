@@ -1291,7 +1291,8 @@ class CI_DB_driver {
 
             return $str;
         }
-        $str = mysqli_real_escape_string($enlace, $str);
+//        $str = sqlsrv_real_escape_string($enlace, $str);
+//        $str = mysqli_real_escape_string($enlace, $str);
 //        var_dump($str);die();
         // escape LIKE condition wildcards
         if ($like === TRUE) {

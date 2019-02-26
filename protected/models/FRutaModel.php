@@ -1,7 +1,7 @@
 <?php
 
 class FRutaModel extends DAOModel {
-   
+
     public $campoFechaOrdenes = 'o_fch_creacion';
 
     public static function getFechaUltimaCarga() {
@@ -169,7 +169,7 @@ class FRutaModel extends DAOModel {
             (SELECT h_cod_cliente
                 FROM tb_historial_mb
                 WHERE 1=1
-                    AND convert(date,h_fecha)='".$fechaGestion."'
+                    AND convert(date,h_fecha)='" . $fechaGestion . "'
                     AND h_usuario='" . $codEjecutivo . "' 
                     AND h_semana=" . $semana . "
                         
@@ -523,6 +523,26 @@ class FRutaModel extends DAOModel {
                     and pg_id='" . $periodo . "'
                 order by r_secuencia
             ;";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getRutasxEjecutivoxPeriodo($ejecutivo, $periodo) {
+        $sql = "
+            SELECT 
+                    DISTINCT R_RUTA AS RUTA
+                FROM tb_ruta_mb as a
+                    inner join tb_ejecutivo_ruta as b
+                        on a.r_ruta = b.er_ruta
+                WHERE 1=1
+                    AND pg_id=" . $periodo . "
+                    AND b.er_usuario='" . $ejecutivo . "'
+                ORDER BY 1;
+            ";
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();

@@ -15,72 +15,10 @@ $this->pageTitle = $pagina_nombre;
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/reporte/RptResumenDiarioHistorial.js"; ?>"></script>
 <script type="text/javascript" language="javascript" src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
 
-<!--<div class="row">
-    <div class="col-md-3">
-<?php
-$periodoAbierto = FPeriodoGestionModel::getPeriodoActivoNotificacion();
-if ($periodoAbierto != '') :
-    ?>
-                                                                                                                                                                                                        <div class="callout callout-info">
-                                                                                                                                                                                                            <center>
-                                                                                                                                                                                                                <p>Periodo semanal abierto : <br/><b><?php echo $periodoAbierto; ?>
-                                                                                                                                                                                                                    </b></p>
-                                                                                                                                                                                                            </center>
-                                                                                                                                                                                                        </div>
-<?php else: ?>
-                                                                                                                                                                                                        <div class="callout callout-danger">
-                                                                                                                                                                                                            <center>
-                                                                                                                                                                                                                <p><b>** NO EXISTE PERIODO SEMANAL ABIERTO **</b></p>
-                                                                                                                                                                                                            </center>
-                                                                                                                                                                                                        </div>
-<?php endif; ?>
-
-    </div>
-    historial
-    <div class="col-md-3">
-<?php
-$ultimaCargaHistorial = FHistorialModel::getFechaUltimaCarga();
-?>
-        <div class="callout small-box bg-blue">
-            <center>
-                <p>Ultima carga historial : <br/><b><?php echo $ultimaCargaHistorial; ?>
-                    </b></p>
-            </center>
-        </div>
-
-    </div>
-    rutas
-    <div class="col-md-3">
-<?php
-$ultimaCargaRuta = FRutaModel::getFechaUltimaCarga();
-?>
-        <div class="callout small-box bg-yellow">
-            <center>
-                <p>Ultima carga ruta : <br/><b><?php echo $ultimaCargaRuta; ?>
-                    </b></p>
-            </center>
-        </div>
-
-    </div>
-
-    <div class="col-md-3">
-<?php
-$ultimaCargaOrdenes = FOrdenModel::getFechaUltimaCarga();
-?>
-        <div class="callout small-box bg-green">
-            <center>
-                <p>Ultima carga ordenes: <br/><b><?php echo $ultimaCargaOrdenes; ?>
-                    </b></p>
-            </center>
-        </div>
-
-    </div>
-</div>-->
-
 <div class="nav-tabs-custom">
     <div class="btn-group">
         <button type="button" title="Revisar carga" class="btn btn-default" data-toggle="modal" data-target="#modal-cargas">
-            <i class="fa fa-align-left"></i>
+            <i class="fa fa-info"></i>
         </button>
     </div>
     <div class="modal fade" id="modal-cargas">
@@ -150,12 +88,7 @@ $ultimaCargaOrdenes = FOrdenModel::getFechaUltimaCarga();
                                         </b></p>
                                 </center>
                             </div>
-
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
                     </div>
                 </div>
                 <!-- /.modal-content -->
@@ -163,6 +96,7 @@ $ultimaCargaOrdenes = FOrdenModel::getFechaUltimaCarga();
             <!-- /.modal-dialog -->
         </div>
     </div>
+
     <ul class="nav nav-tabs">
         <li class="active"><a href="#tab_1" data-toggle="tab">Revision jornada</a></li>
         <li><a href="#tab_2" data-toggle="tab">Revision individual</a></li>
@@ -335,13 +269,13 @@ $ultimaCargaOrdenes = FOrdenModel::getFechaUltimaCarga();
                                                             <div class="col-md-6">
                                                                 <?php
                                                                 echo CHtml::Button(
-                                                                        'Limpiar', array('id' => 'btnLimpiar'
+                                                                        'Limpiar', array('id' => 'btnLimpiarJornadaIndividual'
                                                                     , 'class' => 'btn btn-block btn-primary btn-sm'
                                                                     , "data-dismiss" => 'modal'
                                                                 ));
                                                                 ?>
                                                             </div>
-                                                           <?php $this->endWidget(); ?>
+                                                            <?php $this->endWidget(); ?>
                                                         </div>
                                                         <!-- /.modal-content -->
                                                     </div>
@@ -1183,7 +1117,7 @@ $ultimaCargaOrdenes = FOrdenModel::getFechaUltimaCarga();
                             $("#tblAltasSinVenta").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'altasSinVenta\']}).trigger(\'reloadGrid\');
                             $("#tblAltasDiaProyeccion").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'altasDiarias\']}).trigger(\'reloadGrid\');
                             GeneralPivotCiudad(datosResult);                            
-//                            GeneralPivotCiudadEjecutivo(datosResult);                            
+                            GeneralPivotCiudadEjecutivo(datosResult);                            
                             
                         } else{
                             $.each(data, function(key, val) {

@@ -406,7 +406,7 @@ class FHistorialModel extends DAOModel {
         return $data;
     }
 
-    public function getCantidadVisitasxEjecutivoxFecha($accion = 'Inicio Visita', $codigoejecutivo, $fecha, $ruta) {
+    public function getCantidadVisitasxEjecutivoxFechaxRuta($accion = 'Inicio Visita', $codigoejecutivo, $fecha, $ruta) {
         $sql = "
             SELECT 
                    count(distinct h_cod_cliente) as visitas_en_ruta
@@ -417,6 +417,25 @@ class FHistorialModel extends DAOModel {
                     AND H_ACCION='" . $accion . "'
                     AND H_RUTA='" . $ruta . "'
                 
+                ;
+            ";
+//   var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getCantidadVisitasxEjecutivoxFechaInicioxFechaFin($codigoejecutivo, $fechaI, $fechaF, $accion = 'Inicio Visita') {
+        $sql = "
+            SELECT 
+                   count(distinct h_cod_cliente) as visitas_en_ruta
+                FROM tb_historial_mb
+                WHERE 1=1
+                    AND " . FuncionesBaseDatos::convertToDate('sqlsrv', 'h_fecha') . "between '" . $fechaI . "' and '" . $fechaF . "'
+                    AND H_USUARIO='" . $codigoejecutivo . "'
+                    AND H_ACCION='" . $accion . "'
                 ;
             ";
 //   var_dump($sql);        die();
@@ -535,6 +554,221 @@ class FHistorialModel extends DAOModel {
 //        var_dump($resultado);        DIE();
         $this->Close();
         return $resultado;
+    }
+
+    public function getClientesConYSinGestionxFecha($ejecutivo, $ruta, $fechaInicio, $fechaFinPeriodo, $periodo, $accion = 'Inicio Visita') {
+//        var_dump($ejecutivo);die();
+        $sql = "   
+            select TIPO ,CONTEO_CLIENTES FROM (            
+                    select 
+                        a.er_usuario_nombre AS EJECUTIVO
+                        ,b.r_ruta AS RUTA
+                        ,count (distinct(b.r_cod_cliente)) as CONTEO_CLIENTES
+                        ,c.pg_descripcion AS FECHA_PERIODO
+                        ,c.pg_id AS PERIODO 
+                        ,'VISITADOS' AS TIPO
+                    FROM tb_ejecutivo_ruta as a
+                        inner join tb_ruta_mb as b
+                            on a.er_ruta=b.r_ruta
+                        inner join tb_periodo_gestion as c
+                            on b.pg_id=c.pg_id
+                    where 1=1
+                        and a.er_usuario='" . $ejecutivo . "'
+                        and b.r_cod_cliente in (
+                            select h_cod_cliente 
+                                from tb_historial_mb 
+                                where 1=1 
+                                    and convert(date,h_fecha) between '" . $fechaInicio . "' and '" . $fechaFinPeriodo . "'
+                                    and h_accion='" . $accion . "'
+                                    and h_usuario='" . $ejecutivo . "'
+                            )
+                        and b.r_ruta='" . $ruta . "'
+                    group by a.er_usuario_nombre,c.pg_descripcion,c.pg_id ,b.r_ruta               
+                    union 
+                    select 
+                        a.er_usuario_nombre AS EJECUTIVO
+                        ,b.r_ruta AS RUTA
+                        ,count (distinct(b.r_cod_cliente)) as CONTEO_CLIENTES
+                        ,c.pg_descripcion AS FECHA_PERIODO 
+                        ,c.pg_id AS PERIODO 
+                        ,'NO VISITADOS' AS TIPO
+                    FROM tb_ejecutivo_ruta as a
+                        inner join tb_ruta_mb as b
+                            on a.er_ruta=b.r_ruta
+                        inner join tb_periodo_gestion as c
+                            on b.pg_id=c.pg_id
+                    where 1=1
+                        and a.er_usuario='" . $ejecutivo . "'
+                        and b.r_cod_cliente not in (
+                            select h_cod_cliente 
+                                from tb_historial_mb 
+                                where 1=1 
+                                    and convert(date,h_fecha) between '" . $fechaInicio . "' and '" . $fechaFinPeriodo . "'
+                                    and h_accion='" . $accion . "'
+                                    and h_usuario='" . $ejecutivo . "'
+                            )
+                        and b.r_ruta='" . $ruta . "'
+                    group by a.er_usuario_nombre,c.pg_descripcion,c.pg_id ,b.r_ruta  
+                ) as w 
+                where PERIODO =" . $periodo . "
+                order by 1
+;
+
+            ";
+//   var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getClientesConYSinGestionxFechaPCP($ejecutivo, $ruta, $fechaInicio, $fechaFinPeriodo, $periodo, $accion = 'Inicio Visita') {
+//        var_dump($ejecutivo);die();
+        $sql = "   
+            select PROVINCIA,CANTON,PARROQUIA,TIPO ,CONTEO_CLIENTES FROM (            
+                    select 
+                        d.dcli_provincia as PROVINCIA
+                        ,d.dcli_CANTON as CANTON
+                        ,d.dcli_PARROQUIA as PARROQUIA
+                        ,count (distinct(b.r_cod_cliente)) as CONTEO_CLIENTES
+                        ,c.pg_descripcion AS FECHA_PERIODO
+                        ,c.pg_id AS PERIODO 
+                        ,'VISITADOS' AS TIPO
+                    FROM tb_ejecutivo_ruta as a
+                        inner join tb_ruta_mb as b
+                            on a.er_ruta=b.r_ruta
+                        inner join tb_periodo_gestion as c
+                            on b.pg_id=c.pg_id
+                        inner join tb_cliente_direccion as d
+                            on b.r_cod_cliente=d.dcli_cliente
+                    where 1=1
+                        and a.er_usuario='" . $ejecutivo . "'
+                        and b.r_cod_cliente in (
+                            select h_cod_cliente 
+                                from tb_historial_mb 
+                                where 1=1 
+                                    and convert(date,h_fecha) between '" . $fechaInicio . "' and '" . $fechaFinPeriodo . "'
+                                    and h_accion='" . $accion . "'
+                                    and h_usuario='" . $ejecutivo . "'
+                            )
+                        and b.r_ruta='" . $ruta . "'
+                    group by d.dcli_provincia,d.dcli_CANTON,d.dcli_PARROQUIA,c.pg_descripcion,c.pg_id               
+                    union 
+                    select 
+                        d.dcli_provincia as PROVINCIA
+                        ,d.dcli_CANTON as CANTON
+                        ,d.dcli_PARROQUIA as PARROQUIA
+                        ,count (distinct(b.r_cod_cliente)) as CONTEO_CLIENTES
+                        ,c.pg_descripcion AS FECHA_PERIODO 
+                        ,c.pg_id AS PERIODO 
+                        ,'NO VISITADOS' AS TIPO
+                    FROM tb_ejecutivo_ruta as a
+                        inner join tb_ruta_mb as b
+                            on a.er_ruta=b.r_ruta
+                        inner join tb_periodo_gestion as c
+                            on b.pg_id=c.pg_id
+                        inner join tb_cliente_direccion as d
+                            on b.r_cod_cliente=d.dcli_cliente
+                    where 1=1
+                        and a.er_usuario='" . $ejecutivo . "'
+                        and b.r_cod_cliente not in (
+                            select h_cod_cliente 
+                                from tb_historial_mb 
+                                where 1=1 
+                                    and convert(date,h_fecha) between '" . $fechaInicio . "' and '" . $fechaFinPeriodo . "'
+                                    and h_accion='" . $accion . "'
+                                    and h_usuario='" . $ejecutivo . "'
+                            )
+                        and b.r_ruta='" . $ruta . "'
+                    group by d.dcli_provincia,d.dcli_CANTON,d.dcli_PARROQUIA,c.pg_descripcion,c.pg_id 
+                ) as w 
+                where PERIODO =" . $periodo . "
+                order by 1
+;
+
+            ";
+//   var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getPeriodosEnHistorial($fechaInicio, $fechaFin, $accion = 'Inicio Visita') {
+        $sql = "   
+            select 
+                    distinct 
+                    a.pg_id as id_periodo
+                    ,b.pg_descripcion as nombre_periodo
+                    ,b.pg_fecha_inicio fecha_inicio
+                    ,b.pg_fecha_fin fecha_fin
+                from tb_historial_mb as a
+                    inner join tb_periodo_gestion as b
+                        on a.pg_id=b.pg_id
+                where 1=1 
+                   and convert(date,a.h_fecha) between '" . $fechaInicio . "' and '" . $fechaFin . "'
+                order by 1
+                   
+;
+            ";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getDetalleClientesVisitadosxTipoUsrxUsrxFecha($VisitadoNoVisitado, $usuario, $fechaInicio, $fechaFin, $periodo, $accion = 'Inicio Visita') {
+        $filtrarHistorial = '';
+//        if ($tipoUsuario == 'E')
+
+        $condicion = $VisitadoNoVisitado == 0 ? 'not' : '';
+        $sql = "   
+            select 
+                    ROW_NUMBER() OVER(ORDER BY r_cod_cliente ASC) AS ITEM
+                    ,er_ruta AS RUTA
+                    ,er_usuario_nombre AS EJECUTIVO
+                    ,r_cod_cliente AS CODIGOCLIENTE
+                    ,r_nom_cliente AS CLIENTE
+                    ,COUNT(r_cod_cliente) AS VISITAS
+                from tb_ruta_mb as a
+                    inner join tb_ejecutivo_ruta as b
+                     on a.r_ruta=b.er_ruta
+                where 1=1
+                    and a.r_cod_cliente $condicion in (
+                        select h_cod_cliente 
+                            from tb_historial_mb 
+                            where 1=1 
+                                and convert(date,h_fecha) between '$fechaInicio ' and '$fechaFin'
+                                and h_accion='$accion'
+                                and h_usuario ='$usuario'
+                    )
+                    and a.pg_id =$periodo 
+                    and b.er_usuario='$usuario'
+            group by r_cod_cliente,r_nom_cliente,er_ruta,er_usuario_nombre
+                order by 3, 2
+                   
+;";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getDetalleClientesVisitadosAcumulado($fechaInicio, $fechaFin,$usuario,  $accion = 'Inicio Visita') {
+
+        $sql = "EXEC [SP_VISITAS_ACUMULADAS_MES] '$fechaInicio','$fechaFin','$usuario';";
+//        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);        die();
+        $this->Close();
+        return $data;
     }
 
 }

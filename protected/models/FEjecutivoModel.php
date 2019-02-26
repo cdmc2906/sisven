@@ -17,8 +17,9 @@ class FEjecutivoModel extends DAOModel {
                     and e_estado='" . $estado . "'
                     " . $usuarios . "
                     AND e_tipo NOT IN ('O','M') -- USUARIOS PARA OTROS SISTEMAS(O -> OTRO M ->MAYORISTA
+                     --and e_usr_mobilvendor='QU23'
                 order by e_nombre asc;";
-//        var_dump($sql);die();
+//        var_dump($sql);die();   
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
 

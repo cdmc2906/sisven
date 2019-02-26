@@ -7,41 +7,41 @@ $(document).ready(function () {
 });
 
 function ConfigurarGrid() {
-    jQuery("#tblGrid").jqGrid({
+    jQuery("#tblClientes").jqGrid({
         loadonce: true,
         datatype: 'json',
         mtype: 'POST',
         url: MetodoListar,
         colNames: [
-            'Codigo cliente',
-            'Nombre',
-            'Latitud',
-            'Longitud'
+            'CODIGO',
+            'NOMBRE',
+            'CREADO',
+            'ESTADO'
         ],
         colModel: [
 
-            {name: 'CODIGO', index: 'CODIGO', width: 200, resizable: false, sortable: false, frozen: false},
-            {name: 'CLIENTENOMBRE', index: 'CLIENTENOMBRE', width: 200, resizable: false, sortable: false, frozen: false},
-            {name: 'LATITUD', index: 'LATITUD', width: 200, resizable: false, sortable: false, frozen: false},
-            {name: 'LONGITUD', index: 'LONGITUD', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'CLI_CODIGO_CLIENTE', index: 'CLI_CODIGO_CLIENTE', width: 100, resizable: false, sortable: false, frozen: false},
+            {name: 'CLI_NOMBRE_CLIENTE', index: 'CLI_NOMBRE_CLIENTE', width: 300, resizable: true, sortable: false, frozen: false},
+            {name: 'CLI_CREADO', index: 'CLI_CREADO', width: 150, resizable: false, sortable: false, frozen: false},
+            {name: 'CLI_ESTATUS', index: 'CLI_ESTATUS', width: 80, resizable: false, sortable: false, frozen: false},
         ],
-        pager: '#pagGrid',
-        rowNum: NroFilas,
+        pager: '#pagtblClientes',
+        rowNum: 10,
         rowList: ElementosPagina,
         //sortname: 'bank_date',
         sortorder: 'ASC',
-        caption:'Coordenadas clientes',
-        
+        caption: 'Datos clientes',
+
         viewrecords: true,
 //        height: 'auto',
-        height: 360,
-//        width: 200,
-        autowidth: true,
-         hidegrid: false,
+        height: 230,
+        width: 780,
+//        autowidth: true,
+        hidegrid: false,
         gridview: true,
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
         rownumbers: true,
-        
+
         jsonReader: {
             root: "Result",
             repeatitems: false, //cuando el array de la data son object
@@ -56,7 +56,7 @@ function ConfigurarGrid() {
         }
     });
 
-    jQuery("#tblGrid").jqGrid('navGrid', '#pagGrid',
+    jQuery("#tblClientes").jqGrid('navGrid', '#pagtblClientes',
             {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options 
             {}, // edit options 
             {}, // add options 

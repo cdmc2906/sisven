@@ -308,7 +308,7 @@ class CargaRutasMbController extends Controller {
                     $rutaEnBase["r_estatus"] != $row['ESTATUS'])) {
 
                 $this->GenerarHistorial($rutaEnBase, 1, $row);
-                $rutaEnBase->delete();
+//                $rutaEnBase->delete();
             }
 
             $exisArray = false;
@@ -345,23 +345,23 @@ class CargaRutasMbController extends Controller {
 //            }
         }
 
-        //eliminacion de los clientes de la carga anterior
-        $datos['rutasmb'] = $datosRutas;
-        $rutasEliminar = RutaMbModel::model()->findAllByAttributes(
-                array(
-                    'r_numero_carga_informacion' => Yii::app()->session['cargaAnterior']
-                    , 'pg_id' => Yii::app()->session['idPeriodoAbierto']
-                )
-        );
-//        var_dump($rutasEliminar,Yii::app()->session['idPeriodoAbierto']);die();
-
-
-        foreach ($rutasEliminar as $rutaEliminar) {
-            $dummy = array();
-            $this->GenerarHistorial($rutaEliminar, 2, $dummy);
-            $rutaEliminar->delete();
-        }
-//        var_dump($datos['rutasmb']);die();
+//        //eliminacion de los clientes de la carga anterior
+//        $datos['rutasmb'] = $datosRutas;
+//        $rutasEliminar = RutaMbModel::model()->findAllByAttributes(
+//                array(
+//                    'r_numero_carga_informacion' => Yii::app()->session['cargaAnterior']
+//                    , 'pg_id' => Yii::app()->session['idPeriodoAbierto']
+//                )
+//        );
+////        var_dump($rutasEliminar,Yii::app()->session['idPeriodoAbierto']);die();
+//
+//
+//        foreach ($rutasEliminar as $rutaEliminar) {
+//            $dummy = array();
+//            $this->GenerarHistorial($rutaEliminar, 2, $dummy);
+//            $rutaEliminar->delete();
+//        }
+////        var_dump($datos['rutasmb']);die();
         return $datos;
     }
 

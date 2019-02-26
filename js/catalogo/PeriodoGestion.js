@@ -6,12 +6,17 @@ $(document).ready(function () {
         document.getElementById("PeriodoGestionModel_pg_fecha_inicio").value = '';
         document.getElementById("PeriodoGestionModel_pg_fecha_fin").value = '';
         switch (strUser) {
-            case 1: //semanal
+            case 1: //variable
                 ConfigDatePickersRango('.txtfechaInicioPeriodo', '.txtfechaFinPeriodo', strUser, 6);
                 document.getElementById("PeriodoGestionModel_pg_fecha_inicio").disabled = false;
                 document.getElementById("PeriodoGestionModel_pg_fecha_fin").disabled = false;
                 break;
-            case 2://mensual
+            case 2: //semanal
+                ConfigDatePickersRango('.txtfechaInicioPeriodo', '.txtfechaFinPeriodo', strUser, 6);
+                document.getElementById("PeriodoGestionModel_pg_fecha_inicio").disabled = false;
+                document.getElementById("PeriodoGestionModel_pg_fecha_fin").disabled = false;
+                break;
+            case 3://mensual
                 ConfigDatePickersRango('.txtfechaInicioPeriodo', '.txtfechaFinPeriodo', strUser, 0);
                 document.getElementById("PeriodoGestionModel_pg_fecha_inicio").disabled = false;
                 document.getElementById("PeriodoGestionModel_pg_fecha_fin").disabled = false;

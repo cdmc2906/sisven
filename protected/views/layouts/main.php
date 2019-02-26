@@ -390,8 +390,14 @@
 //                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
                                                 ),
                                                 array(
-                                                    'label' => 'Coordenadas'
-                                                    , 'url' => array('/CargaCoordenadasClientes/index')
+                                                    'label' => 'Clientes'
+                                                    , 'url' => array('/CargaClientes/index')
+                                                    , 'visible' => $verMenusAdmin
+//                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
+                                                ),
+                                                array(
+                                                    'label' => 'Direcciones Clientes'
+                                                    , 'url' => array('/CargaDireccionClientes/index')
                                                     , 'visible' => $verMenusAdmin
 //                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
                                                 ),
@@ -544,6 +550,31 @@
                                         ?>
 
                                     </li>
+                                    
+                                     <li class="treeview">
+                                        <a href="#"><i class="fa fa-circle-o"></i>Analisis Clientes
+                                            <span class="pull-right-container">
+                                                <i class="fa fa-angle-left pull-right"></i>
+                                            </span>
+                                        </a>
+                                        <?php
+                                        $this->widget('zii.widgets.CMenu', array(
+                                            'items' => array(
+                                                array(
+                                                    'label' => 'Sin gestion por fecha'
+                                                    , 'url' => array('/RptCliSinGestionxFecha/')
+//                                                    , 'visible' => $verMenusAdmin
+//                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
+                                                ),
+                                            ),
+                                            'linkLabelWrapper' => 'i',
+                                            'linkLabelWrapperHtmlOptions' => array('class' => 'fa'),
+                                            'htmlOptions' => array('class' => 'treeview-menu'),
+                                        ));
+                                        ?>
+
+                                    </li>
+
 
 
                                     <li class="treeview">

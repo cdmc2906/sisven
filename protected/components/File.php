@@ -437,18 +437,49 @@ class File {
 
             while (!feof($data)) {
                 $strFilas = fgets($data, 4096);
+//                $strFilas = fgets($data);
+//                var_dump($strFilas,"ca",$strFilas1);die();
                 if ($lineNumber >= $start && $lineNumber <= ($start + $blockSize) - 1) {
                     $arrColumnas = explode($this->Delimitador, $strFilas);
-//                    var_dump(utf8_encode($arrColumnas[0]));die();
-//                    var_dump($arrColumnas[0]);die();
-//                    var_dump(count($arrColumnas));die();
-                    if (isset($arrColumnas[3])) {
-                        if (utf8_encode($arrColumnas[0]) != 'Cliente') { // Quita la fila de encabezados
+                    if (isset($arrColumnas[32])) {
+//                        var_dump(utf8_encode($arrColumnas[0]), utf8_encode('Código'), utf8_encode($arrColumnas[0]) != utf8_encode('Código'));
+//                        var_dump(substr($arrColumnas[1], 0, 7));
+                        if (substr($arrColumnas[1], 0, 7) != 'Tipo de') {
+//                            var_dump($arrColumnas[1]);
                             $datos = array(
-                                'CODIGO' => utf8_encode(trim($arrColumnas[0])),
-                                'CLIENTENOMBRE' => utf8_encode(trim(trim($arrColumnas[1], '\"'))),
-                                'LATITUD' => (trim($arrColumnas[2]) == 'null') ? '0' : trim($arrColumnas[2]),
-                                'LONGITUD' => (trim($arrColumnas[3]) == 'null') ? '0' : trim($arrColumnas[3]),
+                                'CLI_CODIGO_CLIENTE' => utf8_encode(trim($arrColumnas[0])),
+                                'CLI_TIPO_DE_IDENTIFICACION' => utf8_encode(trim($arrColumnas[1])),
+                                'CLI_IDENTIFICACION' => utf8_encode(trim($arrColumnas[2])),
+                                'CLI_NOMBRE_CLIENTE' => utf8_decode(utf8_encode(trim(trim($arrColumnas[3], '"')))),
+                                'CLI_NOMBRE_DE_COMPANIA' => utf8_decode(utf8_encode(trim(trim($arrColumnas[4], '"')))),
+                                'CLI_NOMBRE_COMERCIAL' => utf8_decode(utf8_encode(trim($arrColumnas[5], '"'))),
+                                'CLI_CONTACTO' => utf8_decode(utf8_encode(trim(trim($arrColumnas[6], '"')))),
+                                'CLI_MONEDA' => utf8_encode(trim($arrColumnas[7])),
+                                'CLI_MONEDA_NOMBRE' => utf8_encode(trim($arrColumnas[8])),
+                                'CLI_TIPO_DE_NEGOCIO' => utf8_encode(trim($arrColumnas[9])),
+                                'CLI_TIPO_DE_NEGOCIO_NOMBRE' => utf8_encode(trim($arrColumnas[10])),
+                                'CLI_SUBCANAL' => utf8_encode(trim($arrColumnas[11])),
+                                'CLI_SUBCANAL_NOMBRE' => utf8_encode(trim($arrColumnas[12])),
+                                'CLI_LISTA_DE_PRECIOS' => utf8_encode(trim($arrColumnas[13])),
+                                'CLI_LISTA_DE_PRECIOS_NOMBRE' => utf8_encode(trim($arrColumnas[14])),
+                                'CLI_LISTA_DE_PRECIOS_2' => utf8_encode(trim($arrColumnas[15])),
+                                'CLI_LISTA_DE_PRECIOS_2_NOMBRE' => utf8_encode(trim($arrColumnas[16])),
+                                'CLI_TERMINO_DE_PAGO' => utf8_encode(trim($arrColumnas[17])),
+                                'CLI_TERMINO_DE_PAGO_NOMBRE' => utf8_encode(trim($arrColumnas[18])),
+                                'CLI_METODO_DE_PAGO' => utf8_encode(trim($arrColumnas[19])),
+                                'CLI_METODO_DE_PAGO_NOMBRE' => utf8_encode(trim($arrColumnas[20])),
+                                'CLI_GRUPO' => utf8_encode(trim($arrColumnas[21])),
+                                'CLI_GRUPO_NOMBRE' => utf8_encode(trim($arrColumnas[22])),
+                                'CLI_USUARIO' => utf8_encode(trim($arrColumnas[23])),
+                                'CLI_USUARIO_NOMBRE' => utf8_decode(utf8_encode(trim($arrColumnas[24]))),
+                                'CLI_COMENTARIO' => utf8_encode(trim(trim($arrColumnas[25], '"'))),
+                                'CLI_OBJETIVO_DE_VENTA' => utf8_encode(trim($arrColumnas[26])),
+                                'CLI_MAXIMO_DESCUENTO_PORCENTAJE' => utf8_encode(trim($arrColumnas[27])),
+                                'CLI_RETENCION_PORCENTAJE' => utf8_encode(trim($arrColumnas[28])),
+                                'CLI_TIENE_CREDITO' => utf8_encode(trim($arrColumnas[29])),
+                                'CLI_ESTATUS' => utf8_encode(trim($arrColumnas[30])),
+                                'CLI_CREADO' => utf8_encode(trim($arrColumnas[31])),
+                                'CLI_CREADO_POR' => utf8_encode(trim($arrColumnas[32])),
                             );
 //                            var_dump($datos);die();
                             array_push($datosCarga, $datos);
@@ -463,7 +494,78 @@ class File {
 
                 $lineNumber++;
             }
+//            die();
         }
+//        var_dump($datosCarga);        die();
+        unset($data);
+        $this->Close();
+        return $datosCarga;
+    }
+
+    public function getDireccionClientes($start, $blockSize) {
+        $this->Open();
+        $data = $this->Archivo;
+
+        if ($data) {
+            $datosCarga = array();
+            $lineNumber = 1;
+
+            while (!feof($data)) {
+                $strFilas = fgets($data, 4096);
+//                $strFilas = fgets($data);
+//                var_dump($strFilas);die();
+                if ($lineNumber >= $start && $lineNumber <= ($start + $blockSize) - 1) {
+                    $arrColumnas = explode($this->Delimitador, $strFilas);
+//                    var_dump(isset($arrColumnas[29]),$arrColumnas);die();
+                    if (isset($arrColumnas[25])) {
+//                        var_dump(utf8_encode($arrColumnas[0]), utf8_encode('Código'), utf8_encode($arrColumnas[0]) != utf8_encode('Código'));
+//                        var_dump(substr($arrColumnas[1], 0, 7));
+                        if ($arrColumnas[1] != 'Cliente') {
+//                            var_dump($arrColumnas[1]);
+                            $datos = array(
+                                'DCLI_CODIGO' => utf8_encode(trim(trim(trim($arrColumnas[0]), "'"), ";")),
+                                'DCLI_CLIENTE' => utf8_encode(trim(trim($arrColumnas[1]), "'")),
+                                'DCLI_CLIENTE_NOMBRE' => utf8_decode(utf8_encode(trim(trim($arrColumnas[2]), "'"))),
+                                'DCLI_CLIENTE_IDENTIFICACION' => utf8_encode(trim(trim($arrColumnas[3]), "'")),
+                                'DCLI_CLIENTE_COMENTARIO' => utf8_decode(utf8_encode(trim(trim(trim($arrColumnas[4]), "'"), ";"))),
+                                'DCLI_OFICINA' => utf8_encode(trim(trim($arrColumnas[5]), "'")),
+                                'DCLI_OFICINA_NOMBRE' => utf8_encode(trim(trim($arrColumnas[6]), "'")),
+                                'DCLI_CODIGO_DE_BARRAS' => utf8_encode(trim(trim($arrColumnas[7]), "'")),
+                                'DCLI_DESCRIPCION' => utf8_encode(trim(trim($arrColumnas[8]), "'")),
+                                'DCLI_CONTACTO' => utf8_encode(trim(trim($arrColumnas[9]), "'")),
+                                'DCLI_GEO_AREA' => utf8_decode(utf8_encode(trim(trim($arrColumnas[10]), "'"))),
+                                'DCLI_GEO_AREA_NOMBRE' => utf8_decode(utf8_encode(trim(trim($arrColumnas[11]), "'"))),
+                                'DCLI_GEO_AREA_CODIGO_RECORRIDO' => utf8_encode(trim(trim($arrColumnas[12]), "'")),
+                                'DCLI_GEO_AREA_DESCRIPCION_RECORRIDO' => utf8_decode(utf8_encode(trim(trim($arrColumnas[13]), "'"))),
+                                'DCLI_CALLE_PRINCIPAL' => utf8_decode(utf8_encode(trim(trim($arrColumnas[14]), "'"))),
+                                'DCLI_NOMENCLATURA' => utf8_decode(utf8_encode(trim(trim($arrColumnas[15]), "'"))),
+                                'DCLI_CALLE_SECUNDARIA' => utf8_decode(utf8_encode(trim(trim($arrColumnas[16]), "'"))),
+                                'DCLI_REFERENCIA' => utf8_decode(utf8_encode(trim(trim($arrColumnas[17]), "'"))),
+                                'DCLI_CODIGO_POSTAL' => utf8_encode(trim(trim($arrColumnas[18]), "'")),
+                                'DCLI_TELEFONO' => utf8_encode(trim(trim($arrColumnas[19]), "'")),
+                                'DCLI_FAX' => utf8_encode(trim(trim($arrColumnas[20]), "'")),
+                                'DCLI_EMAIL' => utf8_encode(trim(trim($arrColumnas[21]), "'")),
+                                'DCLI_LATITUD' => utf8_encode(trim(trim($arrColumnas[22]), "'")),
+                                'DCLI_LONGITUD' => utf8_encode(trim(trim($arrColumnas[23]), "'")),
+                                'DCLI_ULTIMA_VISITA' => utf8_encode(trim(trim($arrColumnas[24]), "'")),
+                                'DCLI_ESTADO_DE_LOCALIZACION' => utf8_decode(utf8_encode(trim(trim($arrColumnas[25]), "'"))),
+                            );
+//                            var_dump($datos);die();
+                            array_push($datosCarga, $datos);
+                            unset($datos);
+                        }
+                    }
+                }
+
+                if ($lineNumber > ($start + $blockSize) - 1) {
+                    break;
+                }
+
+                $lineNumber++;
+            }
+//            die();
+        }
+//        var_dump($datosCarga);        die();
         unset($data);
         $this->Close();
         return $datosCarga;
@@ -749,7 +851,7 @@ class File {
 //                    var_dump($arrColumnas);die();
 //                    var_dump($arrColumnas[1]);                    die();
                     if (isset($arrColumnas[11])) {
-                        if ($arrColumnas[0] != 'Código') { // Quita la fila de encabezados
+                        if ($arrColumnas[1] != 'Ruta') { // Quita la fila de encabezados
                             $datos = array(
                                 'CODIGO' => utf8_encode(trim($arrColumnas[0])),
                                 'RUTA' => utf8_encode(trim($arrColumnas[1])),

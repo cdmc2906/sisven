@@ -213,7 +213,7 @@ class RptResumenDiarioHistorialController extends Controller {
                     $datosEnviarVista['ventasmensual'] = $datosVentasMes;
 
 //                    die();
-//                    var_dump($datos);die();
+//                    var_dump($datosEnviarVista['ventasmensual']);die();
                     $response->Message = "Periodo revisado exitosamente";
                     $response->Status = SUCCESS;
                     $response->Result = $datosEnviarVista;
@@ -835,6 +835,10 @@ class RptResumenDiarioHistorialController extends Controller {
         $contadorClientesNuevos = 0;
         $contadorVisitasRepetidas = 0;
 
+        $contadorClientesPropios = 0;
+        $contadorClienteTemporal = 0;
+        $contadorClientesDesconocido = 0;
+
         $clientesVisitados = array();
         $semanasEjecutivo = array();
         $s_semanasEjecutivo = '';
@@ -850,7 +854,7 @@ class RptResumenDiarioHistorialController extends Controller {
         $segundosTralado = "";
         $_sTiempoTraslado = "";
         foreach ($historial as $itemHistorial) {
-//            var_dump($itemHistorial['accion']);die();
+//            var_dump($itemHistorial);die();
             switch ($itemHistorial['accion']) {
                 /* 'Inicio visita' => 'Inicio visita',
                   'Orden' => 'Orden',
@@ -863,6 +867,7 @@ class RptResumenDiarioHistorialController extends Controller {
                   'Estatus' => 'Estatus'
                  */
                 case 'Inicio visita':
+
                     $fechaGestion = DateTime::createFromFormat('Y-m-d H:i', $itemHistorial['FECHAVISITA'])->format(FORMATO_FECHA);
                     $inicioVisita = new DateTime('00:00:00');
                     $finVisita = new DateTime('00:00:00');
@@ -878,10 +883,19 @@ class RptResumenDiarioHistorialController extends Controller {
                         $s_semanasEjecutivo .= $itemHistorial['SEMANAHISTORIAL'] . '/';
                     }
 
-                    if (array_search($itemHistorial['CODIGOCLIENTE'], $clientesVisitados) === FALSE)
-                        array_push($clientesVisitados, $itemHistorial['CODIGOCLIENTE']);
-                    else
-                        $contadorVisitasRepetidas += 1;
+                    if ((substr($itemHistorial['CODIGOCLIENTE'], 0, 4) == INICIAL_CLIENTES_MOVISTAR) ||
+                            (substr($itemHistorial['CODIGOCLIENTE'], 0, 2) == INICIAL_CLIENTES_TUENTI)) {
+                        if (array_search($itemHistorial['CODIGOCLIENTE'], $clientesVisitados) === FALSE) {
+                            array_push($clientesVisitados, $itemHistorial['CODIGOCLIENTE']);
+                            $contadorClientesPropios += 1;
+                        } else
+                            $contadorVisitasRepetidas += 1;
+                    } elseif (substr($itemHistorial['CODIGOCLIENTE'], 0, 4) == INICIAL_CLIENTES_TEMPORAL ||
+                            substr($itemHistorial['CODIGOCLIENTE'], 0, 3) == INICIAL_CLIENTES_TEMPORAL_2) {
+                        $contadorClienteTemporal += 1;
+                    } else {
+                        $contadorClientesDesconocido += 1;
+                    }
 
                     $inicioFinVisitaHistorial = $fHistorial->getInicioFinVisitaClientexEjecutivoxFecha(
                             'Inicio visita'
@@ -933,6 +947,7 @@ class RptResumenDiarioHistorialController extends Controller {
                     break;
             }
         }#Fin iteracion items historial
+//        die();
 //        Yii::app()->session['tiempoGestionEjecutivo'] = $totalGestion;
 //        Yii::app()->session['tiempoTrasladoEjecutivo'] = $totalTraslados;
 //        Yii::app()->session['semanas'] = $s_semanasEjecutivo;
@@ -949,14 +964,19 @@ class RptResumenDiarioHistorialController extends Controller {
         $dataRetorno['tiempoTrasladoEjecutivo'] = $totalTraslados;
         $dataRetorno['semanas'] = $s_semanasEjecutivo;
         $dataRetorno['cantidadVisitas'] = count($clientesVisitados);
+//        $dataRetorno['cantidadVisitas'] = $contadorClientesPropios + $contadorClienteTemporal;
         $dataRetorno['cantidadRepetidas'] = $contadorVisitasRepetidas;
-        $dataRetorno['totalVisitas'] = count($clientesVisitados) + $contadorVisitasRepetidas;
+        $dataRetorno['totalVisitas'] = count($clientesVisitados) + $contadorVisitasRepetidas + $contadorClienteTemporal;
         $dataRetorno['contadorChipsVendidos'] = $contadorChipsVendidos;
         $dataRetorno['contadorClientesEfectivos'] = $contadorClientesEfectivos;
         $dataRetorno['contadorEncuestas'] = $contadorEncuestas;
         $dataRetorno['contadorClientesNuevos'] = $contadorClientesNuevos;
 
-//        $dataRetorno
+        $dataRetorno['totalPropios'] = $contadorClientesPropios;
+        $dataRetorno['totalTemporal'] = $contadorClienteTemporal;
+        $dataRetorno['totalDesconocido'] = $contadorClientesDesconocido;
+
+//    var_dump(        $dataRetorno);die();
         return $dataRetorno;
     }
 
@@ -1037,6 +1057,9 @@ class RptResumenDiarioHistorialController extends Controller {
                         'SEMANAS' => ($det['semanas'] > 0) ? $det['semanas'] : '0',
                         'VISITAS' => ($det['cantidadVisitas'] > 0) ? $det['cantidadVisitas'] : '0',
                         'REPETIDAS' => ($det['cantidadRepetidas'] > 0) ? $det['cantidadRepetidas'] : '0',
+                        'PROPIOS' => ($det['totalPropios'] > 0) ? $det['totalPropios'] : '0',
+                        'TEMPORAL' => ($det['totalTemporal'] > 0) ? $det['totalTemporal'] : '0',
+                        'DESCONOCIDO' => ($det['totalDesconocido'] > 0) ? $det['totalDesconocido'] : '0',
                         'TOTAL' => ($det['totalVisitas'] > 0) ? $det['totalVisitas'] : '0',
                         'NUEVOS' => ($det['contadorClientesNuevos'] > 0) ? $det['contadorClientesNuevos'] : '0',
                         'EFECTIVOS' => ($det['contadorClientesEfectivos'] > 0) ? $det['contadorClientesEfectivos'] : '0',
@@ -1526,7 +1549,7 @@ class RptResumenDiarioHistorialController extends Controller {
         $cEjecutivos = new FEjecutivoModel();
         $ejecutivos = $cEjecutivos->getEjecutivosXUsrMobilvendor($_POST['ejecutivoSeleccionadoPeriodo'], 1);
         $libreria = new Libreria();
-        
+
         if ($_POST['tipoFecha'] == 'P') {
             $numMes = substr($_POST['inicioPeriodo'], 5, 2);
             $diasMes = cal_days_in_month(CAL_GREGORIAN, intval($numMes), $_POST['anioPeriodo']);

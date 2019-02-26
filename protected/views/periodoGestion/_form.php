@@ -29,8 +29,10 @@
             <?php
             echo $form->dropDownList(
                     $model, 'pg_tipo', array(
+                'VARIABLE' => 'VARIABLE',
                 'SEMANAL' => 'SEMANAL',
-                'MENSUAL' => 'MENSUAL',)
+                'MENSUAL' => 'MENSUAL',
+                    )
                     , array(
                 'empty' => TEXT_OPCION_SELECCIONE,
                 'options' => array(1 => array('selected' => true)),
@@ -60,7 +62,7 @@
                 'disabled' => 'disabled'
             ));
             ?>
-<?php echo $form->error($model, 'pg_fecha_fin'); ?>
+            <?php echo $form->error($model, 'pg_fecha_fin'); ?>
         </div>
 
 
@@ -68,8 +70,8 @@
 
     <!--    <div class="row">
             <div class="col-md-8">
-<?php echo $form->labelEx($model, 'pg_descripcion'); ?>
-<?php echo $form->textField($model, 'pg_descripcion', array('size' => 40, 'maxlength' => 60)); ?>
+    <?php echo $form->labelEx($model, 'pg_descripcion'); ?>
+    <?php echo $form->textField($model, 'pg_descripcion', array('size' => 40, 'maxlength' => 60)); ?>
     <?php echo $form->error($model, 'pg_descripcion'); ?>                
             </div>
         </div>-->
@@ -90,7 +92,7 @@
             )
     );
     ?>
-<?php echo $form->error($model, 'pg_estado'); ?>
+    <?php echo $form->error($model, 'pg_estado'); ?>
     
             </div>-->
 
@@ -110,15 +112,15 @@
 
 <!--    <div class="row">
 <?php echo $form->labelEx($model, 'pg_cod_usuario_ing_mod'); ?>
-    <?php echo $form->textField($model, 'pg_cod_usuario_ing_mod'); ?>
-    <?php echo $form->error($model, 'pg_cod_usuario_ing_mod'); ?>
+<?php echo $form->textField($model, 'pg_cod_usuario_ing_mod'); ?>
+<?php echo $form->error($model, 'pg_cod_usuario_ing_mod'); ?>
     </div>-->
 
 <div class="row buttons">
-<?php echo CHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Save', array('class' => 'btn btn-success btn-sm')); ?>
-<?php
-echo CHtml::Button('Limpiar', array('id' => 'btnLimpiar', 'class' => 'btn btn-danger btn-sm'));
-?>
+    <?php echo CHtml::submitButton($model->isNewRecord ? 'Guardar' : 'Save', array('class' => 'btn btn-success btn-sm')); ?>
+    <?php
+    echo CHtml::Button('Limpiar', array('id' => 'btnLimpiar', 'class' => 'btn btn-danger btn-sm'));
+    ?>
 </div>
 
 <?php $this->endWidget(); ?>

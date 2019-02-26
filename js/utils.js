@@ -141,35 +141,10 @@ function ConfigDatePickersReporte(inicio, fin) {
             })
             .on('changeDate', function (e) {
                 var selectedDate = $(inicio).val();
-//        alert(selectedDate);
                 $(fin).datepicker('setStartDate', selectedDate);
-//                alert(selectedDate);
-//                var fechaHoy = new Date();
-//                alert(fechaHoy);
-//                var fechaInicio = new Date.parse(selectedDate);
-//                alert (fechaInicio)
                 var fechaInicio = new Date(e.date);
-//                fechaMaxima.setMonth(fechaMaxima.getMonth() + 12);
-//alert(fechaMaxima)
-//                var anio = selectedDate.getFullYear();
-//                var mes = selectedDate.getMonth();
-//                var dia = new Date(fechaMaxima.getFullYear(), fechaMaxima.getMonth(), 0).getDate();
-
-//alert(fechaInicio.getFullYear())
-//alert(fechaInicio.getMonth()+1)
-//                alert(fechaInicio.getDate())
                 var fechaMaxima = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth() + 2, 0);
-//                alert(fechaMaxima)
-//                if (fechaHoy > fechaMaxima)
-//                {
-//                    var fecha = anio + "/" + mes + "/" + dia;
-//                    $(fin).datepicker('setEndDate', fecha);
-//                    $(fin).datepicker('setDate', fecha);
-//                } else
-//                {
                 $(fin).datepicker('setEndDate', fechaMaxima);
-//                    $(fin).datepicker('setDate', fechaHoy.getFullYear() + '/' + (fechaHoy.getMonth() + 1) + '/' + fechaHoy.getDate());
-//                }
             }
             );
 
@@ -187,6 +162,7 @@ function ConfigDatePickersReporte(inicio, fin) {
             }
             );
 }
+
 /*
  * tipoRango : 1 semanal . 2 mensual
  * 
@@ -210,10 +186,13 @@ function ConfigDatePickersRango(inicio, fin, tipoRango, rango) {
                 var fechaMaxima;
                 switch (tipoRango) {
                     case 1:
+                        fechaMaxima = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth() + 11, 0);
+                        break;
+                    case 2:
                         fechaMaxima = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth(), fechaInicio.getDate() + rango);
                         break;
 
-                    case 2:
+                    case 3:
                         //agrego 1 al mes porque getmonth devuelve el numero de mes mes 1. es decir enero es 0
                         fechaMaxima = new Date(fechaInicio.getFullYear(), fechaInicio.getMonth() + 1 + rango, 0);
                         break;

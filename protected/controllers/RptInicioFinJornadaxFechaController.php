@@ -210,7 +210,7 @@ class RptInicioFinJornadaxFechaController extends Controller {
                     $comentarioDiaSupervisor = '';
                     $totalClientesRuta = $fRuta->getTotalClientesxRutaxEjecutivoxDia($ejecutivo['e_iniciales'], $diaGestion + 1)[0]["TOTALCLIENTES"];
 
-                    $visitasValidasRuta = $fHistorial->getCantidadVisitasxEjecutivoxFecha($accion, $ejecutivo['e_usr_mobilvendor'], $model->fechaInicioFinJornada, $ruta_dia_gestion);
+                    $visitasValidasRuta = $fHistorial->getCantidadVisitasxEjecutivoxFechaxRuta($accion, $ejecutivo['e_usr_mobilvendor'], $model->fechaInicioFinJornada, $ruta_dia_gestion);
 
                     if (count($visitasValidasRuta) == 0) {
                         $cumplimientoEjecutivo = '0';

@@ -106,7 +106,7 @@ class CargaHistorialMbController extends Controller {
                 $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHA']);
                 $dateString = $date->format(FORMATO_FECHA_LONG_4);
             }
-            
+
             if ($dateString >= Yii::app()->session['fechaInicioPeriodo'] && $dateString <= Yii::app()->session['fechaFinPeriodo']) {
                 $data = array(
                     'ID' => ($row['ID'] == '') ? null : $row['ID'],
@@ -179,6 +179,7 @@ class CargaHistorialMbController extends Controller {
                             $connection->active = true;
                             $transaction = $connection->beginTransaction();
                             $command = $connection->createCommand($sql);
+//                            var_dump($command);die();
                             $countInsert = $command->execute();
 
                             if ($countInsert > 0) {
@@ -238,8 +239,13 @@ class CargaHistorialMbController extends Controller {
         // agregar 
         foreach ($dataFile as $row) {
 
+//            $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHA']);
+//            $dateString = $date->format(FORMATO_FECHA_LONG_4);
             $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHA']);
-            $dateString = $date->format(FORMATO_FECHA_LONG_4);
+            $dateString = '';
+            if ($date !== FALSE) {
+                $dateString = $date->format(FORMATO_FECHA_LONG);
+            }
 
             if (
                     $dateString >= Yii::app()->session['fechaInicioPeriodo'] &&
@@ -258,8 +264,13 @@ class CargaHistorialMbController extends Controller {
                 }
                 if (!$exisArray) {
 
-                    $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHA']);
-                    $dateString = $date->format(FORMATO_FECHA_LONG);
+//                    $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHA']);
+//                    $dateString = $date->format(FORMATO_FECHA_LONG);
+//                    $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHA']);
+//                    $dateString = '';
+//                    if ($date !== FALSE) {
+//                        $dateString = $date->format(FORMATO_FECHA_LONG);
+//                    }
 
                     $data = array(
                         'h_id' => ($row['ID'] == '') ? null : $row['ID'],

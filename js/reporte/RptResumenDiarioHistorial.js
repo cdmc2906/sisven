@@ -122,6 +122,16 @@ $(document).ready(function () {
         $("#gridPivotAltasCiudad").html("<table id=\"tblAltasCiudad\" class=\"table table-condensed\"></table><div id=\"pagtblAltasCiudad\"> </div>");
         $("#gridPivotAltasCiudadEjecutivo").html("<table id=\"tblAltasCiudadEjecutivo\" class=\"table table-condensed\"></table><div id=\"pagtblAltasCiudadEjecutivo\"></div>");
     });
+    
+    $("#btnLimpiarJornadaIndividual").click(function () {
+
+        document.getElementById("RptResumenDiarioHistorialForm_fechaInicioFinJornada").value = "";
+        document.getElementById("RptResumenDiarioHistorialForm_tipoUsuarioJornada").value = "T";
+        document.getElementById("RptResumenDiarioHistorialForm_horaInicioGestionJornada").value = "08:00";
+        document.getElementById("RptResumenDiarioHistorialForm_horaFinGestionJornada").value = "23:59";
+
+        $("#tblGridResumenJornada").jqGrid("clearGridData", true).trigger("reloadGrid");
+    });
 
     $("#btnExcelNoVisitados").click(function () {
         GenerarDocumentoReporte('GenerateExcelNoVisitados');
@@ -184,12 +194,15 @@ function ConfigurarGrids() {
             'GESTION',
             'TRASLADO',
             'TOTAL',
-            'TOTALB',
-            'Semanas',
-            'VISITAS',
-            'REPETIDAS',
+            'TOTAL_B',
+            'SEMANA(S)',
+            'PROPIOS',
+            'TEMPORAL',
             'TOTAL',
             'NUEVOS',
+            'VISITAS',
+            'REPETIDAS',
+            'DESCONOCIDOS',
             'EFECTIVOS',
             'ENCUESTAS',
             'VENTA'
@@ -204,11 +217,14 @@ function ConfigurarGrids() {
             {name: 'TIEMPOTRASLADO', index: 'TIEMPOTRASLADO', sortable: false, width: 80, align: "center", },
             {name: 'TOTALTIEMPO', index: 'TOTALTIEMPO', sortable: false, width: 80, align: "center", },
             {name: 'TOTALTIEMPO2', index: 'TOTALTIEMPO2', sortable: false, width: 80, align: "center", },
-            {name: 'SEMANAS', index: 'SEMANAS', width: 60, align: "center"},
-            {name: 'VISITAS', index: 'VISITAS', width: 60, align: "center"},
-            {name: 'REPETIDAS', index: 'REPETIDAS', width: 80, align: "center"},
+            {name: 'SEMANAS', index: 'SEMANAS', width: 80, align: "center"},
+            {name: 'PROPIOS', index: 'PROPIOS', width: 80, align: "center"},
+            {name: 'TEMPORAL', index: 'TEMPORAL', width: 80, align: "center"},
             {name: 'TOTAL', index: 'TOTAL', width: 60, align: "center"},
             {name: 'NUEVOS', index: 'NUEVOS', width: 80, align: "center"},
+            {name: 'VISITAS', index: 'VISITAS', width: 60, align: "center"},
+            {name: 'REPETIDAS', index: 'REPETIDAS', width: 80, align: "center"},
+            {name: 'DESCONOCIDO', index: 'DESCONOCIDO', width: 100, align: "center"},
             {name: 'EFECTIVOS', index: 'EFECTIVOS', width: 80, align: "center"},
             {name: 'ENCUESTAS', index: 'ENCUESTAS', width: 85, align: "center"},
             {name: 'VENTA', index: 'VENTA', width: 80, align: "center"},
@@ -229,6 +245,11 @@ function ConfigurarGrids() {
             var $grid = $('#tblGridResumenJornada');
             var colSumaVisitas = $grid.jqGrid('getCol', 'VISITAS', false, 'sum');
             var colSumaVisitasRepetidas = $grid.jqGrid('getCol', 'REPETIDAS', false, 'sum');
+            
+            var colSumaPropios = $grid.jqGrid('getCol', 'PROPIOS', false, 'sum');
+            var colSumaTemporal = $grid.jqGrid('getCol', 'TEMPORAL', false, 'sum');
+            var colSumaDesconocido = $grid.jqGrid('getCol', 'DESCONOCIDO', false, 'sum');
+            
             var colSumaTotalVisitas = $grid.jqGrid('getCol', 'TOTAL', false, 'sum');
             var colSumaClientesNuevos = $grid.jqGrid('getCol', 'NUEVOS', false, 'sum');
             var colSumaClientesEfectivos = $grid.jqGrid('getCol', 'EFECTIVOS', false, 'sum');
@@ -237,6 +258,11 @@ function ConfigurarGrids() {
             $grid.jqGrid('footerData', 'set', {'SEMANAS': 'Totales'});
             $grid.jqGrid('footerData', 'set', {'VISITAS': colSumaVisitas});
             $grid.jqGrid('footerData', 'set', {'REPETIDAS': colSumaVisitasRepetidas});
+            
+            $grid.jqGrid('footerData', 'set', {'PROPIOS': colSumaPropios});
+            $grid.jqGrid('footerData', 'set', {'TEMPORAL': colSumaTemporal});
+            $grid.jqGrid('footerData', 'set', {'DESCONOCIDO': colSumaDesconocido});
+            
             $grid.jqGrid('footerData', 'set', {'TOTAL': colSumaTotalVisitas});
             $grid.jqGrid('footerData', 'set', {'NUEVOS': colSumaClientesNuevos});
             $grid.jqGrid('footerData', 'set', {'EFECTIVOS': colSumaClientesEfectivos});

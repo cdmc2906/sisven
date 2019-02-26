@@ -17,6 +17,11 @@ define('TIPO_NOVEDAD_GENERAL', 'Incidente');
 
 define('NUMERO_DECIMALES_RESULTADO', '0');
 
+define('INICIAL_CLIENTES_MOVISTAR', 'TCQU');
+define('INICIAL_CLIENTES_TUENTI', 'TU');
+define('INICIAL_CLIENTES_TEMPORAL', 'TCTM');
+define('INICIAL_CLIENTES_TEMPORAL_2', 'TMp');
+
 
 define('MINMETROSVISITAVALIDA', '10');
 define('MAXMETROSVISITAVALIDA', '15');
@@ -57,6 +62,10 @@ define('GRUPO_DESARROLLADORES', 'D');
 define('GRUPO_TECNICOS', 'ST');
 
 define('RUTASNOREVISAR', '\'RZS 47\',\'RZS 39\',\'RZS 20\'');
+
+define('_30DIAS', '30');
+define('_60DIAS', '60');
+define('_90DIAS', '90');
 
 define('COPYRIGHT', 'TECECAB');
 define('LEYENDA_COPYRIGHT', 'Todos los derechos reservados &copy;');

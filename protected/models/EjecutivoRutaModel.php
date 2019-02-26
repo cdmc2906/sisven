@@ -42,7 +42,8 @@ class EjecutivoRutaModel extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('e_cod, rg_id, er_semana_visitar, er_dia_visitar, er_cod_usr_ing, er_cod_usr_mod', 'numerical', 'integerOnly'=>true),
-			array('er_usuario, er_usuario_nombre, er_ruta, er_ruta_nombre, er_estado', 'length', 'max'=>50),
+			array('er_usuario, er_usuario_nombre, er_ruta, er_estado', 'length', 'max'=>50),
+			array('er_ruta_nombre', 'length', 'max'=>250),
 			array('er_fecha_ingreso, er_fecha_modificacion', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.

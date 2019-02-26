@@ -283,7 +283,7 @@ class CargaIndicadorController extends Controller {
                     'i_descripcion_producto' => ($row['DESCRIPCION_PRODUCTO'] == '') ? null : $row['DESCRIPCION_PRODUCTO'],
                     'i_codigo_grupo' => ($row['CODIGO_GRUPO'] == '') ? null : $row['CODIGO_GRUPO'],
                     'i_grupo' => ($row['GRUPO'] == '') ? null : $row['GRUPO'],
-                    'i_cantidad' => ($row['CANTIDAD'] == '') ? null : $row['CANTIDAD'],
+                    'i_cantidad' => ($row['CANTIDAD'] == '') ? null : intval($row['CANTIDAD']),
                     'i_detalle' => ($row['DETALLE'] == '') ? null : $row['DETALLE'],
                     'i_imei' => ($row['IMEI'] == '') ? null : $row['IMEI'],
                     'i_min' => ($row['MIN'] == '') ? null : $row['MIN'],

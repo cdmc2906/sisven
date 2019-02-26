@@ -51,7 +51,7 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'er_ruta_nombre'); ?>
-		<?php echo $form->textField($model,'er_ruta_nombre',array('size'=>50,'maxlength'=>50)); ?>
+		<?php echo $form->textField($model,'er_ruta_nombre',array('size'=>60,'maxlength'=>250)); ?>
 		<?php echo $form->error($model,'er_ruta_nombre'); ?>
 	</div>
 

@@ -4,7 +4,7 @@
  * @fecha 
  * @author
  */
-class CargaCoordenadasClientesForm extends CFormModel {
+class CargaClientesForm extends CFormModel {
 
     public $rutaArchivo;
     public $delimitadorColumnas;
@@ -16,7 +16,7 @@ class CargaCoordenadasClientesForm extends CFormModel {
     public function rules() {
         return array(
             array('delimitadorColumnas', 'required'),
-            array('rutaArchivo,delimitadorColumnas,fechaUltimaCarga', 'safe'),
+            array('delimitadorColumnas,fechaUltimaCarga', 'safe'),
             array('rutaArchivo', 'file', 'types' => 'csv')
         );
     }
@@ -29,9 +29,9 @@ class CargaCoordenadasClientesForm extends CFormModel {
     public function attributeLabels() {
         return array(
 //            'fechaConsumo' => 'Fecha Consumo',
-            'rutaArchivo' => 'Archivo coordenadas',
+            'rutaArchivo' => 'Archivo cliente',
             'delimitadorColumnas' => 'Delimitador columnas archivo',
-            'fechaUltimaCarga' => 'Ultima fecha carga coordenadas',
+            'fechaUltimaCarga' => 'Ultima fecha carga: ',
         );
     }
 
