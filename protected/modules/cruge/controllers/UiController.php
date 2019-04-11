@@ -112,15 +112,10 @@ class UiController extends Controller {
     }
 
     public function actionLogin() {
-
-
-//        $this->layout = CrugeUtil::config()->loginLayout;
         $this->layout = '//layouts/main_login';
 
         $model = Yii::app()->user->um->getNewCrugeLogon('login');
-//var_dump($model);die();
         // por ahora solo un metodo de autenticacion por vez es usado, aunque sea un array en config/main
-        //
         $model->authMode = CrugeFactory::get()->getConfiguredAuthMethodName();
 
         Yii::app()->user->setFlash('loginflash', null);
@@ -131,15 +126,14 @@ class UiController extends Controller {
             $model->attributes = $_POST[CrugeUtil::config()->postNameMappings['CrugeLogon']];
             if ($model->validate()) {
                 if ($model->login(false) == true) {
-
-                    Yii::log(__CLASS__ . "\nCrugeLogon->login() returns true\n", "info");
-
+                    Yii::log(__CLASS__ . "\nCrugeLogon->login() returns true ".implode("-_-", Yii::app()->user->returnUrl), "info");
                     // a modo de conocimiento, Yii::app()->user->returnUrl es
                     // establecida automaticamente por CAccessControlFilter cuando
                     // preFilter llama a accessDenied quien a su vez llama a
                     // CWebUser::loginRequired que es donde finalmente se llama a setReturnUrl
                     $this->redirect(Yii::app()->user->returnUrl);
                 } else {
+                    Yii::log(__CLASS__ . "\nmodel->login(false) es false\n", "error");
                     Yii::app()->user->setFlash('loginflash', Yii::app()->user->getLastError());
                 }
             } else {
@@ -177,6 +171,7 @@ class UiController extends Controller {
     public function actionLogout() {
         // retorna false si ocurrio un error O si el filtro de sesion
         // dispone de onBeforeLogin el cual ha retornado false.
+        Yii::log(__CLASS__ . "\nError en Logout Yii::app()->user->logout()".Yii::app()->user->logout(), "error");
         if (Yii::app()->user->logout() == false) {
             // se devuelve a la URL de donde vino
             $this->redirect(Yii::app()->user->returnUrl);

@@ -144,6 +144,7 @@ class CargaHistorialMbController extends Controller {
         $DclientesRepetidos = '';
         $mensaje = '';
         try {
+//            var_dump(2);die();
 //            if (isset($_SESSION['archivosHistorialMb'])) {
             if (isset(Yii::app()->session['archivosHistorialMb'])) {
 //                $filePath = $_SESSION['archivosHistorialMb'];
@@ -168,11 +169,12 @@ class CargaHistorialMbController extends Controller {
                         $dataInsertar = $this->getDatosGuardar($file, $registroInicio, $tamanioBloque);
                         $datosHistorialMb = $dataInsertar['historialmb'];
 
+//                        var_dump($datosHistorialMb);                        die();
                         if (count($datosHistorialMb) > 0) {
                             $dbConnection = new CI_DB_active_record(null);
 
                             $sql = $dbConnection->insert_batch('tb_historial_mb', $datosHistorialMb);
-//                            var_dump($sql);die();
+//                            var_dump($sql);                            die();
                             $sql = str_replace('"', '', $sql);
 
                             $connection = Yii::app()->db_conn;
@@ -237,14 +239,15 @@ class CargaHistorialMbController extends Controller {
         Yii::app()->session['itemHistorialDuplicado'] = 0;
         $dataFile = $file->getDatosHistorialMb($start, $blockSize);
         // agregar 
+//        var_dump($dataFile);die();
         foreach ($dataFile as $row) {
 
 //            $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHA']);
 //            $dateString = $date->format(FORMATO_FECHA_LONG_4);
             $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHA']);
             $dateString = '';
-            if ($date !== FALSE) {
-                $dateString = $date->format(FORMATO_FECHA_LONG);
+            if ($date != FALSE) {
+                $dateString = $date->format(FORMATO_FECHA_LONG_4);
             }
 
             if (
@@ -309,7 +312,7 @@ class CargaHistorialMbController extends Controller {
             }
         }
         $datos['historialmb'] = $datosHistorial;
-//                var_dump($datos);die();
+//        var_dump($datos);        die();
         return $datos;
     }
 

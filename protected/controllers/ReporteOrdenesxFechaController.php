@@ -143,11 +143,8 @@ class ReporteOrdenesxFechaController extends Controller {
         $reporteModel = new ReportesModel();
 
         $response = new Response();
-//        var_dump($_POST['ejecutivo'], $_POST['fechaInicio'], $_POST['fechaFin']);        die();
         $data = $reporteModel->getOrdenesxEjecutivoxFecha($_POST['ejecutivo'], $_POST['fechaInicio'], $_POST['fechaFin']);
-//        var_dump($data);die();
         $response->Result = $data;
-//var_dump($response);die();
         $this->actionResponse(null, null, $response);
         return;
     }

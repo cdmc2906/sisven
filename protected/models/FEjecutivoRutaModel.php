@@ -66,6 +66,8 @@ class FEjecutivoRutaModel extends DAOModel {
                     and b.pg_id=" . $periodo . "
      ;  
 ";
+//        Yii::log($sql, "error");
+
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
@@ -118,7 +120,6 @@ class FEjecutivoRutaModel extends DAOModel {
             where 
                 a.e_cod =" . $codigoEjecutivo . "
                 and pg_id=" . $periodo . "
-                --and pg_id=28
             group by 
                 c.zg_nombre_zona,
                 a.er_usuario,
@@ -128,7 +129,7 @@ class FEjecutivoRutaModel extends DAOModel {
                 a.er_dia_visitar,
                 a.er_cod,
                 b.rg_id
-            --order by er_ruta,SEMANA,DIA
+            order by 4,6,7
             ;
             ";
 //        var_dump($sql);        die();

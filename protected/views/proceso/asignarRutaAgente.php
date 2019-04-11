@@ -17,19 +17,7 @@ $this->pageTitle = $pagina_nombre;
 <?php endif; ?>
 
 <div class="row">
-    <!--    <div class="col-md-12">
-            <div class="box box-primary">
-                <div class="box-body no-padding">
-   
-                    
-                </div>
-            </div>
-        </div>-->
-
     <div class="col-md-3">
-        <!--<div class="box box-primary">-->
-        <!--<div class="box-body no-padding">-->
-
         <?php
         $form = $this->beginWidget('CActiveForm', array(
             'id' => 'frmLoad',
@@ -64,8 +52,8 @@ $this->pageTitle = $pagina_nombre;
                         ::normalizeUrl(array('asignarRutaAgente/cargarUsuarios', 'render' => true)), array(
                     'dataType' => 'json',
                     'type' => 'post',
-                    'beforeSend' => 'function() {blockUIOpen();}',
-                    'success' => 'function(data) {
+                    'beforeSend' => 'function() {blockUIOpen();}'
+                    , 'success' => 'function(data) {
                         blockUIClose();
                         setMensaje(data.ClassMessage, data.Message);
                         if(data.Status==1){
@@ -77,11 +65,12 @@ $this->pageTitle = $pagina_nombre;
                             $("#frmBankStat #"+key+"_em_").show();
                             });
                             }
-                        } ',
-                    'error' => 'function(xhr,st,err) {
+                        } '
+                    , 'error' => 'function(xhr,st,err) {
                             blockUIClose();
                             RedirigirError(xhr.status);
-                        }')
+                        }'
+                        )
                         , array('id' => 'btnCargarUsuarios'
                     , 'class' => 'btn btn-block btn-success btn-sm'));
                 ?>
@@ -89,8 +78,6 @@ $this->pageTitle = $pagina_nombre;
             </div>
         </div>
         <?php $this->endWidget(); ?>
-        <!--</div>-->
-        <!--</div>-->
     </div>
 </div>
 <div class="row">
@@ -98,33 +85,21 @@ $this->pageTitle = $pagina_nombre;
         <div class="box box-primary">
             <div class="box-body no-padding">
                 <div class="table-responsive mailbox-messages">                 
-                    <div  style="display: flex; justify-content: flex-start;">
-                        <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                            <table id="tblAgentes" class="table table-condensed"></table>
-                            <div id="pagGridAgentes"> </div>
-                        </div>
-                        <div style="margin-left: 10px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                            <table id="tblZonasGestion" class="table table-condensed"></table>
-                            <div id="pagGridZonasGestion"> </div>
-                        </div>
-                        <div style="margin-left: 10px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                            <table id="tblRutasGestion" class="table table-condensed"></table>
-                            <div id="pagGridRutasGestion"> </div>
-                            <?php
-//                            echo CHtml::submitButton('Asignar Seleccion', array(
-//                                'id' => 'btnAsignarRuta',
-//                                'class' => 'btn btn-success'));
-                            ?>
-                        </div>
+                    <div class="col-md-6">
+                        <table id="tblAgentes" class="table table-condensed"></table>
+                        <div id="pagGridAgentes"> </div>
                     </div>
-                    <div>
+                    <div class="col-md-6">
+                        <table id="tblZonasGestion" class="table table-condensed"></table>
+                        <div id="pagGridZonasGestion"> </div>
+                    </div>
+                    <div class="col-md-6">
+                        <table id="tblRutasGestion" class="table table-condensed"></table>
+                        <div id="pagGridRutasGestion"> </div>
+                    </div>
+                    <div class="col-md-6">
                         <table id="tblRutasAgente" class="table table-condensed"></table>
                         <div id="pagGridRutasAgente"> </div> 
-                        <?php
-//                        echo CHtml::submitButton('Eliminar Seleccion', array(
-//                            'id' => 'btnQuitarRuta',
-//                            'class' => 'btn btn-warning'));
-                        ?>
                     </div>
                 </div>
             </div>

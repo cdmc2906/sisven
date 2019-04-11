@@ -27,6 +27,7 @@
  * @property string $o_nom_termino_pago
  * @property string $o_usuario
  * @property string $o_nom_usuario
+ * @property string $o_departamento_ventas
  * @property string $o_oficina
  * @property string $o_nom_oficina
  * @property string $o_tipo_secuencia
@@ -74,7 +75,7 @@ class OrdenesMbModel extends CActiveRecord
 		return array(
 			array('pg_id, o_id, o_usr_ing_mod', 'numerical', 'integerOnly'=>true),
 			array('o_concepto, o_codigo_mb, o_comentario', 'length', 'max'=>500),
-			array('o_tipo, o_estatus, o_cod_cliente', 'length', 'max'=>50),
+			array('o_tipo, o_estatus, o_cod_cliente, o_departamento_ventas', 'length', 'max'=>50),
 			array('o_nom_cliente, o_id_cliente, o_lista_precio, o_nom_lista_precio, o_bodega_origen, o_nom_bodega_origen, o_termino_pago, o_nom_termino_pago, o_usuario, o_nom_usuario, o_oficina, o_nom_oficina, o_tipo_secuencia', 'length', 'max'=>100),
 			array('o_direccion', 'length', 'max'=>250),
 			array('o_iva_12_base, o_iva_12_valor, o_iva_0_base, o_iva_0_valor, o_iva_14_base, o_iva_14_valor, o_subtotal, o_porcentaje_descuento, o_descuento, o_impuestos, o_otros_cargos, o_total', 'length', 'max'=>10),
@@ -82,7 +83,7 @@ class OrdenesMbModel extends CActiveRecord
 			array('o_fch_venta, o_fch_creacion, o_fch_despacho, o_fch_ingreso, o_fch_modificacion, o_fch_desde, o_fch_hasta', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('o_codigo, pg_id, o_id, o_concepto, o_codigo_mb, o_comentario, o_fch_venta, o_fch_creacion, o_fch_despacho, o_tipo, o_estatus, o_cod_cliente, o_nom_cliente, o_id_cliente, o_direccion, o_lista_precio, o_nom_lista_precio, o_bodega_origen, o_nom_bodega_origen, o_termino_pago, o_nom_termino_pago, o_usuario, o_nom_usuario, o_oficina, o_nom_oficina, o_tipo_secuencia, o_iva_12_base, o_iva_12_valor, o_iva_0_base, o_iva_0_valor, o_iva_14_base, o_iva_14_valor, o_subtotal, o_porcentaje_descuento, o_descuento, o_impuestos, o_otros_cargos, o_total, o_datos, o_referencia, o_estado_proceso, o_fch_ingreso, o_fch_modificacion, o_fch_desde, o_fch_hasta, o_usr_ing_mod', 'safe', 'on'=>'search'),
+			array('o_codigo, pg_id, o_id, o_concepto, o_codigo_mb, o_comentario, o_fch_venta, o_fch_creacion, o_fch_despacho, o_tipo, o_estatus, o_cod_cliente, o_nom_cliente, o_id_cliente, o_direccion, o_lista_precio, o_nom_lista_precio, o_bodega_origen, o_nom_bodega_origen, o_termino_pago, o_nom_termino_pago, o_usuario, o_nom_usuario, o_departamento_ventas, o_oficina, o_nom_oficina, o_tipo_secuencia, o_iva_12_base, o_iva_12_valor, o_iva_0_base, o_iva_0_valor, o_iva_14_base, o_iva_14_valor, o_subtotal, o_porcentaje_descuento, o_descuento, o_impuestos, o_otros_cargos, o_total, o_datos, o_referencia, o_estado_proceso, o_fch_ingreso, o_fch_modificacion, o_fch_desde, o_fch_hasta, o_usr_ing_mod', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -127,6 +128,7 @@ class OrdenesMbModel extends CActiveRecord
 			'o_nom_termino_pago' => 'O Nom Termino Pago',
 			'o_usuario' => 'O Usuario',
 			'o_nom_usuario' => 'O Nom Usuario',
+			'o_departamento_ventas' => 'O Departamento Ventas',
 			'o_oficina' => 'O Oficina',
 			'o_nom_oficina' => 'O Nom Oficina',
 			'o_tipo_secuencia' => 'O Tipo Secuencia',
@@ -194,6 +196,7 @@ class OrdenesMbModel extends CActiveRecord
 		$criteria->compare('o_nom_termino_pago',$this->o_nom_termino_pago,true);
 		$criteria->compare('o_usuario',$this->o_usuario,true);
 		$criteria->compare('o_nom_usuario',$this->o_nom_usuario,true);
+		$criteria->compare('o_departamento_ventas',$this->o_departamento_ventas,true);
 		$criteria->compare('o_oficina',$this->o_oficina,true);
 		$criteria->compare('o_nom_oficina',$this->o_nom_oficina,true);
 		$criteria->compare('o_tipo_secuencia',$this->o_tipo_secuencia,true);

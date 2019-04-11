@@ -223,6 +223,8 @@ class CargaClientesController extends Controller {
                 $existeBdd["cli_retencion_porcentaje"] = floatval($cliente['CLI_RETENCION_PORCENTAJE']);
                 $existeBdd["cli_tiene_credito"] = $cliente['CLI_TIENE_CREDITO'];
                 $existeBdd["cli_estatus"] = $cliente['CLI_ESTATUS'];
+                $existeBdd["cli_latitud"] = 0;
+                $existeBdd["cli_longitud"] = 0;
 //                $existeBdd["cli_creado"] = $cliente['CLI_CREADO'];
                 $existeBdd["cli_creado_por"] = $cliente['CLI_CREADO_POR'];
                 $existeBdd["cli_fecha_modificacion"] = date(FORMATO_FECHA_LONG);
@@ -276,6 +278,8 @@ class CargaClientesController extends Controller {
                         'cli_estatus' => $cliente['CLI_ESTATUS'],
                         'cli_creado' => $dateString,
                         'cli_creado_por' => $cliente['CLI_CREADO_POR'],
+                        'cli_latitud' => 0,
+                        'cli_longitud' => 0,
                         'cli_estado' => 1,
                         'cli_fecha_ingreso' => date(FORMATO_FECHA_LONG),
                         'cli_fecha_modificacion' => date(FORMATO_FECHA_LONG),

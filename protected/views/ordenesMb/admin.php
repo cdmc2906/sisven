@@ -69,6 +69,7 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'o_nom_termino_pago',
 		'o_usuario',
 		'o_nom_usuario',
+		'o_departamento_ventas',
 		'o_oficina',
 		'o_nom_oficina',
 		'o_tipo_secuencia',

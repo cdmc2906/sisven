@@ -5,7 +5,7 @@
  * @fecha 
  * @author 
  */
-class RptCliSinGestionxFechaController extends Controller {
+class RptFotosController extends Controller {
 
     public $layout = LAYOUT_FILTRO_GRID;
 
@@ -17,13 +17,13 @@ class RptCliSinGestionxFechaController extends Controller {
             Yii::app()->session['RptCliSinGestionxFechaForm'] = '';
 
             $model = new RptCliSinGestionxFechaForm();
-            $this->render('/reportes/rptCliSinGestionxFecha', array('model' => $model));
+            $this->render('/reportes/rptFotos', array('model' => $model));
         }
     }
 
     function validarCamposVNS($modelSeleccion, $mesSeleccionado) {
-
         $resultadoValidacion = '';
+
         $model = $modelSeleccion;
         $nuevaLinea = '<br/>';
 //        var_dump($model->tipoFecha,$model->tipoFecha != '' , $model->tipoFecha == NULL,$model,$mesSeleccionado);die();
@@ -45,9 +45,9 @@ class RptCliSinGestionxFechaController extends Controller {
                 if ($model->periodo == '' || $model->periodo != NULL)
                     $resultadoValidacion .= $nuevaLinea . 'Seleccione el periodo';
             } else if ($model->tipoFecha == 'R') {
-                if ($model->fechaInicioAnalisis == '' || $model->fechaInicioAnalisis === NULL)
+                if ($model->fechaInicioAnalisis == '' || $model->fechaInicioAnalisis != NULL)
                     $resultadoValidacion .= $nuevaLinea . 'Ingrese la fecha de inicio del rango';
-                if ($model->fechaFinAnalisis == '' || $model->fechaFinAnalisis === NULL)
+                if ($model->fechaFinAnalisis == '' || $model->fechaFinAnalisis != NULL)
                     $resultadoValidacion .= $nuevaLinea . 'Ingrese la fecha de fin del rango';
             }
         }

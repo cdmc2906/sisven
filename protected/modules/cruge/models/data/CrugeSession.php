@@ -52,6 +52,7 @@ class CrugeSession extends CActiveRecord implements ICrugeSession
     public function store()
     {
         $ret = false;
+//        var_dump("HOLA!",$this->getIsNewRecord());die();
         if ($this->getIsNewRecord()) {
             $ret = $this->insert();
         } else {
@@ -104,7 +105,7 @@ class CrugeSession extends CActiveRecord implements ICrugeSession
             array('iduser' => $iduser),
             array('order' => 'idsession DESC')
         );
-        Yii::log(__CLASS__ . "::findLast iduser={$iduser}\ncurSession:" . CJSON::encode($curSession), "info");
+        Yii::log(__CLASS__ . "::findLast iduser={$iduser}\ncurSession:" . CJSON::encode($curSession), "error");
 
         $info = "";
         if ($curSession != null) {
@@ -129,6 +130,7 @@ class CrugeSession extends CActiveRecord implements ICrugeSession
      */
     public function validateSession()
     {
+//        var_dump($this->status);die();
         if ((1 * ($this->status)) != 1) {
             Yii::log("CrugeSession. validateSession. causa: estatus cerrado", "info");
             return false;

@@ -4,8 +4,10 @@
  * Constantes ETIQUETAS
  */
 define('PRUEBA_MAIL', false);
+define('DBMS', 'sqlsrv');//opciones mysql sqlsrv
 define('MAIL', 'christian.araujo@tececab.com.ec');
 
+define('EJECUTIVOS_REVISION_INDIVIDUAL', '(\'EZM\',\'EZT\',\'D\',\'ST\',\'SC\')');
 define('PATH_FOLDER_ADJUNTOS', 'C:\archivos_adjuntos_mail\\');
 define('LAYOUT_ADMIN_CATALOG', '//layouts/layout_admin_catalog');
 define('LAYOUT_IMPORTAR', '//layouts/layout_importar');

@@ -47,6 +47,17 @@ class FuncionesBaseDatos {
         }
     }
 
+    public static function convertToDecimal($dbms, $campo, $cantidadDigitos, $cantidadDecimales) {
+        switch ($dbms) {
+            case 'mysql':
+                return " CONVERT($campo, decimal($cantidadDigitos, $cantidadDecimales)";
+                break;
+            case 'sqlsrv':
+                return " CONVERT(DECIMAL($cantidadDigitos,$cantidadDecimales),$campo) ";
+                break;
+        }
+    }
+
     /**
      * @param type $dbms Gestor de base de datos a usar
      * @param type $fecha Fecha para convertir
@@ -62,6 +73,7 @@ class FuncionesBaseDatos {
                 break;
         }
     }
+
     /**
      * @param type $dbms Gestor de base de datos a usar
      * @param type $fecha Fecha para convertir
@@ -77,7 +89,7 @@ class FuncionesBaseDatos {
                 break;
         }
     }
-    
+
     /**
      * @param type $dbms Gestor de base de datos a usar
      * @param type $fecha Fecha para convertir

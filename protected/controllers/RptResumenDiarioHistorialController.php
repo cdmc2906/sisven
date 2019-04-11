@@ -391,7 +391,6 @@ class RptResumenDiarioHistorialController extends Controller {
 
     public function actionRevisarHistorial() {
         $response = new Response();
-
         try {
             $solicitarLogin = true;
             if (Yii::app()->user->id <> intval(USUARIO_INVITADO)) {
@@ -404,6 +403,7 @@ class RptResumenDiarioHistorialController extends Controller {
                     Yii::app()->session['ModelForm'] = $model;
 
                     if ($model->validate() && $model["ejecutivo"] != '') {
+//        var_dump("2");die();
                         $fLibreria = new Libreria();
                         $response = $fLibreria->VerificarHistorialDiarioUsuario(
                                 $model->ejecutivo
@@ -810,17 +810,6 @@ class RptResumenDiarioHistorialController extends Controller {
                 , $horaFinGestion
                 , $codigoEjecutivo
         );
-//        var_dump($historial);die();
-//        unset(Yii::app()->session['tiempoGestionEjecutivo']);
-//        unset(Yii::app()->session['tiempoTrasladoEjecutivo']);
-//        unset(Yii::app()->session['semanas']);
-//        unset(Yii::app()->session['cantidadVisitas']);
-//        unset(Yii::app()->session['cantidadRepetidas']);
-//        unset(Yii::app()->session['totalVisitas']);
-//        unset(Yii::app()->session['contadorChipsVendidos']);
-//        unset(Yii::app()->session['contadorClientesEfectivos']);
-//        unset(Yii::app()->session['contadorEncuestas']);
-//        unset(Yii::app()->session['contadorClientesNuevos']);
 
         $libreria = new Libreria();
         $totalGestion = '00:00:00';

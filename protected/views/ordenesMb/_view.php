@@ -98,6 +98,10 @@
 	<?php echo CHtml::encode($data->o_nom_usuario); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('o_departamento_ventas')); ?>:</b>
+	<?php echo CHtml::encode($data->o_departamento_ventas); ?>
+	<br />
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('o_oficina')); ?>:</b>
 	<?php echo CHtml::encode($data->o_oficina); ?>
 	<br />

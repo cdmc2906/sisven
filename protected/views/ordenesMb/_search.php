@@ -127,6 +127,11 @@
 	</div>
 
 	<div class="row">
+		<?php echo $form->label($model,'o_departamento_ventas'); ?>
+		<?php echo $form->textField($model,'o_departamento_ventas',array('size'=>50,'maxlength'=>50)); ?>
+	</div>
+
+	<div class="row">
 		<?php echo $form->label($model,'o_oficina'); ?>
 		<?php echo $form->textField($model,'o_oficina',array('size'=>60,'maxlength'=>100)); ?>
 	</div>

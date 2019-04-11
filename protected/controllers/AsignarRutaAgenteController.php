@@ -24,7 +24,7 @@ class AsignarRutaAgenteController extends Controller {
         $response = new Response();
         try {
             $model = new AsignaRutaAgenteForm();
-//            var_dump($_POST['RptSupervisorVsEjecutivoHistorialForm']);die();
+//            var_dump($_POST['AsignaRutaAgenteForm']);die();
             if (isset($_POST['AsignaRutaAgenteForm'])) {
                 $model->attributes = $_POST['AsignaRutaAgenteForm'];
 
@@ -56,9 +56,14 @@ class AsignarRutaAgenteController extends Controller {
     public function actionCargarRutasAsignadas() {
         $response = new Response();
 
-        $periodoSemanalActivo = PeriodoGestionModel::model()->findAllByAttributes(array('pg_tipo' => array('SEMANAL'), 'pg_estado' => array('1')));
+        $periodoSemanalActivo = PeriodoGestionModel::model()->findAllByAttributes(
+                array(
+                    'pg_tipo' => array('SEMANAL')
+                    , 'pg_estado' => array('1')
+                )
+        );
+        
         Yii::app()->session['idPeriodoSemanalActivo'] = $periodoSemanalActivo[0]['pg_id'];
-
         Yii::app()->session['codigUsuarioSeleccionado'] = $_POST['codigoUsuario'];
 
         if (Yii::app()->session['tipoUsuario'] == 1) {

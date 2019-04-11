@@ -50,7 +50,7 @@ class FRutaModel extends DAOModel {
         return $data;
     }
 
-    public function getRutaxClientexSemana($codigo_cliente, $iniciales_ejecutivo, $semana, $periodo) {
+    public function getRutaxClientexSemana($codigo_cliente, $ejecutivo, $semana, $periodo) {
         $sql = "
            SELECT 
 		R_DIA AS DIARUTA
@@ -60,7 +60,15 @@ class FRutaModel extends DAOModel {
             WHERE 1=1
 		AND R_COD_CLIENTE='" . $codigo_cliente . "'
 		AND R_SEMANA='" . $semana . "'
-		AND pg_id='" . $periodo . "';
+		AND pg_id='" . $periodo . "'
+                AND r_ruta IN (
+                        SELECT er_ruta 
+                            FROM tb_ejecutivo_ruta 
+                            WHERE er_usuario='$ejecutivo' 
+                                and er_estado=1 
+                                and er_semana_visitar=1 
+                    )
+            ;
             ";
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
@@ -145,8 +153,7 @@ class FRutaModel extends DAOModel {
     }
 
     public function getTotalClientesNoVisitadosxRutaxEjecutivo(
-    $inicialesEjecutivo
-    , $dia
+      $dia
     , $fechaGestion
     , $codEjecutivo
     , $periodoAbierto
@@ -309,7 +316,6 @@ class FRutaModel extends DAOModel {
 
     public function getTotalChipsVentaRuta($inicialesEjecutivo, $dia, $fechaGestion, $horaInicio, $codEjecutivo, $periodo) {
         $fechaHoraGestion = $fechaGestion . ' ' . $horaInicio;
-//        $fechaHoraDiaDespues = date('Y-m-d', strtotime($fechaGestion . ' + 1 days')) . ' ' . $horaInicio;
         $fechaHoraDiaDespues = $fechaGestion . ' ' . HORA_FIN_DIA;
 
         $sql = "
@@ -317,7 +323,6 @@ class FRutaModel extends DAOModel {
             SELECT " . FuncionesBaseDatos::isnull('sqlsrv') . "(SUM(O_SUBTOTAL/" . PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI . "),0) AS RESPUESTA
                 FROM tb_ordenes_mb  
                 WHERE 1=1 
-                    -- AND DATE(O_FCH_CREACION)='" . $fechaGestion . "' 
                     AND O_FCH_CREACION BETWEEN '" . $fechaHoraGestion . "' AND '" . $fechaHoraDiaDespues . "'
                     AND O_SUBTOTAL>0 
                     AND O_USUARIO='" . $codEjecutivo . "'

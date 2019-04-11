@@ -1116,7 +1116,7 @@ abstract class CActiveRecord extends CModel
 	{
 		if($this->getIsNewRecord())
 			throw new CDbException(Yii::t('yii','The active record cannot be updated because it is new.'));
-		if($this->beforeSave())
+                if($this->beforeSave())
 		{
 			Yii::trace(get_class($this).'.update()','system.db.ar.CActiveRecord');
 			if($this->_pk===null)
@@ -1124,6 +1124,7 @@ abstract class CActiveRecord extends CModel
 			$this->updateByPk($this->getOldPrimaryKey(),$this->getAttributes($attributes));
 			$this->_pk=$this->getPrimaryKey();
 			$this->afterSave();
+//                        var_dump("HOLA 22",$this->afterSave());die();
 			return true;
 		}
 		else

@@ -5,6 +5,7 @@ class FZonasGestionModel extends DAOModel {
     public function getInformacionZonasXPeriodo($idPeriodo) {
         $sql = "
             SELECT 
+                    b.zg_tipo_zona as TIPOZONA,
                     b.ZG_ID as CODIGOZONA,
                     b.ZG_NOMBRE_ZONA as NOMBREZONA,
                     b.ZG_NOMB_EJECUTIVO_ASIGNADO AS EJECUTIVO,
@@ -18,11 +19,12 @@ class FZonasGestionModel extends DAOModel {
                 WHERE 1=1
                     and c.pg_id=" . $idPeriodo . "
                     --and c.pg_id=28
-                GROUP by 
+                GROUP by
+                    b.zg_tipo_zona,
                     b.zg_id,
                     b.ZG_NOMBRE_ZONA,
                     b.ZG_NOMB_EJECUTIVO_ASIGNADO
-                ORDER BY 2
+                ORDER BY 1,2
                 ;
             ";
 //        var_dump($sql);        die();

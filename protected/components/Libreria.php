@@ -170,7 +170,7 @@ class Libreria {
         $fDetalleHistorialUsuario = new FDetalleRevisionHistorialModel();
         $detalleRevisionGuardado = $fDetalleHistorialUsuario->getDetalleHistorialxVendedorxFecha($fechagestion, $ejecutivoSeleccionado, $semanaRevision);
 
-        $ejecutivo = EjecutivoModel::model()->findAllByAttributes(array('e_usr_mobilvendor' => $ejecutivoSeleccionado));
+
         $fHistorial = new FHistorialModel();
         if (count($detalleRevisionGuardado) == 0) {
             $fila = 1;
@@ -179,23 +179,21 @@ class Libreria {
             $fRuta = new FRutaModel();
             $fEjecutivoRuta = new FEjecutivoRutaModel();
 
-            if (isset($ejecutivo[0]['e_usr_mobilvendor'])) {
-                $historial = $fHistorial->getHistorialxVendedorxFechaxHoraInicioxHoraFinSemana(
-                        $accionHistorial
-                        , $fechagestion
-                        , $horaInicioGestion
-                        , $horaFinGestion
-                        , $ejecutivo[0]['e_usr_mobilvendor']
-                        , $semanaRevision
-                );
-            }
-//            var_dump($historial);die();
+            $historial = $fHistorial->getHistorialxVendedorxFechaxHoraInicioxHoraFinSemana(
+                    $accionHistorial
+                    , $fechagestion
+                    , $horaInicioGestion
+                    , $horaFinGestion
+                    , $ejecutivoSeleccionado
+                    , $semanaRevision
+            );
+
             if (isset($historial)) {
                 if (count($historial) > 0) {
                     $diaGestion = date("w", strtotime($fechagestion));
 //                    $ruta_dia_gestion = "R" . $diaGestion . '-' . $ejecutivo[0]['e_iniciales'];
                     $ruta_dia_gestion = $fEjecutivoRuta->getRutaGestionxEjecutivoxDiaxSemana(
-                                    $ejecutivo[0]['e_usr_mobilvendor']
+                                    $ejecutivoSeleccionado
                                     , $diaGestion + 1
                                     , $semanaRevision)[0]['ruta'];
 //            var_dump($ruta_dia_gestion);die();
@@ -234,13 +232,13 @@ class Libreria {
 //                    var_dump($fechagestion,$fechaInicioPrimerPeriodo[0]['FECHA_INICIO'],$fechagestion < $fechaInicioPrimerPeriodo[0]['FECHA_INICIO']);die();
                     if ($fechagestion < $fechaInicioPrimerPeriodo[0]['FECHA_INICIO'])
                         $totalClientesRuta = $fEjecutivoRuta->getTotalClientesxRutaxEjecutivoxDiaxSemana(
-                                        $ejecutivo[0]['e_usr_mobilvendor']
+                                        $ejecutivoSeleccionado
                                         , $diaGestion + 1
                                         , $semanaRevision
                                 )[0]["TOTALCLIENTES"];
                     else
                         $totalClientesRuta = $fEjecutivoRuta->getTotalClientesxRutaxEjecutivoxDiaxSemanaxPeriodo(
-                                        $ejecutivo[0]['e_usr_mobilvendor']
+                                        $ejecutivoSeleccionado
                                         , $diaGestion + 1
                                         , $semanaRevision
                                         , Yii::app()->session['idPeriodoAbierto']
@@ -259,13 +257,14 @@ class Libreria {
                         $tiempoGestion = '00:00:00';
                         $tiempoTraslado = '00:00:00';
 
-                        $cliente = ClienteModel::model()->findAllByAttributes(array('cli_codigo_cliente' => $itemHistorial['CODIGOCLIENTE']));
+                        $cliente = ClienteDireccionModel::model()->findAllByAttributes(array('dcli_cliente' => $itemHistorial['CODIGOCLIENTE']));
 
                         //INICIO REVISION DE COORDENADAS Y DISTANCIA ENTRE CLIENTE ANTERIOR Y CLIENTE ACTUAL Y DISTANCIA ENTRE EJECUTIVO Y CLIENTE
                         //CASO SI EXISTE EL CLIENTE
                         if (count($cliente) > 0) {
-                            $latitudCliente = str_replace(',', '.', $cliente[0]['cli_latitud']);
-                            $longitudCliente = str_replace(',', '.', $cliente[0]['cli_longitud']);
+//                            Yii::log(__CLASS__ . " " . $cliente[0]['cli_codigo_cliente'] . "-" . " lat:" . $cliente[0]['cli_latitud'] . " long:" . $cliente[0]['cli_longitud'], "error");
+                            $latitudCliente = str_replace(',', '.', ($cliente[0]['dcli_latitud'] == 'null') ? 0 : $cliente[0]['dcli_latitud']);
+                            $longitudCliente = str_replace(',', '.', ($cliente[0]['dcli_longitud'] == 'null') ? 0 : $cliente[0]['dcli_longitud']);
 
                             $latitudHistorial = str_replace(',', '.', $itemHistorial['LATITUD']);
                             $longitudHistorial = str_replace(',', '.', $itemHistorial['LONGITUD']);
@@ -350,20 +349,10 @@ class Libreria {
                         $inicioFinVisitaHistorial = $fHistorial->getInicioFinVisitaClientexEjecutivoxFecha(
                                 'Inicio visita'
                                 , $fechaGestion
-                                , $ejecutivo[0]['e_usr_mobilvendor']
+                                , $ejecutivoSeleccionado
                                 , $itemHistorial['CODIGOCLIENTE']
                                 , $itemHistorial['IDHISTORIAL']);
 
-//                        $finVisitaHistorial = $fHistorial->getInicioFinVisitaClientexEjecutivoxFecha(
-//                                'Fin de visita'
-//                                , $fechaGestion
-//                                , $ejecutivo[0]['e_usr_mobilvendor']
-//                                , $itemHistorial['CODIGOCLIENTE']
-//                                , $inicioVisitaHistorial[0]['IDHISTORIAL']);
-//                        if (isset($inicioVisitaHistorial[0]))
-//                            $inicioVisita = new DateTime($inicioVisitaHistorial[0]["HORAVISITA"]);
-//                        if (isset($finVisitaHistorial[0]))
-//                            $finVisita = new DateTime($finVisitaHistorial[0]["HORAVISITA"]);
                         $inicioVisita = DateTime::createFromFormat(FORMATO_FECHA_LONG_4, $inicioFinVisitaHistorial[0]['HORAVISITA']);
                         $finVisita = DateTime::createFromFormat(FORMATO_FECHA_LONG_4, $inicioFinVisitaHistorial[1]['HORAVISITA']);
 
@@ -378,9 +367,10 @@ class Libreria {
                         $finVisitaAnterior = $finVisita;
                         #FIN CALCULO TIEMPOS DE GESTION
                         #INICIO ANALISIS DE RUTA
-                        if (isset($cliente[0]['cli_latitud']) && $cliente[0]['cli_longitud']) {
-                            $latitudClienteAnterior = str_replace(',', '.', $cliente[0]['cli_latitud']);
-                            $longitudClienteAnterior = str_replace(',', '.', $cliente[0]['cli_longitud']);
+
+                        if (isset($cliente[0]['dcli_latitud']) && $cliente[0]['dcli_longitud']) {
+                            $latitudClienteAnterior = str_replace(',', '.', $cliente[0]['dcli_latitud']);
+                            $longitudClienteAnterior = str_replace(',', '.', $cliente[0]['dcli_longitud']);
 
                             if (isset($inicioVisitaHistorial[0]))
                                 $ultimoCodigoHistorial = $inicioVisitaHistorial[0]['IDHISTORIAL'];
@@ -394,7 +384,7 @@ class Libreria {
                         $estadoRevisionRuta = '';
                         $cantidadChips = $fOrden->getChipsxClientexEjecutivoxFecha(
                                 $itemHistorial['CODIGOCLIENTE']
-                                , $ejecutivo[0]['e_usr_mobilvendor']
+                                , $ejecutivoSeleccionado
                                 , $fechaHistorial
                         );
                         $chips = $cantidadChips[0]['CHIPS'];
@@ -407,7 +397,7 @@ class Libreria {
 
                         $rutaClienteItemHistorial = $fRuta->getRutaxClientexSemana(
                                 $itemHistorial['CODIGOCLIENTE']
-                                , $ejecutivo[0]['e_iniciales']
+                                , $ejecutivoSeleccionado
                                 , $semanaRevision
                                 , Yii::app()->session['idPeriodoAbierto']
                         );
@@ -477,6 +467,7 @@ class Libreria {
                         $nombre1 = (isset($nombre[1]) && strlen($nombre[1]) > 0) ? $nombre[1] : '';
                         $primerNombre = (isset($nombre[2]) && strlen($nombre[2]) > 0) ? $nombre[2] : $nombre1;
 
+                        $ejecutivo = EjecutivoModel::model()->findAllByAttributes(array('e_usr_mobilvendor' => $ejecutivoSeleccionado));
                         #INICIO CARGA DE DATOS PARA REPORTE DETALLE
                         $revisionRuta = array(
                             'FECHAREVISION' => date(FORMATO_FECHA),
@@ -627,10 +618,9 @@ class Libreria {
                     //INICIO GENERARION DE RESULTADOS ANALISIS
                     //GENERACION DE DATOS DE VISITAS
                     $clientesNoVisitados = $fRuta->getTotalClientesNoVisitadosxRutaxEjecutivo(
-                                    $ejecutivo[0]['e_iniciales']
-                                    , $diaGestion + 1 // las rutas en mobilvendor tienen los dias iniciando en 0 para el domingo
+                                    $diaGestion + 1 // las rutas en mobilvendor tienen los dias iniciando en 0 para el domingo
                                     , $fechagestion
-                                    , $ejecutivo[0]['e_usr_mobilvendor']
+                                    , $ejecutivoSeleccionado
                                     , Yii::app()->session['idPeriodoAbierto']
                                     , $semanaRevision
                             )[0]['CLIENTESNOVISITADOS'];
@@ -640,13 +630,13 @@ class Libreria {
                                     , $fechagestion
                                     , $horaInicioGestion
                                     , $horaFinGestion
-                                    , $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESULTADO'];
+                                    , $ejecutivoSeleccionado)[0]['RESULTADO'];
                     $ultimaVisita = $fHistorial->getUltimaVisitaxEjecutivoxFechaxHoraInicioxHoraFin(
                                     $accionHistorial
                                     , $fechagestion
                                     , $horaInicioGestion
                                     , $horaFinGestion
-                                    , $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESULTADO'];
+                                    , $ejecutivoSeleccionado)[0]['RESULTADO'];
                     $mesAnterior = date("m", strtotime(date("Y-m-t", strtotime(date('Y-m-d', strtotime($fechagestion . ' - 1 days'))))));
                     $mesGestion = date("m", strtotime($fechagestion));
 
@@ -655,19 +645,19 @@ class Libreria {
                     if ($mesAnterior[0] == $mesGestion - 1) {
                         if ($diaGestion == 1) {//1--> Lunes
                             $fechaViernes = date('Y-m-d', strtotime($fechagestion . ' - 3 days'));
-                            $_totalVentaViernes = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechaViernes, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                            $_totalVentaRutaViernes = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], 6, $fechaViernes, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'], Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
-                            $_totalVentaFueraRutaViernes = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], 6, $fechaViernes, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'], Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
-                            $_totalClientesVentaViernes = intval($rsTotales->getTotalClientesVenta($fechaViernes, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                            $_totalVentaViernes = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechaViernes, $horaInicioGestion, $ejecutivoSeleccionado)[0]['RESPUESTA']);
+                            $_totalVentaRutaViernes = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], 6, $fechaViernes, $horaInicioGestion, $ejecutivoSeleccionado, Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
+                            $_totalVentaFueraRutaViernes = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], 6, $fechaViernes, $horaInicioGestion, $ejecutivoSeleccionado, Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
+                            $_totalClientesVentaViernes = intval($rsTotales->getTotalClientesVenta($fechaViernes, $ejecutivoSeleccionado)[0]['RESPUESTA']);
 
-                            $_totalVentaFinSemana = intval($rsTotales->getTotalChipsVentaFinSemana($fechaViernes, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                            $_totalVentaRutaFinSemana = intval($rsTotales->getTotalChipsVentaFinSemana($fechaViernes, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                            $_totalClientesVentaFinSemana = intval($rsTotales->getTotalClientesVentaFinSemana($fechaViernes, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                            $_totalVentaFinSemana = intval($rsTotales->getTotalChipsVentaFinSemana($fechaViernes, $ejecutivoSeleccionado)[0]['RESPUESTA']);
+                            $_totalVentaRutaFinSemana = intval($rsTotales->getTotalChipsVentaFinSemana($fechaViernes, $ejecutivoSeleccionado)[0]['RESPUESTA']);
+                            $_totalClientesVentaFinSemana = intval($rsTotales->getTotalClientesVentaFinSemana($fechaViernes, $ejecutivoSeleccionado)[0]['RESPUESTA']);
 
-                            $_totalVentaDiaLunes = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                            $_totalVentaRutaLunes = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'], Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
-                            $_totalVentaFueraRutaLunes = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'], Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
-                            $_totalClientesVentaLunes = intval($rsTotales->getTotalClientesVenta($fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                            $_totalVentaDiaLunes = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechagestion, $horaInicioGestion, $ejecutivoSeleccionado)[0]['RESPUESTA']);
+                            $_totalVentaRutaLunes = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivoSeleccionado, Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
+                            $_totalVentaFueraRutaLunes = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivoSeleccionado, Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
+                            $_totalClientesVentaLunes = intval($rsTotales->getTotalClientesVenta($fechagestion, $ejecutivoSeleccionado)[0]['RESPUESTA']);
 
                             $_totalVentaDia = $_totalVentaViernes + $_totalVentaFinSemana + $_totalVentaDiaLunes;
                             $_totalVentaRuta = $_totalVentaRutaViernes + $_totalVentaRutaFinSemana + $_totalVentaRutaLunes;
@@ -676,15 +666,15 @@ class Libreria {
                         } else {
                             $fechaDiaAnterior = date('Y-m-d', strtotime($fechagestion . ' - 1 days'));
 
-                            $_totalVentaDiaAnterior = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechaDiaAnterior, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                            $_totalVentaRutaDiaAnterior = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $diaGestion, $fechaDiaAnterior, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'], Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
-                            $_totalVentaFueraRutaDiaAnterior = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $diaGestion, $fechaDiaAnterior, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'], Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
-                            $_totalClientesVentaDiaAnterior = intval($rsTotales->getTotalClientesVenta($fechaDiaAnterior, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                            $_totalVentaDiaAnterior = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechaDiaAnterior, $horaInicioGestion, $ejecutivoSeleccionado)[0]['RESPUESTA']);
+                            $_totalVentaRutaDiaAnterior = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $diaGestion, $fechaDiaAnterior, $horaInicioGestion, $ejecutivoSeleccionado, Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
+                            $_totalVentaFueraRutaDiaAnterior = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $diaGestion, $fechaDiaAnterior, $horaInicioGestion, $ejecutivoSeleccionado, Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
+                            $_totalClientesVentaDiaAnterior = intval($rsTotales->getTotalClientesVenta($fechaDiaAnterior, $ejecutivoSeleccionado)[0]['RESPUESTA']);
 
-                            $_totalVentaDiaE = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                            $_totalVentaRutaDia = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'], Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
-                            $_totalVentaFueraRutaDia = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'], Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
-                            $_totalClientesVentaDia = intval($rsTotales->getTotalClientesVenta($fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                            $_totalVentaDiaE = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechagestion, $horaInicioGestion, $ejecutivoSeleccionado)[0]['RESPUESTA']);
+                            $_totalVentaRutaDia = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivoSeleccionado, Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
+                            $_totalVentaFueraRutaDia = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivoSeleccionado, Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
+                            $_totalClientesVentaDia = intval($rsTotales->getTotalClientesVenta($fechagestion, $ejecutivoSeleccionado)[0]['RESPUESTA']);
 
                             $_totalVentaDia = $_totalVentaDiaAnterior + $_totalVentaDiaE;
                             $_totalVentaRuta = $_totalVentaRutaDiaAnterior + $_totalVentaRutaDia;
@@ -697,24 +687,24 @@ class Libreria {
                     //VENTAS MES NORMAL
                     else {
                         if ($diaGestion == 5) { //5-> viernes
-                            $_totalVentaViernes = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                            $_totalVentaRutaViernes = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'], Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
-                            $_totalVentaFueraRutaViernes = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'], Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
-                            $_totalClientesVentaViernes = intval($rsTotales->getTotalClientesVenta($fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                            $_totalVentaViernes = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechagestion, $horaInicioGestion, $ejecutivoSeleccionado)[0]['RESPUESTA']);
+                            $_totalVentaRutaViernes = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivoSeleccionado, Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
+                            $_totalVentaFueraRutaViernes = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivoSeleccionado, Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
+                            $_totalClientesVentaViernes = intval($rsTotales->getTotalClientesVenta($fechagestion, $ejecutivoSeleccionado)[0]['RESPUESTA']);
 
-                            $_totalVentaFinSemana = intval($rsTotales->getTotalChipsVentaFinSemana($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                            $_totalVentaRutaFinSemana = intval($rsTotales->getTotalChipsVentaFinSemana($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                            $_totalClientesVentaFinSemana = intval($rsTotales->getTotalClientesVentaFinSemana($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                            $_totalVentaFinSemana = intval($rsTotales->getTotalChipsVentaFinSemana($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $ejecutivoSeleccionado)[0]['RESPUESTA']);
+                            $_totalVentaRutaFinSemana = intval($rsTotales->getTotalChipsVentaFinSemana($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $ejecutivoSeleccionado)[0]['RESPUESTA']);
+                            $_totalClientesVentaFinSemana = intval($rsTotales->getTotalClientesVentaFinSemana($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $ejecutivoSeleccionado)[0]['RESPUESTA']);
 
                             $_totalVentaDia = $_totalVentaViernes + $_totalVentaFinSemana;
                             $_totalVentaRuta = $_totalVentaRutaViernes + $_totalVentaRutaFinSemana;
                             $_totalVentaFueraRuta = $_totalVentaFueraRutaViernes;
                             $_totalClientesVenta = $_totalClientesVentaViernes + $_totalClientesVentaFinSemana;
                         } else {
-                            $_totalVentaDia = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
-                            $_totalVentaRuta = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'], Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
-                            $_totalVentaFueraRuta = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivo[0]['e_usr_mobilvendor'], Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
-                            $_totalClientesVenta = intval($rsTotales->getTotalClientesVenta($fechagestion, $ejecutivo[0]['e_usr_mobilvendor'])[0]['RESPUESTA']);
+                            $_totalVentaDia = intval($rsTotales->getTotalChipsVentaxDiaxHoraInicioxEjecutivo($fechagestion, $horaInicioGestion, $ejecutivoSeleccionado)[0]['RESPUESTA']);
+                            $_totalVentaRuta = intval($rsTotales->getTotalChipsVentaRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivoSeleccionado, Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
+                            $_totalVentaFueraRuta = intval($rsTotales->getTotalChipsVentaFueraRuta($ejecutivo[0]['e_iniciales'], $diaGestion + 1, $fechagestion, $horaInicioGestion, $ejecutivoSeleccionado, Yii::app()->session['idPeriodoAbierto'], $semanaRevision)[0]['RESPUESTA']);
+                            $_totalClientesVenta = intval($rsTotales->getTotalClientesVenta($fechagestion, $ejecutivoSeleccionado)[0]['RESPUESTA']);
                         }
                     }
 
@@ -748,7 +738,7 @@ class Libreria {
                     foreach ($datosResumenGrid as $key => $filaGrid) {
                         foreach ($filaGrid as $clave => $valor) {
                             $resumenRuta = array(
-                                'EJECUTIVO' => $ejecutivo[0]['e_usr_mobilvendor'],
+                                'EJECUTIVO' => $ejecutivoSeleccionado,
                                 'FECHA_HISTORIAL' => $fechagestion,
                                 'PARAMETRO' => $clave,
                                 'VALOR' => strval($valor),
@@ -756,7 +746,7 @@ class Libreria {
                             );
                             $itemResumenRutaGuardar = array(
                                 'pg_id ' => Yii::app()->session['idPeriodoAbierto'],
-                                'rhd_cod_ejecutivo' => $ejecutivo[0]['e_usr_mobilvendor'],
+                                'rhd_cod_ejecutivo' => $ejecutivoSeleccionado,
                                 'rhd_fecha_historial' => $fechagestion,
                                 'rhd_parametro' => $clave,
                                 'rhd_valor' => strval($valor),
@@ -953,7 +943,7 @@ class Libreria {
                     , $fechagestion
                     , $horaInicioGestion
                     , $horaFinGestion
-                    , $ejecutivo[0]['e_usr_mobilvendor']
+                    , $ejecutivoSeleccionado
                     , $semanaRevision
             );
             $datosRevisionRuta = $this->AnalizarVisitasRuta(

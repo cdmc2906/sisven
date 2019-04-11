@@ -141,11 +141,12 @@ class CargaRutasMbController extends Controller {
                         $file = new File($filePath, $operation, $delimiter);
                         $registroInicio = (($numeroBloque - 1) * $tamanioBloque) + 1;
                         $dataInsertar = $this->getDatosGuardar($file, $registroInicio, $tamanioBloque);
-                        $datosRutasMb = $dataInsertar['rutasmb'];
-
+                        $datosRutasMb = $dataInsertar;
+//                        var_dump($dataInsertar);
                         if (count($datosRutasMb) > 0) {
                             $dbConnection = new CI_DB_active_record(null);
                             $sql = $dbConnection->insert_batch('tb_ruta_mb', $datosRutasMb);
+//                            var_dump($sql);die();
                             $sql = str_replace('"', '', $sql);
                             $connection = Yii::app()->db_conn;
                             $connection->active = true;
@@ -195,7 +196,7 @@ class CargaRutasMbController extends Controller {
                 $response->Status = NOTICE;
             }
         } catch (Exception $e) {
-            $response->Message = 'Se ha producido un error al guardar los datos';
+            $response->Message = 'Se ha producido un error al guardar los datos '.$e;
             $response->Status = ERROR;
             $response->ClassMessage = CLASS_MENSAJE_ERROR;
         }
@@ -340,29 +341,9 @@ class CargaRutasMbController extends Controller {
 
             array_push($datosRutas, $data);
             unset($data);
-//            } else {
-//                Yii::app()->session['itemRutaDuplicado'] = Yii::app()->session['itemRutaDuplicado'] + 1;
-//            }
         }
-
-//        //eliminacion de los clientes de la carga anterior
-//        $datos['rutasmb'] = $datosRutas;
-//        $rutasEliminar = RutaMbModel::model()->findAllByAttributes(
-//                array(
-//                    'r_numero_carga_informacion' => Yii::app()->session['cargaAnterior']
-//                    , 'pg_id' => Yii::app()->session['idPeriodoAbierto']
-//                )
-//        );
-////        var_dump($rutasEliminar,Yii::app()->session['idPeriodoAbierto']);die();
-//
-//
-//        foreach ($rutasEliminar as $rutaEliminar) {
-//            $dummy = array();
-//            $this->GenerarHistorial($rutaEliminar, 2, $dummy);
-//            $rutaEliminar->delete();
-//        }
-////        var_dump($datos['rutasmb']);die();
-        return $datos;
+//        var_dump($datosRutas)
+        return $datosRutas;
     }
 
     public function actionVerDatosArchivo() {

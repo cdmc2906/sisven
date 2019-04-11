@@ -1,6 +1,6 @@
 $(document).ready(function () {
     configurarMaestroDetalle();
-    ConfigDatePickersReporte('.txtfechaOrdenesInicio','.txtfechaOrdenesFin');
+    ConfigDatePickersReporte('.txtfechaOrdenesInicio', '.txtfechaOrdenesFin');
 
     $("#btnLimpiar").click(function () {
         $("#ReporteOrdenesxFechaForm_fechaOrdenesInicio").val('');
@@ -11,7 +11,7 @@ $(document).ready(function () {
     $("#btnExcel").click(function () {
         GenerarDocumentoReporte('GenerateExcel');
     });
-    
+
     $("#btnEditarFila").click(function () {
         var idFilaSeleccionada = jQuery("#tblGridDetalle").jqGrid('getGridParam', 'selrow');
         if (idFilaSeleccionada != null)
@@ -40,8 +40,8 @@ $(document).ready(function () {
         } else
             alert("Por favor seleccione una fila");
     });
-    
-     $("#btnEliminarFila").click(function () {
+
+    $("#btnEliminarFila").click(function () {
         var idFilaSeleccionada = jQuery("#tblGridDetalle").jqGrid('getGridParam', 'selrow');
         if (idFilaSeleccionada != null)
         {
@@ -97,6 +97,7 @@ function configurarMaestroDetalle()
                 , multiselect: false
                 , caption: "Pedidos "
                 , footerrow: true
+                , hidegrid: false
                 , gridComplete: function () {
                     var $grid = $('#tblGridMaestro');
                     var colSum = $grid.jqGrid('getCol', 'TOTALPEDIDOS', false, 'sum');
@@ -109,94 +110,49 @@ function configurarMaestroDetalle()
                     cargarDetalle(fila.CODIGOEJECUTIVO);
                 }});
     jQuery("#tblGridMaestro").jqGrid('navGrid', '#pager10', {add: false, edit: false, del: false});
-    
-    jQuery("#tblGridDetalle").jqGrid(
-            {
-                height: 200
-                , width: 720
-                , datatype: "json"
-                , colNames: [
-//                    'Ejecutivo',
-                    'Id',
-                    'Orden',
-                    'Cod Cliente',
-                    'Cliente',
-                    '# Chips',
-                    'Periodo'
-                ]
-                , colModel:
-                        [
-//                            {name: 'EJECUTIVO', hidden: true, index: 'EJECUTIVO', sortable: false, frozen: true},
-                            {name: 'CODIGOORDEN',
-//                                hidden: true,
-                                index: 'CODIGOORDEN',
-                                sortable: false,
-                                width: 80,
-                                frozen: true,
-                                editable: true,
-                                align: "center",
-                                editoptions: {readonly: true, size: 10}
-                            },
-                            {name: 'ORDEN',
-                                index: 'CODORDEN',
-                                sortable: false,
-                                frozen: true,
-                                editable: true,
-                                editoptions: {readonly: true, size: 20}
-                            },
-                            {name: 'COD_CLIENTE'
-                                , index: 'COD_CLIENTE'
-                                , sortable: false
-                                , frozen: true
-                                , width: 100
-                                , editable: true,
-                                editoptions: {readonly: true, size: 15}
 
-//                                , summaryType: 'count'
-//                                , summaryTpl: '<b>{0} Orden(es)</b>'
-                            },
-                            {name: 'NOM_CLIENTE'
-                                , index: 'NOM_CLIENTE'
-                                , sortable: false
-                                , width: 350
-                                , frozen: true
-                                , editable: false, editoptions: {readonly: true, size: 50}
-//                                , summaryType: 'count'
-//                                , summaryTpl: '<b>{0} Orden(es)</b>'
-                            },
-                            {name: 'TOTALORDENES'
-                                , index: 'TOTALORDENES'
-                                , width: 80
-                                , align: "right"
-                                , sorttype: "float"
-                                , align: "center"
-                                , formatter: "integer"
-                                , summaryType: 'sum'
-                                , summaryTpl: '<b> Total: {0}</b>'
-                                , editable: true, editoptions: {size: 10}
-                            },
-                            {name: 'PERIODO'
-                                , index: 'PERIODO'
-                                , width: 120
-                                , sortable: false
-                                , frozen: false
-                                , sorttype: "date", formatter: "date"
-                            }
-                        ]
-                , rowNum: 1000
-                , rowList: [5, 10, 20]
-                , pager: '#pager10_d'
-                , sortname: 'item'
-                , viewrecords: true
-                , sortorder: "asc"
-                , footerrow: true
-                , gridComplete: function () {
-                    var $grid = $('#tblGridDetalle');
-                    var colSum = $grid.jqGrid('getCol', 'TOTALORDENES', false, 'sum');
-                    $grid.jqGrid('footerData', 'set', {'TOTALORDENES': colSum});
-                    $grid.jqGrid('footerData', 'set', {'NOM_CLIENTE': 'Total'});
-                }
-                , caption: "Detalle Pedidos"}
+    jQuery("#tblGridDetalle").jqGrid({
+        height: 200
+        , width: 720
+        , datatype: "json"
+        , colNames: [
+            'Id',
+            'Orden',
+            'Cod Cliente',
+            'Cliente',
+            '# Chips',
+            'Periodo'
+        ]
+        , colModel: [
+            {name: 'CODIGOORDEN', index: 'CODIGOORDEN', sortable: false, width: 80, frozen: true, editable: true, align: "center", editoptions: {readonly: true, size: 10}},
+            {name: 'ORDEN', index: 'CODORDEN', sortable: false, frozen: true, editable: true, editoptions: {readonly: true, size: 20}},
+            {name: 'COD_CLIENTE', index: 'COD_CLIENTE', sortable: false, frozen: true, width: 100, editable: true, editoptions: {readonly: true, size: 15}},
+            {name: 'NOM_CLIENTE', index: 'NOM_CLIENTE', sortable: false, width: 350, frozen: true, editable: false, editoptions: {readonly: true, size: 50}},
+            {name: 'TOTALORDENES', index: 'TOTALORDENES', width: 80, align: "right", sorttype: "float", align: "center", formatter: "integer", summaryType: 'sum', summaryTpl: '<b> Total: {0}</b>', editable: true, editoptions: {size: 10}
+            },
+            {name: 'PERIODO'
+                , index: 'PERIODO'
+                , width: 120
+                , sortable: false
+                , frozen: false
+                , sorttype: "date", formatter: "date"
+            }
+        ]
+        , rowNum: 1000
+        , rowList: [5, 10, 20]
+        , pager: '#pager10_d'
+        , sortname: 'item'
+        , viewrecords: true
+        , sortorder: "asc"
+        , footerrow: true
+        , hidegrid: false
+        , gridComplete: function () {
+            var $grid = $('#tblGridDetalle');
+            var colSum = $grid.jqGrid('getCol', 'TOTALORDENES', false, 'sum');
+            $grid.jqGrid('footerData', 'set', {'TOTALORDENES': colSum});
+            $grid.jqGrid('footerData', 'set', {'NOM_CLIENTE': 'Total'});
+        }
+        , caption: "Detalle Pedidos"}
     ).navGrid('#pager10_d', {add: false, edit: false, del: false}
     );
 }

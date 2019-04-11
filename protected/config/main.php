@@ -175,11 +175,11 @@ return array(
             'routes' => array(
                 array(
                     'class' => 'CFileLogRoute',
-                    'levels' => 'error, warning, rbac',
+                    'levels' => 'error',
                 ),
 //                array(
 //                    'class'=>'CEmailLogRoute',
-//                    'levels'=>'error, warning',
+//                    'levels'=>'error, warning, info',
 //                    'emails'=>'christian.araujo@tececab.com.ec',
 //                ),
             // uncomment the following to show log messages on web pages

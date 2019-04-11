@@ -585,7 +585,8 @@ $this->pageTitle = $pagina_nombre;
                                             echo $form->labelEx($model, 'ejecutivo');
                                             $criteria = new CDbCriteria;
                                             $criteria->addCondition("e_estado = 1");
-                                            $criteria->addCondition("e_tipo in ('EZ','D','ST','SC')");
+                                            $condicion = "e_tipo in" . EJECUTIVOS_REVISION_INDIVIDUAL;
+                                            $criteria->addCondition($condicion);
 
                                             $ejecutivosZona = EjecutivoModel::model()->findAll($criteria);
                                             $listaEjecutivosZona = CHtml::listData($ejecutivosZona, 'e_usr_mobilvendor', 'e_nombre');
@@ -601,8 +602,9 @@ $this->pageTitle = $pagina_nombre;
                                         </a>
                                     </li>
                                     <li><a href="#">
-                                            <i class="fa  fa-clock-o"></i>
-                                            <?php echo $form->labelEx($model, 'semanaRevision'); ?>
+                                            <i class = "fa  fa-clock-o"></i>
+                                            <?php echo $form->labelEx($model, 'semanaRevision');
+                                            ?>
                                             <?php
                                             echo $form->dropDownList(
                                                     $model, 'semanaRevision'
@@ -854,7 +856,7 @@ $this->pageTitle = $pagina_nombre;
                                         <div style="margin-top: 10px;margin-left: 5px; background-color: transparent; " id="grilla" class="_grilla panel panel-shadow">VISITA</div>
                                     </div>
                                     <div id="map"></div>
-                                    <?php // endif;                  ?>
+                                    <?php // endif;                   ?>
                                 </div>
                             </div>
                         </div>

@@ -345,7 +345,6 @@ class CrugeWebUser extends CWebUser implements IWebUser
             );
         }
 
-
         Yii::log(__CLASS__ . "\nlogin\n", "info");
 
         $this->_lastError = "";
@@ -370,7 +369,7 @@ class CrugeWebUser extends CWebUser implements IWebUser
         }
 
         // aplica credenciales sobre el sistema para obtener una sesion
-        Yii::log(__CLASS__ . "\nfiltro->startSession\n", "info");
+//        Yii::log(__CLASS__ . "\nfiltro->startSession\n", "info");
         if (($usersession = $filtro->startSession($user, $system)) != null) {
             Yii::log(__CLASS__ . "\nfiltro->startSession OK\n", "info");
 
@@ -449,6 +448,7 @@ class CrugeWebUser extends CWebUser implements IWebUser
     {
         // idsession usado al momento del login almacenado en la memoria de sesion
         $model = $this->getum()->loadSession($this->getSessionId());
+//        var_dump("id",$this->getSessionId(),$model);die();
         if ($model != null) {
             if ($model->validateSession()) {
                 return $model;

@@ -16,15 +16,14 @@ class ReportesModel extends DAOModel {
             SELECT
                     o_usuario AS CODIGOEJECUTIVO                
                     ,o_nom_usuario AS EJECUTIVO                
-                    , CONVERT(sum(o_subtotal), decimal(6, 0)) AS TOTALPEDIDOS
+                    , " . FuncionesBaseDatos::convertToDecimal(DBMS, 'sum(o_subtotal)', 6, 0) . " AS TOTALPEDIDOS
                 FROM tb_ordenes_mb
                 WHERE 1 = 1
                     AND o_fch_creacion >= '" . $fechaInicioB . "'
                     AND o_fch_creacion<'" . $fechaFinB . "'	
-                    AND o_usuario in(" . $grupoEjecutivos . ")	
-                GROUP BY o_usuario
+                    AND o_usuario in('" . $grupoEjecutivos . "')	
+                GROUP BY o_usuario,o_nom_usuario
                 ORDER BY o_usuario;";
-
 //        var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
@@ -64,7 +63,6 @@ class ReportesModel extends DAOModel {
         $hora_inicio = "09:00:00";
 //        $hora_fin = "23:59:59";
 
-
         $fechaInicioA = $fechaInicio;
         $fechaFinA = $fechaFin;
         $fechaInicioB = $fechaInicioA . " " . $hora_inicio;
@@ -79,7 +77,7 @@ class ReportesModel extends DAOModel {
                 ,o_codigo_mb as ORDEN
                 ,o_cod_cliente AS COD_CLIENTE
                 ,o_nom_cliente AS NOM_CLIENTE
-                , CONVERT(o_subtotal, decimal(6, 0)) AS TOTALORDENES
+                , " . FuncionesBaseDatos::convertToDecimal(DBMS, o_subtotal, 6, 0) . " AS TOTALORDENES
                 , DATE(o_fch_creacion) AS PERIODO
             FROM tb_ordenes_mb
             WHERE 1 = 1
@@ -88,7 +86,8 @@ class ReportesModel extends DAOModel {
                 AND o_fch_creacion<'" . $fechaFinB . "'
 			ORDER BY 1;";
 
-//        var_dump($sql);        die();
+        var_dump($sql);
+        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
         $this->Close();
@@ -376,8 +375,10 @@ class ReportesModel extends DAOModel {
                         e_cod AS CODIGOAGENTE
                         ,e_nombre AS NOMBREAGENTE
                         ,CASE e_tipo
-                            WHEN 'EZ' THEN 'EJECUTIVO_ZONA'
-                            WHEN 'S' THEN 'SUPERVISOR'
+                            WHEN 'EZM' THEN 'EJECUTIVO_ZONA_MOVISTAR'
+                            WHEN 'EZT' THEN 'EJECUTIVO_ZONA_TUENTI'
+                            WHEN 'SUPM' THEN 'SUPERVISOR_MOVISTAR'
+                            WHEN 'SUPT' THEN 'SUPERVISOR_TUENTI'
                             WHEN 'D' THEN 'DESARROLLADOR'
                             WHEN 'SC' THEN 'SERVICIO_CLIENTE'
                             WHEN 'ST' THEN 'SERVICIO_TECNICO'
@@ -385,7 +386,8 @@ class ReportesModel extends DAOModel {
                     from tb_ejecutivo 
                     where 1=1
                         and e_estado=1 
-                        and e_tipo in ('EZ','S','D','SC','ST')
+                        and e_tipo in ('EZM','EZT','SUPM','SUPT','D','SC','ST')
+                    ORDER BY 3
             ";
         else
             $sql = "
