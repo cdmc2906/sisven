@@ -20,6 +20,7 @@ class FChipsFacturadosModel extends DAOModel {
                 AND i_imei not in 
                     (select vm_icc from tb_venta_movistar)
                 AND i_estado_icc='ICC OK'
+                AND i_codigo_producto IN ('5','6')
                 ;
             ";
 //        var_dump($sql);        die();

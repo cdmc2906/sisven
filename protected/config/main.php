@@ -209,6 +209,7 @@ return array(
         'archivosRutasMb' => 'C:\carga_mobilvendor\rutas' . date('YmdHs') . '.csv',
         'archivosVentasMovistar' => 'C:\carga_mobilvendor\ventasMovistar' . date('YmdHs') . '.csv',
         'archivosTransferenciasMovistar' => 'C:\carga_mobilvendor\transferenciasMovistar' . date('YmdHs') . '.csv',
+        'archivosStockMovistar' => 'C:\carga_mobilvendor\stockMovistar' . date('YmdHs') . '.csv',
         'archivosClientes' => 'C:\carga_mobilvendor\clientes' . date('YmdHs') . '.csv',
         'archivosDireccionClientes' => 'C:\carga_mobilvendor\direccionClientes' . date('YmdHs') . '.csv',
 //        

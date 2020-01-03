@@ -296,7 +296,7 @@ class CargaRutasMbController extends Controller {
             $rutaEnBase = RutaMbModel::model()->findByAttributes(
                     array('r_cod_cliente' => $row['CLIENTE']
                         , 'pg_id' => Yii::app()->session['idPeriodoAbierto']
-                        , 'r_semana' => $row['SEMANA']
+                        //, 'r_semana' => $row['SEMANA']
                     )
             );
 

@@ -27,18 +27,47 @@ function ConfigurarGrid() {
         mtype: 'POST',
         url: 'VerDatosArchivo',
         colNames: [
-            'FECHA', 'SUCURSAL', 'NUM_BOD',
-            'BODEGA', 'NUM_SERIE', 'NUM_FACT',
-            'CODCLI', 'TIPOCLI', 'NOMCLI',
-            'RUC', 'DIRECCION', 'CIUDAD',
-            'TELEFONO', 'COD_PROD', 'DESCRIP',
-            'CODGRUP', 'GRUPO', 'CANTIDAD',
-            'DETALLE', 'IMEI', 'MIN',
-            'ICC', 'COSTO', 'PRECIO1',
-            'PRECIO2', 'PRECIO3', 'PRECIO4',
-            'PRECIO5', 'PRECIO', 'PORCENDES',
-            'DESCUENTO', 'SUBTOTAL', 'IVA',
-            'TOTAL', 'E_COD', 'VENDEDOR', 'PROVINCIA'
+            'FECHA'
+            , 'SUCURSAL'
+            , 'NUM_BOD'
+            , 'BODEGA'
+            , 'NUM_SERIE'
+            , 'NUM_FACT'
+            , 'CODCLI'
+            , 'TIPOCLI'
+            , 'NOMCLI'
+            , 'RUC'
+            , 'DIRECCION'
+            , 'CIUDAD'
+            , 'TELEFONO'
+            , 'COD_PROD'
+            , 'DESCRIP'
+            , 'CODGRUP'
+            , 'GRUPO'
+            , 'CANTIDAD'
+            , 'DETALLE'
+            , 'IMEI'
+            , 'MIN'
+            , 'ICC'
+            , 'COSTO'
+            , 'PRECIO1'
+            , 'PRECIO2'
+            , 'PRECIO3'
+            , 'PRECIO4'
+            , 'PRECIO5'
+            , 'PRECIO'
+            , 'PORCENDES'
+            , 'DESCUENTO'
+            , 'SUBTOTAL'
+            , 'IVA'
+            , 'TOTAL'
+            , 'E_COD'
+            , 'VENDEDOR'
+            , 'MES'
+            , 'SEMANA'
+            , 'CEDULA'
+            , 'LISTADO_OPERADORA'
+            , 'PROVINCIA'
         ],
         colModel: [
             {name: 'FECHA', index: 'FECHA', width: 200, resizable: false, sortable: false, frozen: false},
@@ -77,6 +106,10 @@ function ConfigurarGrid() {
             {name: 'TOTAL', index: 'TOTAL', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'E_CODIGO', index: 'E_CODIGO', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'VENDEDOR', index: 'VENDEDOR', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'MES', index: 'PROVINCIA', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'SEMANA', index: 'SEMANA', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'CEDULA', index: 'CEDULA', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'LISTADO_OPERADORA', index: 'LISTADO_OPERADORA', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'PROVINCIA', index: 'PROVINCIA', width: 200, resizable: false, sortable: false, frozen: false},
         ],
         pager: '#pagGrid',

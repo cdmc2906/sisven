@@ -16,6 +16,18 @@
  */
 class FTransferenciasMovistarModel extends DAOModel {
 
+    public static function getFechaUltimaCarga() {
+        $command1 = Yii::app()->db->createCommand("
+         select  
+                MAX(CONVERT(DATE,tm_fecha_ingreso))  as ultimacarga
+            from tcc_control_ruta.dbo.tb_transferencia_movistar
+");
+
+        $resultado1 = $command1->queryRow();
+
+        return $resultado1['ultimacarga'];
+    }
+
     public function getDatosMinxICC($iccBuscar) {
         $sql = "
            select 
@@ -26,11 +38,12 @@ class FTransferenciasMovistarModel extends DAOModel {
             ";
 //        var_dump($sql);die();   
         $command = $this->connection->createCommand($sql);
-        
+
         $data = $command->queryAll();
         $this->Close();
         return $data;
     }
+
     public function getLotexICC($iccBuscar) {
         $sql = "
             select 
@@ -40,9 +53,9 @@ class FTransferenciasMovistarModel extends DAOModel {
                 
             ";
 //        var_dump($sql);die();   
-        
+
         $command = $this->connection->createCommand($sql);
-        
+
         $data = $command->queryAll();
         $this->Close();
         return $data;

@@ -236,7 +236,7 @@ class CargaTransferenciasMovistarController extends Controller {
         $datosChipsRepetidos = array();
         $datosChipsActualizados = array();
 
-        $archivoVentasMovistar = $file->getDatosVentasMovistar($start, $blockSize);
+        $archivoVentasMovistar = $file->getDatosTransferenciasMovistar($start, $blockSize);
         foreach ($archivoVentasMovistar as $row) {
             $existeBdd = TransferenciaMovistarModel::model()->findByAttributes(array('tm_icc' => trim($row['ICC'])));
             if ($existeBdd) {

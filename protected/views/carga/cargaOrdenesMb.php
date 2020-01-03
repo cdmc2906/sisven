@@ -89,6 +89,7 @@ $this->pageTitle = $pagina_nombre;
                         setMensaje(data.ClassMessage, data.Message);
                         if(data.Status==1){
                             var datosResult = data.Result;
+                            alert(datosResult)
                             $("#tblGridResumen").setGridParam({datatype: \'jsonstring\', datastr: datosResult}).trigger(\'reloadGrid\');
                         } else{
                             $.each(data, function(key, val) {

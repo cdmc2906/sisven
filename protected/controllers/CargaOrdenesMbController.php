@@ -149,6 +149,7 @@ class CargaOrdenesMbController extends Controller {
                 }
             }
         }
+//        var_dump($dataInsert);die();
         return $dataInsert;
     }
 

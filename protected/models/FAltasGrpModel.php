@@ -5,6 +5,17 @@
  */
 class FAltasGrpModel extends DAOModel {
 
+     public static function getFechaUltimaCarga() {
+        $command1 = Yii::app()->db->createCommand("
+        select 
+                MAX(CONVERT(DATE,FECHA_HASTA))  ultimacarga
+            from tececab.dbo.CHIP_ALTAS
+");
+
+        $resultado1 = $command1->queryRow();
+
+        return $resultado1['ultimacarga'];
+    }
     public function getAltasPorPeriodo($fechaInicio, $fechaFin) {
         $dataResultado = array();
 

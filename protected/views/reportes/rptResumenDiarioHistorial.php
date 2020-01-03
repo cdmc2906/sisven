@@ -474,7 +474,6 @@ $this->pageTitle = $pagina_nombre;
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div class="tab-pane" id="tab_2">

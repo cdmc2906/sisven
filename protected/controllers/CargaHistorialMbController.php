@@ -24,11 +24,6 @@ class CargaHistorialMbController extends Controller {
         Yii::app()->session['itemsFueraPeriodo'] = 0;
         $response = new Response();
         try {
-
-
-
-
-
             $model = new CargaHistorialMbForm();
             $historialMbItems = array();
             if (isset($_POST['CargaHistorialMbForm'])) {
@@ -95,7 +90,7 @@ class CargaHistorialMbController extends Controller {
     private function getDatosMostrar($file, $start, $blockSize) {
         $dataInsert = array();
         $dataFile = $file->getDatosHistorialMb($start, $blockSize);
-
+//        var_dump($dataFile);die();
         foreach ($dataFile as $row) {
 //        var_dump($row['FECHA']);DIE();
             $dateString = '';
@@ -106,7 +101,7 @@ class CargaHistorialMbController extends Controller {
                 $date = DateTime::createFromFormat('d/m/Y H:i:s', $row['FECHA']);
                 $dateString = $date->format(FORMATO_FECHA_LONG_4);
             }
-
+//            var_dump($dateString,$dateString >= Yii::app()->session['fechaInicioPeriodo'] ,$dateString <= Yii::app()->session['fechaFinPeriodo']);die();
             if ($dateString >= Yii::app()->session['fechaInicioPeriodo'] && $dateString <= Yii::app()->session['fechaFinPeriodo']) {
                 $data = array(
                     'ID' => ($row['ID'] == '') ? null : $row['ID'],
@@ -136,6 +131,7 @@ class CargaHistorialMbController extends Controller {
                 Yii::app()->session['itemsFueraPeriodo'] += 1;
             }
         }
+//        var_dump($dataInsert);die();
         return $dataInsert;
     }
 

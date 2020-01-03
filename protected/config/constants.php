@@ -4,7 +4,7 @@
  * Constantes ETIQUETAS
  */
 define('PRUEBA_MAIL', false);
-define('DBMS', 'sqlsrv');//opciones mysql sqlsrv
+define('DBMS', 'sqlsrv'); //opciones mysql sqlsrv
 define('MAIL', 'christian.araujo@tececab.com.ec');
 
 define('EJECUTIVOS_REVISION_INDIVIDUAL', '(\'EZM\',\'EZT\',\'D\',\'ST\',\'SC\')');
@@ -13,6 +13,10 @@ define('LAYOUT_ADMIN_CATALOG', '//layouts/layout_admin_catalog');
 define('LAYOUT_IMPORTAR', '//layouts/layout_importar');
 define('LAYOUT_INDEX', '//layouts/main');
 define('LAYOUT_FILTRO_GRID', '//layouts/main');
+
+define('VALIDACION_PROMO', 'PROMOS');
+define('VALIDACION_INVASION', 'INVAS');
+define('VALIDACION_AUDITORIA', 'AUDIT');
 
 define('TIPO_NOVEDAD_NO_COMPRA_CHIP', 'No compra chip');
 define('TIPO_NOVEDAD_GENERAL', 'Incidente');
@@ -23,6 +27,15 @@ define('INICIAL_CLIENTES_MOVISTAR', 'TCQU');
 define('INICIAL_CLIENTES_TUENTI', 'TU');
 define('INICIAL_CLIENTES_TEMPORAL', 'TCTM');
 define('INICIAL_CLIENTES_TEMPORAL_2', 'TMp');
+
+define('OPERADOR_BETWEEN', 'BETWEEN');
+define('OPERADOR_MAYOR_IGUAL', '>=');
+define('OPERADOR_MENOR_IGUAL', '<=');
+define('OPERADOR_IGUAL', '=');
+define('OPERADOR_LIKE', 'LIKE');
+define('OPERADOR_IN', 'IN');
+define('OPERADOR_DIFERENTE', '!=');
+define('NO_TECECAB', '*NO TECECAB*');
 
 
 define('MINMETROSVISITAVALIDA', '10');

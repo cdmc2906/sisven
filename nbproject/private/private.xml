@@ -3,16 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/sisven_dev/protected/views/layouts/main.php</file>
-            <file>file:/C:/xampp/htdocs/sisven_dev/protected/models/CargaHistorialMbForm.php</file>
-            <file>file:/C:/xampp/htdocs/sisven_dev/js/reporte/RptOrdenesxFechaMD.js</file>
-            <file>file:/C:/xampp/htdocs/sisven_dev/js/proceso/AsignarRutaAgente.js</file>
-            <file>file:/C:/xampp/htdocs/sisven_dev/protected/models/EjecutivoModel.php</file>
-            <file>file:/C:/xampp/htdocs/sisven_dev/protected/controllers/ReporteOrdenesxFechaController.php</file>
-            <file>file:/C:/xampp/htdocs/sisven_dev/protected/components/FuncionesBaseDatos.php</file>
-            <file>file:/C:/xampp/htdocs/sisven_dev/protected/views/reportes/rptOrdenesxFecha.php</file>
-            <file>file:/C:/xampp/htdocs/sisven_dev/protected/models/ReportesModel.php</file>
-            <file>file:/C:/xampp/htdocs/sisven_dev/protected/config/constants.php</file>
+            <file>file:/C:/xampp/htdocs/sisven_dev/protected/components/File.php</file>
+            <file>file:/C:/xampp/htdocs/sisven_dev/protected/controllers/CargaRutasMbController.php</file>
         </group>
     </open-files>
 </project-private>

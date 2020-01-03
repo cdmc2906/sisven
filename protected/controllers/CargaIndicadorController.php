@@ -261,12 +261,19 @@ class CargaIndicadorController extends Controller {
 //            var_dump($row['FECHA']);die();
             if (!$exisArray) {
 
-                $fechaIndicador = DateTime::createFromFormat('d/m/Y', $row['FECHA']);
-                $sfechaIndicador = $fechaIndicador->format(FORMATO_FECHA_LONG);
+//                $fechaIndicador = DateTime::createFromFormat('d/m/Y', $row['FECHA']);
+//                $sfechaIndicador = $fechaIndicador->format(FORMATO_FECHA_LONG);
+
+                $date = DateTime::createFromFormat('d/m/Y', $row['FECHA']);
+                $dateString = '';
+                if ($date !== FALSE) {
+                    $dateString = $date->format(FORMATO_FECHA_LONG);
+                }
+
 
                 $data = array(
                     //''i_codigo' => ($row['CODIGO'] == '') ? null : $row['CODIGO'],
-                    'i_fecha' => ($row['FECHA'] == '') ? null : $sfechaIndicador,
+                    'i_fecha' => ($row['FECHA'] == '') ? null : $dateString,//$sfechaIndicador,
                     'i_sucursal' => ($row['SUCURSAL'] == '') ? null : $row['SUCURSAL'],
                     'i_numero_bodega' => ($row['NUMERO_BODEGA'] == '') ? null : $row['NUMERO_BODEGA'],
                     'i_bodega' => ($row['BODEGA'] == '') ? null : $row['BODEGA'],

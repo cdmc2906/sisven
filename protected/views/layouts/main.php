@@ -81,7 +81,8 @@
                 Yii::app()->user->id == 14 ||
                 Yii::app()->user->id == 15 ||
                 Yii::app()->user->id == 18 ||
-                Yii::app()->user->id == 16
+                Yii::app()->user->id == 16 ||
+                Yii::app()->user->id == 21
         )
             $verMenusAdmin = true;
 
@@ -236,6 +237,12 @@
                                                     , 'visible' => $verMenusAdmin
 //                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
                                                 ),
+                                                array(
+                                                    'label' => 'Stock'
+                                                    , 'url' => array('/StockMovistar/admin')
+                                                    , 'visible' => $verMenusAdmin
+//                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
+                                                ),
                                             ),
                                             'linkLabelWrapper' => 'i',
                                             'linkLabelWrapperHtmlOptions' => array('class' => 'fa'),
@@ -285,6 +292,18 @@
                                                 array(
                                                     'label' => 'Ejecutivos'
                                                     , 'url' => array('/Ejecutivo/admin')
+                                                    , 'visible' => $verMenusAdmin
+//                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
+                                                ),
+                                                array(
+                                                    'label' => 'Promocion'
+                                                    , 'url' => array('/Promocion/admin')
+                                                    , 'visible' => $verMenusAdmin
+//                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
+                                                ),
+                                                array(
+                                                    'label' => 'CondicionPromocion'
+                                                    , 'url' => array('/CondicionPromocion/admin')
                                                     , 'visible' => $verMenusAdmin
 //                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
                                                 ),
@@ -431,6 +450,12 @@
                                                     , 'visible' => $verMenusAdmin
 //                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
                                                 ),
+                                                array(
+                                                    'label' => 'Stock'
+                                                    , 'url' => array('/CargaStockMovistar/index')
+                                                    , 'visible' => $verMenusAdmin
+//                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
+                                                ),
                                             ),
                                             'linkLabelWrapper' => 'i',
                                             'linkLabelWrapperHtmlOptions' => array('class' => 'fa'),
@@ -452,6 +477,12 @@
                                                 array(
                                                     'label' => 'Indicadores'
                                                     , 'url' => array('/CargaIndicador/index')
+                                                    , 'visible' => $verMenusAdmin
+//                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
+                                                ),
+                                                array(
+                                                    'label' => 'Clientes'
+                                                    , 'url' => array('/CargaClientesDM')
                                                     , 'visible' => $verMenusAdmin
 //                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
                                                 ),
@@ -630,7 +661,7 @@
                                                                     <i class="fa fa-angle-left pull-right"></i>
                                                                 </span>
                                                             </a>
-                            
+
                             <?php
 //                                $this->widget('zii.widgets.CMenu', array(
 //                                    'items' => array(
@@ -686,6 +717,13 @@
 //                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
                                         ),
                                         array(
+                                            'label' => 'Validacion Chips'
+                                            , 'url' => array('/ValidacionChip/')
+                                            , 'visible' => $verMenusCallCenter
+//                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
+                                        ),
+                                        
+                                        array(
                                             'label' => 'Reporte Resultados'
                                             , 'url' => array('/RptResultadosRevisionMines/')
                                             , 'visible' => $verMenusAdmin
@@ -697,7 +735,7 @@
                                     'htmlOptions' => array('class' => 'treeview-menu'),
                                 ));
                                 ?>
-                            </li> 
+                            </li>
                         <?php } if ($verMenusAdmin) { ?>
                             <li class="treeview">
                                 <a href="#">
@@ -729,10 +767,10 @@
             <div class="content-wrapper">
 
                 <?php // if (isset($this->breadcrumbs)): ?>
-                <?php // $this->widget('zii.widgets.CBreadcrumbs', array('links' => $this->breadcrumbs,)); ?> 
+                <?php // $this->widget('zii.widgets.CBreadcrumbs', array('links' => $this->breadcrumbs,)); ?>
                 <?php // endif ?>
 
-                <section class="content"> 
+                <section class="content">
                     <?php
                     $flashMessages = Yii::app()->user->getFlashes();
 //                    var_dump($flashMessages);die();

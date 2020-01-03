@@ -2,6 +2,17 @@
 
 class FVentasMovistarModel extends DAOModel {
 
+    public static function getFechaUltimaCarga() {
+        $command1 = Yii::app()->db->createCommand("
+        select 
+                MAX(CONVERT(DATE,vm_fecha_ingreso)) as ultimacarga
+            from tcc_control_ruta.dbo.tb_venta_movistar
+");
+
+        $resultado1 = $command1->queryRow();
+
+        return $resultado1['ultimacarga'];
+    }
     public function getVentasMes($fechaInicio, $fechaFin) {
         $sql = "
             SET LANGUAGE Spanish;  
@@ -58,7 +69,7 @@ class FVentasMovistarModel extends DAOModel {
         return $data;
     }
 
-    public function getSellIn($fechaInicio, $fechaFin,$idPeriodo) {
+    public function getSellIn($fechaInicio, $fechaFin, $idPeriodo) {
         $sql = "
             SELECT 
                      VM_NOMBREDISTRIBUIDOR AS VENDEDOR
@@ -139,6 +150,23 @@ class FVentasMovistarModel extends DAOModel {
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
 
+        $this->Close();
+        return $data;
+    }
+
+    public function getDatosVentaxICC($iccBuscar) {
+        $sql = "
+           select
+                vm_iddestino
+                ,vm_nombredestino
+                ,vm_fecha 
+            from tcc_control_ruta.dbo.tb_venta_movistar 
+            where vm_icc ='" . $iccBuscar . "';
+            ";
+//        var_dump($sql);die();   
+        $command = $this->connection->createCommand($sql);
+
+        $data = $command->queryAll();
         $this->Close();
         return $data;
     }
