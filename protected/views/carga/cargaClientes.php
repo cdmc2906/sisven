@@ -9,7 +9,7 @@ $this->pageTitle = $pagina_nombre;
 <?php
 $form = $this->beginWidget('CActiveForm', array(
     'id' => 'frmLoad',
-    'enableClientValidation' => true,
+//    'enableClientValidation' => true,
     'clientOptions' => array(
         'validateOnSubmit' => true,
     ),

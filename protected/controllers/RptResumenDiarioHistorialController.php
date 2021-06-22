@@ -48,7 +48,7 @@ class RptResumenDiarioHistorialController extends Controller {
                 $solicitarLogin = false;
                 $model = new RptResumenDiarioHistorialForm();
                 $model->attributes = $_POST['RptResumenDiarioHistorialForm'];
-                Yii::app()->session['ModelForm'] = $model;
+                Yii::app()->session['ModlForm'] = $model;
 
                 if (isset($_POST['periodos']) && intval($_POST['periodos']) > 0) {
                     $datosEnviarVista = array();
@@ -60,9 +60,7 @@ class RptResumenDiarioHistorialController extends Controller {
 
                     $periodo = PeriodoGestionModel::model()->findAllByAttributes(array('pg_id' => array($_POST['periodos'])));
                     $fVentasMovistar = new FVentasMovistarModel();
-//                    var_dump(1);
                     $duplicado = $fVentasMovistar->getDuplicado($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
-//                    var_dump(2);
                     $concatenadoDupli = '';
                     $autocalcularDescartado = 0;
 
@@ -80,15 +78,15 @@ class RptResumenDiarioHistorialController extends Controller {
                     $datosEnviarVista['duplicado'] = $concatenadoDupli;
 
                     $capilaridades = $fVentasMovistar->getCapilaridad($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin'], $periodo[0]['pg_id']);
-//                    var_dump($capilaridades);DIE();
-//                    var_dump(3);
+                    //                    var_dump($capilaridades);DIE();
+                    //                    var_dump(3);
                     foreach ($capilaridades as $capilaridad) {
                         $pcumplimiento = intval($capilaridad["PRESUPUESTO"]) > 0 ? (intval($capilaridad["CAPILARIDAD"]) / intval($capilaridad["PRESUPUESTO"])) * 100 : 0;
                         $faltante = intval($capilaridad["PRESUPUESTO"]) - intval($capilaridad["CAPILARIDAD"]);
                         $pfaltante = intval($capilaridad["PRESUPUESTO"]) > 0 ? ((intval($capilaridad["PRESUPUESTO"]) - intval($capilaridad["CAPILARIDAD"])) / intval($capilaridad["PRESUPUESTO"])) * 100 : 0;
 
                         $descartar = $fVentasMovistar->getCapilaridadDescartar($capilaridad['CDGVENDEDOR'], $periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
-//                        var_dump(4);
+                        //                        var_dump(4);
                         $capilaridadEjecutivo = array(
                             'BODEGA' => $capilaridad["VENDEDOR"],
                             'PRESUPUESTO' => $capilaridad["PRESUPUESTO"],
@@ -107,7 +105,7 @@ class RptResumenDiarioHistorialController extends Controller {
                     Yii::app()->session['capilaridadMovistar'] = $datosCapilaridadMovistar;
 
                     $sellIn = $fVentasMovistar->getSellIn($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin'], $periodo[0]['pg_id']);
-//                    var_dump(5);
+                    //                    var_dump(5);
                     foreach ($sellIn as $itemsellIn) {
                         $pcumplimiento = intval($itemsellIn["PRESUPUESTO"]) > 0 ? (intval($itemsellIn["VENTA"]) / intval($itemsellIn["PRESUPUESTO"])) * 100 : 0;
                         $faltante = intval($itemsellIn["PRESUPUESTO"]) - intval($itemsellIn["VENTA"]);
@@ -132,9 +130,9 @@ class RptResumenDiarioHistorialController extends Controller {
                     $fVentasIndicadores = new FIndicadoresModel();
 
                     $capilaridades = $fVentasIndicadores->getCapilaridad($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin'], $periodo[0]['pg_id']);
-//                    var_dump(6);
+                    //                    var_dump(6);
                     $duplicado = $fVentasIndicadores->getDuplicado($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
-//                    var_dump(7);
+                    //                    var_dump(7);
                     $concatenadoDupliDelta = '';
                     $autocalcularDescartadoDelta = 0;
 
@@ -155,9 +153,9 @@ class RptResumenDiarioHistorialController extends Controller {
                         $pcumplimiento = intval($capilaridad["PRESUPUESTO"]) > 0 ? (intval($capilaridad["CAPILARIDAD"]) / intval($capilaridad["PRESUPUESTO"])) * 100 : 0;
                         $faltante = intval($capilaridad["PRESUPUESTO"]) - intval($capilaridad["CAPILARIDAD"]);
                         $pfaltante = intval($capilaridad["PRESUPUESTO"]) > 0 ? ((intval($capilaridad["PRESUPUESTO"]) - intval($capilaridad["CAPILARIDAD"])) / intval($capilaridad["PRESUPUESTO"])) * 100 : 0;
-//                        var_dump($capilaridad);die();
+                        //                        var_dump($capilaridad);die();
                         $descartar = $fVentasIndicadores->getCapilaridadDescartar($capilaridad['CDGBODEGA'], $periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
-//                        var_dump(8);
+                        //                        var_dump(8);
                         $capilaridadEjecutivo = array(
                             'D_BODEGA' => $capilaridad["VENDEDOR"],
                             'D_PRESUPUESTO' => $capilaridad["PRESUPUESTO"],
@@ -176,7 +174,7 @@ class RptResumenDiarioHistorialController extends Controller {
                     Yii::app()->session['capilaridadDelta'] = $datosCapilaridadDelta;
 
                     $sellInIndicadores = $fVentasIndicadores->getSellIn($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin'], $periodo[0]['pg_id']);
-//                    var_dump(9);
+                    //                    var_dump(9);
                     foreach ($sellInIndicadores as $itemSellInIndicadores) {
                         $pcumplimiento = intval($itemSellInIndicadores["PRESUPUESTO"]) > 0 ? (intval($itemSellInIndicadores["VENTA"]) / intval($itemSellInIndicadores["PRESUPUESTO"])) * 100 : 0;
                         $faltante = intval($itemSellInIndicadores["PRESUPUESTO"]) - intval($itemSellInIndicadores["VENTA"]);
@@ -200,7 +198,7 @@ class RptResumenDiarioHistorialController extends Controller {
                     $fLibreria = new Libreria();
                     $fVentas = new FVentasMovistarModel();
                     $ventas = $fVentas->getVentasMes($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
-//                    var_dump(10);
+                    //                    var_dump(10);
                     foreach ($ventas as $venta) {
                         $dat = array(
                             'BODEGA' => $venta["BODEGA"],
@@ -212,8 +210,8 @@ class RptResumenDiarioHistorialController extends Controller {
                     }
                     $datosEnviarVista['ventasmensual'] = $datosVentasMes;
 
-//                    die();
-//                    var_dump($datosEnviarVista['ventasmensual']);die();
+                    //                    die();
+                    //                    var_dump($datosEnviarVista['ventasmensual']);die();
                     $response->Message = "Periodo revisado exitosamente";
                     $response->Status = SUCCESS;
                     $response->Result = $datosEnviarVista;
@@ -232,12 +230,12 @@ class RptResumenDiarioHistorialController extends Controller {
             Yii::app()->user->setFlash('resultadoGuardar', "Por favor inicie sesion para continuar");
             $returnUri = '/' . SISTEMA . '/cruge/ui/login';
             Yii::app()->clientScript->registerMetaTag("" . INTERVALO_REFRESCO_INMEDIATO . ";url={$returnUri}", null, 'refresh');
-//            $this->render('/historialmb/rptResumenDiarioHistorial', array('model' => $model));
+            //            $this->render('/historialmb/rptResumenDiarioHistorial', array('model' => $model));
         } else {
             $this->actionResponse(null, null, $response);
         }
-//        $this->actionResponse(null, $model, $response);
-//        var_dump($response);die();
+        //        $this->actionResponse(null, $model, $response);
+        //        var_dump($response);die();
         return;
     }
 
@@ -301,9 +299,9 @@ class RptResumenDiarioHistorialController extends Controller {
                     $datos['detalleAltasVentasTransferencias'] = $detalleAltasVentasTransferencias;
 
 
-//                    var_dump($periodo[0]['pg_fecha_fin']);die();
+                    //                    var_dump($periodo[0]['pg_fecha_fin']);die();
                     $diasMes = substr($periodo[0]['pg_fecha_fin'], 8, 2);
-//                    var_dump($diasMes);die();
+                    //                    var_dump($diasMes);die();
                     $datosAltasDia = array();
                     $diasInicio = new DateTime($altasPeriodo['inicioFin'][0]['INICIO']);
                     $diasFin = new DateTime($altasPeriodo['inicioFin'][0]['FIN']);
@@ -318,7 +316,7 @@ class RptResumenDiarioHistorialController extends Controller {
                         array_push($datosAltasDia, $dat);
                         unset($dat);
                     }
-//                    var_dump($datosAltasDia);die();
+                    //                    var_dump($datosAltasDia);die();
                     $datos['altasDiarias'] = $datosAltasDia;
 
                     //ALTAS FUERA DE ZONA
@@ -336,13 +334,13 @@ class RptResumenDiarioHistorialController extends Controller {
                         array_push($altasFueraZona, $dat);
                         unset($dat);
                     }
-//                    var_dump($altasFueraZona);die();
+                    //                    var_dump($altasFueraZona);die();
                     $datos['altasFueraZona'] = $altasFueraZona;
 
 
                     $datosAltasSinVenta = array();
                     $altasSinVenta = $fAltasGrp->getAltasSinVentaPorPeriodo($periodo[0]['pg_fecha_inicio'], $periodo[0]['pg_fecha_fin']);
-//                    var_dump($altasSinVenta);die();
+                    //                    var_dump($altasSinVenta);die();
                     foreach ($altasSinVenta as $alta) {
                         $dat = array(
                             'A_CIUDAD' => $alta["A_CIUDAD"],
@@ -380,12 +378,12 @@ class RptResumenDiarioHistorialController extends Controller {
             Yii::app()->user->setFlash('resultadoGuardar', "Por favor inicie sesion para continuar");
             $returnUri = '/' . SISTEMA . '/cruge/ui/login';
             Yii::app()->clientScript->registerMetaTag("" . INTERVALO_REFRESCO_INMEDIATO . ";url={$returnUri}", null, 'refresh');
-//            $this->render('/historialmb/rptResumenDiarioHistorial', array('model' => $model));
+            //            $this->render('/historialmb/rptResumenDiarioHistorial', array('model' => $model));
         } else {
             $this->actionResponse(null, null, $response);
         }
-//        $this->actionResponse(null, $model, $response);
-//        var_dump($response);die();
+        //        $this->actionResponse(null, $model, $response);
+        //        var_dump($response);die();
         return;
     }
 
@@ -403,16 +401,16 @@ class RptResumenDiarioHistorialController extends Controller {
                     Yii::app()->session['ModelForm'] = $model;
 
                     if ($model->validate() && $model["ejecutivo"] != '') {
-//        var_dump("2");die();
+                        //        var_dump("2");die();
                         $fLibreria = new Libreria();
                         $response = $fLibreria->VerificarHistorialDiarioUsuario(
-                                $model->ejecutivo
-                                , $model->fechagestion
-                                , $model->accionHistorial
-                                , $model->horaInicioGestion
-                                , $model->horaFinGestion
-                                , $model->precisionVisitas
-                                , $model->semanaRevision
+                                $model->ejecutivo,
+                                $model->fechagestion,
+                                $model->accionHistorial,
+                                $model->horaInicioGestion,
+                                $model->horaFinGestion,
+                                $model->precisionVisitas,
+                                $model->semanaRevision
                         );
                     } else {
                         $response->Message = "Debe seleccionar todos los filtros";
@@ -429,20 +427,20 @@ class RptResumenDiarioHistorialController extends Controller {
             Yii::app()->user->setFlash('resultadoGuardar', "Por favor inicie sesion para continuar");
             $returnUri = '/' . SISTEMA . '/cruge/ui/login';
             Yii::app()->clientScript->registerMetaTag("" . INTERVALO_REFRESCO_INMEDIATO . ";url={$returnUri}", null, 'refresh');
-//            $this->render('/historialmb/rptResumenDiarioHistorial', array('model' => $model));
+            //            $this->render('/historialmb/rptResumenDiarioHistorial', array('model' => $model));
         } else {
             $this->actionResponse(null, null, $response);
         }
-//        $this->actionResponse(null, $model, $response);
-//        var_dump($response);die();
+        //        $this->actionResponse(null, $model, $response);
+        //        var_dump($response);die();
         return;
     }
 
     private function actionResponse($view = 'error', $model = null, $response = null) {
-//        var_dump(Yii::app()->request->isAjaxRequest);die();
+        //        var_dump(Yii::app()->request->isAjaxRequest);die();
         if (Yii::app()->request->isAjaxRequest) {
-//            var_dump( ($response));die();
-//            var_dump(json_encode($response), json_last_error());die();
+            //            var_dump( ($response));die();
+            //            var_dump(json_encode($response), json_last_error());die();
             echo json_encode($response);
         } else {
             $this->render($view, $model);
@@ -457,7 +455,7 @@ class RptResumenDiarioHistorialController extends Controller {
             $datos = Yii::app()->session['detallerevisionhistorialitem'];
             foreach ($datos as $value) {
                 $dat = array(
-//                    'FECHAREVISION' => $value['FECHAREVISION'],
+                    //                    'FECHAREVISION' => $value['FECHAREVISION'],
                     'FECHARUTA' => $value['FECHARUTA'],
                     'EJECUTIVO' => $value['EJECUTIVO'],
                     'CODIGOCLIENTE' => $value['CODIGOCLIENTE'],
@@ -523,7 +521,7 @@ class RptResumenDiarioHistorialController extends Controller {
         try {
             $revisionRuta = array();
             $datosResumenDiario = Yii::app()->session['resumenrevisionhistorialitem'];
-//            $datosPrimeraUltima = Yii::app()->session['resumenPrimeraUltima'];
+            //            $datosPrimeraUltima = Yii::app()->session['resumenPrimeraUltima'];
 
             foreach ($datosResumenDiario as $value) {
                 $dat = array(
@@ -534,16 +532,16 @@ class RptResumenDiarioHistorialController extends Controller {
                 );
                 array_push($revisionRuta, $dat);
             }
-//            foreach ($datosPrimeraUltima as $filaGrid) {
-////                var_dump($key );die();
-//                $dat = array(
-//                    'PARAMETRO' => $filaGrid["VISITA"],
-//                    'VALOR' => $filaGrid["CANTIDAD"],
-//                    'FECHA_GESTION' => strval(Yii::app()->session['ModelForm']['fechagestion']),
-//                    'EJECUTIVO' => strval(Yii::app()->session['ModelForm']['ejecutivo'])
-//                );
-//                array_push($revisionRuta, $dat);
-//            }
+            //            foreach ($datosPrimeraUltima as $filaGrid) {
+            ////                var_dump($key );die();
+            //                $dat = array(
+            //                    'PARAMETRO' => $filaGrid["VISITA"],
+            //                    'VALOR' => $filaGrid["CANTIDAD"],
+            //                    'FECHA_GESTION' => strval(Yii::app()->session['ModelForm']['fechagestion']),
+            //                    'EJECUTIVO' => strval(Yii::app()->session['ModelForm']['ejecutivo'])
+            //                );
+            //                array_push($revisionRuta, $dat);
+            //            }
 
             $NombreArchivo = "reporte_resumen_revision_ruta";
             $NombreHoja = "reporte_resumen_revision_ruta";
@@ -733,16 +731,16 @@ class RptResumenDiarioHistorialController extends Controller {
                 $ejecutivo = EjecutivoModel::model()->findAllByAttributes(array('e_usr_mobilvendor' => $filtros['ejecutivo']));
                 $diaGestion = date("w", strtotime($filtros['fechagestion']));
                 $ruta_dia_gestion = "R" . $diaGestion . '-' . $ejecutivo[0]['e_iniciales'];
-//                var_dump($ruta_dia_gestion);die();
+                //                var_dump($ruta_dia_gestion);die();
                 $fRutaA = $fRuta->getClientesNoVisitadosxRutaxEjecutivoxDiaxPeriodo(
-                        $filtros['ejecutivo']
-                        , $ruta_dia_gestion
-                        , $diaGestion + 1
-                        , $filtros['fechagestion']
-                        , $filtros['accionHistorial']
-                        , Yii::app()->session['idPeriodoAbierto']
+                        $filtros['ejecutivo'],
+                        $ruta_dia_gestion,
+                        $diaGestion + 1,
+                        $filtros['fechagestion'],
+                        $filtros['accionHistorial'],
+                        Yii::app()->session['idPeriodoAbierto']
                 );
-//                var_dump($fRutaA);die();
+                //                var_dump($fRutaA);die();
                 foreach ($fRutaA as $clienteNoVisitado) {
                     $dat = array(
                         'FECHA_GESTION' => $filtros['fechagestion'],
@@ -795,31 +793,45 @@ class RptResumenDiarioHistorialController extends Controller {
         return;
     }
 
-    function ObtenerTiemposGestionTraslado(
-    $accionHistorial
-    , $fechagestion
-    , $horaInicioGestion
-    , $horaFinGestion
-    , $codigoEjecutivo
+    function
+    ObtenerTiemposGestionTraslado(
+            $accionHistorial,
+            $fechagestion,
+            $horaInicioGestion,
+            $horaFinGestion,
+            $codigoEjecutivo
     ) {
+
+//        var_dump($accionHistorial,
+//            $fechagestion,
+//            $horaInicioGestion,
+//            $horaFinGestion,
+//            $codigoEjecutivo);die();
         $dataRetorno = array();
         $fHistorial = new FHistorialModel();
+//        var_dump( $fechagestion,
+//                $horaInicioGestion,
+//                $horaFinGestion,
+//                $codigoEjecutivo);die();
         $historial = $fHistorial->getHistorialxVendedorxFechaxHoraInicioxHoraFin(
-                $fechagestion
-                , $horaInicioGestion
-                , $horaFinGestion
-                , $codigoEjecutivo
+                0,
+                $accionHistorial,
+                $fechagestion,
+                $horaInicioGestion,
+                $horaFinGestion,
+                $codigoEjecutivo
         );
 
         $libreria = new Libreria();
         $totalGestion = '00:00:00';
-        $totalTraslados = '00:00:00';
+        $totalTiempoTraslado = '00:00:00';
         $finVisitaAnterior = new DateTime('00:00:00');
 
         $contadorItemVisita = 0;
 
         $contadorChipsVendidos = 0;
         $contadorClientesEfectivos = 0;
+        $contadorClientesCerrados = 0;
         $contadorEncuestas = 0;
         $contadorClientesNuevos = 0;
         $contadorVisitasRepetidas = 0;
@@ -829,7 +841,7 @@ class RptResumenDiarioHistorialController extends Controller {
         $contadorClientesDesconocido = 0;
 
         $clientesVisitados = array();
-        $semanasEjecutivo = array();
+        $semanasUsadasEjecutivo = array();
         $s_semanasEjecutivo = '';
 
         $horasGestion = "";
@@ -837,135 +849,191 @@ class RptResumenDiarioHistorialController extends Controller {
         $segundosGestion = "";
         $_sTiempoGestion = "";
 
+        $detalletiempos = array();
 
+        $cantidad_comentarios_campo = 0;
+        $cantidad_comentarios_telefono = 0;
+
+        $formatoTiempoTotalGestion = "";
         $horasTraslado = "";
         $minutosTraslado = "";
         $segundosTralado = "";
         $_sTiempoTraslado = "";
-        foreach ($historial as $itemHistorial) {
-//            var_dump($itemHistorial);die();
-            switch ($itemHistorial['accion']) {
-                /* 'Inicio visita' => 'Inicio visita',
-                  'Orden' => 'Orden',
-                  'Forma' => 'Forma',
-                  'Comentario' => 'Comentario',
-                  'Día inicio' => 'Dia inicio',
-                  'Fin de visita' => 'Fin de visita',
-                  'Día fin' => 'Dia fin',
-                  'Nuevo cliente' => 'Nuevo cliente',
-                  'Estatus' => 'Estatus'
-                 */
-                case 'Inicio visita':
 
-                    $fechaGestion = DateTime::createFromFormat('Y-m-d H:i', $itemHistorial['FECHAVISITA'])->format(FORMATO_FECHA);
-                    $inicioVisita = new DateTime('00:00:00');
-                    $finVisita = new DateTime('00:00:00');
+        $diaGestion = DateTime::createFromFormat(FORMATO_FECHA_3, $fechagestion)->format('w') + 1;
+        $_semanaGestion = (DateTime::createFromFormat(FORMATO_FECHA_3, $fechagestion)->format('W')) % SEMANAS_GESTION;
+        $semanaGestion = $_semanaGestion == 0 ? 4 : $_semanaGestion;
 
-                    $latitudHistorial = 0;
-                    $longitudHistorial = 0;
+//        var_dump($historial);die();
+        if (count($historial) > 0) {
+            foreach ($historial as $itemHistorial) {
+//        var_dump($itemHistorial);die();
 
-                    $tiempoGestion = '00:00:00';
-                    $tiempoTraslado = '00:00:00';
+                switch ($itemHistorial['accion']) {
+                    /* 'Inicio visita' => 'Inicio visita',
+                      'Orden' => 'Orden',
+                      'Forma' => 'Forma',
+                      'Comentario' => 'Comentario',
+                      'Día inicio' => 'Dia inicio',
+                      'Fin de visita' => 'Fin de visita',
+                      'Día fin' => 'Dia fin',
+                      'Nuevo cliente' => 'Nuevo cliente',
+                      'Estatus' => 'Estatus'
+                     */
+                    case 'Inicio visita':
+                        $fechaGestion = DateTime::createFromFormat(FORMATO_FECHA_LONG_4, $itemHistorial['FECHAVISITA'])->format(FORMATO_FECHA);
+                        $inicioVisita = new DateTime('00:00:00');
+                        $finVisita = new DateTime('00:00:00');
 
-                    if (array_search($itemHistorial['SEMANAHISTORIAL'], $semanasEjecutivo) === FALSE) {
-                        array_push($semanasEjecutivo, $itemHistorial['SEMANAHISTORIAL']);
-                        $s_semanasEjecutivo .= $itemHistorial['SEMANAHISTORIAL'] . '/';
-                    }
+                        $latitudHistorial = 0;
+                        $longitudHistorial = 0;
 
-                    if ((substr($itemHistorial['CODIGOCLIENTE'], 0, 4) == INICIAL_CLIENTES_MOVISTAR) ||
-                            (substr($itemHistorial['CODIGOCLIENTE'], 0, 2) == INICIAL_CLIENTES_TUENTI)) {
-                        if (array_search($itemHistorial['CODIGOCLIENTE'], $clientesVisitados) === FALSE) {
-                            array_push($clientesVisitados, $itemHistorial['CODIGOCLIENTE']);
-                            $contadorClientesPropios += 1;
-                        } else
-                            $contadorVisitasRepetidas += 1;
-                    } elseif (substr($itemHistorial['CODIGOCLIENTE'], 0, 4) == INICIAL_CLIENTES_TEMPORAL ||
-                            substr($itemHistorial['CODIGOCLIENTE'], 0, 3) == INICIAL_CLIENTES_TEMPORAL_2) {
-                        $contadorClienteTemporal += 1;
-                    } else {
-                        $contadorClientesDesconocido += 1;
-                    }
+                        $tiempoGestion = '00:00:00';
+                        $tiempoTraslado = '00:00:00';
 
-                    $inicioFinVisitaHistorial = $fHistorial->getInicioFinVisitaClientexEjecutivoxFecha(
-                            'Inicio visita'
-                            , $fechaGestion
-                            , $codigoEjecutivo
-                            , $itemHistorial['CODIGOCLIENTE']
-                            , $itemHistorial['IDHISTORIAL']);
+                        if (array_search($itemHistorial['SEMANAHISTORIAL'], $semanasUsadasEjecutivo) === FALSE) {
+                            array_push($semanasUsadasEjecutivo, $itemHistorial['SEMANAHISTORIAL']);
+                            $s_semanasEjecutivo .= $itemHistorial['SEMANAHISTORIAL'] . 'a-';
+                        }
 
-                    $inicioVisita = DateTime::createFromFormat(FORMATO_FECHA_LONG_4, $inicioFinVisitaHistorial[0]['HORAVISITA']);
-                    $finVisita = isset($inicioFinVisitaHistorial[1]['HORAVISITA']) ? DateTime::createFromFormat(FORMATO_FECHA_LONG_4, $inicioFinVisitaHistorial[1]['HORAVISITA']) : DateTime::createFromFormat(FORMATO_FECHA_LONG_4, $inicioFinVisitaHistorial[0]['HORAVISITA']);
+                        // Verificacion de 4 caracteres iniciales del codigo de cliente para definir que tipo es
+                        //  se definen clientes Movistar (TCQU), clientes Tuenti (TU) (TUCH,TUNG,TUCX,TUBL)
 
-                    $tiempoGestion = $inicioVisita->diff($finVisita)->format("%h:%I:%S");
-                    $totalGestion = $libreria->SumaHoras($totalGestion, $tiempoGestion);
+                        if ((substr($itemHistorial['CODIGOCLIENTE'], 0, 4) == INICIAL_CLIENTES_MOVISTAR) ||
+                                (substr($itemHistorial['CODIGOCLIENTE'], 0, 2) == INICIAL_CLIENTES_TUENTI) ||
+                                (substr($itemHistorial['CODIGOCLIENTE'], 0, 4) == INICIAL_CLIENTES_MOVISTAR_MANABI
+                                )
+                        ) {
+                            if (array_search($itemHistorial['CODIGOCLIENTE'], $clientesVisitados) === FALSE) {
+                                array_push($clientesVisitados, $itemHistorial['CODIGOCLIENTE']);
+                                $contadorClientesPropios += 1;
+                            } else {
+                                $contadorVisitasRepetidas += 1;
+                            }
+                        } elseif (
+                                substr($itemHistorial['CODIGOCLIENTE'], 0, 4) == INICIAL_CLIENTES_TEMPORAL ||
+                                substr($itemHistorial['CODIGOCLIENTE'], 0, 3) == INICIAL_CLIENTES_TEMPORAL_2
+                        ) {
+                            $contadorClienteTemporal += 1;
+                        } else {
+                            $contadorClientesDesconocido += 1;
+                        }
 
-                    if ($contadorItemVisita > 0) { // solo si hay mas de una visita debe haber traslado entre clientes 
-                        $tiempoTraslado = $inicioVisita->diff($finVisitaAnterior)->format("%h:%I:%S");
-                        $totalTraslados = $libreria->SumaHoras($totalTraslados, $tiempoTraslado);
-                    }
-                    $finVisitaAnterior = $finVisita;
 
-                    $_tiempoGestion = new DateTime($totalGestion);
-                    $horasGestion = $_tiempoGestion->format("h");
-                    $minutosGestion = $_tiempoGestion->format("i");
-                    $segundosGestion = $_tiempoGestion->format("s");
-                    $_sTiempoGestion = $minutosGestion . "m " . $segundosGestion . "s";
+                        $inicioFinVisitaHistorial = $fHistorial->getInicioFinVisitaClientexEjecutivoxFecha(
+                                'Inicio visita',
+                                $fechaGestion,
+                                $codigoEjecutivo,
+                                $itemHistorial['CODIGOCLIENTE'],
+                                $itemHistorial['IDHISTORIAL']
+                        );
+//                        var_dump($inicioFinVisitaHistorial);                        die();
+                        $inicioVisita = DateTime::createFromFormat(FORMATO_FECHA_LONG_4, $inicioFinVisitaHistorial[0]['HORAVISITA']);
+                        $finVisita = isset($inicioFinVisitaHistorial[1]['HORAVISITA']) ?
+                                DateTime::createFromFormat(FORMATO_FECHA_LONG_4, $inicioFinVisitaHistorial[1]['HORAVISITA']) :
+                                DateTime::createFromFormat(FORMATO_FECHA_LONG_4, $inicioFinVisitaHistorial[0]['HORAVISITA']);
 
-                    $_tiempoTraslado = new DateTime($totalTraslados);
-                    $horasTraslado = $_tiempoTraslado->format("h");
-                    $minutosTraslado = $_tiempoTraslado->format("i");
-                    $segundosTralado = $_tiempoTraslado->format("s");
-                    $_sTiempoTraslado = $minutosTraslado . "m " . $segundosTralado . "s";
-                    $contadorItemVisita++;
-                    break;
-                case 'Orden':
-                    $contadorChipsVendidos += $itemHistorial['CHIPS'];
-                    $contadorClientesEfectivos += 1;
+                        // var_dump($in--$finVisita);die();
+                        // var_dump($inicioVisita->diff($finVisita));die();
+                        // var_dump($inicioVisita->diff($finVisita)->format(FORMATO_HORA_1));die();
+                        $tiempoGestion = $inicioVisita->diff($finVisita)->format(FORMATO_HORA_1);
+                        $totalGestion = $libreria->SumaHoras($totalGestion, $tiempoGestion);
 
-                    break;
-                case 'Forma':
-                    $contadorEncuestas += 1;
+                        if ($contadorItemVisita > 0) { // solo si hay mas de una visita debe haber traslado entre clientes 
+                            $tiempoTraslado = $inicioVisita->diff($finVisitaAnterior)->format(FORMATO_HORA_1);
+                            $totalTiempoTraslado = $libreria->SumaHoras($totalTiempoTraslado, $tiempoTraslado);
+                        }
 
-                    break;
-                case 'Nuevo cliente':
-                    $contadorClientesNuevos += 1;
+                        $finVisitaAnterior = $finVisita;
 
-                    break;
+                        $_tiempoGestion = new DateTime($totalGestion);
 
-                default:
-                    break;
-            }
-        }#Fin iteracion items historial
-//        die();
-//        Yii::app()->session['tiempoGestionEjecutivo'] = $totalGestion;
-//        Yii::app()->session['tiempoTrasladoEjecutivo'] = $totalTraslados;
-//        Yii::app()->session['semanas'] = $s_semanasEjecutivo;
-//        Yii::app()->session['cantidadVisitas'] = count($clientesVisitados);
-//        Yii::app()->session['cantidadRepetidas'] = $contadorVisitasRepetidas;
-//        Yii::app()->session['totalVisitas'] = count($clientesVisitados) + $contadorVisitasRepetidas;
-//        Yii::app()->session['contadorChipsVendidos'] = $contadorChipsVendidos;
-//        Yii::app()->session['contadorClientesEfectivos'] = $contadorClientesEfectivos;
-//        Yii::app()->session['contadorEncuestas'] = $contadorEncuestas;
-//        Yii::app()->session['contadorClientesNuevos'] = $contadorClientesNuevos;
-//        $dataRetorno['horasGestionEjecutivo'] = $horasGestion;
-//        $dataRetorno['horasTrasladoEjecutivo'] = $horasTraslado;
-        $dataRetorno['tiempoGestionEjecutivo'] = $totalGestion;
-        $dataRetorno['tiempoTrasladoEjecutivo'] = $totalTraslados;
-        $dataRetorno['semanas'] = $s_semanasEjecutivo;
-        $dataRetorno['cantidadVisitas'] = count($clientesVisitados);
-//        $dataRetorno['cantidadVisitas'] = $contadorClientesPropios + $contadorClienteTemporal;
-        $dataRetorno['cantidadRepetidas'] = $contadorVisitasRepetidas;
-        $dataRetorno['totalVisitas'] = count($clientesVisitados) + $contadorVisitasRepetidas + $contadorClienteTemporal;
-        $dataRetorno['contadorChipsVendidos'] = $contadorChipsVendidos;
-        $dataRetorno['contadorClientesEfectivos'] = $contadorClientesEfectivos;
-        $dataRetorno['contadorEncuestas'] = $contadorEncuestas;
-        $dataRetorno['contadorClientesNuevos'] = $contadorClientesNuevos;
+                        $formatoTiempoTotalGestion = $_tiempoGestion->format(FORMATO_HORA_1);
 
-        $dataRetorno['totalPropios'] = $contadorClientesPropios;
-        $dataRetorno['totalTemporal'] = $contadorClienteTemporal;
-        $dataRetorno['totalDesconocido'] = $contadorClientesDesconocido;
+                        $horasGestion = $_tiempoGestion->format("h") == 12 ? 0 : $_tiempoGestion->format("h");
+                        $minutosGestion = $_tiempoGestion->format("i");
+                        $segundosGestion = $_tiempoGestion->format("s");
+                        array_push($detalletiempos, $_tiempoGestion);
 
-//    var_dump(        $dataRetorno);die();
+                        $_sTiempoGestion = $minutosGestion . "m " . $segundosGestion . "s";
+
+                        $_tiempoTraslado = new DateTime($totalTiempoTraslado);
+                        $horasTraslado = $_tiempoTraslado->format("h");
+                        $minutosTraslado = $_tiempoTraslado->format("i");
+                        $segundosTralado = $_tiempoTraslado->format("s");
+                        $_sTiempoTraslado = $horasTraslado . "h" . $minutosTraslado . "m " . $segundosTralado . "s";
+                        $contadorItemVisita++;
+
+                        break;
+                    case 'Orden':
+//                        $contadorChipsVendidos += $itemHistorial['CHIPS'];
+                        $contadorClientesEfectivos += 1;
+
+                        break;
+                    case 'Forma':
+                        $contadorEncuestas += 1;
+
+                        break;
+                    case 'Nuevo cliente':
+                        $contadorClientesNuevos += 1;
+
+                        break;
+
+                    case 'Comentario':
+
+                        $codigos_comentario_gestion_campo = explode(' ', CODIGO_COMENTARIO_GESTION_CAMPO);
+                        $codigos_comentario_gestion_telefono = explode(' ', CODIGO_COMENTARIO_GESTION_TELEFONO);
+
+                        if (in_array($itemHistorial['CODIGOCOMENTARIO'], $codigos_comentario_gestion_campo)) {
+                            $cantidad_comentarios_campo += 1;
+                        } elseif (in_array($itemHistorial['CODIGOCOMENTARIO'], $codigos_comentario_gestion_telefono)) {
+                            $cantidad_comentarios_telefono += 1;
+                        }
+
+                        if ($itemHistorial['CODIGOCOMENTARIO'] == CODIGO_COMENTARIO_CERRADOS) {
+                            $contadorClientesCerrados += 1;
+                        }
+
+                        break;
+
+                    default:
+                        break;
+                }
+            } #Fin iteracion items historial
+
+            $time = ($horasGestion > 0 && $minutosGestion > 0 && $segundosGestion > 0) ? ($horasGestion * 60) + $minutosGestion + ($segundosGestion / 60) : 0;
+            $promedioGestion = (floatval($contadorClientesPropios - $contadorClientesCerrados) > 0) ? $time / floatval($contadorClientesPropios - $contadorClientesCerrados) : 0;
+
+            $FEjecutivoRuta = new FEjecutivoRutaModel();
+            $clientesRuta = $FEjecutivoRuta->getTotalClientesxEjecutivoxDiaxSemanaxLineaNegocio(
+                    $codigoEjecutivo
+                    , $semanaGestion
+                    , $diaGestion
+                    , 'MOVZS');
+
+            $dataRetorno['cantidadRepetidas'] = $contadorVisitasRepetidas;
+            $dataRetorno['cantidadVisitas'] = count($clientesVisitados);
+            $dataRetorno['clientesCerrados'] = $contadorClientesCerrados;
+            $dataRetorno['contadorChipsVendidos'] = $contadorChipsVendidos;
+            $dataRetorno['contadorClientesEfectivos'] = $contadorClientesEfectivos;
+            $dataRetorno['contadorClientesNuevos'] = $contadorClientesNuevos;
+            $dataRetorno['contadorEncuestas'] = $contadorEncuestas;
+            $dataRetorno['nombreRuta'] = isset($clientesRuta[0]) ? $clientesRuta[0]['ruta'] : ' ';
+            $dataRetorno['semanas'] = $s_semanasEjecutivo;
+            $dataRetorno['tiempoGestionEjecutivo'] = $totalGestion;
+//            $dataRetorno['tiempoGestionEjecutivo'] = $formatoTiempoTotalGestion;
+            $dataRetorno['tiempoTrasladoEjecutivo'] = $totalTiempoTraslado;
+            $dataRetorno['tiempoxCliente'] = sprintf('%02dh %02dm %02ds', $promedioGestion / 60, fmod($promedioGestion, 60), fmod($promedioGestion, 1) * 60);
+            $dataRetorno['totalClientesRuta'] = isset($clientesRuta[0]) ? intval($clientesRuta[0]['totalclientes']) : 0;
+            $dataRetorno['totalDesconocido'] = $contadorClientesDesconocido;
+            $dataRetorno['totalPropios'] = $contadorClientesPropios;
+            $dataRetorno['totalTemporal'] = $contadorClienteTemporal;
+            $dataRetorno['totalVisitas'] = count($clientesVisitados) + $contadorVisitasRepetidas + $contadorClienteTemporal;
+
+            $dataRetorno['cantidadComentariosCampo'] = $cantidad_comentarios_campo;
+            $dataRetorno['cantidadComentariosTelefono'] = $cantidad_comentarios_telefono;
+        }
+//        var_dump($dataRetorno);die();
         return $dataRetorno;
     }
 
@@ -976,103 +1044,132 @@ class RptResumenDiarioHistorialController extends Controller {
         $response = new Response();
         $solicitarLogin = true;
         $mensaje = '';
-
         try {
             $model = new RptResumenDiarioHistorialForm();
 
             if (isset($_POST['RptResumenDiarioHistorialForm'])) {
                 $model->attributes = $_POST['RptResumenDiarioHistorialForm'];
 
-                $cEjecutivos = new FEjecutivoModel();
                 $reporteModel = new ReportesModel();
-                $fRuta = new FRutaModel();
-                $fHistorial = new FHistorialModel();
-
                 $accion = 'Inicio Visita';
-                $ejecutivos = $cEjecutivos->getEjecutivosXGrupoXEstado($model['tipoUsuarioJornada'], 1);
-                $libreria = new Libreria();
 
-                foreach ($ejecutivos as $ejecutivo) {
-                    $det = $this->ObtenerTiemposGestionTraslado(
-                            'Inicio visita'
-                            , $model->fechaInicioFinJornada
-                            , $model->horaInicioGestionJornada
-                            , $model->horaFinGestionJornada
-                            , $ejecutivo['e_usr_mobilvendor']
-                    );
+//                var_dump(Yii::app()->session['codigoUsuarioSeleccionado']);die();
 
-                    $inicioJornadaEjecutivo = $reporteModel->getInicioJornadaxFecha(
-                            $ejecutivo['e_usr_mobilvendor']
-                            , $model->fechaInicioFinJornada
-                            , $model->horaInicioGestionJornada
-                            , $model->horaFinGestionJornada
-                    );
-
-                    $finJornadaEjecutivo = $reporteModel->getFinJornadaxUsuarioxFecha(
-                            $ejecutivo['e_usr_mobilvendor']
-                            , $model->fechaInicioFinJornada
-                            , $model->horaInicioGestionJornada
-                            , $model->horaFinGestionJornada
-                    );
-
-                    if (isset($inicioJornadaEjecutivo[0]) > 0)
-                        $entrada = new DateTime($inicioJornadaEjecutivo[0]["HORA"]);
-                    else
-                        $entrada = '00:00:00';
-
-                    if (isset($finJornadaEjecutivo[0]) > 0)
-                        $salida = new DateTime($finJornadaEjecutivo[0]["HORA"]);
-                    else
-                        $salida = '00:00:00';
-
-                    $tiempoGestion = (count($inicioJornadaEjecutivo) > 0 && (count($finJornadaEjecutivo) > 0)) ?
-                            $entrada->diff($salida)->format("%h:%I") : "00:00";
-                    $_tiempoGestion = new DateTime($tiempoGestion);
-                    $horasGestion = $_tiempoGestion->format("h");
-                    $minutosGestion = $_tiempoGestion->format("i");
-                    $segundosGestion = $_tiempoGestion->format("s");
-                    $_sTiempoGestion = $horasGestion . "h " . $minutosGestion . "m";
-
-                    $infoJornada = array(
-                        'FECHA' => $model->fechaInicioFinJornada,
-                        'EJECUTIVO' => $ejecutivo['e_nombre'],
-//                            'CUMPLIMIENTO' => $cumplimientoEjecutivo,
-                        'INICIOPRIMERAVISITA' => (count($inicioJornadaEjecutivo) > 0) ? $entrada->format("H:i") : "00:00",
-                        'FINALULTIMAVISITA' => (count($finJornadaEjecutivo) > 0) ? $salida->format("H:i") : "00:00",
-                        'TOTALTIEMPO' => $tiempoGestion, //$_sTiempoGestion,
-                        'TOTALTIEMPO2' => $_sTiempoGestion,
-                        'TIEMPOGESTION' => $det['tiempoGestionEjecutivo'],
-                        'TIEMPOTRASLADO' => $det['tiempoTrasladoEjecutivo'],
-                        'SEMANAS' => ($det['semanas'] > 0) ? $det['semanas'] : '0',
-                        'VISITAS' => ($det['cantidadVisitas'] > 0) ? $det['cantidadVisitas'] : '0',
-                        'REPETIDAS' => ($det['cantidadRepetidas'] > 0) ? $det['cantidadRepetidas'] : '0',
-                        'PROPIOS' => ($det['totalPropios'] > 0) ? $det['totalPropios'] : '0',
-                        'TEMPORAL' => ($det['totalTemporal'] > 0) ? $det['totalTemporal'] : '0',
-                        'DESCONOCIDO' => ($det['totalDesconocido'] > 0) ? $det['totalDesconocido'] : '0',
-                        'TOTAL' => ($det['totalVisitas'] > 0) ? $det['totalVisitas'] : '0',
-                        'NUEVOS' => ($det['contadorClientesNuevos'] > 0) ? $det['contadorClientesNuevos'] : '0',
-                        'EFECTIVOS' => ($det['contadorClientesEfectivos'] > 0) ? $det['contadorClientesEfectivos'] : '0',
-                        'ENCUESTAS' => ($det['contadorEncuestas'] > 0) ? $det['contadorEncuestas'] : '0',
-                        'VENTA' => ($det['contadorChipsVendidos'] > 0) ? $det['contadorChipsVendidos'] : '0',
-                    );
-
-                    array_push($datosGridJornada, $infoJornada);
-                    unset($infoJornada);
+                $cEjecutivos = new FEjecutivoModel();
+                if ($model['tipoUsuarioJornada'] != 'SE') { //opcion SE corresponde a seleccione ejecutivo
+                    //Obtener los usuarios que hicieron gestión el dia escogido en el filtro
+                    $ejecutivos = $cEjecutivos->getEjecutivosXGrupoXEstadoXFechaGestion(
+                            $model['tipoUsuarioJornada']
+                            , 1
+                            , $model['fechaInicioJornada']
+                            , $model['fechaFinJornada']);
+//                    var_dump($ejecutivos);die();
+                } else {
+                    //Obtener datos del usuario seleccionado 
+                    $ejecutivos = $cEjecutivos->getEjecutivoFormatoXGestion(Yii::app()->session['codigoUsuarioSeleccionado']);
                 }
 
-                $datosGrid['infoJornada'] = $datosGridJornada;
+//                var_dump($ejecutivos);die();
+//                if (isset(Yii::app()->session['codigoUsuarioSeleccionado'])) {
+                if (isset($ejecutivos)) {
+                    $fechaEnIntervalo = $model['fechaInicioJornada'];
+                    while ($fechaEnIntervalo <= $model['fechaFinJornada']) {
+                        //Analizar gestión de cada ejecutivo    
+                        foreach ($ejecutivos as $ejecutivo) {
+                            $det = $this->ObtenerTiemposGestionTraslado(
+                                    $accion,
+                                    $fechaEnIntervalo,
+                                    $model->horaInicioJornada,
+                                    $model->horaFinJornada,
+                                    $ejecutivo['e_usr_mobilvendor']
+                            );
+                            $inicioJornadaEjecutivo = $reporteModel->getInicioJornadaxFecha(
+                                    $ejecutivo['e_usr_mobilvendor'],
+                                    $fechaEnIntervalo,
+                                    $model->horaInicioJornada,
+                                    $model->horaFinJornada
+                            );
 
-//                $_SESSION['revisionJornada'] = $datosGrid;
-                Yii::app()->session['revisionJornada'] = $datosGridJornada;
-                $response->Message = $mensaje;
-                $response->Status = SUCCESS;
-                $response->Result = $datosGrid;
-//                    var_dump($response);die();
+                            $finJornadaEjecutivo = $reporteModel->getFinJornadaxUsuarioxFecha(
+                                    $ejecutivo['e_usr_mobilvendor'],
+                                    $fechaEnIntervalo,
+                                    $model->horaInicioJornada,
+                                    $model->horaFinJornada
+                            );
+
+                            if (isset($inicioJornadaEjecutivo[0]) > 0)
+                                $entrada = new DateTime($inicioJornadaEjecutivo[0]["HORA"]);
+                            else
+                                $entrada = '00:00:00';
+
+                            if (isset($finJornadaEjecutivo[0]) > 0)
+                                $salida = new DateTime($finJornadaEjecutivo[0]["HORA"]);
+                            else
+                                $salida = '00:00:00';
+
+                            $tiempoGestion = (count($inicioJornadaEjecutivo) > 0 && (count($finJornadaEjecutivo) > 0)) ?
+//                                $entrada->diff($salida)->format("%h:%I" FORMATO_HORA_1) : "00:00";
+                                    $entrada->diff($salida)->format(FORMATO_HORA_1) : "00:00:00";
+
+                            $_tiempoGestion = new DateTime($tiempoGestion);
+                            $horasGestion = $_tiempoGestion->format("h");
+                            $minutosGestion = $_tiempoGestion->format("i");
+                            $segundosGestion = $_tiempoGestion->format("s");
+                            $_sTiempoGestion = $horasGestion . "h " . $minutosGestion . "m " . $segundosGestion . "s";
+
+                            if (isset($det['tiempoGestionEjecutivo'])) {//controlo que el ejecutivo tenga gestion en el dia del rango 
+                                $infoJornada = array(
+                                    'FECHA' => $fechaEnIntervalo,
+                                    'EJECUTIVO' => $ejecutivo['e_nombre'],
+                                    'USR' => $ejecutivo['e_usr_mobilvendor'],
+                                    //                            'CUMPLIMIENTO' => $cumplimientoEjecutivo,
+                                    'INICIOPRIMERAVISITA' => (count($inicioJornadaEjecutivo) > 0) ? $entrada->format("H:i") : "00:00",
+                                    'FINALULTIMAVISITA' => (count($finJornadaEjecutivo) > 0) ? $salida->format("H:i") : "00:00",
+                                    'TOTALTIEMPO' => $tiempoGestion, //$_sTiempoGestion,
+                                    'TOTALTIEMPOTEXTO' => $_sTiempoGestion,
+                                    'TIEMPOGESTION' => $det['tiempoGestionEjecutivo'],
+                                    'TIEMPOTRASLADO' => $det['tiempoTrasladoEjecutivo'],
+                                    'PROMEDIOXCLIENTE' => $det['tiempoxCliente'],
+                                    'SEMANAS' => ($det['semanas'] > 0) ? $det['semanas'] : '0',
+                                    'VISITAS' => ($det['cantidadVisitas'] > 0) ? $det['cantidadVisitas'] : '0',
+                                    'REPETIDAS' => ($det['cantidadRepetidas'] > 0) ? $det['cantidadRepetidas'] : '0',
+                                    'RUTA' => $det['nombreRuta'],
+                                    'ENRUTA' => $det['totalClientesRuta'],
+                                    'PROPIOS' => ($det['totalPropios'] > 0) ? $det['totalPropios'] : '0',
+                                    'TEMPORAL' => ($det['totalTemporal'] > 0) ? $det['totalTemporal'] : '0',
+                                    'DESCONOCIDO' => ($det['totalDesconocido'] > 0) ? $det['totalDesconocido'] : '0',
+                                    'CERRADOS' => ($det['clientesCerrados'] > 0) ? $det['clientesCerrados'] : '0',
+                                    'TOTAL' => ($det['totalVisitas'] > 0) ? $det['totalVisitas'] : '0',
+                                    'NUEVOS' => ($det['contadorClientesNuevos'] > 0) ? $det['contadorClientesNuevos'] : '0',
+                                    'EFECTIVOS' => ($det['contadorClientesEfectivos'] > 0) ? $det['contadorClientesEfectivos'] : '0',
+                                    'ENCUESTAS' => ($det['contadorEncuestas'] > 0) ? $det['contadorEncuestas'] : '0',
+                                    'VENTA' => ($det['contadorChipsVendidos'] > 0) ? $det['contadorChipsVendidos'] : '0',
+                                    'GESTION_CAMPO' => $det['cantidadComentariosCampo'],
+                                    'GESTION_TELEFONICA' => $det['cantidadComentariosTelefono'],
+                                );
+                                array_push($datosGridJornada, $infoJornada);
+                                unset($infoJornada);
+                            }//fin de if control de gestion de ejecutivo en dia
+                        }//fin de for iterador de ejecutivos
+                        $fechaEnIntervalo = date(FORMATO_FECHA_3, strtotime($fechaEnIntervalo . "+1 day"));
+                    }//fin del while iteración fechas
+
+                    $datosGrid['infoJornada'] = $datosGridJornada;
+
+                    Yii::app()->session['revisionJornada'] = $datosGridJornada;
+                    $response->Message = $mensaje;
+                    $response->Status = SUCCESS;
+                    $response->Result = $datosGrid;
+                }// fin del if que controla que se tenga un usuario escogido
+                else {
+                    $response->Message = "Sin usuarios seleccionados";
+                    $response->Status = NOTICE;
+//                    $response->Result = $datosGrid;
+                }
             } else {
                 echo CActiveForm::validate($model);
                 Yii::app()->end();
             }
-//            }
         } catch (Exception $e) {
             $mensaje = array(
                 'code' => $e->getCode(),
@@ -1084,7 +1181,7 @@ class RptResumenDiarioHistorialController extends Controller {
             $response->Status = ERROR;
         }
         $this->actionResponse(null, null, $response);
-//        var_dump($response);        die();
+        //        var_dump($response);        die();
         return;
     }
 
@@ -1109,13 +1206,25 @@ class RptResumenDiarioHistorialController extends Controller {
         return;
     }
 
+    public function actionSetearEjecutivoSeleccionadoJornada() {
+        $response = new Response();
+        $codigoUsuarioSeleccionado = $_POST['codigoUsuarioSeleccionado'];
+//        var_dump($codigoUsuarioSeleccionado);die();
+        Yii::app()->session['codigoUsuarioSeleccionado'] = $codigoUsuarioSeleccionado;
+//        var_dump("i got the data", Yii::app()->session['codigoUsuarioSeleccionado']); //       die();
+
+        $response->Result = "OK";
+        $this->actionResponse(null, null, $response);
+        return;
+    }
+
     public function actionGenerateExcelResumenCapilaridad() {
         $datosGrid = array();
         $response = new Response();
         try {
             if ((isset(Yii::app()->session['capilaridadMovistar']) &&
                     count(Yii::app()->session['capilaridadMovistar']) > 0)
-                    or ( isset(Yii::app()->session['capilaridadDelta']) &&
+                    or (isset(Yii::app()->session['capilaridadDelta']) &&
                     count(Yii::app()->session['capilaridadDelta']) > 0)
             ) {
 
@@ -1197,7 +1306,7 @@ class RptResumenDiarioHistorialController extends Controller {
         try {
             if ((isset(Yii::app()->session['SellInMovistar']) &&
                     count(Yii::app()->session['SellInDelta']) > 0)
-                    or ( isset(Yii::app()->session['SellInMovistar']) &&
+                    or (isset(Yii::app()->session['SellInMovistar']) &&
                     count(Yii::app()->session['SellInDelta']) > 0)
             ) {
 
@@ -1287,21 +1396,6 @@ class RptResumenDiarioHistorialController extends Controller {
         return;
     }
 
-    public function actionBuscaPeriodosJornada() {
-        $response = new Response();
-        $fPeriodos = new FPeriodoGestionModel();
-        $periodos = $fPeriodos->getPeriodosMensuales();
-        $response->Result = $periodos;
-//        unset(Yii::app()->session['inicioPeriodoSeleccionadoFZ']);
-//        unset(Yii::app()->session['inicioPeriodoSeleccionadoFZ']);
-//        unset(Yii::app()->session['resultadoEnvioMail']);
-//        unset(Yii::app()->session['detalleResultadoEnvioMail']);
-//        var_dump($periodos);
-
-        $this->actionResponse(null, null, $response);
-        return;
-    }
-
     public function actionMostrarDetalleTipoBodegaXPeriodo() {
         $response = new Response();
         $fResumenRevision = new FResumenPeriodoModel();
@@ -1330,7 +1424,9 @@ class RptResumenDiarioHistorialController extends Controller {
         unset(Yii::app()->session['detalleResultadoEnvioMail']);
 
         $resumenes['detallePeriodoTipoBodega'] = $fResumenRevision->getResumenAltasxPeriodoMensualxTipoBodega(
-                Yii::app()->session['inicioPeriodoSeleccionadoFZ'], Yii::app()->session['finPeriodoSeleccionadoFZ'], $_POST["tipoBodega"]
+                Yii::app()->session['inicioPeriodoSeleccionadoFZ'],
+                Yii::app()->session['finPeriodoSeleccionadoFZ'],
+                $_POST["tipoBodega"]
         );
 
         $response->Result = $resumenes;
@@ -1346,7 +1442,9 @@ class RptResumenDiarioHistorialController extends Controller {
         Yii::app()->session['numBodegaSeleccionada'] = $_POST["numBodegaSeleccionada"];
 
         $resumenes['detallePorBodega'] = $fResumenRevision->getResumenAltasxPeriodoMensualxBodega(
-                Yii::app()->session['inicioPeriodoSeleccionadoFZ'], Yii::app()->session['finPeriodoSeleccionadoFZ'], $_POST["bodegaSeleccionada"]
+                Yii::app()->session['inicioPeriodoSeleccionadoFZ'],
+                Yii::app()->session['finPeriodoSeleccionadoFZ'],
+                $_POST["bodegaSeleccionada"]
         );
         $resumenes['activarEnviarMail'] = count($resumenes['detallePorBodega']) > 0 ? true : false;
         unset(Yii::app()->session['resultadoEnvioMail']);
@@ -1370,16 +1468,16 @@ class RptResumenDiarioHistorialController extends Controller {
         try {
             $response = new Response();
             $ejecutivo = EjecutivoModel::model()->findAllByAttributes(array('e_id_bodega_delta' => array(Yii::app()->session['numBodegaSeleccionada'])));
-//            var_dump($ejecutivo);die();
+            //            var_dump($ejecutivo);die();
             if (isset($ejecutivo[0])) {
-                if ($ejecutivo[0]['e_estado'] == 1) {//enviar mail solo a ejecutivos activos (activo=1, inactivo=0)
-//                if (true) {
-//                    var_dump($this->GenerarExcelAdjunto($ejecutivo));die();
+                if ($ejecutivo[0]['e_estado'] == 1) { //enviar mail solo a ejecutivos activos (activo=1, inactivo=0)
+                    //                if (true) {
+                    //                    var_dump($this->GenerarExcelAdjunto($ejecutivo));die();
                     $fResumenPeriodo = new FResumenPeriodoModel();
                     $datos = $fResumenPeriodo->getResumenAltasxPeriodoMensualxBodegaMail(
-                            Yii::app()->session['inicioPeriodoSeleccionadoFZ']
-                            , Yii::app()->session['finPeriodoSeleccionadoFZ']
-                            , Yii::app()->session['bodegaSeleccionada']
+                            Yii::app()->session['inicioPeriodoSeleccionadoFZ'],
+                            Yii::app()->session['finPeriodoSeleccionadoFZ'],
+                            Yii::app()->session['bodegaSeleccionada']
                     );
 
                     $model = new MailReporteAltaFueraZonaModel();
@@ -1389,7 +1487,7 @@ class RptResumenDiarioHistorialController extends Controller {
                     $model->periodo = Yii::app()->session['anioPeriodoSeleccionadoFZ'] . '-' . Yii::app()->session['mesPeriodoSeleccionadoFZ'];
                     $model->cantidadAltas = count($datos['excelAdjunto']);
                     $model->cantidadCiudades = $datos['ciudades'][0]['CIUDADES'];
-//                    var_dump($model);die();
+                    //                    var_dump($model);die();
                     $NombreArchivo = "reporte_altas_fuera_zona";
                     $NombreHoja = "reporte_altas_fuera_zona";
 
@@ -1420,12 +1518,12 @@ class RptResumenDiarioHistorialController extends Controller {
                     $excel->GuardarArchivoFolderServer($archivo);
 
                     Yii::app()->crugemailer->enviarReporteAltasFueraZona($model->emailTo, $model, $archivo);
-//                    var_dump($res);die();
+                    //                    var_dump($res);die();
                     if (Yii::app()->session['resultadoEnvioMail'] == 1)
                         $estadoEnvioMensaje = 'Correo enviado correctamente a ' . $model->emailTo;
                     else
                         $estadoEnvioMensaje = 'Correo no enviado';
-//                    $estadoEnvioMensaje = Yii::app()->session['resultadoEnvioMail'];
+                    //                    $estadoEnvioMensaje = Yii::app()->session['resultadoEnvioMail'];
                 } else {
                     //ejecutivo con bodega seleccionada esta inactivo
                     $estadoEnvioMensaje = 'Ejecutivo de bodega seleccionada esta inactivo. No se enviara ningun correo';
@@ -1443,7 +1541,7 @@ class RptResumenDiarioHistorialController extends Controller {
         $response->Result = $estadoEnvioMensaje;
         $response->Status = SUCCESS;
 
-//        var_dump($response);        die();
+        //        var_dump($response);        die();
         $this->actionResponse(null, null, $response);
         return;
     }
@@ -1456,35 +1554,32 @@ class RptResumenDiarioHistorialController extends Controller {
         $ejecutivos = $cEjecutivos->getEjecutivosXGrupoXEstado($_POST['tipoUsuarioPeriodo'], 1);
         $libreria = new Libreria();
 
-//        var_dump($_POST);          die();
+        //        var_dump($_POST);          die();
         if ($_POST['tipoFecha'] == 'P') {
             $numMes = substr($_POST['inicioPeriodo'], 5, 2);
             $diasMes = cal_days_in_month(CAL_GREGORIAN, intval($numMes), $_POST['anioPeriodo']);
-            $mesEjecutivo = array();
+            $datosGestionPeriodoEjecutivo = array();
             $datosReporte = array();
             for ($dia = 1; $dia <= $diasMes; $dia++) {
                 $fecha = $_POST['anioPeriodo'] . '-' . $numMes . '-' . $dia;
                 foreach ($ejecutivos as $ejecutivo) {
                     $det = $this->ObtenerTiemposGestionTraslado(
-                            'Inicio visita'
-                            , $fecha
-                            , $_POST['horaInicioPeriodo']
-                            , $_POST['horaFinPeriodo']
-                            , $ejecutivo['e_usr_mobilvendor']
+                            'Inicio visita',
+                            $fecha,
+                            $_POST['horaInicioPeriodo'],
+                            $_POST['horaFinPeriodo'],
+                            $ejecutivo['e_usr_mobilvendor']
                     );
+
                     foreach ($det as $key => $itemDet) {
-//                    if ($key != 'tiempoGestionEjecutivo' ||
-//                            $key != 'tiempoTrasladoEjecutivo' || 
-//                            $key != 'semanas') {
                         $itemReporte = array(
                             'FECHA' => $dia . '-' . $_POST["mesPeriodo"],
                             'EJECUTIVO' => $ejecutivo['e_nombre'],
                             'ACCION' => $key,
                             'VALOR_ACCION' => $itemDet,
                         );
-                        array_push($mesEjecutivo, $itemReporte);
+                        array_push($datosGestionPeriodoEjecutivo, $itemReporte);
                         unset($itemReporte);
-//                    }
                     };
                 }
             }
@@ -1504,11 +1599,11 @@ class RptResumenDiarioHistorialController extends Controller {
                 $fecha = $_POST['anioPeriodo'] . '-' . $numMes . '-' . $dia;
                 foreach ($ejecutivos as $ejecutivo) {
                     $det = $this->ObtenerTiemposGestionTraslado(
-                            'Inicio visita'
-                            , $fecha
-                            , $_POST['horaInicioPeriodo']
-                            , $_POST['horaFinPeriodo']
-                            , $ejecutivo['e_usr_mobilvendor']
+                            'Inicio visita',
+                            $fecha,
+                            $_POST['horaInicioPeriodo'],
+                            $_POST['horaFinPeriodo'],
+                            $ejecutivo['e_usr_mobilvendor']
                     );
                     foreach ($det as $key => $itemDet) {
                         $itemReporte = array(
@@ -1519,13 +1614,13 @@ class RptResumenDiarioHistorialController extends Controller {
                         );
                         array_push($mesEjecutivo, $itemReporte);
                         unset($itemReporte);
-//                    }
+                        //                    }
                     };
                 }
             }
-//            die();
+            //            die();
         }
-        $response->Result = $mesEjecutivo;
+        $response->Result = $datosGestionPeriodoEjecutivo;
         $response->Status = SUCCESS;
         $this->actionResponse(null, null, $response);
         return;
@@ -1548,16 +1643,16 @@ class RptResumenDiarioHistorialController extends Controller {
                 $fecha = $_POST['anioPeriodo'] . '-' . $numMes . '-' . $dia;
                 foreach ($ejecutivos as $ejecutivo) {
                     $det = $this->ObtenerTiemposGestionTraslado(
-                            'Inicio visita'
-                            , $fecha
-                            , $_POST['horaInicioPeriodo']
-                            , $_POST['horaFinPeriodo']
-                            , $ejecutivo['e_usr_mobilvendor']
+                            'Inicio visita',
+                            $fecha,
+                            $_POST['horaInicioPeriodo'],
+                            $_POST['horaFinPeriodo'],
+                            $ejecutivo['e_usr_mobilvendor']
                     );
                     foreach ($det as $key => $itemDet) {
-//                    if ($key != 'tiempoGestionEjecutivo' ||
-//                            $key != 'tiempoTrasladoEjecutivo' || 
-//                            $key != 'semanas') {
+                        //                    if ($key != 'tiempoGestionEjecutivo' ||
+                        //                            $key != 'tiempoTrasladoEjecutivo' || 
+                        //                            $key != 'semanas') {
                         $itemReporte = array(
                             'FECHA' => $dia . '-' . $_POST["mesPeriodo"],
                             'EJECUTIVO' => $ejecutivo['e_nombre'],
@@ -1566,7 +1661,7 @@ class RptResumenDiarioHistorialController extends Controller {
                         );
                         array_push($mesEjecutivo, $itemReporte);
                         unset($itemReporte);
-//                    }
+                        //                    }
                     };
                 }
             }
@@ -1580,22 +1675,22 @@ class RptResumenDiarioHistorialController extends Controller {
 
             $mesEjecutivo = array();
             $datosReporte = array();
-//            var_dump($_POST);die();
+            //            var_dump($_POST);die();
             $inicioContador = substr($_POST['inicioPeriodo'], 8, 2);
             for ($dia = $inicioContador; $dia <= ($inicioContador + intval($interval->format('%R%a'))); $dia++) {
                 $fecha = $_POST['anioPeriodo'] . '-' . $numMes . '-' . $dia;
                 foreach ($ejecutivos as $ejecutivo) {
                     $det = $this->ObtenerTiemposGestionTraslado(
-                            'Inicio visita'
-                            , $fecha
-                            , $_POST['horaInicioPeriodo']
-                            , $_POST['horaFinPeriodo']
-                            , $ejecutivo['e_usr_mobilvendor']
+                            'Inicio visita',
+                            $fecha,
+                            $_POST['horaInicioPeriodo'],
+                            $_POST['horaFinPeriodo'],
+                            $ejecutivo['e_usr_mobilvendor']
                     );
                     foreach ($det as $key => $itemDet) {
-//                    if ($key != 'tiempoGestionEjecutivo' ||
-//                            $key != 'tiempoTrasladoEjecutivo' || 
-//                            $key != 'semanas') {
+                        //                    if ($key != 'tiempoGestionEjecutivo' ||
+                        //                            $key != 'tiempoTrasladoEjecutivo' || 
+                        //                            $key != 'semanas') {
                         $itemReporte = array(
                             'FECHA' => $dia . '-' . $_POST["mesPeriodo"],
                             'EJECUTIVO' => $ejecutivo['e_nombre'],
@@ -1604,11 +1699,11 @@ class RptResumenDiarioHistorialController extends Controller {
                         );
                         array_push($mesEjecutivo, $itemReporte);
                         unset($itemReporte);
-//                    }
+                        //                    }
                     };
                 }
             }
-//            die();
+            //            die();
         }
 
         $response->Result = $mesEjecutivo;
@@ -1622,11 +1717,11 @@ class RptResumenDiarioHistorialController extends Controller {
         $response = new Response();
 
         $fEjecutivos = new FEjecutivoModel();
-        $ejecutivos = $fEjecutivos->getEjecutivosXEstadoXTipos(1, "'EZ','D','S','SC','ST'");
+        $ejecutivos = $fEjecutivos->getEjecutivosXEstadoXTipos(1, "'EZM','EZMC','EZT','SUPMC','SUPM','SUPT','D','S','SC','ST'");
         $ejecutivosD = array();
 
         foreach ($ejecutivos as $ejecutivo) {
-//            var_dump($ejecutivo);            die();
+            //            var_dump($ejecutivo);            die();
             $dataEjecutivos = array(
                 'ID' => $ejecutivo['e_cod'],
                 'CODIGO' => $ejecutivo['e_usr_mobilvendor'],
@@ -1636,7 +1731,7 @@ class RptResumenDiarioHistorialController extends Controller {
             array_push($ejecutivosD, $dataEjecutivos);
             unset($dataEjecutivos);
         }
-//        var_dump($ejecutivosD);die();
+        //        var_dump($ejecutivosD);die();
         $response->Result = $ejecutivosD;
         $response->Status = SUCCESS;
         $this->actionResponse(null, null, $response);

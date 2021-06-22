@@ -105,143 +105,179 @@ $this->pageTitle = $pagina_nombre;
         <li><a href="#tab_5" data-toggle="tab">Notificacion Altas FZ</a></li>
     </ul>
     <div class="tab-content">
+        <!--REVISION JORNADA-->        
         <div class="tab-pane active" id="tab_1">
-            <div class="nav-tabs-custom">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tab_1_1" data-toggle="tab">Jornada individual</a></li>
-                    <li><a href="#tab_1_2" data-toggle="tab">Jornada mensual</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="tab_1_1">
-                        <div class="box-solid">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="btn-group">
-                                        <button type="button" title="Filtrar" class="btn btn-default" data-toggle="modal" data-target="#modal-filtros">
-                                            <i class="fa fa-filter"></i>
-                                        </button>
+            <div class="box-solid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="btn-group">
+                            <button type="button" title="Filtrar" class="btn btn-default" data-toggle="modal" data-target="#modal-filtros">
+                                <i class="fa fa-filter"></i>
+                            </button>
+                        </div>
+                        <div class="modal fade" id="modal-filtros">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">Filtros</h4>
                                     </div>
-                                    <div class="modal fade" id="modal-filtros">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span></button>
-                                                    <h4 class="modal-title">Filtros</h4>
-                                                </div>
-                                                <div class="modal-body">
+                                    <div class="modal-body">
+                                        <?php
+                                        $form = $this->beginWidget('CActiveForm', array(
+                                            'id' => 'frmLoad',
+                                            'enableClientValidation' => true,
+                                            'clientOptions' => array(
+                                                'validateOnSubmit' => true,
+                                            ),
+                                            'htmlOptions' => array("enctype" => "multipart/form-data"),));
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <i class="fa fa-calendar"></i>
+                                                <?php
+                                                echo $form->labelEx($model, 'fechaInicioJornada');
+                                                echo $form->textField(
+                                                        $model
+                                                        , 'fechaInicioJornada'
+                                                        , array(
+                                                    'class' => 'txtfechaInicioJornada form-control'
+                                                    , 'placeholder' => 'Fecha Inicio'));
+                                                ?>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <i class="fa fa-calendar"></i>
+                                                <?php
+                                                echo $form->labelEx($model, 'fechaFinJornada');
+                                                echo $form->textField(
+                                                        $model
+                                                        , 'fechaFinJornada'
+                                                        , array(
+                                                    'class' => 'txtfechaFinJornada form-control'
+                                                    , 'placeholder' => 'Fecha Fin'));
+                                                ?>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <i class="fa fa-clock-o"></i>
+                                                <?php
+                                                echo $form->labelEx($model, 'horaInicioJornada');
+                                                echo $form->dropDownList(
+                                                        $model, 'horaInicioJornada', array(
+                                                    '01:00' => '01:00',
+                                                    '02:00' => '02:00',
+                                                    '03:00' => '03:00',
+                                                    '04:00' => '04:00',
+                                                    '05:00' => '05:00',
+                                                    '06:00' => '06:00',
+                                                    '07:00' => '07:00',
+                                                    '08:00' => '08:00',
+                                                    '09:00' => '09:00',
+                                                    '10:00' => '10:00',
+                                                    '11:00' => '11:00',
+                                                    '12:00' => '12:00'
+                                                        )
+                                                        , array('options' => array('08:00' => array('selected' => true))
+                                                    , 'class' => 'form-control select2')
+                                                );
+
+                                                echo $form->error($model, 'horaInicioJornada');
+                                                ?>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <i class="fa fa-clock-o"></i>
+                                                <?php
+                                                echo $form->labelEx($model, 'horaFinJornada');
+                                                echo $form->dropDownList(
+                                                        $model, 'horaFinJornada', array(
+                                                    '23:59' => 'Sin limite',
+                                                    '17:00' => '17:00',
+                                                    '17:00' => '17:30',
+                                                    '18:00' => '18:00',
+                                                    '18:30' => '18:30',
+                                                    '19:00' => '19:00',
+                                                    '19:30' => '19:30',
+                                                    '20:00' => '20:00',
+                                                    '20:30' => '20:30',
+                                                    '21:00' => '21:00',
+                                                    '21:30' => '21:30',
+                                                    '22:00' => '22:00',
+                                                    '22:30' => '22:30',
+                                                    '23:00' => '23:00',
+                                                    '23:30' => '23:30',
+                                                        )
+                                                        , array('options' => array('19:30' => array('selected' => true))
+                                                    , 'class' => 'form-control select2')
+                                                );
+
+                                                echo $form->error($model, 'horaFinJornada');
+                                                ?>
+                                            </div>
+                                        </div>
+                                        <br/>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <i class="fa fa-user"></i>
+                                                <?php
+                                                echo $form->labelEx($model, 'tipoUsuarioJornada');
+                                                echo $form->dropDownList(
+                                                        $model
+                                                        , 'tipoUsuarioJornada'
+                                                        , array(
+                                                    'T' => 'Todos',
+                                                    'SE' => 'Seleccionar ejecutivo',
+                                                    GRUPO_EJECUTIVOS_ZONA_MOVI_ZS => 'Ejecutivos Zona Movi Sur',
+                                                    GRUPO_EJECUTIVOS_ZONA_MOVI_ZC => 'Ejecutivos Zona Movi Centro',
+                                                    GRUPO_EJECUTIVOS_ZONA_MOVI_ZMANABI => 'Ejecutivos Zona Movi Manabi',
+                                                    GRUPO_EJECUTIVOS_ZONA_TUENTI => 'Ejecutivos Zona Tuenti',
+                                                    GRUPO_SUPERVISORES_MOVI_ZS => 'Supervisores Movistar Sur',
+                                                    GRUPO_SUPERVISORES_MOVI_ZC => 'Supervisores Movistar Centro',
+                                                    GRUPO_SUPERVISORES_TUENTI => 'Supervisores Tuenti',
+                                                    GRUPO_SERVICIO_CLIENTE => 'Servicio Cliente',
+                                                    GRUPO_DESARROLLADORES => 'Desarrolladores',
+                                                    GRUPO_TECNICOS => 'Tecnico',
+                                                    GRUPO_CANAL_DIGITAL=> 'Canal Digital',
+                                                    GRUPO_ZONA_EXTERNO=> 'Ejecutivo Zona Externo',
+                                                    GRUPO_USR_TECECAB => 'Usuarios Tececab',
+                                                    GRUPO_CHOFER_VAN => 'Usuarios Chofer Van',
+                                                        )
+                                                        , array('class' => 'form-control select2')
+                                                );
+                                                echo $form->error($model, 'tipoUsuarioJornada');
+                                                ?>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div style="margin-left: 10px;
+                                                     background-color: transparent ;
+                                                     display:none" 
+                                                     id="grilla_sel_ejecutivos" 
+                                                     class="_grilla panel panel-shadow" >
+                                                    <table id="tblEjecutivosPeriodo" class="table table-condensed"></table>
+                                                    <div id="pagtEjecutivosPeriodo"> </div>
+                                                </div>        
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="row">
+                                                <div class="col-md-6">
                                                     <?php
-                                                    $form = $this->beginWidget('CActiveForm', array('id' => 'frmLoad', 'enableClientValidation' => true, 'clientOptions' => array('validateOnSubmit' => true,), 'htmlOptions' => array("enctype" => "multipart/form-data"),));
-                                                    ?>
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <i class="fa fa-calendar"></i>
-                                                            <?php echo $form->labelEx($model, 'fechaInicioFinJornada'); ?>
-                                                            <?php
-                                                            echo $form->textField(
-                                                                    $model
-                                                                    , 'fechaInicioFinJornada'
-                                                                    , array(
-                                                                'class' => 'txtfechaInicioFinJornadaInicio form-control'));
-                                                            ?>
-                                                            <?php echo $form->error($model, 'fechaInicioFinJornada'); ?>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <i class="fa fa-user"></i>
-                                                            <?php
-                                                            echo $form->labelEx($model, 'tipoUsuarioJornada');
-                                                            echo $form->dropDownList(
-                                                                    $model
-                                                                    , 'tipoUsuarioJornada'
-                                                                    , array(
-                                                                'T' => 'Todos',
-                                                                GRUPO_EJECUTIVOS_ZONA_MOVI => 'Ejecutivos Zona Movi',
-                                                                GRUPO_EJECUTIVOS_ZONA_TUENTI => 'Ejecutivos Zona Tuenti',
-                                                                GRUPO_SUPERVISORES_MOVI => 'Supervisores Movistar',
-                                                                GRUPO_SUPERVISORES_TUENTI => 'Supervisores Tuenti',
-                                                                GRUPO_SERVICIO_CLIENTE => 'Servicio Cliente',
-                                                                GRUPO_DESARROLLADORES => 'Desarrolladores',
-                                                                GRUPO_TECNICOS => 'Tecnico ',
-                                                                    )
-                                                                    , array('class' => 'form-control select2')
-                                                            );
-                                                            echo $form->error($model, 'tipoUsuarioJornada');
-                                                            ?>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <i class="fa fa-clock-o"></i>
-                                                            <?php
-                                                            echo $form->labelEx($model, 'horaInicioGestionJornada');
-                                                            echo $form->dropDownList(
-                                                                    $model, 'horaInicioGestionJornada', array(
-                                                                '01:00' => '01:00',
-                                                                '02:00' => '02:00',
-                                                                '03:00' => '03:00',
-                                                                '04:00' => '04:00',
-                                                                '05:00' => '05:00',
-                                                                '06:00' => '06:00',
-                                                                '07:00' => '07:00',
-                                                                '08:00' => '08:00',
-                                                                '09:00' => '09:00',
-                                                                '10:00' => '10:00',
-                                                                '11:00' => '11:00',
-                                                                '12:00' => '12:00'
-                                                                    )
-                                                                    , array('options' => array('08:00' => array('selected' => true))
-                                                                , 'class' => 'form-control select2')
-                                                            );
-
-                                                            echo $form->error($model, 'horaInicioGestionJornada');
-                                                            ?>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <i class="fa fa-clock-o"></i>
-                                                            <?php
-                                                            echo $form->labelEx($model, 'horaFinGestionJornada');
-                                                            echo $form->dropDownList(
-                                                                    $model, 'horaFinGestionJornada', array(
-                                                                '23:59' => 'Sin limite',
-                                                                '17:00' => '17:00',
-                                                                '17:00' => '17:30',
-                                                                '18:00' => '18:00',
-                                                                '18:30' => '18:30',
-                                                                '19:00' => '19:00',
-                                                                '19:30' => '19:30',
-                                                                '20:00' => '20:00',
-                                                                '20:30' => '20:30',
-                                                                '21:00' => '21:00',
-                                                                '21:30' => '21:30',
-                                                                '22:00' => '22:00',
-                                                                '22:30' => '22:30',
-                                                                '23:00' => '23:00',
-                                                                '23:30' => '23:30',
-                                                                    )
-                                                                    , array('options' => array('23:59' => array('selected' => true))
-                                                                , 'class' => 'form-control select2')
-                                                            );
-
-                                                            echo $form->error($model, 'horaFinGestionJornada');
-                                                            ?>
-                                                        </div>
-                                                    </div>
-
-
-                                                    <div class="modal-footer">
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <?php
-                                                                echo CHtml::ajaxSubmitButton(
-                                                                        'Consultar'
-                                                                        , CHtml::normalizeUrl(array(
-                                                                            'RptResumenDiarioHistorial/ObtenerTiemposGestionTraslado'
-                                                                            , 'render' => true))
-                                                                        , array(
-                                                                    'dataType' => 'json',
-                                                                    'type' => 'post',
-                                                                    'beforeSend' => 'function() {blockUIOpen();}',
-                                                                    'success' => 'function(data) {
+                                                    echo CHtml::ajaxSubmitButton(
+                                                            'Consultar'
+                                                            , CHtml::normalizeUrl(array(
+                                                                'RptResumenDiarioHistorial/ObtenerTiemposGestionTraslado'
+                                                                , 'render' => true))
+                                                            , array(
+                                                        'dataType' => 'json',
+                                                        'type' => 'post',
+                                                        'beforeSend' => 'function() {blockUIOpen();}',
+                                                        'success' => 'function(data) {
                         blockUIClose();
                         //setMensaje(data.ClassMessage, data.Message);
                         if(data.Status==1){
@@ -255,214 +291,53 @@ $this->pageTitle = $pagina_nombre;
                             });
                             }
                         } ',
-                                                                    'error' => 'function(xhr,st,err) {
+                                                        'error' => 'function(xhr,st,err) {
                             blockUIClose();
                             alert(err);
                         }'
-                                                                        ), array(
-                                                                    'id' => 'btnGenerar'
-                                                                    , 'class' => 'btn btn-block btn-success btn-sm'
-                                                                    , "data-dismiss" => 'modal'
-                                                                ));
-                                                                ?>
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <?php
-                                                                echo CHtml::Button(
-                                                                        'Limpiar', array('id' => 'btnLimpiarJornadaIndividual'
-                                                                    , 'class' => 'btn btn-block btn-primary btn-sm'
-                                                                    , "data-dismiss" => 'modal'
-                                                                ));
-                                                                ?>
-                                                            </div>
-                                                            <?php $this->endWidget(); ?>
-                                                        </div>
-                                                        <!-- /.modal-content -->
-                                                    </div>
-                                                    <!-- /.modal-dialog -->
+                                                            ), array(
+                                                        'id' => 'btnGenerar'
+                                                        , 'class' => 'btn btn-block btn-success btn-sm'
+                                                        , "data-dismiss" => 'modal'
+                                                    ));
+                                                    ?>
                                                 </div>
+                                                <div class="col-md-6">
+                                                    <?php
+                                                    echo CHtml::Button(
+                                                            'Limpiar', array('id' => 'btnLimpiarRevisionJornada'
+                                                        , 'class' => 'btn btn-block btn-primary btn-sm'
+                                                        , "data-dismiss" => 'modal'
+                                                    ));
+                                                    ?>
+                                                </div>
+                                                <?php $this->endWidget(); ?>
                                             </div>
-                                            <!-- /.FIN MODAL -->
+                                            <!-- /.modal-content -->
                                         </div>
+                                        <!-- /.modal-dialog -->
                                     </div>
-                                    <br/>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="box box-primary">
-                                                <div class="box-body no-padding">
-                                                    <div id="grilla" class="_grilla">
-                                                        <table id="tblGridResumenJornada" class="table table-condensed"></table>
-                                                        <div id="pagGridResumenJornada"> </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                </div>
+                                <!-- /.FIN MODAL -->
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box box-primary">
+                                    <div class="box-body no-padding">
+                                        <div id="grilla" class="_grilla">
+                                            <table id="tblGridResumenJornada" class="table table-condensed"></table>
+                                            <div id="pagGridResumenJornada"> </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="tab-pane" id="tab_1_2">
-                        <div class="box-solid">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="box-body">
-                                        <div class="form-group">
-                                            <span class="input-group-addon">
-                                                <i class="fa fa-calendar"></i>
-                                                <label><?php echo $form->labelEx($model, 'tipoFechaJornadaPeriodo'); ?></label>
-                                            </span>
-                                            <?php
-                                            echo $form->dropDownList(
-                                                    $model, 'tipoFechaJornadaPeriodo'
-                                                    , array(
-                                                'P' => 'Periodo',
-                                                'RF' => 'Rango fecha mes',)
-                                                    , array('class' => 'form-control select2')
-//                                        , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
-                                            );
-                                            ?>
-
-                                        </div>
-                                        <div class="form-group">
-                                            <span class="input-group-addon">
-                                                <i class="fa fa-user"></i>
-                                                <label> <?php echo $form->labelEx($model, 'tipoUsuarioPeriodo'); ?></label>
-                                            </span>
-                                            <?php
-                                            echo $form->dropDownList(
-                                                    $model, 'tipoUsuarioPeriodo', array(
-                                                'T' => 'Todos',
-                                                'SE' => 'Seleccionar ejecutivo',
-                                                GRUPO_EJECUTIVOS_ZONA_MOVI => 'Ejecutivos Zona',
-                                                GRUPO_SUPERVISORES_MOVI => 'Supervisores',
-                                                GRUPO_SERVICIO_CLIENTE => 'Servicio Cliente',
-                                                GRUPO_DESARROLLADORES => 'Desarrolladores',
-                                                GRUPO_TECNICOS => 'Tecnico',
-                                                    ), array('class' => 'form-control select2')
-                                            );
-                                            ?>
-
-                                        </div>
-                                        <div class="form-group">
-                                            <span class="input-group-addon">
-                                                <i class="fa fa-clock-o"></i>
-                                                <label><?php echo $form->labelEx($model, 'horaInicioJornadaPeriodo'); ?></label>
-                                            </span>
-                                            <?php
-                                            echo $form->dropDownList(
-                                                    $model, 'horaInicioJornadaPeriodo', array(
-                                                '01:00' => '01:00',
-                                                '02:00' => '02:00',
-                                                '03:00' => '03:00',
-                                                '04:00' => '04:00',
-                                                '05:00' => '05:00',
-                                                '06:00' => '06:00',
-                                                '07:00' => '07:00',
-                                                '08:00' => '08:00',
-                                                '09:00' => '09:00',
-                                                '10:00' => '10:00',
-                                                '11:00' => '11:00',
-                                                '12:00' => '12:00',)
-                                                    , array('class' => 'form-control select2')
-//                                        , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
-                                            );
-                                            ?>
-
-                                        </div>
-
-                                        <div class="form-group">
-                                            <span class="input-group-addon">
-                                                <i class="fa fa-clock-o"></i>
-                                                <label><?php echo $form->labelEx($model, 'horaFinJornadaPeriodo'); ?></label>
-                                            </span>
-                                            <?php
-                                            echo $form->dropDownList(
-                                                    $model, 'horaFinJornadaPeriodo', array(
-                                                '23:59' => 'Sin limite',
-                                                '17:00' => '17:00',
-                                                '17:00' => '17:30',
-                                                '18:00' => '18:00',
-                                                '18:30' => '18:30',
-                                                '19:00' => '19:00',
-                                                '19:30' => '19:30',
-                                                '20:00' => '20:00',
-                                                '20:30' => '20:30',
-                                                '21:00' => '21:00',
-                                                '21:30' => '21:30',
-                                                '22:00' => '22:00',
-                                                '22:30' => '22:30',
-                                                '23:00' => '23:00',
-                                                '23:30' => '23:30',)
-                                                    , array('class' => 'form-control select2')
-//                                        , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
-                                            );
-                                            ?>
-                                        </div>
-                                    </div>    
-                                </div>
-                                <!--                                <div class="col-md-3">
-                                                                     
-                                                                </div>-->
-                                <div class="col-md-9">
-                                    <div class="box-body no-padding">                                
-                                        <div  style="display: flex; justify-content: flex-start;">
-                                            <div class="table-responsive mailbox-messages">
-                                                <div  style="display: flex; justify-content: flex-start;">
-                                                    <div id="grilla_periodos_mensuales" 
-                                                         class="_grilla panel panel-shadow" 
-                                                         style="background-color: transparent">
-                                                        <table id="tblGridPeriodosMensuales" class="table table-condensed"></table>
-                                                    </div>
-                                                    <div id="grilla_fecha_inicio_fin" 
-                                                         class="_grilla panel panel-shadow" 
-                                                         style="background-color: transparent; display:none">
-                                                        <div class="box box-info">
-                                                            <div class="box-header with-border">
-                                                                <h3 class="box-title">Seleccione las Fechas de Inicio y Fin</h3>
-                                                            </div>
-                                                            <div class="box-body">
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                                    <?php
-                                                                    echo $form->textField(
-                                                                            $model
-                                                                            , 'fechaInicioJornadaPeriodo'
-                                                                            , array(
-                                                                        'class' => 'txtfechaInicioJornadaPeriodo form-control', 'placeholder' => 'Fecha Inicio'));
-                                                                    ?>
-                                                                </div>
-                                                                <br>
-                                                                <div class="input-group">
-                                                                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                                                    <?php echo $form->textField($model, 'fechaFinJornadaPeriodo', array('class' => 'txtfechaFinJornadaPeriodo form-control', 'placeholder' => 'Fecha Fin')); ?>
-                                                                </div>
-                                                                <br>
-                                                                <div class="input-group">
-                                                                    <?php
-                                                                    echo CHtml::submitButton(
-                                                                            'Revisar Gestion Periodo', array(
-                                                                        'id' => 'btnBuscarRevisarGestionRangoFecha'
-                                                                        , 'class' => 'btn btn-block btn-primary btn-sm'
-                                                                    ));
-                                                                    ?>                                                                        
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div style="margin-left: 10px;
-                                                         background-color: transparent ;
-                                                         display:none" 
-                                                         id="grilla_sel_ejecutivos" 
-                                                         class="_grilla panel panel-shadow" >
-                                                        <table id="tblEjecutivosPeriodo" class="table table-condensed"></table>
-                                                        <div id="pagtEjecutivosPeriodo"> </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box box-primary">
+                                    <div class="box-body no-padding">
                                         <div id="gridPivotGestionMes">
                                             <table id="tblGestionMes" class="table table-condensed"></table>
                                             <div id="pagtblGestionMes"> </div>
@@ -476,386 +351,387 @@ $this->pageTitle = $pagina_nombre;
             </div>
         </div>
 
+        <!--REVISION INDIVIDUAL DE GESTION-->
         <div class="tab-pane" id="tab_2">
-            <div class="box-body">
+            <div class="box-solid">
                 <div class="row">
-                    <div class="col-md-3">
-                        <?php
-                        $form = $this->beginWidget('CActiveForm', array(
-                            'id' => 'frmLoad',
-                            'enableClientValidation' => true,
-                            'clientOptions' => array(
-                                'validateOnSubmit' => true,
-                            ),
-                            'htmlOptions' => array("enctype" => "multipart/form-data"),
-                        ));
-                        ?>
-                        <!--mailbox-controls-->
-                        <div class="mailbox-controls">
-                            <div class="btn-group">
-                                <?php
-                                echo CHtml::ajaxSubmitButton(
-                                        'Revisar historial', CHtml
-                                        ::normalizeUrl(array(
-                                            'rptResumenDiarioHistorial/revisarhistorial'
-                                            , 'render' => true))
-                                        , array(
-                                    'dataType' => 'json',
-                                    'type' => 'post',
-                                    'beforeSend' => 'function() {blockUIOpen();}',
-                                    'success' => 'function(data) {
-                        
-                        blockUIClose();
-                        setMensaje(data.ClassMessage, data.Message);
-                        if(data.Status==1){
-                             var datosResult = data.Result;
-                            if(datosResult[\'estadoGeneracion\'])
-                            {
-                                $("#tblGridDetalle").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'detalle\']}).trigger(\'reloadGrid\');
-                                $("#tblResumenGeneral").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenGeneral\']}).trigger(\'reloadGrid\');
-                                $("#tblResumenVisitas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitas\']}).trigger(\'reloadGrid\');
-                                $("#tblResumenVisitasValidasInvalidas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitasValidasInvalidas\']}).trigger(\'reloadGrid\');
-                                $("#tblPrimeraUltimaVisita").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenPrimeraUltima\']}).trigger(\'reloadGrid\');
-                                $("#tblResumenVentas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVentas\']}).trigger(\'reloadGrid\');
-                                $("#tblResumenTiempos").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenTiempos\']}).trigger(\'reloadGrid\');
-
-                                $("#d_comentariosSupervision").val(datosResult[\'comentarioSupervisor\']);
-
-                                $("#RptResumenDiarioHistorialForm_enlaceMapa").val(datosResult[\'enlaceMapa\']);
-                                mostrarVisitasEnMapa2(datosResult[\'coordenadasClientes\'],datosResult[\'coordenadasVisitas\']);
-                            }
-                            else
-                            {
-                                $("#tblGridDetalle").jqGrid("clearGridData", true).trigger("reloadGrid");
-                                $("#tblResumenGeneral").jqGrid("clearGridData", true).trigger("reloadGrid");
-                                $("#tblResumenVisitas").jqGrid("clearGridData", true).trigger("reloadGrid");
-                                $("#tblResumenVisitasValidasInvalidas").jqGrid("clearGridData", true).trigger("reloadGrid");
-                                $("#tblPrimeraUltimaVisita").jqGrid("clearGridData", true).trigger("reloadGrid");
-                                $("#tblResumenVentas").jqGrid("clearGridData", true).trigger("reloadGrid");
-                                $("#tblResumenTiempos").jqGrid("clearGridData", true).trigger("reloadGrid");
-
-                                $("#d_comentariosSupervision").val(\'\');
-                                initMap2();
-                            }
-                        } else{
-                            $.each(data, function(key, val) {
-                            $("#frmBankStat #"+key+"_em_").text(val);
-                            $("#frmBankStat #"+key+"_em_").show();
-                            });
-                            }
-                        } ',
-                                    'error' => 'function(xhr,st,err) {
-                            blockUIClose();
-                            RedirigirError(xhr.status);
-                        }')
-                                        , array('id' => 'btnGenerate'
-                                    , 'class' => 'btn btn-block btn-success'));
-                                ?>
-                                <?php
-                                echo CHtml::Button(
-                                        'Limpiar'
-                                        , array('id' => 'btnLimpiar'
-                                    , 'class' => 'btn btn-block btn-primary'));
-                                ?>
-                            </div>
+                    <div class="col-md-12">
+                        <div class="btn-group">
+                            <button type="button" title="Filtrar" class="btn btn-default" data-toggle="modal" data-target="#modal-filtros-individual">
+                                <i class="fa fa-filter"></i>
+                            </button>
                         </div>
-                        <div class="box box-solid">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">Fecha / Ejecutivo</h3>
-                                <div class="box-tools">
-                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="box-body no-padding">
-                                <ul class="nav nav-pills nav-stacked">
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-calendar"></i>
-                                            <?php echo $form->labelEx($model, 'fechagestion'); ?>
-                                            <?php echo $form->textField($model, 'fechagestion', array('class' => 'txtfechagestion')) ?>
-                                            <?php echo $form->error($model, 'fechagestion'); ?>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <i class="fa fa-user-circle"></i>
-                                            <?php
-                                            echo $form->labelEx($model, 'ejecutivo');
-                                            $criteria = new CDbCriteria;
-                                            $criteria->addCondition("e_estado = 1");
-                                            $condicion = "e_tipo in" . EJECUTIVOS_REVISION_INDIVIDUAL;
-                                            $criteria->addCondition($condicion);
-
-                                            $ejecutivosZona = EjecutivoModel::model()->findAll($criteria);
-                                            $listaEjecutivosZona = CHtml::listData($ejecutivosZona, 'e_usr_mobilvendor', 'e_nombre');
-                                            echo $form->dropDownList(
-                                                    $model, 'ejecutivo', $listaEjecutivosZona, array(
-                                                'empty' => '(Seleccione un ejecutivo)',
-                                                'options' => array(1 => array('e_usr_mobilvendor' => true),
-                                                    'disabled' => true))
-                                            );
-
-                                            echo $form->error($model, 'ejecutivo');
-                                            ?>
-                                        </a>
-                                    </li>
-                                    <li><a href="#">
-                                            <i class = "fa  fa-clock-o"></i>
-                                            <?php echo $form->labelEx($model, 'semanaRevision');
-                                            ?>
-                                            <?php
-                                            echo $form->dropDownList(
-                                                    $model, 'semanaRevision'
-                                                    , array(
-                                                '1' => 'Semana 1',
-                                                '2' => 'Semana 2',
-                                                '3' => 'Semana 3',
-                                                '4' => 'Semana 4'
-                                                    )
-//                                    , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
-                                            );
-                                            ?>
-                                            <?php echo $form->error($model, 'semanaRevision'); ?>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="box box-solid collapsed-box">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">Inicio/Fin Gestion</h3>
-                                <div class="box-tools">
-                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="box-body no-padding" style="display: none;">
-                                <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="#">
-                                            <i class="fa  fa-clock-o"></i>
-                                            <?php echo $form->labelEx($model, 'horaInicioGestion'); ?>
-
-                                            <?php
-                                            echo $form->dropDownList(
-                                                    $model, 'horaInicioGestion', array(
-                                                '08:00' => '08:00',
-                                                '09:00' => '09:00',
-                                                '10:00' => '10:00'
-                                                    )
-                                                    , array('options' => array('08:00' => array('selected' => true)))
-                                            );
-                                            echo $form->error($model, 'horaInicioGestion');
-                                            ?>
-                                        </a>
-                                    </li>
-                                    <li><a href="#">
-                                            <i class="fa  fa-clock-o"></i>
-                                            <?php
-                                            echo $form->labelEx($model, 'horaFinGestion');
-                                            echo $form->dropDownList(
-                                                    $model, 'horaFinGestion', array(
-                                                '23:59' => 'Sin limite',
-                                                '17:00' => '17:00',
-                                                '17:00' => '17:30',
-                                                '18:00' => '18:00',
-                                                '18:30' => '18:30',
-                                                '19:00' => '19:00',
-                                                '19:30' => '19:30',
-                                                '20:00' => '20:00',
-                                                '20:30' => '20:30',
-                                                '21:00' => '21:00',
-                                                '21:30' => '21:30',
-                                                '22:00' => '22:00',
-                                                '22:30' => '22:30',
-                                                '23:00' => '23:00',
-                                                '23:30' => '23:30',
-                                                    )
-                                                    , array('options' => array('23:59' => array('selected' => true)))
-                                            );
-
-                                            echo $form->error($model, 'horaFinGestion');
-                                            ?> 
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="box box-solid collapsed-box">
-                            <div class="box-header with-border">
-                                <h3 class="box-title">Acciones</h3>
-                                <div class="box-tools">
-                                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="box-body no-padding" style="display: none;">
-                                <ul class="nav nav-pills nav-stacked">
-                                    <li><a href="#">
-                                            <i class="fa  fa-clock-o"></i>
-                                            <?php echo $form->labelEx($model, 'precisionVisita'); ?>
-                                            <?php
-                                            echo $form->dropDownList(
-                                                    $model, 'precisionVisitas'
-                                                    , array(
-                                                '0' => 'Sin limite',
-                                                '5' => '5 metros',
-                                                '10' => '10 metros',
-                                                '15' => '15 metros',
-                                                '20' => '20 metros',
-                                                '25' => '25 metros',
-                                                '50' => '50 metros',
-                                                '100' => '100 metros'
-                                                    )
-//                                    , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
-                                            );
-                                            ?>
-                                            <?php echo $form->error($model, 'precisionVisitas'); ?>
-                                        </a>
-                                    </li>
-                                    <li><a href="#">
-                                            <i class="fa  fa-clock-o"></i>
-                                            <?php echo $form->labelEx($model, 'accionHistorial'); ?>
-                                            <?php
-                                            echo $form->dropDownList(
-                                                    $model, 'accionHistorial'
-                                                    , array(
-                                                'Inicio visita' => 'Inicio visita',
-                                                'Orden' => 'Orden',
-                                                'Forma' => 'Forma',
-                                                'Comentario' => 'Comentario',
-                                                'Día inicio' => 'Dia inicio',
-                                                'Fin de visita' => 'Fin de visita',
-                                                'Día fin' => 'Dia fin',
-                                                'Nuevo cliente' => 'Nuevo cliente',
-                                                'Estatus' => 'Estatus'
-                                                    )
-//                                    , array('empty' => TEXT_OPCION_SELECCIONE, 'options' => array(0 => array('selected' => true)))
-                                            );
-                                            ?>
-                                            <?php echo $form->error($model, 'accionHistorial'); ?>
-                                        </a>
-                                    </li>
-
-                                </ul>
-                            </div>
-                        </div>
-                        <?php $this->endWidget(); ?>
-                    </div>
-
-                    <div class="col-md-9">
-                        <div class="box box-primary">
-                            <div class="box-body no-padding">
-                                <div class="table-responsive mailbox-messages">
-                                    <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                                        <table id="tblResumenGeneral" class="table table-condensed"></table>
+                        <div class="modal fade" id="modal-filtros-individual">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">Filtros</h4>
                                     </div>
-                                    <div  style="display: flex; justify-content: flex-start;">
-                                        <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                                    <div class="modal-body">
+                                        <?php
+                                        $form = $this->beginWidget('CActiveForm', array(
+                                            'id' => 'frmLoad',
+                                            'enableClientValidation' => true,
+                                            'clientOptions' => array(
+                                                'validateOnSubmit' => true,
+                                            ),
+                                            'htmlOptions' => array("enctype" => "multipart/form-data"),
+                                        ));
+                                        ?>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <i class="fa fa-clock-o"></i>
+                                                <?php
+                                                echo $form->labelEx($model, 'ejecutivo');
+                                                $criteria = new CDbCriteria;
+                                                $criteria->addCondition("e_estado = 1");
+                                                $condicion = "e_tipo in" . EJECUTIVOS_REVISION_INDIVIDUAL;
+                                                $criteria->addCondition($condicion);
+                                                $criteria->order = 'e_nombre ASC, e_usr_mobilvendor ASC';
+
+                                                $ejecutivosZona = EjecutivoModel::model()->findAll($criteria);
+                                                $listaEjecutivosZona = CHtml::listData($ejecutivosZona, 'e_usr_mobilvendor', 'e_nombre');
+                                                echo $form->dropDownList(
+                                                        $model, 'ejecutivo', $listaEjecutivosZona, array(
+                                                    'empty' => '(Seleccione un ejecutivo)'
+                                                    , 'class' => 'form-control select2'
+                                                    , 'options' => array(1 => array('e_usr_mobilvendor' => true), 'disabled' => true)
+                                                        )
+                                                );
+
+                                                echo $form->error($model, 'ejecutivo');
+                                                ?>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <i class="fa fa-calendar"></i>
+                                                <?php
+                                                echo $form->labelEx($model, 'fechagestion');
+                                                echo $form->textField(
+                                                        $model
+                                                        , 'fechagestion'
+                                                        , array(
+                                                    'class' => ' form-control txtfechagestion'));
+                                                echo $form->error($model, 'fechagestion');
+                                                ?>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <i class="fa fa-calendar"></i>
+                                                <?php
+                                                echo $form->labelEx($model, 'semanaRevision');
+
+                                                echo $form->dropDownList(
+                                                        $model, 'semanaRevision'
+                                                        , array(
+                                                    '1' => 'Semana 1',
+                                                    '2' => 'Semana 2',
+                                                    '3' => 'Semana 3',
+                                                    '4' => 'Semana 4',
+                                                    '0' => 'Sin control semana'
+                                                        )
+                                                        , array(
+                                                    'empty' => TEXT_OPCION_SELECCIONE
+                                                    , 'options' => array(0 => array('selected' => true))
+                                                    , 'class' => 'form-control select2'
+                                                        )
+                                                );
+                                                echo $form->error($model, 'semanaRevision');
+                                                ?>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <i class="fa fa-clock-o"></i>
+                                                <?php
+                                                echo $form->labelEx($model, 'horaInicioGestion');
+                                                echo $form->dropDownList(
+                                                        $model, 'horaInicioGestion', array(
+                                                    '08:00' => '08:00',
+                                                    '09:00' => '09:00',
+                                                    '10:00' => '10:00'
+                                                        )
+                                                        , array(
+                                                    'empty' => TEXT_OPCION_SELECCIONE
+                                                    , 'class' => 'form-control select2'
+                                                    , 'options' => array('08:00' => array('selected' => true)))
+                                                );
+                                                echo $form->error($model, 'horaInicioGestion');
+                                                ?>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <i class="fa fa-clock-o"></i>
+                                                <?php
+                                                echo $form->labelEx($model, 'horaFinGestion');
+                                                echo $form->dropDownList(
+                                                        $model, 'horaFinGestion', array(
+                                                    '23:59' => 'Sin limite',
+                                                    '17:00' => '17:00',
+                                                    '17:00' => '17:30',
+                                                    '18:00' => '18:00',
+                                                    '18:30' => '18:30',
+                                                    '19:00' => '19:00',
+                                                    '19:30' => '19:30',
+                                                    '20:00' => '20:00',
+                                                    '20:30' => '20:30',
+                                                    '21:00' => '21:00',
+                                                    '21:30' => '21:30',
+                                                    '22:00' => '22:00',
+                                                    '22:30' => '22:30',
+                                                    '23:00' => '23:00',
+                                                    '23:30' => '23:30',
+                                                        )
+                                                        , array(
+                                                    'empty' => TEXT_OPCION_SELECCIONE
+                                                    , 'class' => 'form-control select2'
+                                                    , 'options' => array('23:59' => array('selected' => true)))
+                                                );
+
+                                                echo $form->error($model, 'horaFinGestion');
+                                                ?>
+                                            </div>
+                                        </div>
+                                        <br/>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <i class="fa fa-user"></i>
+                                                <?php
+                                                echo $form->labelEx($model, 'precisionVisita');
+                                                echo $form->dropDownList(
+                                                        $model, 'precisionVisitas'
+                                                        , array(
+                                                    '0' => 'Sin limite',
+                                                    '5' => '5 metros',
+                                                    '10' => '10 metros',
+                                                    '15' => '15 metros',
+                                                    '20' => '20 metros',
+                                                    '25' => '25 metros',
+                                                    '50' => '50 metros',
+                                                    '100' => '100 metros'
+                                                        )
+                                                        , array(
+                                                    'empty' => TEXT_OPCION_SELECCIONE
+                                                    , 'class' => 'form-control select2'
+                                                    , 'options' => array(0 => array('selected' => true)))
+                                                );
+                                                echo $form->error($model, 'precisionVisitas');
+                                                ?>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <i class="fa fa-user"></i>
+                                                <?php
+                                                echo $form->labelEx($model, 'accionHistorial');
+                                                echo $form->dropDownList(
+                                                        $model, 'accionHistorial'
+                                                        , array(
+                                                    'Inicio visita' => 'Inicio visita',
+                                                    'Orden' => 'Orden',
+                                                    'Forma' => 'Forma',
+                                                    'Comentario' => 'Comentario',
+                                                    'Dia inicio' => 'Dia inicio',
+                                                    'Fin de visita' => 'Fin de visita',
+                                                    'Dia fin' => 'Dia fin',
+                                                    'Nuevo cliente' => 'Nuevo cliente',
+                                                    'Estatus' => 'Estatus'
+                                                        )
+                                                        , array(
+                                                    'empty' => TEXT_OPCION_SELECCIONE
+                                                    , 'class' => 'form-control select2'
+                                                    , 'options' => array(0 => array('selected' => true)))
+                                                );
+                                                ?>
+                                            </div>
+                                        </div>
+                                        <br/>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div style="margin-left: 10px;
+                                                     background-color: transparent ;
+                                                     display:none" 
+                                                     id="grilla_sel_ejecutivos" 
+                                                     class="_grilla panel panel-shadow" >
+                                                    <table id="tblEjecutivosPeriodo" class="table table-condensed"></table>
+                                                    <div id="pagtEjecutivosPeriodo"> </div>
+                                                </div>        
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <?php
+                                                    echo CHtml::ajaxSubmitButton(
+                                                            'Revisar historial', CHtml
+                                                            ::normalizeUrl(array(
+                                                                'rptResumenDiarioHistorial/revisarhistorial'
+                                                                , 'render' => true))
+                                                            , array(
+                                                        'dataType' => 'json',
+                                                        'type' => 'post',
+                                                        'beforeSend' => 'function() {blockUIOpen();}',
+                                                        'success' => 'function(data) {
+					blockUIClose();
+					setMensaje(data.ClassMessage, data.Message);
+					if(data.Status==1){
+						 var datosResult = data.Result;
+						if(datosResult[\'estadoGeneracion\'])
+						{
+							$("#tblGridDetalle").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'detalle\']}).trigger(\'reloadGrid\');
+							$("#tblResumenGeneral").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenGeneral\']}).trigger(\'reloadGrid\');
+							$("#tblResumenVisitas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitas\']}).trigger(\'reloadGrid\');
+							$("#tblResumenVisitasValidasInvalidas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVisitasValidasInvalidas\']}).trigger(\'reloadGrid\');
+							$("#tblPrimeraUltimaVisita").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenPrimeraUltima\']}).trigger(\'reloadGrid\');
+							$("#tblResumenVentas").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenVentas\']}).trigger(\'reloadGrid\');
+							$("#tblResumenTiempos").setGridParam({datatype: \'jsonstring\', datastr: datosResult[\'resumenTiempos\']}).trigger(\'reloadGrid\');
+
+							$("#d_comentariosSupervision").val(datosResult[\'comentarioSupervisor\']);
+
+							$("#RptResumenDiarioHistorialForm_enlaceMapa").val(datosResult[\'enlaceMapa\']);
+							mostrarVisitasEnMapa2(datosResult[\'coordenadasClientes\'],datosResult[\'coordenadasVisitas\']);
+						}
+						else
+						{
+							$("#tblGridDetalle").jqGrid("clearGridData", true).trigger("reloadGrid");
+							$("#tblResumenGeneral").jqGrid("clearGridData", true).trigger("reloadGrid");
+							$("#tblResumenVisitas").jqGrid("clearGridData", true).trigger("reloadGrid");
+							$("#tblResumenVisitasValidasInvalidas").jqGrid("clearGridData", true).trigger("reloadGrid");
+							$("#tblPrimeraUltimaVisita").jqGrid("clearGridData", true).trigger("reloadGrid");
+							$("#tblResumenVentas").jqGrid("clearGridData", true).trigger("reloadGrid");
+							$("#tblResumenTiempos").jqGrid("clearGridData", true).trigger("reloadGrid");
+
+							$("#d_comentariosSupervision").val(\'\');
+							initMap2();
+						}
+					} else{
+						$.each(data, function(key, val) {
+						$("#frmBankStat #"+key+"_em_").text(val);
+						$("#frmBankStat #"+key+"_em_").show();
+						});
+						}
+					} ',
+                                                        'error' => 'function(xhr,st,err) {
+						blockUIClose();
+						RedirigirError(xhr.status);
+					}')
+                                                            , array('id' => 'btnGenerate'
+                                                        , 'class' => 'btn btn-block btn-success btn-sm'
+                                                        , "data-dismiss" => 'modal'
+                                                    ));
+                                                    ?>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <?php
+                                                    echo CHtml::Button(
+                                                            'Limpiar'
+                                                            , array('id' => 'btnLimpiarRevisionHistorial'
+                                                        , 'class' => 'btn btn-block btn-primary'
+                                                        , "data-dismiss" => 'modal'
+                                                    ));
+                                                    ?>
+                                                </div>
+                                                <?php $this->endWidget(); ?>
+                                            </div>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                        <!-- /.modal-dialog -->
+                                    </div>
+                                </div>
+                                <!-- /.FIN MODAL -->
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="box box-primary">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <table id="tblResumenGeneral" class="table table-condensed"></table>
+                                        </div>
+                                        <div class="col-md-4">
                                             <table id="tblResumenVisitas" class="table table-condensed"></table>
                                         </div>
-                                        <div style="margin-left: 10px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                                        <div class="col-md-4">
                                             <table id="tblResumenVisitasValidasInvalidas" class="table table-condensed"></table>
                                         </div>
-                                        <div style="margin-left: 10px" id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
                                             <table id="tblPrimeraUltimaVisita" class="table table-condensed"></table>
                                         </div>
-                                    </div>
-                                    <div  style="display: flex; justify-content: flex-start;">
-                                        <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
+                                        <div class="col-md-4">
                                             <table id="tblResumenVentas" class="table table-condensed"></table>                
                                         </div>
-                                        <div id="grilla" class="_grilla panel panel-shadow" style="margin-left: 10px;background-color: transparent">
+                                        <div class="col-md-4">
                                             <table id="tblResumenTiempos" class="table table-condensed"></table>                
                                         </div>
                                     </div>
-                                    <!--<br/>-->
-                                    <!--                    <div  style="display: flex; justify-content: flex-start;">
-                                                            <div id="grilla" class="_grilla panel panel-shadow" style="background-color: transparent">
-                                                                <h1>Comentario del supervisor de zona:</h1>
-                                                                <br/>
-                                    <?php
-//                                echo CHtml::textArea('d_comentarioSupervision', '', array(
-//                                    'placeholder' => 'Ingrese un nuevo comentario'
-//                                    , 'readonly' => false
-//                                    , 'onblur' => 'setComentarioSupervisor(document.getElementById(\'d_comentarioSupervision\').value)'
-//                                    , 'id' => 'd_comentarioSupervision', 'cols' => 50, 'rows' => 2, 'maxlength' => 200)
-//                                );
-                                    ?>  
-                                                                <h1>Comentarios anteriores:</h1>
-                                                                <br/>
-                                    <?php
-//                                echo CHtml::textArea('d_comentariosSupervision', '', array(
-//                                    'placeholder' => 'Ingrese el comentario'
-//                                    , 'readonly' => TRUE
-//                                    , 'disabled' => TRUE
-//                                    , 'id' => 'd_comentariosSupervision'
-//                                    , 'cols' => 50
-//                                    , 'rows' => 5
-//                                    , 'maxlength' => 100)
-//                                );
-                                    ?>      
-                                                            </div>
-                                    
-                                                        </div>-->
-                                    <!--<br/>-->
-                                    <div class="margin">
-                                        <div class="btn-group">
-                                            <?php
-                                            echo CHtml::Button(
-                                                    'Exportar Resumen'
-                                                    , array('id' => 'btnExcelResumen'
-                                                , 'class' => 'btn btn-warning btn-sm'));
-                                            ?> 
-                                        </div>
-                                        <div class="btn-group">
-                                            <?php
-                                            echo CHtml::Button(
-                                                    'Exportar Detalle'
-                                                    , array('id' => 'btnExcelDetalle'
-                                                , 'class' => 'btn btn-warning btn-sm'));
-                                            ?> 
-                                        </div>
-                                        <div class="btn-group">
-                                            <?php
-                                            echo CHtml::Button(
-                                                    'Exportar Clientes no visitados'
-                                                    , array('id' => 'btnExcelNoVisitados'
-                                                , 'class' => 'btn btn-warning btn-sm'));
-                                            ?> 
-                                        </div>
-                                        <div class="btn-group">
-                                            <?php
-                                            echo CHtml::Button(
-                                                    'Exportar Tiempos gestion'
-                                                    , array('id' => 'btnExcelTiemposGestion'
-                                                , 'class' => 'btn btn-warning btn-sm'));
-                                            ?>
-                                        </div>
-                                        <div class="btn-group">
-                                            <?php
-                                            echo CHtml::Button(
-                                                    'Exportar Estado visita x Ruta'
-                                                    , array('id' => 'btnExcelEstadoRuta'
-                                                , 'class' => 'btn btn-warning btn-sm'));
-                                            ?>
-                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="box box-primary">
+                                    <div class="btn-group">
+                                        <?php
+                                        echo CHtml::Button(
+                                                'Exportar Resumen'
+                                                , array('id' => 'btnExcelResumen'
+                                            , 'class' => 'btn btn-warning btn-sm'));
+                                        ?> 
                                     </div>
-                                    <div>
-                                        <table id="tblGridDetalle" class="table table-condensed"></table>
-                                        <div id="pagGrid"> </div>
+                                    <div class="btn-group">
+                                        <?php
+                                        echo CHtml::Button(
+                                                'Exportar Detalle'
+                                                , array('id' => 'btnExcelDetalle'
+                                            , 'class' => 'btn btn-warning btn-sm'));
+                                        ?> 
                                     </div>
-                                    <h1>Mapa</h1>
-                                    <div  style="display: flex; justify-content: flex-start; border:1px solid green; width: 300px">
-                                        <h3 style="margin-top: 5px">Leyenda :</h3>
-                                        <div style="margin-top: 10px;margin-left: 30px; width:10px;height:10px;background-color: #dd4b4b; " id="grilla" class="_grilla panel panel-shadow"></div>
-                                        <div style="margin-top: 10px;margin-left: 5px; background-color: transparent; " id="grilla" class="_grilla panel panel-shadow">CLIENTE</div>
-                                        <div style="margin-top: 10px;margin-left: 50px; width:10px;height:10px;background-color: #0288d1; " id="grilla" class="_grilla panel panel-shadow"></div>
-                                        <div style="margin-top: 10px;margin-left: 5px; background-color: transparent; " id="grilla" class="_grilla panel panel-shadow">VISITA</div>
+                                    <div class="btn-group">
+                                        <?php
+                                        echo CHtml::Button(
+                                                'Exportar Clientes no visitados'
+                                                , array('id' => 'btnExcelNoVisitados'
+                                            , 'class' => 'btn btn-warning btn-sm'));
+                                        ?> 
                                     </div>
+                                    <div class="btn-group">
+                                        <?php
+                                        echo CHtml::Button(
+                                                'Exportar Tiempos gestion'
+                                                , array('id' => 'btnExcelTiemposGestion'
+                                            , 'class' => 'btn btn-warning btn-sm'));
+                                        ?>
+                                    </div>
+                                    <div class="btn-group">
+                                        <?php
+                                        echo CHtml::Button(
+                                                'Exportar Estado visita x Ruta'
+                                                , array('id' => 'btnExcelEstadoRuta'
+                                            , 'class' => 'btn btn-warning btn-sm'));
+                                        ?>
+                                    </div>
+                                </div>
+                                <div>
+                                    <table id="tblGridDetalle" class="table table-condensed"></table>
+                                    <div id="pagGrid"> </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="box box-primary">
+                                    <!--<h1>Mapa</h1>-->
+                                    <div class="col-md-3"><h4 style="margin-top: 5px">Leyenda :</h4></div>
+                                    <div style="margin-top: 10px;margin-left: 30px; width:10px;height:10px;background-color: #dd4b4b;"class="col-md-2"></div>
+                                    <div class="col-md-3">CLIENTE</div>
+                                    <div style="margin-top: 10px;margin-left: 50px; width:10px;height:10px;background-color: #0288d1;"class="col-md-2"></div>
+                                    <div class="col-md-3">VISITA</div>
                                     <div id="map"></div>
-                                    <?php // endif;                   ?>
                                 </div>
                             </div>
                         </div>
@@ -863,7 +739,7 @@ $this->pageTitle = $pagina_nombre;
                 </div>
             </div>
         </div>
-
+        <!--CONTROL DE CAPILARIDAD Y SELL-IN-->
         <div class="tab-pane" id="tab_3">
             <div class="box-body">
                 <div class="row">
@@ -1081,6 +957,7 @@ $this->pageTitle = $pagina_nombre;
             </div>
         </div>
 
+        <!--CONTROL ALTAS-->
         <div class="tab-pane" id="tab_4">
             <div class="box-body">
                 <div class="row">
@@ -1236,19 +1113,9 @@ $this->pageTitle = $pagina_nombre;
             </div>
         </div>
 
+        <!--NOTIFICACIÓN ALTAS FUERA DE ZONA-->
         <div class="tab-pane" id="tab_5">
             <div class="box-body">
-                <!--                <div class="row">
-                                    <div class="col-md-3">
-                <?php
-                //                        echo CHtml::submitButton(
-                //                                'Buscar Periodos', array(
-                //                            'id' => 'btnBuscarPeriodos'
-                //                            , 'class' => 'btn btn-block btn-primary btn-sm'
-                //                        ));
-                ?>      
-                                    </div>
-                                </div>-->
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="box box-primary">

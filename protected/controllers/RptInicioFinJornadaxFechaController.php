@@ -23,7 +23,9 @@ class RptInicioFinJornadaxFechaController extends Controller {
 //        var_dump($accionHistorial, $fechagestion, $horaInicioGestion, $horaFinGestion, $codigoEjecutivo);        die();
         $fHistorial = new FHistorialModel();
         $historial = $fHistorial->getHistorialxVendedorxFechaxHoraInicioxHoraFin(
-                $fechagestion
+                0
+                ,''
+                ,$fechagestion
                 , $horaInicioGestion
                 , $horaFinGestion
                 , $codigoEjecutivo

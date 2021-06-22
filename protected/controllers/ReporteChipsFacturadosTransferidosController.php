@@ -27,6 +27,8 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
                 $datosFacturadosNoTransferidos = $facturadosNoTansferidos->getChipsFacturadosNoTransferidos();
                 $noFacturadosTansferidos = new FChipsTransferidosModel();
                 $datosNoFacturadosTransferidos = $noFacturadosTansferidos->getChipsNoFacturadosTransferidos();
+
+                // var_dump($datosFacturadosNoTransferidos);die();
                 foreach ($datosFacturadosNoTransferidos as $item) {
                     $lote = $transferencias->getLotexICC($item['i_imei']);
                     if (count($lote) > 0) {
@@ -47,6 +49,7 @@ class ReporteChipsFacturadosTransferidosController extends Controller {
                     unset($infoFacturadosNoTransferidos);
                 }
                 foreach ($datosNoFacturadosTransferidos as $item) {
+                    // var_dump($item);die();
                     $infoNoFacturadosTransferidos = array(
                         'FECHA' => $item['VM_FECHA'],
                         'EJECUTIVO' => $item['VM_NOMBREDISTRIBUIDOR'],

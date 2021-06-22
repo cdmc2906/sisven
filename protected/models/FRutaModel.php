@@ -10,14 +10,14 @@ class FRutaModel extends DAOModel {
 
         $resultado1 = $command1->queryRow();
         $ultimacarga = $resultado1['ultimacarga'];
-
+// var_dump  ($ultimacarga);die();
         return $ultimacarga;
 //        var_dump($sql);        die();
-        $command = $this->connection->createCommand($sql);
-        $data = $command->queryAll();
-//        var_dump($data);        die();
-        $this->Close();
-        return $data;
+//         $command = $this->connection->createCommand($sql);
+//         $data = $command->queryAll();
+// //        var_dump($data);        die();
+//         $this->Close();
+//         return $data;
     }
 
     public function getCargaAnterior() {

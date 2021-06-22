@@ -11,7 +11,7 @@ function ConfigurarGrid() {
         loadonce: true,
         datatype: 'json',
         mtype: 'POST',
-        url: MetodoListar,
+        url: VerDatosArchivo,
         colNames: [
             'CODIGO',
             'NOMBRE',

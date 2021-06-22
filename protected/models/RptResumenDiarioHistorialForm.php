@@ -18,16 +18,15 @@ class RptResumenDiarioHistorialForm extends CFormModel {
     public $enlaceMapa;
     public $accionHistorial;
     public $semanaRevision;
-    public $fechaInicioFinJornada;
-    public $horaFinGestionJornada;
-    public $horaInicioGestionJornada;
-    public $tipoFechaJornadaPeriodo;
-    public $fechaInicioJornadaPeriodo;
-    public $fechaFinJornadaPeriodo;
+    
+    public $fechaInicioJornada;
+    public $fechaFinJornada;
+    
+    public $horaInicioJornada;
+    public $horaFinJornada;
+    
     public $tipoUsuarioJornada;
-    public $horaInicioJornadaPeriodo;
-    public $horaFinJornadaPeriodo;
-    public $tipoUsuarioPeriodo;
+    
     public $anioFiltro;
     public $periodoFiltro;
 
@@ -55,9 +54,10 @@ class RptResumenDiarioHistorialForm extends CFormModel {
                 ,accionHistorial
                 ,semanaRevision
                 
-                ,fechaInicioFinJornada
-                ,horaFinGestionJornada
-                ,horaInicioGestionJornada
+                ,fechaInicioJornada
+                ,fechaFinJornada
+                ,horaInicioJornada
+                ,horaFinJornada
                 ,tipoUsuarioJornada
                 
                 ,anioFiltro
@@ -83,16 +83,13 @@ class RptResumenDiarioHistorialForm extends CFormModel {
             'enlaceMapa' => 'Ingresar el enlace del mapa',
             'accionHistorial' => 'Accion historial',
             'semanaRevision' => 'Semana revision',
-            'fechaInicioFinJornada' => 'Fecha Inicio Jornada',
-            'horaFinGestionJornada' => 'Hora Fin Jornada',
-            'horaInicioGestionJornada' => 'Hora Inicio Jornada',
-            'tipoUsuarioJornada' => 'Tipo usuario',
-            'tipoFechaJornadaPeriodo' => 'Tipo Fecha',
-            'fechaInicioJornadaPeriodo' => 'Fecha Inicio',
-            'fechaFinJornadaPeriodo' => 'Fecha Fin',
-            'horaInicioJornadaPeriodo' => 'Inicio Jornada',
-            'horaFinJornadaPeriodo' => 'Fin Jornada',
-            'tipoUsuarioPeriodo' => 'Tipo usuario',
+            
+            'fechaInicioJornada' => 'Fecha Inicio Jornada',
+            'fechaFinJornada' => 'Fecha Fin Jornada',
+            'horaInicioJornada' => 'Hora Inicio Jornada',
+            'horaFinJornada' => 'Hora Fin Jornada',
+            'tipoUsuarioJornada' => 'Tipo usuario Jornada',
+            
             'anioFiltro' => 'Anio',
             'periodoFiltro' => 'Periodo',
         );

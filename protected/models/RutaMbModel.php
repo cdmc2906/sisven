@@ -23,6 +23,8 @@
  * @property string $r_fch_desde
  * @property string $r_fch_hasta
  * @property integer $r_usuario_ing_mod
+ * @property string $r_telefono
+ * @property string $r_fax
  *
  * The followings are the available model relations:
  * @property TbPeriodoGestion $pg
@@ -48,11 +50,11 @@ class RutaMbModel extends CActiveRecord
 			array('pg_id, r_semana, r_dia, r_secuencia, r_estatus, r_numero_carga_informacion, r_usuario_ing_mod', 'numerical', 'integerOnly'=>true),
 			array('r_ruta, r_cod_cliente', 'length', 'max'=>100),
 			array('r_nom_cliente, r_tipo_negocio, r_cod_direccion', 'length', 'max'=>200),
-			array('r_direccion, r_referencia', 'length', 'max'=>500),
+			array('r_direccion, r_referencia, r_telefono, r_fax', 'length', 'max'=>500),
 			array('r_fch_ingreso, r_fch_modificacion, r_fch_desde, r_fch_hasta', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('r_cod, pg_id, r_ruta, r_cod_cliente, r_nom_cliente, r_tipo_negocio, r_cod_direccion, r_direccion, r_referencia, r_semana, r_dia, r_secuencia, r_estatus, r_numero_carga_informacion, r_fch_ingreso, r_fch_modificacion, r_fch_desde, r_fch_hasta, r_usuario_ing_mod', 'safe', 'on'=>'search'),
+			array('r_cod, pg_id, r_ruta, r_cod_cliente, r_nom_cliente, r_tipo_negocio, r_cod_direccion, r_direccion, r_referencia, r_semana, r_dia, r_secuencia, r_estatus, r_numero_carga_informacion, r_fch_ingreso, r_fch_modificacion, r_fch_desde, r_fch_hasta, r_usuario_ing_mod, r_telefono, r_fax', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -93,6 +95,8 @@ class RutaMbModel extends CActiveRecord
 			'r_fch_desde' => 'R Fch Desde',
 			'r_fch_hasta' => 'R Fch Hasta',
 			'r_usuario_ing_mod' => 'R Usuario Ing Mod',
+			'r_telefono' => 'R Telefono',
+			'r_fax' => 'R Fax',
 		);
 	}
 
@@ -133,6 +137,8 @@ class RutaMbModel extends CActiveRecord
 		$criteria->compare('r_fch_desde',$this->r_fch_desde,true);
 		$criteria->compare('r_fch_hasta',$this->r_fch_hasta,true);
 		$criteria->compare('r_usuario_ing_mod',$this->r_usuario_ing_mod);
+		$criteria->compare('r_telefono',$this->r_telefono,true);
+		$criteria->compare('r_fax',$this->r_fax,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

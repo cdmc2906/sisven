@@ -5,18 +5,12 @@
  * @fecha 
  * @author
  */
-class ValidacionChipForm extends CFormModel {
+class ConsultaChipForm extends CFormModel {
 
-    public $tipoValidacion;
-    public $operadora;
+    public $codigoAcceso;
     public $min;
     public $icc;
     public $codigoLocal;
-    public $reportadoPor;
-    public $ejecutivoReporta;
-    public $reportadoVia;
-//    public $fechaActivaCliente;
-    public $promocion;
 
     /**
      * Declares the validation rules.
@@ -24,22 +18,13 @@ class ValidacionChipForm extends CFormModel {
     public function rules() {
         return array(
             array('
-                tipoValidacion,
-                operadora,
                 codigoLocal,
-                reportadoPor,
-                reportadoVia,
                 ', 'required'),
             array('
-               tipoValidacion,
-               operadora,
+                codigoAcceso,
                 min,
                 icc,
                 codigoLocal,
-                reportadoPor,
-                ejecutivoReporta,
-                reportadoVia,
-                promocion,
                 ', 'safe'),
         );
     }
@@ -51,16 +36,10 @@ class ValidacionChipForm extends CFormModel {
      */
     public function attributeLabels() {
         return array(
-            'tipoValidacion' => 'Tipo validacion',
-            'operadora' => 'Operadora',
-            'min' => 'Ingrese min validar-aaaa/mm/dd',
-            'icc' => 'Ingrese icc validar',
-            'codigoLocal' => 'Codigo del local',
-            'reportadoPor' => 'Reportado por',
-            'ejecutivoReporta' => 'Ejecutivo',
-            'reportadoVia' => 'Reportado via',
-//            'fechaActivaCliente' => 'Fecha activacion',
-            'promocion' => 'Promocion',
+            'codigoAcceso' => 'Clave de acceso',
+            'min' => 'Ingrese el/los MIN(es) a validar',
+            'icc' => 'Ingrese el/los ICC(es) a validar',
+            'codigoLocal' => 'Codigo del local TCQU',
         );
     }
 

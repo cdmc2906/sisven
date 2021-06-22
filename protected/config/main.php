@@ -25,7 +25,7 @@ return array(
             'class' => 'system.gii.GiiModule',
             'password' => '1234',
             // If removed, Gii defaults to localhost only. Edit carefully to taste.
-            'ipFilters' => array('127.0.0.1', '::1', '10.130.1.67'),
+            'ipFilters' => array('127.0.0.1', '::1', '10.130.1.68'),
         ),
         'cruge' => array(
             'tableprefix' => 'cruge_',
@@ -202,7 +202,9 @@ return array(
         'ivaincdoce' => '1.12',
         'archivosConsumo' => 'C:\carga_mobilvendor\consumo' . date('YmdHs') . '.csv',
         'archivosCompra' => 'C:\carga_mobilvendor\compra' . date('YmdHs') . '.csv',
-        'archivosIndicadores' => 'C:\carga_mobilvendor\indicador' . date('YmdHs') . '.csv',
+//        'archivosIndicadores' => 'C:\carga_mobilvendor\indicador' . date(FORMATO_FECHA_LONG_6) . '.csv',
+//        'archivosIndicadores' => 'C:\carga_mobilvendor\indicador' . date(FORMATO_FECHA_LONG_6) ,
+        'archivosIndicadores' => 'C:\carga_mobilvendor\\' . date(FORMATO_FECHA_LONG_6).'_' ,
         'archivosHistorialMb' => 'C:\carga_mobilvendor\historial' . date('YmdHs') . '.csv',
         'archivosMinesValidacion' => 'C:\carga_mobilvendor\minesValidacion' . date('YmdHs') . '.csv',
         'archivosOrdenesMb' => 'C:\carga_mobilvendor\ordenes' . date('YmdHs') . '.csv',

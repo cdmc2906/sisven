@@ -82,6 +82,14 @@
 	<?php echo CHtml::encode($data->r_usuario_ing_mod); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('r_telefono')); ?>:</b>
+	<?php echo CHtml::encode($data->r_telefono); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('r_fax')); ?>:</b>
+	<?php echo CHtml::encode($data->r_fax); ?>
+	<br />
+
 	*/ ?>
 
 </div>

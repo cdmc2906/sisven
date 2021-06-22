@@ -36,6 +36,7 @@ function ConfigurarGrid() {
         mtype: 'POST',
         url: 'ConfigurarGrid',
         colNames: [
+            'FECHA_REVISION',
             'TIPO',
             'SUBTIPO',
             'MIN_ICC',
@@ -88,6 +89,7 @@ function ConfigurarGrid() {
             'PROMO_REPORTA_VIA',
         ],
         colModel: [
+            {name: 'FECHA_REVISION', index: 'FECHA_REVISION', width: 75, sortable: false, frozen: true, },
             {name: 'TIPO', index: 'TIPO', width: 70, sortable: false, frozen: true, },
             {name: 'SUBTIPO', index: 'SUBTIPO', width: 70, sortable: false, frozen: true, },
             {name: 'MIN_ICC', index: 'MIN_ICC', width: 150, sortable: false, frozen: true, },
@@ -278,8 +280,8 @@ function reportarValidacion() {
                         , fila.VENTAS_FECHA
                         , separadorMensaje, 'ALTAS_FECHA_ALTA '
                         , fila.ALTAS_FECHA_ALTA
-                        , separadorMensaje, 'PROMO_VALIDACION '
-                        , fila.PROMO_VALIDACION);
+                        , separadorMensaje, 'PROMO_VALIDACION *'
+                        , fila.RESULTADO_VALIDA,'*');
                 mensaje = mensaje.concat(filaSeleccionada, nuevaLinea);
             }
         }

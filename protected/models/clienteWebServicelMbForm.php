@@ -4,21 +4,21 @@
  * @fecha 
  * @author
  */
-class CargaHistorialMbForm extends CFormModel {
+class ClienteWebServicelMbForm extends CFormModel {
 
-    public $rutaArchivo;
-    public $periodoAbierto;
-    public $fechaUltimaCarga;
-    public $delimitadorColumnas;
+//    public $rutaArchivo;
+//    public $periodoAbierto;
+//    public $fechaUltimaCarga;
+    public $origen;
 
     /**
      * Declares the validation rules.
      */
     public function rules() {
         return array(
-            array('delimitadorColumnas', 'required'),
-            array('rutaArchivo,delimitadorColumnas,fechaUltimaCarga', 'safe'),
-            array('rutaArchivo', 'file', 'types' => 'csv,xls,xlsx')
+            array('origen', 'required'),
+//            array('rutaArchivo,delimitadorColumnas,fechaUltimaCarga', 'safe'),
+//            array('rutaArchivo', 'file', 'types' => 'csv,xls,xlsx')
         );
     }
 
@@ -30,10 +30,10 @@ class CargaHistorialMbForm extends CFormModel {
     public function attributeLabels() {
         return array(
 //            'fechaConsumo' => 'Fecha Consumo',
-            'rutaArchivo' => 'Archivo Historial',
-            'delimitadorColumnas' => 'Delimitador columnas archivo',
-            'fechaUltimaCarga' => 'Ultima fecha carga historial',
-            'periodoAbierto' => 'Periodo Abierto',
+//            'rutaArchivo' => 'Archivo Historial',
+//            'delimitadorColumnas' => 'Delimitador columnas archivo',
+//            'fechaUltimaCarga' => 'Ultima fecha carga historial',
+            'origen' => 'Origen Datos',
         );
     }
 

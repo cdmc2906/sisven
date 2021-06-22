@@ -73,13 +73,7 @@ class FHistorialModel extends DAOModel {
                 ORDER BY H_FECHA
                     ;
             ";
-//        if ($codCliente == "TCQU180168"&&$codigoHistorial=="647061") {
-//            var_dump($sql);
-//            die();
-//        }
-//        if ($codCliente == 'TCQU170109') {
-//            var_dump($sql);            die();
-//        }
+//       var_dump($sql);        die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
 //        var_dump($data);        die();
@@ -117,30 +111,45 @@ class FHistorialModel extends DAOModel {
         return $data;
     }
 
-    public function getHistorialxVendedorxFechaxHoraInicioxHoraFin($fechagestion, $horaInicio, $horaFin, $ejecutivo) {
+    public function getHistorialxVendedorxFechaxHoraInicioxHoraFin(
+            $filtrarAccion
+            , $accion = 'Inicio Visita'
+            , $fechagestion
+            , $horaInicio
+            , $horaFin
+            , $ejecutivo) {
+
         $fechaInicio = $fechagestion . ' ' . $horaInicio;
         $fechaFin = $fechagestion . ' ' . $horaFin;
 
+        $accionFiltrar = $filtrarAccion == 1 ? "AND H_ACCION = '" . $accion . "'" : "";
+
+//        var_dump($filtrarAccion, $accionFiltrar);die();
+
         $sql = "
-            SELECT 
+             SELECT 
                     " . FuncionesBaseDatos::convertToDateTimeYYYYMMDDHHMM('sqlsrv', 'H_FECHA') . " AS FECHAVISITA
                     ,H_COD_CLIENTE AS CODIGOCLIENTE
                     ,H_NOM_CLIENTE AS NOMBRECLIENTE
+                    ,H_RUTA AS RUTAVISITA
+                    ,h_latitud AS LATITUD
+                    ,h_longitud AS LONGITUD
                     ,h_id AS IDHISTORIAL
                     ,h_semana AS SEMANAHISTORIAL
                     ,H_ACCION as accion
                     ,h_cod_accion as codigoitem
-                    , CAST(COALESCE(SUM(O_SUBTOTAL/" . PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI . "),0) AS int)AS CHIPS                   
-                FROM tb_historial_mb 
-                    left outer join tb_ordenes_mb  
-                        on tb_historial_mb.h_cod_accion=tb_ordenes_mb.o_codigo_mb
+                    ,h_cod_comentario as CODIGOCOMENTARIO
+                    --,'' as CHIPS
+                    --,CAST(COALESCE(SUM(O_SUBTOTAL/" . PRECIO_UNITARIO_PRODUCTO_CHIP_MOVI . "),0) AS int)AS CHIPS   
+                FROM tb_historial_mb
                 WHERE 1=1
+                    AND H_COD_CLIENTE <>'null'
                     AND H_FECHA BETWEEN '" . $fechaInicio . "' AND '" . $fechaFin . "'
                     AND H_USUARIO='" . $ejecutivo . "'
-                GROUP BY H_FECHA,H_COD_CLIENTE,H_NOM_CLIENTE,h_id,h_semana,H_ACCION,h_cod_accion
+                    " . $accionFiltrar . "
                 ORDER BY H_FECHA ;
             ";
-//        var_dump($sql);        die();
+//        var_dump($sql);die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
         //var_dump($data);        die();
@@ -148,7 +157,13 @@ class FHistorialModel extends DAOModel {
         return $data;
     }
 
-    public function getHistorialxVendedorxFechaxHoraInicioxHoraFinSemana($accion = 'Inicio Visita', $fechagestion, $horaInicio, $horaFin, $ejecutivo, $semana) {
+    public function getHistorialxVendedorxFechaxHoraInicioxHoraFinSemana(
+            $accion = 'Inicio Visita'
+            , $fechagestion
+            , $horaInicio
+            , $horaFin
+            , $ejecutivo
+            , $semana) {
         $fechaInicio = $fechagestion . ' ' . $horaInicio;
         $fechaFin = $fechagestion . ' ' . $horaFin;
 
@@ -180,12 +195,12 @@ class FHistorialModel extends DAOModel {
     }
 
     public function getValidarVisitaClientexVendedorxFechaxPeriodo(
-    $accion = 'Inicio Visita'
-    , $codigoCliente
-    , $codigoEjecutivo
-    , $fechagestion
-    , $semana
-    , $periodo
+            $accion = 'Inicio Visita'
+            , $codigoCliente
+            , $codigoEjecutivo
+            , $fechagestion
+            , $semana
+            , $periodo
     ) {
 
         $fechaInicio = $fechagestion . ' ' . '00:00:00';
@@ -378,10 +393,10 @@ class FHistorialModel extends DAOModel {
     }
 
     public function getHistorialVisitaxEjecutivoxClientexFecha(
-    $accion = 'Inicio Visita'
-    , $codigoejecutivo
-    , $codigocliente
-    , $fecha) {
+            $accion = 'Inicio Visita'
+            , $codigoejecutivo
+            , $codigocliente
+            , $fecha) {
 //        $anio = $datos['anio'];
         $sql = "
             SELECT 
@@ -469,14 +484,14 @@ class FHistorialModel extends DAOModel {
     }
 
     public function getDatosUltimaVisitaxEjecutivoxAccionxCodClientexFechaInicioxFechaFinxHoraInicioxHoraFinxRuta(
-    $codigoEjecutivo
-    , $accion = 'Inicio Visita'
-    , $codigoCliente
-    , $fechaInicio
-    , $fechaFin
-    , $horaInicio
-    , $horaFin
-    , $ruta) {
+            $codigoEjecutivo
+            , $accion = 'Inicio Visita'
+            , $codigoCliente
+            , $fechaInicio
+            , $fechaFin
+            , $horaInicio
+            , $horaFin
+            , $ruta) {
         $sql = "
               SELECT 
                    h_fecha
@@ -760,7 +775,7 @@ class FHistorialModel extends DAOModel {
         return $data;
     }
 
-    public function getDetalleClientesVisitadosAcumulado($fechaInicio, $fechaFin,$usuario,  $accion = 'Inicio Visita') {
+    public function getDetalleClientesVisitadosAcumulado($fechaInicio, $fechaFin, $usuario, $accion = 'Inicio Visita') {
 
         $sql = "EXEC [SP_VISITAS_ACUMULADAS_MES] '$fechaInicio','$fechaFin','$usuario';";
 //        var_dump($sql);        die();

@@ -420,6 +420,12 @@
                                                     , 'visible' => $verMenusAdmin
 //                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
                                                 ),
+                                                array(
+                                                    'label' => 'WebService'
+                                                    , 'url' => array('/obtieneDatosWebService/index')
+                                                    , 'visible' => $verMenusAdmin
+//                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
+                                                ),
                                             ),
                                             'linkLabelWrapper' => 'i',
                                             'linkLabelWrapperHtmlOptions' => array('class' => 'fa'),
@@ -722,7 +728,6 @@
                                             , 'visible' => $verMenusCallCenter
 //                                        , 'itemOptions' => array('class' => 'fa fa-circle-o'),
                                         ),
-                                        
                                         array(
                                             'label' => 'Reporte Resultados'
                                             , 'url' => array('/RptResultadosRevisionMines/')
@@ -766,7 +771,7 @@
 
             <div class="content-wrapper">
 
-                <?php // if (isset($this->breadcrumbs)): ?>
+                <?php // if (isset($this->breadcrumbs)):  ?>
                 <?php // $this->widget('zii.widgets.CBreadcrumbs', array('links' => $this->breadcrumbs,)); ?>
                 <?php // endif ?>
 
@@ -804,9 +809,9 @@
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl ?>/js/jqueryblockUI.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl ?>/js/jqueryblockUI.js"></script>
 
-<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                           ?>/assets/template/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
-<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                           ?>/assets/template/bower_components/fastclick/lib/fastclick.js"></script>-->
+<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                            ?>/assets/template/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
+<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                            ?>/assets/template/bower_components/fastclick/lib/fastclick.js"></script>-->
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/template/dist/js/adminlte.min.js"></script>
-<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                           ?>/assets/template/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>-->
+<!--<script type="text/javascript" src="<?php // echo Yii::app()->request->baseUrl;                                            ?>/assets/template/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>-->
 </body>
 </html>

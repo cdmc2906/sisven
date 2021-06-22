@@ -31,7 +31,6 @@ class CargaClientesController extends Controller {
 
             if (isset($_POST['CargaClientesForm'])) {
                 $model->attributes = $_POST['CargaClientesForm'];
-
                 if ($model->validate()) {
 
                     unset(Yii::app()->session['datosClientes']);
@@ -64,6 +63,7 @@ class CargaClientesController extends Controller {
                             }
                             $numeroBloque ++;
                         }
+//                        var_dump(1, $datosClientes);die();
                         Yii::app()->session['datosClientes'] = $datosClientes;
                     } else {
                         $response->Message = 'El archivo no contiene registros';
@@ -312,6 +312,7 @@ class CargaClientesController extends Controller {
         try {
             $response->Result = Yii::app()->session['datosClientes'];
 //            var_dump(Yii::app()->session['datosClientes']);die();
+//            Yii::app()->session['datosClientes'] = $datosClientes;
 //            unset(Yii::app()->session['datosClientes']);
         } catch (Exception $e) {
             $mensaje = array(

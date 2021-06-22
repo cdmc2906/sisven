@@ -11,7 +11,8 @@
  *
  * @author caraujo
  */
-class FuncionesBaseDatos {
+class FuncionesBaseDatos
+{
 
     /**
      * 
@@ -19,7 +20,8 @@ class FuncionesBaseDatos {
      * @param type $fecha Fecha para convertir
      * @return type resultado de conversion a tipo fecha yyy-mm-dd
      */
-    public static function convertToDate($dbms, $fecha) {
+    public static function convertToDate($dbms, $fecha)
+    {
         switch ($dbms) {
             case 'mysql':
                 return 'date(' . $fecha . ')';
@@ -35,19 +37,21 @@ class FuncionesBaseDatos {
      * @param type $fecha Fecha para convertir
      * @return type resultado de conversion a tipo tiempo hh:mm
      */
-    public static function convertToTimeHHMMSS($dbms, $fecha) {
+    public static function convertToTimeHHMMSS($dbms, $fecha)
+    {
         switch ($dbms) {
             case 'mysql':
                 return "TIME_FORMAT(' . $fecha . ', '%H:%i:%s'))";
                 break;
             case 'sqlsrv':
                 return 'CONVERT(VARCHAR(8), CAST(' . $fecha . ' AS TIME), 108)';
-//                return 'convert(date,' . $fecha . ')';
+                //                return 'convert(date,' . $fecha . ')';
                 break;
         }
     }
 
-    public static function convertToDecimal($dbms, $campo, $cantidadDigitos, $cantidadDecimales) {
+    public static function convertToDecimal($dbms, $campo, $cantidadDigitos, $cantidadDecimales)
+    {
         switch ($dbms) {
             case 'mysql':
                 return " CONVERT($campo, decimal($cantidadDigitos, $cantidadDecimales)";
@@ -63,13 +67,14 @@ class FuncionesBaseDatos {
      * @param type $fecha Fecha para convertir
      * @return type resultado de conversion a tipo date y tiempo YYYYmmdd HHMM
      */
-    public static function convertToDateTimeYYYYMMDDHHMM($dbms, $fecha) {
+    public static function convertToDateTimeYYYYMMDDHHMM($dbms, $fecha)
+    {
         switch ($dbms) {
             case 'mysql':
                 return "DATE_FORMAT(" . $fecha . ", '%Y-%m-%d %H:%i') ";
                 break;
             case 'sqlsrv':
-                return 'CONVERT(VARCHAR(16),' . $fecha . ')';
+                return 'CONVERT(VARCHAR,' . $fecha . ',120)';
                 break;
         }
     }
@@ -79,13 +84,14 @@ class FuncionesBaseDatos {
      * @param type $fecha Fecha para convertir
      * @return type resultado de conversion a tipo date y tiempo YYYYmmdd HHMM
      */
-    public static function convertToDateTimeYYYYMMDDHHMMSS($dbms, $fecha) {
+    public static function convertToDateTimeYYYYMMDDHHMMSS($dbms, $fecha)
+    {
         switch ($dbms) {
             case 'mysql':
                 return "DATE_FORMAT(" . $fecha . ", '%Y-%m-%d %H:%i') ";
                 break;
             case 'sqlsrv':
-                return 'CONVERT(VARCHAR(19),' . $fecha . ')';
+                return 'CONVERT(VARCHAR,' . $fecha . ',120)';
                 break;
         }
     }
@@ -95,7 +101,8 @@ class FuncionesBaseDatos {
      * @param type $fecha Fecha para convertir
      * @return type resultado de conversion a tipo date y tiempo YYYYmmdd HHMM
      */
-    public static function isnull($dbms) {
+    public static function isnull($dbms)
+    {
         switch ($dbms) {
             case 'mysql':
                 return 'IFNULL';
@@ -105,5 +112,4 @@ class FuncionesBaseDatos {
                 break;
         }
     }
-
 }

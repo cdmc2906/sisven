@@ -1,12 +1,12 @@
 <?php
-$pagina_nombre = 'Carga Historial Mobilvendor';
-$this->breadcrumbs = array('Cargas Informacion', $pagina_nombre => array('index'));
+$pagina_nombre = 'Cli WS Mobilvendor';
+$this->breadcrumbs = array('Conexion Web Service Mobilvendor', $pagina_nombre => array('index'));
 $this->renderPartial('/shared/_blockUI');
 $this->renderPartial('/shared/_headgrid', array('metodo' => '"VerDatosArchivo"'));
 $this->pageTitle = $pagina_nombre;
 ?>
 
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/carga/CargaHistorialMb.js"; ?>"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/cliente_webservice/ObtieneDatosWebService.js"; ?>"></script>
 <?php if (Yii::app()->user->hasFlash('resultadoHistorial')): ?>
     <div class="flash-notice">
         <?php echo Yii::app()->user->getFlash('resultadoHistorial'); ?>
@@ -24,7 +24,7 @@ $this->pageTitle = $pagina_nombre;
             'validateOnSubmit' => true,
         ),
         'htmlOptions' => array("enctype" => "multipart/form-data"),
-        'action' => Yii::app()->request->baseUrl . '/CargaHistorialMb/SubirArchivo'
+        'action' => Yii::app()->request->baseUrl . '/ObtieneDatosWebService/Consultar'
     ));
     ?>
     <div class="row">
@@ -48,15 +48,11 @@ $this->pageTitle = $pagina_nombre;
         <div class="col-md-3">
             <div class="form-group">
                 <?php
-                echo $form->labelEx($model, 'rutaArchivo');
-                echo $form->fileField($model, 'rutaArchivo');
-                echo $form->error($model, 'rutaArchivo', array('errorCssClass' => 'form-group has-error'));
-
-                echo $form->labelEx($model, 'delimitadorColumnas');
+                echo $form->labelEx($model, 'origen');
                 echo $form->dropDownList(
-                        $model, 'delimitadorColumnas', array(
-                    ';' => 'Punto y Coma',
-                    ',' => 'Coma'
+                        $model, 'origen', array(
+                    'getHistorial' => 'Historial',
+                    'getOrders' => 'Ordenes'
                         ), array(
                     'empty' => TEXT_OPCION_SELECCIONE,
                     'options' => array(0 => array('selected' => true)),
@@ -100,7 +96,11 @@ $this->pageTitle = $pagina_nombre;
                                         blockUIClose();
                                         RedirigirError(xhr.status);
                                     }'
-                ), array('id' => 'btnGenerate', 'class' => 'btn btn-success'));
+                ), array(
+            'id' => 'btnGenerate'
+            , 'class' => 'btn btn-success'
+            , 'disabled' => 'disabled')
+        );
         ?>        &nbsp        
         <?php
         echo CHtml::Button('Limpiar', array('id' => 'btnLimpiar', 'class' => 'btn btn-danger'));

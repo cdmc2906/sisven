@@ -18,9 +18,9 @@ class FChipsFacturadosModel extends DAOModel {
                 -- on  tb_indicadores.i_imei=tb_transferencia_movistar.tm_icc
             where 1=1
                 AND i_imei not in 
-                    (select vm_icc from tb_venta_movistar)
+                    (select convert(varchar(100),vm_icc) from tb_venta_movistar)
                 AND i_estado_icc='ICC OK'
-                AND i_codigo_producto IN ('5','6')
+                AND i_codigo_producto IN ('5','6','7')
                 ;
             ";
 //        var_dump($sql);        die();

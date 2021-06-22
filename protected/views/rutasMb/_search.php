@@ -106,6 +106,16 @@
 		<?php echo $form->textField($model,'r_usuario_ing_mod'); ?>
 	</div>
 
+	<div class="row">
+		<?php echo $form->label($model,'r_telefono'); ?>
+		<?php echo $form->textField($model,'r_telefono',array('size'=>60,'maxlength'=>500)); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->label($model,'r_fax'); ?>
+		<?php echo $form->textField($model,'r_fax',array('size'=>60,'maxlength'=>500)); ?>
+	</div>
+
 	<div class="row buttons">
 		<?php echo CHtml::submitButton('Search'); ?>
 	</div>

@@ -118,8 +118,8 @@ $this->pageTitle = $pagina_nombre;
                             echo $form->dropDownList(
                                     $model, 'tipoUsuario', array(
                                 'T' => 'Todos',
-                                GRUPO_EJECUTIVOS_ZONA_MOVI => 'Ejecutivos Zona',
-                                GRUPO_SUPERVISORES_MOVI => 'Supervisores',
+                                GRUPO_EJECUTIVOS_ZONA_MOVI_ZS => 'Ejecutivos Zona',
+                                GRUPO_SUPERVISORES_MOVI_ZS => 'Supervisores',
                                 GRUPO_SERVICIO_CLIENTE => 'Servicio Cliente',
                                 GRUPO_DESARROLLADORES => 'Desarrolladores',
                                     )

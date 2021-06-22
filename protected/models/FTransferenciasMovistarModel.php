@@ -38,12 +38,11 @@ class FTransferenciasMovistarModel extends DAOModel {
             ";
 //        var_dump($sql);die();   
         $command = $this->connection->createCommand($sql);
-
+        
         $data = $command->queryAll();
         $this->Close();
         return $data;
     }
-
     public function getLotexICC($iccBuscar) {
         $sql = "
             select 
@@ -53,9 +52,9 @@ class FTransferenciasMovistarModel extends DAOModel {
                 
             ";
 //        var_dump($sql);die();   
-
+        
         $command = $this->connection->createCommand($sql);
-
+        
         $data = $command->queryAll();
         $this->Close();
         return $data;

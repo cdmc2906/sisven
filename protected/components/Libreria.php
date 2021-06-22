@@ -16,16 +16,16 @@ class Libreria {
      * Haversine Formula
      * Basado en ESTO: http://www.taringa.net/posts/hazlo-tu-mismo/14270601/PHP-Calcular-distancia-entre-dos-coordenadas.html
      * Formula para sacar distancia entre dos puntos dada la latitud y longitud de dos puntos.
-     * Esta distancia tiene que estar dada en notación DECIMAL y no en SEXADECIMAL (Grados, minutos... etc)
+     * Esta distancia tiene que estar dada en notaciï¿½n DECIMAL y no en SEXADECIMAL (Grados, minutos... etc)
      * @param type $latitud 1
      * @param type $longitud 1
      * @param type $latitud 2
      * @param type $longitud 2
-     * @return type, Distancia en Kms, con 1 decimal de precisión
+     * @return type, Distancia en Kms, con 1 decimal de precisiï¿½n
      */
     // haversineGreatCircleDistance
     public function DistanciaEntreCoordenadas(
-    $latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo) {
+            $latitudeFrom, $longitudeFrom, $latitudeTo, $longitudeTo) {
         // convert from degrees to radians
 //        var_dump($latitudeFrom,$longitudeFrom,$latitudeTo,$longitudeTo);die();
         $earthRadius = 6371000;
@@ -116,14 +116,22 @@ class Libreria {
      * @return \Response
      */
     public function VerificarHistorialDiarioUsuario(
-    $ejecutivoSeleccionado
-    , $fechagestion
-    , $accionHistorial
-    , $horaInicioGestion
-    , $horaFinGestion
-    , $precisionVisitas
-    , $semanaRevision
+            $ejecutivoSeleccionado
+            , $fechagestion
+            , $accionHistorial
+            , $horaInicioGestion
+            , $horaFinGestion
+            , $precisionVisitas
+            , $semanaRevision
     ) {
+//        var_dump(
+//             $ejecutivoSeleccionado
+//            , $fechagestion
+//            , $accionHistorial
+//            , $horaInicioGestion
+//            , $horaFinGestion
+//            , $precisionVisitas
+//            , $semanaRevision);die();
 
         Yii::app()->user->setFlash('resultadoGuardarRevisionAviso', null);
         Yii::app()->user->setFlash('resultadoGuardarRevisionOK', null);
@@ -178,24 +186,42 @@ class Libreria {
             $fOrden = new FOrdenModel();
             $fRuta = new FRutaModel();
             $fEjecutivoRuta = new FEjecutivoRutaModel();
-
-            $historial = $fHistorial->getHistorialxVendedorxFechaxHoraInicioxHoraFinSemana(
-                    $accionHistorial
-                    , $fechagestion
-                    , $horaInicioGestion
-                    , $horaFinGestion
-                    , $ejecutivoSeleccionado
-                    , $semanaRevision
+//            var_dump($accionHistorial
+//                            , $fechagestion
+//                            , $horaInicioGestion
+//                            , $horaFinGestion
+//                            , $ejecutivoSeleccionado);die();
+//            var_dump($accionHistorial);die();
+            $historial = ($semanaRevision == 0) ?
+                    $fHistorial->getHistorialxVendedorxFechaxHoraInicioxHoraFin(
+                            1,
+                            $accionHistorial
+                            , $fechagestion
+                            , $horaInicioGestion
+                            , $horaFinGestion
+                            , $ejecutivoSeleccionado
+                    ) : $fHistorial->getHistorialxVendedorxFechaxHoraInicioxHoraFinSemana(
+                            $accionHistorial
+                            , $fechagestion
+                            , $horaInicioGestion
+                            , $horaFinGestion
+                            , $ejecutivoSeleccionado
+                            , $semanaRevision
             );
 
             if (isset($historial)) {
                 if (count($historial) > 0) {
                     $diaGestion = date("w", strtotime($fechagestion));
 //                    $ruta_dia_gestion = "R" . $diaGestion . '-' . $ejecutivo[0]['e_iniciales'];
-                    $ruta_dia_gestion = $fEjecutivoRuta->getRutaGestionxEjecutivoxDiaxSemana(
+//                    var_dump($semanaRevision);die();
+                    //si la 
+                    $ruta_dia_gestion = ($semanaRevision != 0) ? $fEjecutivoRuta->getRutaGestionxEjecutivoxDiaxSemana(
                                     $ejecutivoSeleccionado
                                     , $diaGestion + 1
-                                    , $semanaRevision)[0]['ruta'];
+                                    , $semanaRevision)[0]['ruta'] : $fEjecutivoRuta->getRutaGestionxEjecutivoxDia(
+                                    $ejecutivoSeleccionado
+                                    , $diaGestion + 1
+                            )[0]['ruta'];
 //            var_dump($ruta_dia_gestion);die();
 
                     $nivelCumplimiento = 0;
@@ -222,6 +248,8 @@ class Libreria {
                     $longitudClienteAnterior = 0;
                     $ultimoCodigoHistorial = 1;
 
+                    $totalClientesRuta = '';
+
                     $fPeriodoGestion = new FPeriodoGestionModel();
                     $fechaInicioPrimerPeriodo = $fPeriodoGestion->getFechaInicioPrimerPeriodo();
 
@@ -247,7 +275,7 @@ class Libreria {
                     $finVisitaAnterior = new DateTime('00:00:00');
 
                     foreach ($historial as $itemHistorial) {
-
+//                        var_dump($historial);
                         $inicioVisita = new DateTime('00:00:00');
                         $finVisita = new DateTime('00:00:00');
 
@@ -343,28 +371,34 @@ class Libreria {
 //                        var_dump($visitasValidas);
                         #FIN VALIDACION VISITA (DENTRO RANGO PRESICION VISITA)
                         #INICIO CALCULO TIEMPO GESTION
-//                        var_dump($itemHistorial['FECHAVISITA']);die();
-                        $fechaGestion = DateTime::createFromFormat('Y-m-d H:i', $itemHistorial['FECHAVISITA'])->format(FORMATO_FECHA);
-
+                        //var_dump(strlen($itemHistorial['FECHAVISITA']));die();
+                        //var_dump($itemHistorial['FECHAVISITA']);die();
+                        $fechaGestion = (strlen($itemHistorial['FECHAVISITA']) == 16) ? DateTime::createFromFormat('Y-m-d H:i', $itemHistorial['FECHAVISITA'])->format(FORMATO_FECHA) : DateTime::createFromFormat('Y-m-d H:i:s', $itemHistorial['FECHAVISITA'])->format(FORMATO_FECHA);
+                        // var_dump($fechaGestion);die();
                         $inicioFinVisitaHistorial = $fHistorial->getInicioFinVisitaClientexEjecutivoxFecha(
                                 'Inicio visita'
                                 , $fechaGestion
                                 , $ejecutivoSeleccionado
                                 , $itemHistorial['CODIGOCLIENTE']
                                 , $itemHistorial['IDHISTORIAL']);
+//                        var_dump($inicioFinVisitaHistorial);die();
+//                        var_dump($inicioVisita,$finVisita);
 
-                        $inicioVisita = DateTime::createFromFormat(FORMATO_FECHA_LONG_4, $inicioFinVisitaHistorial[0]['HORAVISITA']);
-                        $finVisita = DateTime::createFromFormat(FORMATO_FECHA_LONG_4, $inicioFinVisitaHistorial[1]['HORAVISITA']);
+                        if (isset($inicioFinVisitaHistorial[0]['HORAVISITA']) && isset($inicioFinVisitaHistorial[0]['HORAVISITA'])) {
 
-                        $tiempoGestion = $inicioVisita->diff($finVisita)->format("%h:%I:%S");
-                        $totalGestion = $this->SumaHoras($totalGestion, $tiempoGestion);
+                            $inicioVisita = DateTime::createFromFormat(FORMATO_FECHA_LONG_4, $inicioFinVisitaHistorial[0]['HORAVISITA']);
+                            $finVisita = DateTime::createFromFormat(FORMATO_FECHA_LONG_4, $inicioFinVisitaHistorial[1]['HORAVISITA']);
 
-                        if (count($detalleTiemposGestion) > 0) {
-                            $tiempoTraslado = $inicioVisita->diff($finVisitaAnterior)->format("%h:%I:%S");
-                            $totalTraslados = $this->SumaHoras($totalTraslados, $tiempoTraslado);
+                            $tiempoGestion = $inicioVisita->diff($finVisita)->format("%h:%I:%S");
+                            $totalGestion = $this->SumaHoras($totalGestion, $tiempoGestion);
+
+                            if (count($detalleTiemposGestion) > 0) {
+                                $tiempoTraslado = $inicioVisita->diff($finVisitaAnterior)->format("%h:%I:%S");
+                                $totalTraslados = $this->SumaHoras($totalTraslados, $tiempoTraslado);
+                            }
+                            $finVisitaAnterior = $finVisita;
                         }
 
-                        $finVisitaAnterior = $finVisita;
                         #FIN CALCULO TIEMPOS DE GESTION
                         #INICIO ANALISIS DE RUTA
 
@@ -827,16 +861,16 @@ class Libreria {
                     Yii::app()->session['detallerevisionhistorialitem'] = $datosDetalleGrid;
                     Yii::app()->session['resumenrevisionhistorialitem'] = $datosResumenRevisionHistorial;
 
-
                     $datos['estadoGeneracion'] = true;
                     $mensaje = '';
-                    if (count($totalClientesRuta) == 0)
-                        $mensaje = 'El periodo no tiene rutas asignadas \n';
+
+//                    if (count($totalClientesRuta) == 0)
+//                        $mensaje = 'El periodo no tiene rutas asignadas \n';
+
                     $response->Message = "Historial revisado exitosamente \n" . $mensaje;
                     $response->Status = SUCCESS;
                     $response->Result = $datos;
-                }
-                else {
+                } else {
                     $response->Message = "No existen datos para los filtros usados";
                     $response->ClassMessage = CLASS_MENSAJE_NOTICE;
                     $response->Result = $datos['estadoGeneracion'] = false;
@@ -1159,13 +1193,13 @@ class Libreria {
      * @return array Ruta verificada 
      */
     function AnalizarVisitasRuta(
-    $ejecutivo
-    , $fechaGestion
-    , $periodo
-    , $ruta
-    , $semana
-    , $accion
-    , $historial
+            $ejecutivo
+            , $fechaGestion
+            , $periodo
+            , $ruta
+            , $semana
+            , $accion
+            , $historial
     ) {
         try {
             $revisionRuta = array();
@@ -1225,5 +1259,80 @@ class Libreria {
         }
         return $revisionRuta;
     }
+
+//    function conectarws() {
+//        $sid_id = '';
+//
+//        $param = array("action" => "login", "login" => "WEBSERVICE", "password" => "Tececab2021*", "context" => "tececab2");
+//        $url = "https://s02.mobilvendor.com/web-service";
+//        $ch = curl_init();
+//        curl_setopt($ch, CURLOPT_URL, $url);
+//        curl_setopt($ch, CURLOPT_POST, true);
+//        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($param));
+//        curl_setopt($ch, CURLOPT_ENCODING, 'Content-type: application/json; charset=utf-8');
+//        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept-Language: es"));
+//        curl_setopt($ch, CURLOPT_TIMEOUT, 120000);
+//        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120000);
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//        $response = curl_exec($ch);
+//
+//        if (curl_errno($ch)) {
+//
+//            echo "Error : " . curl_error($ch);
+//        }
+//
+//        curl_close($ch);
+//        $sid_id = json_decode($response, true)["session_id"];
+//        return $sid_id;
+//    }
+//
+//    function GetHistorialWS() {
+//        $sesion_id = $this->conectarws();
+//
+//        $respuesta = array();
+//        $param = array(
+//            "action" => "getUserHistory",
+//            "session_id" => $sesion_id,
+//            "page" => 1,
+//            "filter" => ([
+//        "start_date" => "1616994000", //30 marzo 2021
+//        "end_date" => "1616994000", //30 marzo 2021
+//        "actions" =>
+//        (["form",
+//        ])
+//        ]));
+//
+//
+//        $url = "https://s02.mobilvendor.com/web-service";
+//        $ch = curl_init();
+//        curl_setopt($ch, CURLOPT_URL, $url);
+//        curl_setopt($ch, CURLOPT_POST, true);
+//        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($param));
+//        curl_setopt($ch, CURLOPT_ENCODING, 'Content-type: application/json; charset=utf-8');
+//        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept-Language: es"));
+//        curl_setopt($ch, CURLOPT_TIMEOUT, 120000);
+//        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120000);
+//        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//        $response = curl_exec($ch);
+//        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+//
+//
+//        if (curl_errno($ch)) {
+//
+//            echo "Error : " . curl_error($ch);
+//        }
+//
+//        curl_close($ch);
+//        if (isset(json_decode($response, true)["error"])) {
+//            echo "Something goes wrong!!";
+//        } else {
+//            array_push($respuesta, json_decode($response, true)["records"]);
+//            array_push($respuesta, json_decode($response, true)["pages"]);
+//            array_push($respuesta, json_decode($response, true)["count"]);
+//        }
+//        
+//        var_dump($respuesta);die();
+//        return $respuesta;
+//    }
 
 }

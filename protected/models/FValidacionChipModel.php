@@ -17,6 +17,7 @@ class FValidacionChipModel extends DAOModel {
     , $reportadoPor
     , $ejecutivoReporta = ''
     , $reportadoVia
+    , $fechaProceso
     ) {
         $largomin = strlen($minValidarOriginal);
         switch ($largomin) {
@@ -44,6 +45,7 @@ class FValidacionChipModel extends DAOModel {
                 , '" . $reportadoPor . "' AS PROMO_REPORTADO_POR
                 , '" . $ejecutivoReporta . "' AS PROMO_EJECUTIVO_REPORTA
                 , '" . $reportadoVia . "' AS PROMO_REPORTA_VIA
+                , '" . $fechaProceso . "' AS FECHA_REVISION
                 , * 
                 FROM 
                 tececab.dbo.V_CHIPS_COMPRA_ALTA_VENTA_13 AS A
@@ -73,6 +75,7 @@ class FValidacionChipModel extends DAOModel {
     , $reportadoPor
     , $ejecutivoReporta = ''
     , $reportadoVia
+    , $fechaProceso
     ) {
 
         $conWildcard = strpos($iccValidar, '%');
@@ -91,6 +94,7 @@ class FValidacionChipModel extends DAOModel {
                 ,'" . $reportadoPor . "' AS PROMO_REPORTADO_POR
                 ,'" . $ejecutivoReporta . "' AS PROMO_EJECUTIVO_REPORTA
                 ,'" . $reportadoVia . "' AS PROMO_REPORTA_VIA
+                ,'" . $fechaProceso . "' AS FECHA_REVISION
                     
             ,* 
                 FROM 
@@ -99,6 +103,57 @@ class FValidacionChipModel extends DAOModel {
                 ;";
 
 //        var_dump($sql);        die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);         die();
+        $this->Close();
+        return $data;
+    }
+
+    public function getAltasporMIN($minICC) {
+        $sql = "
+         /*  select 
+                    CONVERT(DATE,FECHA_ALTA) AS FECHA_ALTA 
+                FROM
+                    tececab.dbo.CHIP_COMPRA as a
+                WHERE 1=1
+                    and a.MIN like '%" . $minICC . "'
+                ORDER BY FECHA_COMPRA DESC*/
+                
+  select 
+ ISNULL(CONVERT(DATE,FECHA_ALTA),'') AS FECHA_ALTA 
+ FROM tececab.dbo.CHIP_COMPRA as a 
+ WHERE 1=1 and a.MIN like '%" . $minICC . "'  
+ ORDER BY FECHA_COMPRA DESC,FECHA_ALTA
+ 
+                ;";
+
+//        var_dump($sql);         die();
+        $command = $this->connection->createCommand($sql);
+        $data = $command->queryAll();
+//        var_dump($data);         die();
+        $this->Close();
+        return $data;
+    }
+    public function getAltasporICC($ICC) {
+        $sql = "
+         /*  select 
+                    CONVERT(DATE,FECHA_ALTA) AS FECHA_ALTA 
+                FROM
+                    tececab.dbo.CHIP_COMPRA as a
+                WHERE 1=1
+                    and a.MIN like '%" . $ICC . "'
+                ORDER BY FECHA_COMPRA DESC*/
+                
+  select 
+ ISNULL(CONVERT(DATE,FECHA_ALTA),'') AS FECHA_ALTA 
+ FROM tececab.dbo.CHIP_COMPRA as a 
+ WHERE 1=1 and a.ICC like '%" . $ICC . "'  
+ ORDER BY FECHA_COMPRA DESC,FECHA_ALTA
+ 
+                ;";
+
+//        var_dump($sql);         die();
         $command = $this->connection->createCommand($sql);
         $data = $command->queryAll();
 //        var_dump($data);         die();

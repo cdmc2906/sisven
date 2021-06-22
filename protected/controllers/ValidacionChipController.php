@@ -17,10 +17,15 @@ class ValidacionChipController extends Controller {
     }
 
     public function actionRevisarChips() {
+//        $fechaP = getdate();
+//        $fechaProceso = new DateTime($fechaP);
+//        $fechaProcesoFormato = $fechaProceso->format(FORMATO_FECHA_LONG_4);
+//        var_dump();        die();
         $response = new Response();
         $mensaje = '';
         $validarChip = new FValidacionChipModel();
 
+        $cantidadConsultados = 0;
         $cantidadOK = 0;
         $cantidadNOTececab = 0;
         unset(Yii::app()->session['VALIDACION']);
@@ -44,7 +49,7 @@ class ValidacionChipController extends Controller {
                     $ejecutivoReporta = $_POST['ValidacionChipForm']['ejecutivoReporta'];
                     $reportadoVia = $_POST['ValidacionChipForm']['reportadoVia'];
 
-//                    var_dump($tipoValidacion,VALIDACION_PROMO,$tipoValidacion == VALIDACION_PROMO,$idPromocion );
+//                    var_dump($tipoValidacion,VALIDACION_PROMO,$tipoValidacion == VALIDACION_PROMO,$idPromocion );die();
                     if ($tipoValidacion == VALIDACION_PROMO) {
                         if ($idPromocion != '') {
                             $valorValidarMin = isset($numeroMin[1]) ? $numeroMin[1] : '';
@@ -57,8 +62,7 @@ class ValidacionChipController extends Controller {
                     if ($reportadoPor == 'EJECUTIVO') {
                         if ($ejecutivoReporta != '')
                             $ejecutivoReportaValidado = TRUE;
-                    }
-                    else {
+                    } else {
                         $ejecutivoReportaValidado = TRUE;
                     }
 
@@ -83,28 +87,35 @@ class ValidacionChipController extends Controller {
 
                                 foreach ($mines as $min) {
                                     if (strlen($min) > 0) {
+                                        $cantidadConsultados += 1;
                                         $numeroMin = explode($separadorConsulta, $min);
 
                                         if ($tipoValidacion == VALIDACION_PROMO) {
                                             $valorValidarMin = isset($numeroMin[1]) ? $numeroMin[1] : '';
                                         } else if ($tipoValidacion == VALIDACION_AUDITORIA) {
                                             $valorValidarMin = isset($min) ? $min : '';
+                                        } else if ($tipoValidacion == VALIDACION_INVASION) {
+                                            $valorValidarMin = isset($min) ? $min : '';
                                         }
+
+                                        $fechaAlta = $validarChip->getAltasporMIN(substr($numeroMin[0], 1, 10));
 
                                         $resultadoValidaItem = $validarChip->getDatosChipsXMin(
                                                 $tipoValidacion
                                                 , $numeroMin[0]
                                                 , isset($numeroMin[1]) ? $numeroMin[1] : ''
-                                                , $this->ValidarItem(
+                                                , ($idPromocion > 0) ? $this->ValidarItemEnPromociones(
                                                         'M'
                                                         , $tipoValidacion
                                                         , $valorValidarMin
-                                                        , $idPromocion)
+                                                        , $idPromocion
+                                                        , $fechaAlta) : 'PROMO NO IDENTIFICADA'
                                                 , $operadora
                                                 , $codigoLocal
                                                 , $reportadoPor
                                                 , $ejecutivoReporta
                                                 , $reportadoVia
+                                                , date("Y-m-d H:i:s")
                                         );
 //                                        var_dump($resultadoValidaItem);die();
 
@@ -116,6 +127,7 @@ class ValidacionChipController extends Controller {
                                         } else {
                                             $CONS_MIN_NO_TECECAB = strlen($numeroMin[0]) == 10 ? NO_TECECAB : (strlen($numeroMin[0]) == 9 ? NO_TECECAB : 'MIN INCORRECTO');
                                             $noaplica = array(
+                                                'FECHA_REVISION' => date("Y-m-d H:i:s"),
                                                 'TIPO' => $tipoValidacion,
                                                 'SUBTIPO' => 'VM',
                                                 'MIN_ICC' => $numeroMin[0],
@@ -178,29 +190,36 @@ class ValidacionChipController extends Controller {
 
                                 foreach ($iccs as $icc) {
                                     if (strlen($icc) > 0) {
-
+                                        $cantidadConsultados += 1;
                                         $numeroICC = explode($separadorConsulta, $icc);
                                         if ($tipoValidacion == VALIDACION_PROMO) {
                                             $valorValidarICC = isset($numeroICC [1]) ? $numeroICC [1] : '';
                                         } else if ($tipoValidacion == VALIDACION_AUDITORIA) {
                                             $valorValidarICC = isset($icc) ? $icc : '';
+                                        } else if ($tipoValidacion == VALIDACION_INVASION) {
+                                            $valorValidarICC = isset($icc) ? $icc : '';
                                         }
+
+//                                        var_dump($tipoValidacion, $valorValidarICC, $idPromocion);
+//                                        die();
+                                        $fechaAlta = $validarChip->getAltasporICC(substr($numeroICC[0], 1, 19));
 
                                         $resultadoValidaItem = $validarChip->getDatosChipsXICC(
                                                 $tipoValidacion
                                                 , $numeroICC[0]
                                                 , isset($numeroICC[1]) ? $numeroICC[1] : ''
-                                                , $this->ValidarItem(
+                                                , ($idPromocion > 0) ? $this->ValidarItemEnPromociones(
                                                         'I'
                                                         , $tipoValidacion
                                                         , $valorValidarICC
                                                         , $idPromocion
-                                                )
+                                                        , $fechaAlta) : 'PROMO NO IDENTIFICADA'
                                                 , $operadora
                                                 , $codigoLocal
                                                 , $reportadoPor
                                                 , $ejecutivoReporta
                                                 , $reportadoVia
+                                                , date("Y-m-d H:i:s")
                                         );
 
                                         if (count($resultadoValidaItem) > 0) {
@@ -209,13 +228,15 @@ class ValidacionChipController extends Controller {
                                                 $cantidadOK += 1;
                                             }
                                         } else {
+//                                            var_dump(strlen($numeroICC[0]) == 19,$numeroICC);die();
                                             $CONS_ICC_NO_TECECAB = strlen($numeroICC[0]) == 19 ? NO_TECECAB : 'ICC INCORRECTO';
                                             $noaplica = array(
+                                                'FECHA_REVISION' => date("Y-m-d H:i:s"),
                                                 'TIPO' => $tipoValidacion,
                                                 'SUBTIPO' => 'VI',
                                                 'MIN_ICC' => $numeroICC[0],
                                                 'CAMPO_VALIDA' => isset($numeroICC[1]) ? $numeroICC[1] : '',
-                                                'RESULTADO_VALIDA' => $CONS_MIN_NO_TECECAB,
+                                                'RESULTADO_VALIDA' => $CONS_ICC_NO_TECECAB,
                                                 'TIPO' => $CONS_ICC_NO_TECECAB,
                                                 'COMPRA_CDG_COMPRA' => $CONS_ICC_NO_TECECAB,
                                                 'COMPRA_MIN' => $CONS_ICC_NO_TECECAB,
@@ -272,7 +293,8 @@ class ValidacionChipController extends Controller {
                                 Yii::app()->session['VALIDACION'] = $chipsValidos;
                                 $resultados['validos'] = $chipsValidos;
                                 $resultados['resultado'] = "** RESULTADO **" . $newLine . $newLine
-                                        . ($cantidadOK + $cantidadNOTececab) . " Chips validados" . $newLine
+//                                        . ($cantidadOK + $cantidadNOTececab) . " Chips validados" . $newLine
+                                        . $cantidadConsultados . " Chips validados" . $newLine
                                         . $cantidadOK . " Chips correctos" . $newLine
                                         . $cantidadNOTececab . " Chips No son Tececab" . $newLine;
 
@@ -321,7 +343,12 @@ class ValidacionChipController extends Controller {
         return;
     }
 
-    function ValidarItem($origen, $tipo = '', $valorValidar, $idPromocion) {
+    function ValidarItemEnPromociones(
+            $origen
+            , $tipo = ''
+            , $valorValidar
+            , $idPromocion
+            , $datoEnBase) {
         $resultadoValidaCondicion = '';
         switch ($tipo) {
             case VALIDACION_PROMO:
@@ -337,45 +364,72 @@ class ValidacionChipController extends Controller {
                     $resultadoValidaCondicion = 'SELECCIONE PROMOCION';
                     if (count($condicionespromociones) > 0) {
                         foreach ($condicionespromociones as $condicion) {
-                            $resultadoValidaCondicion = 'NO APLICA';
+                            $resultadoValidaCondicion = 'NO APLICA - NO CUMPLE PROMO';
                             $parametroCompara = strtotime($valorValidar);
                             if (isset($parametroCompara)) {
-                                switch ($condicion["cpr_operador"]) {
-                                    case OPERADOR_BETWEEN:
-                                        if (
-                                                $parametroCompara >= strtotime($condicion["cpr_valor_min"]) &&
-                                                $parametroCompara <= strtotime($condicion["cpr_valor_max"])) {
-                                            $resultadoValidaCondicion = 'APLICA';
+//                            var_dump($valorValidar,$parametroCompara);die();
+//                                var_dump(count($datoEnBase) > 0, $parametroCompara, $valorValidar, $datoEnBase[0]);die();
+//                                var_dump(count($datoEnBase) > 0, $parametroCompara, $valorValidar, $datoEnBase[0]);die();
+                                if (count($datoEnBase) > 0) {
+
+//                                    var_dump(count($datoEnBase) > 0, $parametroCompara, $valorValidar, $datoEnBase[0]['FECHA_ALTA']);
+//                                    die();
+                                    if ($datoEnBase[0]['FECHA_ALTA'] != '1900-01-01') {
+//                                        var_dump($datoEnBase[0]['FECHA_ALTA']);die();
+                                        $fechaBase = new DateTime($datoEnBase[0]['FECHA_ALTA']);
+                                        $fechaBaseFormato = $fechaBase->format(FORMATO_FECHA);
+
+//                                        var_dump($fechaBaseFormato,$valorValidar == $datoEnBase, $valorValidar, $datoEnBase);die();
+//                                        var_dump($condicion["cpr_operador"]);die();
+                                        if ($valorValidar == $fechaBaseFormato) {
+                                            switch ($condicion["cpr_operador"]) {
+                                                case OPERADOR_BETWEEN:
+//                                                        var_dump($parametroCompara ,strtotime($condicion["cpr_valor_min"]),
+//                                                            strtotime($condicion["cpr_valor_max"]),$condicion["cpr_valor_max"]);die();
+                                                    if (
+                                                            $parametroCompara >= strtotime($condicion["cpr_valor_min"]) &&
+                                                            $parametroCompara <= strtotime($condicion["cpr_valor_max"])) {
+                                                        $resultadoValidaCondicion = 'APLICA';
+                                                    } else {
+                                                        $resultadoValidaCondicion = 'FUERA RANGO PROMO' . " PROMO VALIDA ENTRE " . $condicion["cpr_valor_min"] . " Y " . $condicion["cpr_valor_max"];
+                                                    }
+                                                    break;
+                                                case OPERADOR_MAYOR_IGUAL:
+                                                    if ($parametroCompara >= $condicion["cpr_valor_min"])
+                                                        $resultadoValidaCondicion = 'APLICA';
+                                                    break;
+                                                case OPERADOR_MENOR_IGUAL:
+                                                    if ($parametroCompara <= $condicion["cpr_valor_min"])
+                                                        $resultadoValidaCondicion = 'APLICA';
+                                                    break;
+                                                case OPERADOR_IGUAL:
+                                                    if ($parametroCompara == $condicion["cpr_valor_min"])
+                                                        $resultadoValidaCondicion = 'APLICA';
+                                                    break;
+                                                case OPERADOR_LIKE:
+                                                    break;
+                                                case OPERADOR_IN:
+                                                    break;
+                                                case OPERADOR_DIFERENTE:
+                                                    if ($parametroCompara != $condicion["cpr_valor_min"])
+                                                        $resultadoValidaCondicion = 'APLICA';
+                                                    break;
+                                                default :
+                                                    break;
+                                            } //Fin Switch
+                                        } else {
+                                            $resultadoValidaCondicion = 'NO APLICA - FECHA ALTA REPORTADA ES INCORRECTA';
                                         }
-                                        break;
-                                    case OPERADOR_MAYOR_IGUAL:
-                                        if ($parametroCompara >= $condicion["cpr_valor_min"])
-                                            $resultadoValidaCondicion = 'APLICA';
-                                        break;
-                                    case OPERADOR_MENOR_IGUAL:
-                                        if ($parametroCompara <= $condicion["cpr_valor_min"])
-                                            $resultadoValidaCondicion = 'APLICA';
-                                        break;
-                                    case OPERADOR_IGUAL:
-                                        if ($parametroCompara == $condicion["cpr_valor_min"])
-                                            $resultadoValidaCondicion = 'APLICA';
-                                        break;
-                                    case OPERADOR_LIKE:
-                                        break;
-                                    case OPERADOR_IN:
-                                        break;
-                                    case OPERADOR_DIFERENTE:
-                                        if ($parametroCompara != $condicion["cpr_valor_min"])
-                                            $resultadoValidaCondicion = 'APLICA';
-                                        break;
-                                    default :
-                                        break;
-                                } //Fin Switch
+                                    } else {
+                                        $resultadoValidaCondicion = 'NO APLICA - CHIP INACTIVO';
+                                    }
+                                } else {
+                                    $resultadoValidaCondicion = 'CHIP INACTIVO';
+                                }
                             }
                         }
                     }
-                }
-                else {
+                } else {
                     $resultadoValidaCondicion = 'Parametro validacion incorrecto';
                 }
 

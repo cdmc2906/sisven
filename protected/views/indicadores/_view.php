@@ -154,8 +154,28 @@
 	<?php echo CHtml::encode($data->i_vendedor); ?>
 	<br />
 
+	<b><?php echo CHtml::encode($data->getAttributeLabel('i_mes')); ?>:</b>
+	<?php echo CHtml::encode($data->i_mes); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('i_semana')); ?>:</b>
+	<?php echo CHtml::encode($data->i_semana); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('i_cedula')); ?>:</b>
+	<?php echo CHtml::encode($data->i_cedula); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('i_listado_operadora')); ?>:</b>
+	<?php echo CHtml::encode($data->i_listado_operadora); ?>
+	<br />
+
 	<b><?php echo CHtml::encode($data->getAttributeLabel('i_provincia')); ?>:</b>
 	<?php echo CHtml::encode($data->i_provincia); ?>
+	<br />
+
+	<b><?php echo CHtml::encode($data->getAttributeLabel('i_estatus')); ?>:</b>
+	<?php echo CHtml::encode($data->i_estatus); ?>
 	<br />
 
 	<b><?php echo CHtml::encode($data->getAttributeLabel('i_fecha_ingreso')); ?>:</b>

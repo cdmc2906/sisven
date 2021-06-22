@@ -35,9 +35,9 @@ class ReporteOrdenesxFechaController extends Controller {
 //                    var_dump($model['tipoReporte']);die();
                     $grupoEjecutivos = '';
                     switch ($model['tipoReporte']) {
-                        case 1: $grupoEjecutivos = GRUPO_EJECUTIVOS_ZONA_MOVI;
+                        case 1: $grupoEjecutivos = GRUPO_EJECUTIVOS_ZONA_MOVI_ZS;
                             break;
-                        case 2: $grupoEjecutivos = GRUPO_SUPERVISORES_MOVI;
+                        case 2: $grupoEjecutivos = GRUPO_SUPERVISORES_MOVI_ZS;
                             break;
                         case 3: $grupoEjecutivos = GRUPO_SERVICIO_CLIENTE;
                             break;

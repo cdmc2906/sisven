@@ -40,5 +40,7 @@ $this->menu=array(
 		'r_fch_desde',
 		'r_fch_hasta',
 		'r_usuario_ing_mod',
+		'r_telefono',
+		'r_fax',
 	),
 )); ?>

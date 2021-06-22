@@ -9,7 +9,7 @@ $this->pageTitle = $pagina_nombre;
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.js"></script>
 <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl; ?>/assets/js/bootstrap-datepicker.es.js"></script>
 
-<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/proceso/validacionChip.js"; ?>"></script>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl . "/js/proceso/ValidacionChip.js"; ?>"></script>
 <script type="text/javascript" language="javascript" src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
 <?php if (Yii::app()->user->hasFlash('resultadoValidacion')): ?>
     <div class="flash-success">
@@ -150,7 +150,7 @@ $form = $this->beginWidget('CActiveForm', array(
                                             $model, 'operadora'
                                             , array(
                                         'MOVISTAR' => 'MOVISTAR',
-                                        'TUENTI' => 'TUENTI',
+                                        // 'TUENTI' => 'TUENTI',
                                             )
                                             , array(
                                         'empty' => TEXT_OPCION_SELECCIONE,
@@ -204,6 +204,7 @@ $form = $this->beginWidget('CActiveForm', array(
                                         'QU53' => 'MEJIA PATRICIO',
                                         'QU73' => 'CORDERO CHRISTIAN',
                                         'QU22' => 'CHAMBA JOSE',
+                                        'QU61' => 'QUISHPE CRISTINA',
                                             )
                                             , array(
                                         'empty' => TEXT_OPCION_SELECCIONE,

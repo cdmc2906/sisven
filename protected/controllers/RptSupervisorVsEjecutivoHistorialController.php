@@ -33,7 +33,7 @@ class RptSupervisorVsEjecutivoHistorialController extends Controller {
                     $datosVisitas = $fReportes->getUsuariosGestionxFecha(
                             $model->fechagestion
                             , $model->accionHistorial
-                            , GRUPO_SUPERVISORES_MOVI
+                            , GRUPO_SUPERVISORES_MOVI_ZS
                             , $model->horaInicioGestion
                             , $model->horaFinGestion);
 //                    var_dump($datosVisitas);die();

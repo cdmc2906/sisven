@@ -18,14 +18,14 @@ function ConfigDatePicker(campo) {
                 startView: 1,
                 language: "es",
                 autoclose: true,
-                endDate: "0d"
+                endDate: "0d",
+                weekStart: 1,
             }
     )
 }
 
 function setMensaje(clase, message)
 {
-//    alert(clase,message)
     // $('html, body').animate({scrollTop: 0}, duration);
     $('#main').scrollTop(0);
 
@@ -44,7 +44,7 @@ function setMensaje(clase, message)
     $("ul.flashes").html(message);
 
     showEffect();
-//    hideEffect();
+    hideEffect();
     return false;
 }
 
@@ -59,7 +59,6 @@ function showEffect() {
 }
 
 function RedirigirError(error) {
-//    alert("error "+error)
     if (error == 403 || error == 401) {
         location.reload();
     } else {
@@ -107,7 +106,8 @@ function ConfigDatePickersReporteMismoMes(inicio, fin) {
                 format: "yyyy-mm-dd",
                 startView: 1,
                 language: "es",
-                autoclose: true
+                autoclose: true,
+                weekStart: 1,
             })
             .on('changeDate', function (e) {
                 var selectedDate = $(inicio).val();
@@ -123,7 +123,8 @@ function ConfigDatePickersReporteMismoMes(inicio, fin) {
                 format: "yyyy-mm-dd",
                 startView: 1,
                 language: "es",
-                autoclose: true
+                autoclose: true,
+                weekStart: 1,
             }
             )
             .on('changeDate', function (e) {
@@ -139,7 +140,8 @@ function ConfigDatePickersReporte(inicio, fin) {
                 format: "yyyy-mm-dd",
                 startView: 1,
                 language: "es",
-                autoclose: true
+                autoclose: true,
+                weekStart: 1,
             })
             .on('changeDate', function (e) {
                 var selectedDate = $(inicio).val();
@@ -155,7 +157,8 @@ function ConfigDatePickersReporte(inicio, fin) {
                 format: "yyyy-mm-dd",
                 startView: 1,
                 language: "es",
-                autoclose: true
+                autoclose: true,
+                weekStart: 1,
             }
             )
             .on('changeDate', function (e) {
@@ -178,6 +181,7 @@ function ConfigDatePickersRango(inicio, fin, tipoRango, rango) {
                 startView: 1,
                 language: "es",
                 autoclose: true,
+                weekStart: 1,
             }
             )
 //            .datepicker('setStartDate', fechaMinima)
@@ -208,7 +212,8 @@ function ConfigDatePickersRango(inicio, fin, tipoRango, rango) {
                 format: "yyyy-mm-dd",
                 startView: 1,
                 language: "es",
-                autoclose: true
+                autoclose: true,
+                weekStart: 1,
             }
             )
             .on('changeDate', function (e) {
@@ -225,6 +230,7 @@ function ConfigDatePickersReporteSemana(inicio, fin) {
                 startView: 1,
                 language: "es",
                 autoclose: true,
+                weekStart: 1,
                 beforeShowDay: $(inicio).datepicker.noWeekends,
             }
             )

@@ -68,6 +68,7 @@ function ConfigurarGrid() {
             , 'CEDULA'
             , 'LISTADO_OPERADORA'
             , 'PROVINCIA'
+            , 'ESTATUS'
         ],
         colModel: [
             {name: 'FECHA', index: 'FECHA', width: 200, resizable: false, sortable: false, frozen: false},
@@ -111,6 +112,7 @@ function ConfigurarGrid() {
             {name: 'CEDULA', index: 'CEDULA', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'LISTADO_OPERADORA', index: 'LISTADO_OPERADORA', width: 200, resizable: false, sortable: false, frozen: false},
             {name: 'PROVINCIA', index: 'PROVINCIA', width: 200, resizable: false, sortable: false, frozen: false},
+            {name: 'ESTATUS', index: 'ESTATUS', width: 200, resizable: false, sortable: false, frozen: false},
         ],
         pager: '#pagGrid',
         rowNum: NroFilas,
@@ -142,12 +144,29 @@ function ConfigurarGrid() {
     });
 
     jQuery("#tblGrid").jqGrid('navGrid', '#pagGrid',
-            {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options 
-            {}, // edit options 
-            {}, // add options 
-            {}, // del options 
+            {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options
+            {}, // edit options
+            {}, // add options
+            {}, // del options
             {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
     );
+    jQuery("#tblGrid").jqGrid('navButtonAdd', '#pagGrid',
+            {
+                caption: "Reporte 1",
+                title: "Exportar",
+                onClickButton: function () {
+                    var options = {
+                        includeLabels: true,
+                        includeGroupHeader: true,
+                        includeFooter: true,
+                        fileName: "reporte_cargados.xlsx",
+                        mimetype: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        maxlength: 40,
+                        onBeforeExport: null,
+                        replaceStr: null
+                    }
+                    $("#tblGrid").jqGrid('exportToExcel', options);
+                }});
 }
 
 function ConfigurarGridResumen() {
@@ -174,7 +193,7 @@ function ConfigurarGridResumen() {
         caption: 'Resumen',
         height: 200,
         autowidth: true,
-        gridview: true, //Hace mas r�pido la carga de la grilla 
+        gridview: true, //Hace mas r�pido la carga de la grilla
         shrinkToFit: false, //permite mantener la dimensi�n personalizada de las celdas,
         rownumbers: true,
         beforeRequest: function () {
@@ -196,12 +215,11 @@ function ConfigurarGridResumen() {
     });
 
     jQuery("#tblGridResumen").jqGrid('navGrid', '#pagGridResumen',
-            {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options 
-            {}, // edit options 
-            {}, // add options 
-            {}, // del options 
+            {add: false, edit: false, del: false, search: true, refresh: true, view: false}, //options
+            {}, // edit options
+            {}, // add options
+            {}, // del options
             {multipleSearch: true, closeAfterSearch: true, closeOnEscape: true}//opciones search
     );
-//    jQuery("#tblGrid").jqGrid('setFrozenColumns');//Fija las columnas 
+//    jQuery("#tblGrid").jqGrid('setFrozenColumns');//Fija las columnas
 }
-

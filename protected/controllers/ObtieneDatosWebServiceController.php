@@ -5,7 +5,7 @@
  * @fecha 
  * @author 
  */
-class CargaHistorialMbController extends Controller {
+class ObtieneDatosWebServiceController extends Controller {
 
     public $layout = LAYOUT_IMPORTAR;
 
@@ -14,39 +14,105 @@ class CargaHistorialMbController extends Controller {
             return;
         } else {
             unset(Yii::app()->session['historialMbItems']);
-            $model = new CargaHistorialMbForm();
-            $this->render('/carga/cargaHistorialMb', array('model' => $model));
+            $model = new ClienteWebServicelMbForm();
+            $this->render('/cliente_webservice/obtieneDatosWebService', array('model' => $model));
         }
     }
 
-    public function actionSubirArchivo() {
+    function conectarws() {
+        $sid_id = '';
 
-        Yii::app()->session['itemsFueraPeriodo'] = 0;
-        $response = new Response();
+        $param = array("action" => "login", "login" => "WEBSERVICE", "password" => "Tececab2021*", "context" => "tececab2");
+        $url = "https://s02.mobilvendor.com/web-service";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($param));
+        curl_setopt($ch, CURLOPT_ENCODING, 'Content-type: application/json; charset=utf-8');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept-Language: es"));
+        curl_setopt($ch, CURLOPT_TIMEOUT, 120000);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120000);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+
+            echo "Error : " . curl_error($ch);
+        }
+
+        curl_close($ch);
+        $sid_id = json_decode($response, true)["session_id"];
+        return $sid_id;
+    }
+
+    function GetHistorialWS($pagina) {
+        $sesion_id = $this->conectarws();
+
+        $respuesta = array();
+        $param = array(
+            "action" => "getUserHistory",
+            "session_id" => $sesion_id,
+            "page" => $pagina,
+            "filter" => ([
+        "start_date" => "1616994000", //30 marzo 2021
+        "end_date" => "1616994000", //30 marzo 2021
+        "actions" =>
+        (["form",
+        ])
+        ]));
+
+
+        $url = "https://s02.mobilvendor.com/web-service";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($param));
+        curl_setopt($ch, CURLOPT_ENCODING, 'Content-type: application/json; charset=utf-8');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept-Language: es"));
+        curl_setopt($ch, CURLOPT_TIMEOUT, 120000);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 120000);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+
+        if (curl_errno($ch)) {
+
+            echo "Error : " . curl_error($ch);
+        }
+
+        curl_close($ch);
+        if (isset(json_decode($response, true)["error"])) {
+            echo "Something goes wrong!!";
+        } else {
+            array_push($respuesta, json_decode($response, true)["pages"]);
+            array_push($respuesta, json_decode($response, true)["count"]);
+            array_push($respuesta, json_decode($response, true)["records"]);
+        }
+        return $respuesta;
+    }
+
+    public function actionConsultar() {
+
         try {
-            $model = new CargaHistorialMbForm();
-            $historialMbItems = array();
-            if (isset($_POST['CargaHistorialMbForm'])) {
-                $model->attributes = $_POST['CargaHistorialMbForm'];
 
+            $model = new ClienteWebServicelMbForm();
+            $historialMbItems = array();
+
+            if (isset($_POST['ClienteWebServicelMbForm'])) {
+                $model->attributes = $_POST['ClienteWebServicelMbForm'];
                 if ($model->validate()) {
+
                     unset(Yii::app()->session['historialMbItems']);
 
-                    $filePath = Yii::app()->params['archivosHistorialMb'];
-                    $model->rutaArchivo = CUploadedFile::getInstance($model, 'rutaArchivo');
-                    $model->rutaArchivo->saveAs($filePath);
-                    Yii::app()->session['archivosHistorialMb'] = $filePath;
-                    Yii::app()->session['ModelForm'] = $model;
+                    $pagina = 1;
+                    $historial = $this->GetHistorialWS($pagina);
+//var_dump($historial[0]);die();
 
-                    $operation = "r";
-                    $delimiter = $model->delimitadorColumnas;
-
-//                    var_dump($model->rutaArchivo);die();
-//                    $excel = new excel();
-//                    $excel->LeerArchivo($model->rutaArchivo);
-//                    var_dump($excel->LeerArchivo($model->rutaArchivo));                    die();
-                    $file = new File($filePath, $operation, $delimiter);
-                    $totalRows = $file->getTotalFilas();
+                    for ($iterador = 0; $iterador < count($historial[0]); $iterador++) {
+                        $historial = $this->GetHistorialWS($pagina);
+                    }
+//                    var_dump($historial[0]);die();
 
                     if ($totalRows > 0) {
                         $totalBloques = ceil($totalRows / TAMANIO_BLOQUE);
@@ -62,14 +128,14 @@ class CargaHistorialMbController extends Controller {
                                 $historialMbItems = array_merge($historialMbItems, $dataInsert);
                                 unset($dataInsert);
                             }
-                            $numeroBloque ++;
+                            $numeroBloque++;
                         }
                         Yii::app()->session['historialMbItems'] = $historialMbItems;
                         if (Yii::app()->session['itemsFueraPeriodo'] > 0) {
                             Yii::app()->user->setFlash('resultadoHistorial', Yii::app()->session['itemsFueraPeriodo'] . ' registros se omitieron por estar fuera del periodo');
                         }
                     } else {
-                        Yii::app()->user->setFlash('resultadoHistorial', 'El archivo no contiene registros');
+                        Yii::app()->user->setFlash('resultadoHistorialWS', 'El archivo no contiene registros');
 //                        $response->Message = 'El archivo no contiene registros';
 //                        $response->Status = NOTICE;
                     }
@@ -191,7 +257,7 @@ class CargaHistorialMbController extends Controller {
                             unset($datosHistorialMb);
                             $connection->active = false;
                         }
-                        $numeroBloque ++;
+                        $numeroBloque++;
                     }
 
                     if ($totalHistorialNoGuardados > 0) {
@@ -346,19 +412,4 @@ class CargaHistorialMbController extends Controller {
         }
     }
 
-//    public function filters() {
-//// return the filter configuration for this controller, e.g.:
-//        return array('accessControl', array('CrugeAccessControlFilter'));
-//    }
-//
-//    public function accessRules() {
-//        return array(
-//            array('allow', // allow authenticated users to access all actions
-//                'users' => array('@'),
-//            ),
-//            array('deny', // deny all users
-//                'users' => array('*'),
-//            ),
-//        );
-//    }
 }

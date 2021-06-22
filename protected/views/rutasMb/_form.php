@@ -127,6 +127,18 @@
 		<?php echo $form->error($model,'r_usuario_ing_mod'); ?>
 	</div>
 
+	<div class="row">
+		<?php echo $form->labelEx($model,'r_telefono'); ?>
+		<?php echo $form->textField($model,'r_telefono',array('size'=>60,'maxlength'=>500)); ?>
+		<?php echo $form->error($model,'r_telefono'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'r_fax'); ?>
+		<?php echo $form->textField($model,'r_fax',array('size'=>60,'maxlength'=>500)); ?>
+		<?php echo $form->error($model,'r_fax'); ?>
+	</div>
+
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
 	</div>

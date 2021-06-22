@@ -153,73 +153,73 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'i_costo'); ?>
-		<?php echo $form->textField($model,'i_costo',array('size'=>6,'maxlength'=>6)); ?>
+		<?php echo $form->textField($model,'i_costo',array('size'=>10,'maxlength'=>10)); ?>
 		<?php echo $form->error($model,'i_costo'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'i_precio1'); ?>
-		<?php echo $form->textField($model,'i_precio1',array('size'=>6,'maxlength'=>6)); ?>
+		<?php echo $form->textField($model,'i_precio1',array('size'=>10,'maxlength'=>10)); ?>
 		<?php echo $form->error($model,'i_precio1'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'i_precio2'); ?>
-		<?php echo $form->textField($model,'i_precio2',array('size'=>6,'maxlength'=>6)); ?>
+		<?php echo $form->textField($model,'i_precio2',array('size'=>10,'maxlength'=>10)); ?>
 		<?php echo $form->error($model,'i_precio2'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'i_precio3'); ?>
-		<?php echo $form->textField($model,'i_precio3',array('size'=>6,'maxlength'=>6)); ?>
+		<?php echo $form->textField($model,'i_precio3',array('size'=>10,'maxlength'=>10)); ?>
 		<?php echo $form->error($model,'i_precio3'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'i_precio4'); ?>
-		<?php echo $form->textField($model,'i_precio4',array('size'=>6,'maxlength'=>6)); ?>
+		<?php echo $form->textField($model,'i_precio4',array('size'=>10,'maxlength'=>10)); ?>
 		<?php echo $form->error($model,'i_precio4'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'i_precio5'); ?>
-		<?php echo $form->textField($model,'i_precio5',array('size'=>6,'maxlength'=>6)); ?>
+		<?php echo $form->textField($model,'i_precio5',array('size'=>10,'maxlength'=>10)); ?>
 		<?php echo $form->error($model,'i_precio5'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'i_precio'); ?>
-		<?php echo $form->textField($model,'i_precio',array('size'=>6,'maxlength'=>6)); ?>
+		<?php echo $form->textField($model,'i_precio',array('size'=>10,'maxlength'=>10)); ?>
 		<?php echo $form->error($model,'i_precio'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'i_porcendes'); ?>
-		<?php echo $form->textField($model,'i_porcendes',array('size'=>6,'maxlength'=>6)); ?>
+		<?php echo $form->textField($model,'i_porcendes',array('size'=>10,'maxlength'=>10)); ?>
 		<?php echo $form->error($model,'i_porcendes'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'i_descuento'); ?>
-		<?php echo $form->textField($model,'i_descuento',array('size'=>6,'maxlength'=>6)); ?>
+		<?php echo $form->textField($model,'i_descuento',array('size'=>10,'maxlength'=>10)); ?>
 		<?php echo $form->error($model,'i_descuento'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'i_subtotal'); ?>
-		<?php echo $form->textField($model,'i_subtotal',array('size'=>6,'maxlength'=>6)); ?>
+		<?php echo $form->textField($model,'i_subtotal',array('size'=>10,'maxlength'=>10)); ?>
 		<?php echo $form->error($model,'i_subtotal'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'i_iva'); ?>
-		<?php echo $form->textField($model,'i_iva',array('size'=>6,'maxlength'=>6)); ?>
+		<?php echo $form->textField($model,'i_iva',array('size'=>10,'maxlength'=>10)); ?>
 		<?php echo $form->error($model,'i_iva'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'i_total'); ?>
-		<?php echo $form->textField($model,'i_total',array('size'=>6,'maxlength'=>6)); ?>
+		<?php echo $form->textField($model,'i_total',array('size'=>10,'maxlength'=>10)); ?>
 		<?php echo $form->error($model,'i_total'); ?>
 	</div>
 
@@ -231,14 +231,44 @@
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'i_vendedor'); ?>
-		<?php echo $form->textField($model,'i_vendedor',array('size'=>20,'maxlength'=>20)); ?>
+		<?php echo $form->textField($model,'i_vendedor',array('size'=>50,'maxlength'=>50)); ?>
 		<?php echo $form->error($model,'i_vendedor'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'i_mes'); ?>
+		<?php echo $form->textField($model,'i_mes',array('size'=>50,'maxlength'=>50)); ?>
+		<?php echo $form->error($model,'i_mes'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'i_semana'); ?>
+		<?php echo $form->textField($model,'i_semana',array('size'=>50,'maxlength'=>50)); ?>
+		<?php echo $form->error($model,'i_semana'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'i_cedula'); ?>
+		<?php echo $form->textField($model,'i_cedula',array('size'=>20,'maxlength'=>20)); ?>
+		<?php echo $form->error($model,'i_cedula'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'i_listado_operadora'); ?>
+		<?php echo $form->textField($model,'i_listado_operadora',array('size'=>60,'maxlength'=>250)); ?>
+		<?php echo $form->error($model,'i_listado_operadora'); ?>
 	</div>
 
 	<div class="row">
 		<?php echo $form->labelEx($model,'i_provincia'); ?>
 		<?php echo $form->textField($model,'i_provincia',array('size'=>20,'maxlength'=>20)); ?>
 		<?php echo $form->error($model,'i_provincia'); ?>
+	</div>
+
+	<div class="row">
+		<?php echo $form->labelEx($model,'i_estatus'); ?>
+		<?php echo $form->textField($model,'i_estatus',array('size'=>60,'maxlength'=>250)); ?>
+		<?php echo $form->error($model,'i_estatus'); ?>
 	</div>
 
 	<div class="row">

@@ -65,6 +65,8 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 		'r_fch_desde',
 		'r_fch_hasta',
 		'r_usuario_ing_mod',
+		'r_telefono',
+		'r_fax',
 		*/
 		array(
 			'class'=>'CButtonColumn',

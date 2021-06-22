@@ -41,7 +41,12 @@
  * @property string $i_total
  * @property string $i_e_codigo
  * @property string $i_vendedor
+ * @property string $i_mes
+ * @property string $i_semana
+ * @property string $i_cedula
+ * @property string $i_listado_operadora
  * @property string $i_provincia
+ * @property string $i_estatus
  * @property string $i_fecha_ingreso
  * @property string $i_fecha_modificacion
  * @property integer $i_usuario_ingresa_modifica
@@ -68,13 +73,14 @@ class IndicadoresModel extends CActiveRecord
 			array('i_numero_bodega, i_cantidad, i_usuario_ingresa_modifica', 'numerical', 'integerOnly'=>true),
 			array('i_sucursal, i_bodega, i_numero_serie, i_numero_factura, i_cod_cliente, i_tipo_cliente, i_nombre_cliente, i_ruc, i_direccion, i_ciudad, i_telefono, i_codigo_producto, i_descripcion_producto, i_codigo_grupo, i_grupo', 'length', 'max'=>500),
 			array('i_detalle', 'length', 'max'=>1024),
-			array('i_imei, i_min, i_icc, i_e_codigo, i_vendedor, i_provincia', 'length', 'max'=>20),
-			array('i_costo, i_precio1, i_precio2, i_precio3, i_precio4, i_precio5, i_precio, i_porcendes, i_descuento, i_subtotal, i_iva, i_total', 'length', 'max'=>6),
-			array('i_estado_icc', 'length', 'max'=>250),
+			array('i_imei, i_min, i_icc, i_e_codigo, i_cedula, i_provincia', 'length', 'max'=>20),
+			array('i_costo, i_precio1, i_precio2, i_precio3, i_precio4, i_precio5, i_precio, i_porcendes, i_descuento, i_subtotal, i_iva, i_total', 'length', 'max'=>10),
+			array('i_vendedor, i_mes, i_semana', 'length', 'max'=>50),
+			array('i_listado_operadora, i_estatus, i_estado_icc', 'length', 'max'=>250),
 			array('i_fecha, i_fecha_ingreso, i_fecha_modificacion', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('i_codigo, i_fecha, i_sucursal, i_numero_bodega, i_bodega, i_numero_serie, i_numero_factura, i_cod_cliente, i_tipo_cliente, i_nombre_cliente, i_ruc, i_direccion, i_ciudad, i_telefono, i_codigo_producto, i_descripcion_producto, i_codigo_grupo, i_grupo, i_cantidad, i_detalle, i_imei, i_min, i_icc, i_costo, i_precio1, i_precio2, i_precio3, i_precio4, i_precio5, i_precio, i_porcendes, i_descuento, i_subtotal, i_iva, i_total, i_e_codigo, i_vendedor, i_provincia, i_fecha_ingreso, i_fecha_modificacion, i_usuario_ingresa_modifica, i_estado_icc', 'safe', 'on'=>'search'),
+			array('i_codigo, i_fecha, i_sucursal, i_numero_bodega, i_bodega, i_numero_serie, i_numero_factura, i_cod_cliente, i_tipo_cliente, i_nombre_cliente, i_ruc, i_direccion, i_ciudad, i_telefono, i_codigo_producto, i_descripcion_producto, i_codigo_grupo, i_grupo, i_cantidad, i_detalle, i_imei, i_min, i_icc, i_costo, i_precio1, i_precio2, i_precio3, i_precio4, i_precio5, i_precio, i_porcendes, i_descuento, i_subtotal, i_iva, i_total, i_e_codigo, i_vendedor, i_mes, i_semana, i_cedula, i_listado_operadora, i_provincia, i_estatus, i_fecha_ingreso, i_fecha_modificacion, i_usuario_ingresa_modifica, i_estado_icc', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -95,47 +101,52 @@ class IndicadoresModel extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'i_codigo' => 'Codigo',
-			'i_fecha' => 'Fecha Indicador',
-			'i_sucursal' => 'Sucursal',
-			'i_numero_bodega' => 'Numero Bodega',
-			'i_bodega' => 'Bodega',
-			'i_numero_serie' => 'Numero Serie',
-			'i_numero_factura' => 'Numero Factura',
-			'i_cod_cliente' => 'Codigo Cliente',
-			'i_tipo_cliente' => 'Tipo Cliente',
-			'i_nombre_cliente' => 'Nombre Cliente',
-			'i_ruc' => 'Ruc',
-			'i_direccion' => 'Direccion',
-			'i_ciudad' => 'Ciudad',
-			'i_telefono' => 'Telefono',
-			'i_codigo_producto' => 'Codigo Producto',
-			'i_descripcion_producto' => 'Descripcion Producto',
-			'i_codigo_grupo' => 'Codigo Grupo',
-			'i_grupo' => 'Grupo',
-			'i_cantidad' => 'Cantidad',
-			'i_detalle' => 'Detalle',
-			'i_imei' => 'Imei',
-			'i_min' => 'Min',
-			'i_icc' => 'Icc',
-			'i_costo' => 'Costo',
-			'i_precio1' => 'Precio1',
-			'i_precio2' => 'Precio2',
-			'i_precio3' => 'Precio3',
-			'i_precio4' => 'Precio4',
-			'i_precio5' => 'Precio5',
-			'i_precio' => 'Precio',
-			'i_porcendes' => 'Porcendes',
-			'i_descuento' => 'Descuento',
-			'i_subtotal' => 'Subtotal',
-			'i_iva' => 'Iva',
-			'i_total' => 'Total',
-			'i_e_codigo' => 'Codigo',
-			'i_vendedor' => 'Vendedor',
-			'i_provincia' => 'Provincia',
-			'i_fecha_ingreso' => 'Fecha Ingreso',
-			'i_fecha_modificacion' => 'Fecha Modificacion',
-			'i_usuario_ingresa_modifica' => 'Usuario Ingresa Modifica',
+			'i_codigo' => 'I Codigo',
+			'i_fecha' => 'I Fecha',
+			'i_sucursal' => 'I Sucursal',
+			'i_numero_bodega' => 'I Numero Bodega',
+			'i_bodega' => 'I Bodega',
+			'i_numero_serie' => 'I Numero Serie',
+			'i_numero_factura' => 'I Numero Factura',
+			'i_cod_cliente' => 'I Cod Cliente',
+			'i_tipo_cliente' => 'I Tipo Cliente',
+			'i_nombre_cliente' => 'I Nombre Cliente',
+			'i_ruc' => 'I Ruc',
+			'i_direccion' => 'I Direccion',
+			'i_ciudad' => 'I Ciudad',
+			'i_telefono' => 'I Telefono',
+			'i_codigo_producto' => 'I Codigo Producto',
+			'i_descripcion_producto' => 'I Descripcion Producto',
+			'i_codigo_grupo' => 'I Codigo Grupo',
+			'i_grupo' => 'I Grupo',
+			'i_cantidad' => 'I Cantidad',
+			'i_detalle' => 'I Detalle',
+			'i_imei' => 'I Imei',
+			'i_min' => 'I Min',
+			'i_icc' => 'I Icc',
+			'i_costo' => 'I Costo',
+			'i_precio1' => 'I Precio1',
+			'i_precio2' => 'I Precio2',
+			'i_precio3' => 'I Precio3',
+			'i_precio4' => 'I Precio4',
+			'i_precio5' => 'I Precio5',
+			'i_precio' => 'I Precio',
+			'i_porcendes' => 'I Porcendes',
+			'i_descuento' => 'I Descuento',
+			'i_subtotal' => 'I Subtotal',
+			'i_iva' => 'I Iva',
+			'i_total' => 'I Total',
+			'i_e_codigo' => 'I E Codigo',
+			'i_vendedor' => 'I Vendedor',
+			'i_mes' => 'I Mes',
+			'i_semana' => 'I Semana',
+			'i_cedula' => 'I Cedula',
+			'i_listado_operadora' => 'I Listado Operadora',
+			'i_provincia' => 'I Provincia',
+			'i_estatus' => 'I Estatus',
+			'i_fecha_ingreso' => 'I Fecha Ingreso',
+			'i_fecha_modificacion' => 'I Fecha Modificacion',
+			'i_usuario_ingresa_modifica' => 'I Usuario Ingresa Modifica',
 			'i_estado_icc' => 'I Estado Icc',
 		);
 	}
@@ -195,7 +206,12 @@ class IndicadoresModel extends CActiveRecord
 		$criteria->compare('i_total',$this->i_total,true);
 		$criteria->compare('i_e_codigo',$this->i_e_codigo,true);
 		$criteria->compare('i_vendedor',$this->i_vendedor,true);
+		$criteria->compare('i_mes',$this->i_mes,true);
+		$criteria->compare('i_semana',$this->i_semana,true);
+		$criteria->compare('i_cedula',$this->i_cedula,true);
+		$criteria->compare('i_listado_operadora',$this->i_listado_operadora,true);
 		$criteria->compare('i_provincia',$this->i_provincia,true);
+		$criteria->compare('i_estatus',$this->i_estatus,true);
 		$criteria->compare('i_fecha_ingreso',$this->i_fecha_ingreso,true);
 		$criteria->compare('i_fecha_modificacion',$this->i_fecha_modificacion,true);
 		$criteria->compare('i_usuario_ingresa_modifica',$this->i_usuario_ingresa_modifica);
